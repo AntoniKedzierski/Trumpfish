@@ -13,10 +13,6 @@ public static class DatabaseInitializer {
         var db = scope.ServiceProvider.GetRequiredService<TrumpfishDbContext>();
         await db.Database.EnsureCreatedAsync(cancellationToken);
 
-        if (await db.BiddingSystems.AnyAsync(cancellationToken)) {
-            return;
-        }
-
         // Bundled bidding system trees are copied next to the assembly by the Seed content item group.
         var seedDirectory = Path.Combine(AppContext.BaseDirectory, "Seed");
         if (!Directory.Exists(seedDirectory)) {
@@ -24,14 +20,26 @@ public static class DatabaseInitializer {
         }
 
         var store = scope.ServiceProvider.GetRequiredService<IBiddingSystemStore>();
+        var knownNames = await db.BiddingSystems.Select(record => record.Name).ToListAsync(cancellationToken);
+        var takenNames = new HashSet<string>(knownNames, StringComparer.OrdinalIgnoreCase);
 
         foreach (var seedPath in Directory.EnumerateFiles(seedDirectory, "*.json")) {
-            var system = new BiddingSystem(seedPath);
-            if (string.IsNullOrWhiteSpace(system.SystemName)) {
-                system.SystemName = Path.GetFileNameWithoutExtension(seedPath);
+            var fileName = Path.GetFileNameWithoutExtension(seedPath);
+
+            // Seed files may declare the same SystemName, so fall back to the file name to keep every bundled system visible.
+            if (takenNames.Contains(fileName)) {
+                continue;
             }
 
-            await store.SaveAsync(system.SystemName, system, cancellationToken);
+            var system = new BiddingSystem(seedPath);
+            var name = string.IsNullOrWhiteSpace(system.SystemName) || takenNames.Contains(system.SystemName) ? fileName : system.SystemName;
+            if (takenNames.Contains(name)) {
+                continue;
+            }
+
+            system.SystemName = name;
+            await store.SaveAsync(name, system, cancellationToken);
+            takenNames.Add(name);
         }
     }
 }

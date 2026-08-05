@@ -1,4 +1,4 @@
-﻿using Model.Bidding;
+using Model.Bidding;
 using Model.Enums;
 using Model.Helpers;
 using Model.Points;
@@ -13,7 +13,7 @@ namespace Model;
 
 public class Hand : IPoints {
 
-    public Card[] Cards { get; private set; }
+    public List<Card> Cards { get; private set; }
     public int Points {  get; private set; }
     public int PointsNt { get; private set; }
 
@@ -44,15 +44,51 @@ public class Hand : IPoints {
 
 
     public void SortHand() {
-        Cards = Cards.OrderByDescending(e => e.Color).ThenByDescending(e => e.Value).ToArray();
+        Cards = Cards
+            .OrderByDescending(e => e.Color)
+            .ThenByDescending(e => e.Value)
+            .ToList();
     }
 
-
+    // TODO: niedoliczanie punktów za figury w krótkościach, jak już doliczamy za te krótkości
     public int CalculatePoints(bool noTrumpGame = false) {
         var totalPoints = 0;
         foreach (var color in Enum.GetValues(typeof(CardColor)).Cast<CardColor>()) {
             var suit = OfColor(color).ToList();
-            var suitLengthColor = Math.Max(0, 3 - suit.Count);
+            var suitLengthColor = 0;
+            if (suit.Count == 2) {
+                // Drugi walet
+                if (suit.Any(e => e.Value == CardValue.Jack)) {
+                    suitLengthColor -= 1;
+                }
+                // Druga dama
+                else if (suit.Any(e => e.Value == CardValue.Queen)) {
+                    suitLengthColor -= 1;
+                }
+
+                //inne
+                suitLengthColor += Math.Max(0, 3 - suit.Count);
+            } else if (suit.Count == 1) {
+                // Walet singiel
+                if (suit.Any(e => e.Value == CardValue.Jack)) {
+                    suitLengthColor -= 1;
+                }
+                // Singlowa dama
+                else if (suit.Any(e => e.Value == CardValue.Queen)) {
+                    suitLengthColor -= 2;
+                }
+                // Król singiel
+                else if (suit.Any(e => e.Value == CardValue.King)) {
+                    suitLengthColor -= 2;
+                }
+
+                //inne
+                suitLengthColor += Math.Max(0, 3 - suit.Count);
+
+            } else {
+                suitLengthColor = Math.Max(0, 3 - suit.Count);
+            }
+
             totalPoints += suit.Sum(e => e.CalculatePoints(noTrumpGame));
             totalPoints += noTrumpGame ? 0 : suitLengthColor;
         }
@@ -159,7 +195,7 @@ public class Hand : IPoints {
     public bool Fits(BidColor color) => CountCards(color.ToCardColor()) >= 3;
 
 
-    private static CardColor GetStrongestColor(Dictionary<CardColor, int> colorCounts, Dictionary<CardColor, double> stopCounts, Dictionary<CardColor, int> pointsCount) {
+    public static CardColor GetStrongestColor(Dictionary<CardColor, int> colorCounts, Dictionary<CardColor, double> stopCounts, Dictionary<CardColor, int> pointsCount) {
         if (colorCounts.Count == 1) {
             return colorCounts.First().Key;
         }
@@ -272,6 +308,13 @@ public class Hand : IPoints {
             .Key;
     }
 
+
+    public Card? GetStrongestCardInColor(CardColor color) {
+        return Cards.Where(card => card.Color == color).MaxBy(card => card.Value);
+    }
+    public Card? GetWeakestCardInColor(CardColor color) {
+        return Cards.Where(card => card.Color == color).MinBy(card => card.Value);
+    }
 
     private static bool InRange(int value, NumberRange? range) {
         if (range is null) {

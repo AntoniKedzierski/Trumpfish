@@ -1,0 +1,295 @@
+.simulation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  animation: view-enter var(--duration-slow) var(--ease-out) both;
+}
+
+.simulation .page-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 28px;
+  background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.simulation .page-header h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.simulation .back-link {
+  padding: 5px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-size: 13px;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+}
+
+.simulation .back-link:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.simulation .status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: rgb(255 181 21 / 12%);
+  color: var(--amber-flame);
+}
+
+.simulation .status.error {
+  background: rgb(235 39 39 / 14%);
+  color: var(--hearts);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 28px;
+  background: var(--surface-base);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.controls .inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.controls input[type='number'] {
+  width: 96px;
+  padding: 7px 10px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+}
+
+/* The spinners clash with the flat dark controls used everywhere else. */
+.controls input[type='number']::-webkit-outer-spin-button,
+.controls input[type='number']::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.controls input[type='number'] {
+  appearance: textfield;
+}
+
+.controls .summary {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.controls .bid-search {
+  width: 130px;
+  padding: 7px 10px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  transition: border-color var(--duration-normal) var(--ease-out);
+}
+
+.controls .bid-search:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.results {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 18px;
+  padding: 22px 28px;
+  overflow: auto;
+}
+
+.results .placeholder {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.deal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: card-rise var(--duration-slow) var(--ease-out) both;
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Contracts at game level or higher (3NT, 4M, 5m) get an accented border so they stand out in a long run. */
+.deal-card.game {
+  border-color: var(--amber-flame);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 1px rgb(255 181 21 / 35%);
+}
+
+.deal-card header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.deal-card h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.deal-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.deal-contract {
+  margin-left: auto;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.deal-contract.passed {
+  background: var(--surface-hover);
+  color: var(--text-muted);
+}
+
+.deal-error {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--hearts);
+}
+
+/* Pair strength for the final contract, on its own row under the header. */
+.deal-summary {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.deal-summary .suit {
+  font-size: 13px;
+}
+
+.hands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hand {
+  padding: 10px 12px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.hand-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.hand-position {
+  font-weight: 700;
+  color: var(--amber-flame);
+}
+
+.hand-points,
+.hand-shape {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.hand-shape {
+  margin-left: auto;
+}
+
+.hand-suits {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hand-suits li {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.hand-cards {
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+}
+
+.bidding-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.bidding-table th {
+  padding: 6px 8px;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.bidding-table td {
+  padding: 5px 8px;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* The suit glyph carries the colour; the level stays neutral so the table does not get noisy. */
+.bidding-table td .suit {
+  margin-left: 1px;
+}
+
+.bidding-table td.empty {
+  color: transparent;
+}
+
+.bidding-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}

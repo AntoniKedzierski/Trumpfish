@@ -1,4 +1,4 @@
-﻿using Model.Enums;
+using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -56,6 +56,10 @@ public class Bid : IEquatable<Bid> {
     public bool IsBidLegal(Auction auction) {
         if (Type == BidType.Pass) {
             return true;
+        }
+
+        if (Value > 7) {
+            return false;
         }
 
         Bid? lastBid = auction.GetLastSubmittedBid();

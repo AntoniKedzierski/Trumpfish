@@ -1,7 +1,8 @@
 .home {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 64px 28px;
+  animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
 .home > header {
@@ -12,18 +13,21 @@
 }
 
 .home > header img {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
 }
 
 .home h1 {
   margin: 0;
-  color: var(--alabaster-grey);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .home p {
-  margin: 4px 0 0;
-  color: var(--alabaster-grey);
+  margin: 6px 0 0;
+  color: var(--text-muted);
 }
 
 .tool-grid {
@@ -33,36 +37,64 @@
 }
 
 .tool-card {
+  position: relative;
   display: block;
   padding: 24px;
-  background: var(--onyx);
-  border: 1px solid var(--graphite);
-  border-radius: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   color: inherit;
+  overflow: hidden;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
 }
 
-.tool-card:hover {
-  border-color: var(--tropical-teal);
+/* Accent sheen that slides in from the left edge on hover. */
+.tool-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.tool-card:not(.disabled):hover {
+  background: var(--surface-overlay);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.tool-card:not(.disabled):hover::before {
+  transform: scaleY(1);
+}
+
+.tool-card:not(.disabled):active {
+  transform: translateY(-1px);
 }
 
 .tool-card h2 {
   margin: 0 0 12px;
   font-size: 18px;
-  color: var(--tropical-teal);
+  font-weight: 600;
+  color: var(--accent);
 }
 
 .tool-card p {
   margin: 0;
-  color: var(--alabaster-grey);
+  color: var(--text-muted);
 }
 
 .tool-card.disabled {
   opacity: 0.45;
   cursor: not-allowed;
-}
-
-.tool-card.disabled:hover {
-  border-color: var(--graphite);
 }
 
 .back-link {

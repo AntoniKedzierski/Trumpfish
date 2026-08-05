@@ -19,6 +19,7 @@ public partial class Program {
 
         builder.Services.AddDbContext<TrumpfishDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Trumpfish") ?? "Data Source=trumpfish.db"));
         builder.Services.AddScoped<IBiddingSystemStore, BiddingSystemStore>();
+        builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
 
         builder.Services.AddOpenApi();
 

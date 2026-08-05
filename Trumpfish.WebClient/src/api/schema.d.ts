@@ -192,6 +192,65 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/simulation/bidding": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SimulationRequest"];
+                    "text/json": components["schemas"]["SimulationRequest"];
+                    "application/*+json": components["schemas"]["SimulationRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SimulationResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -251,12 +310,18 @@ export interface components {
         };
         /** @enum {unknown} */
         BidType: "Pass" | "Submit" | "Double" | "Redouble";
+        /** @enum {unknown} */
+        CardColor: "Clubs" | "Diamonds" | "Hearts" | "Spades";
+        /** @enum {unknown} */
+        CardValue: "Two" | "Three" | "Four" | "Five" | "Six" | "Seven" | "Eight" | "Nine" | "Ten" | "Jack" | "Queen" | "King" | "Ace";
         NumberRange: {
             /** Format: int32 */
             lower?: null | number | string;
             /** Format: int32 */
             upper?: null | number | string;
         };
+        /** @enum {unknown} */
+        PlayerPosition: "North" | "East" | "South" | "West";
         ProblemDetails: {
             type?: null | string;
             title?: null | string;
@@ -268,6 +333,81 @@ export interface components {
         Root: {
             name?: null | string;
             bids?: components["schemas"]["BidNode"][];
+        };
+        SimulationBid: {
+            /** Format: int32 */
+            index: number | string;
+            bidder: components["schemas"]["PlayerPosition"];
+            type: components["schemas"]["BidType"];
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            value: null | number | string;
+            isFromSystem: boolean;
+            label: string;
+        };
+        SimulationCard: {
+            value: components["schemas"]["CardValue"];
+            color: components["schemas"]["CardColor"];
+            label: string;
+        };
+        SimulationContract: {
+            passed: boolean;
+            declarer: null | components["schemas"]["PlayerPosition"];
+            /** Format: int32 */
+            value: null | number | string;
+            color: components["schemas"]["BidColor"];
+            isDoubled: boolean;
+            isRedoubled: boolean;
+            label: string;
+            /** Format: int32 */
+            pairPoints: null | number | string;
+            /** Format: int32 */
+            trumpCount: null | number | string;
+        };
+        SimulationDealRequest: {
+            dealer: components["schemas"]["PlayerPosition"];
+            hands: components["schemas"]["SimulationHandRequest"][];
+        };
+        SimulationDealResult: {
+            /** Format: int32 */
+            index: number | string;
+            dealer: components["schemas"]["PlayerPosition"];
+            hands: components["schemas"]["SimulationHand"][];
+            bidding: components["schemas"]["SimulationBid"][];
+            contract: components["schemas"]["SimulationContract"];
+            error: null | string;
+        };
+        SimulationHand: {
+            position: components["schemas"]["PlayerPosition"];
+            cards: components["schemas"]["SimulationCard"][];
+            /** Format: int32 */
+            points: number | string;
+            /** Format: int32 */
+            pointsNt: number | string;
+            /** Format: int32 */
+            spades: number | string;
+            /** Format: int32 */
+            hearts: number | string;
+            /** Format: int32 */
+            diamonds: number | string;
+            /** Format: int32 */
+            clubs: number | string;
+        };
+        SimulationHandRequest: {
+            position: components["schemas"]["PlayerPosition"];
+            cards: components["schemas"]["SimulationCard"][];
+        };
+        SimulationRequest: {
+            systemName: string;
+            deals: components["schemas"]["SimulationDealRequest"][];
+        };
+        SimulationResponse: {
+            systemName: string;
+            /** Format: int32 */
+            dealCount: number | string;
+            /** Format: int32 */
+            failedCount: number | string;
+            deals: components["schemas"]["SimulationDealResult"][];
         };
         ValidationIssue: {
             severity: components["schemas"]["ValidationSeverity"];

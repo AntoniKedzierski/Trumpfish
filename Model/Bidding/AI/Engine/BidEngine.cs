@@ -1,4 +1,4 @@
-﻿using Model.Bidding.AI.Eval;
+using Model.Bidding.AI.Eval;
 using Model.Bidding.Bids;
 using Model.Enums;
 using Model.Helpers;
@@ -42,6 +42,17 @@ public partial class BidEngine : IBidInput {
     }
 
 
+    /// <summary>
+    /// Creates an engine on top of an already loaded system, so hosts (server simulation) do not depend on the file system.
+    /// </summary>
+    public BidEngine(Auction auction, PlayerPosition position, BiddingSystem biddingSystem) {
+        Auction = auction;
+        BiddingSystem = biddingSystem;
+        Position = position;
+        Goal = BiddingGoal.None;
+    }
+
+
     public void Reset() {
         OwnBidsHistory.Clear();
         Goal = BiddingGoal.None;
@@ -79,17 +90,25 @@ public partial class BidEngine : IBidInput {
             Goal = BiddingGoal.MinLoss;
         }
 
+        // Jeżeli był Game lub GF to trzeba się upewnić, że nie powinno przejść na grę premiową
+        if (Goal == BiddingGoal.Game || Goal == BiddingGoal.Gf) {
+
+        }
+
         // Goal pozostaje niezmieniony.
     }
 
-
-    // TODO
-    public BidNode? PlayInDefence(Hand hand, Bid lastOpponentBid) {
+    /// <summary>
+    /// Wejście w obrony jako pierwszy z pary
+    /// </summary>
+    public BidNode? PlayInDefence(Hand hand, Bid bidToDefendAgainst) {
         // Gałąź z konwencjami obronnymi na ostatnią odzywkę przeciwników.
         var defences = BiddingSystem.Defences() ?? throw new Exception("Defences not found.");
-        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(lastOpponentBid));
+        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(bidToDefendAgainst));
 
         if (defenceBranch == null) {
+            // Próbujemy otwarcia naturalnego, bo nie ma brancha obrony z systemu, więc na pewno nie będzie confusing
+            // return TrueNaturalOpening(hand);
             return null;
         }
 
@@ -98,27 +117,69 @@ public partial class BidEngine : IBidInput {
             return PlayInOffence(hand);
         }
 
-        // Próbujemy otwarcia naturalnego
-        return result ?? TrueNaturalOpening(hand);
+        return result;
     }
 
 
-    public BidNode? PlayInDefence(Hand hand, Bid lastOpponentBid, Bid lastPartnerBid) {
+    /// <summary>
+    /// Wejście w obrony po partnerze
+    /// </summary>
+    public BidNode? PlayInDefence(Hand hand, Bid bidToDefendAgainst, Bid lastPartnerBid, BidNode? lastOwnBid = null) {
         var defences = BiddingSystem.Defences() ?? throw new Exception("Defences not found.");
-        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(lastOpponentBid));
+        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(bidToDefendAgainst));
 
+        // Obrona NIE z systemu
         if (defenceBranch == null) {
-            return null;
+            return GetNaturalBid(hand, lastPartnerBid);
         }
 
-        var partnerDefences = defenceBranch.NextBids.FirstOrDefault(e => e.EqualsByColorAndValue(lastPartnerBid));
-        if (partnerDefences == null) {
-            return null;
+        var descendants = lastOwnBid == null
+            ? BiddingSystem.GetDescendants(defenceBranch, lastPartnerBid)
+            : BiddingSystem.GetDescendants(lastOwnBid, lastPartnerBid);
+
+        var branches = descendants
+            .ToDictionary(
+                e => e,
+                e => Evaluator.FromPartner(e, hand, Auction, Position)
+            );
+
+        // Potencjalne przeście na GF lub na jedno kółko
+        var isForced = false;
+        if (Goal == BiddingGoal.Gf) {
+            throw new Exception("Play in defenece impossible while already GF"); // Nigdy nie powinniśmy wejść w obrony, jeżeli już wcześniej było GF
+            // isForced = true; 
+        } else if (branches.Count > 0) {
+            if (branches.Keys.All(e => e.IsGameForcing())) {
+                // Jeżeli oponenci zgłosili jakimś cudem końcówkę (punkty układowe) to kontra karna. Raz się tak zdażyło...
+                if (LastOpponentBid?.MakesGame() == true) {
+                    BidNode.Double();
+                }
+
+                Goal = BiddingGoal.Gf;
+                isForced = true;
+            } else if (branches.Keys.All(e => e.OneRoundForcing == true) && !Auction.Interrupted()) {
+                isForced = true;
+            }
         }
 
-        var result = GetBidFromSystemBranches(hand, partnerDefences);
-        if (result == null && partnerDefences.OneRoundForcing) {
-            result = TrueNaturalResponse(hand, partnerDefences, Evaluator.FromPartner(partnerDefences, hand, Auction, Position));
+        var result = GetBidFromSystemBranches(hand, branches.Keys);
+
+        // jak można z systemu to z sytemu
+        if (result != null) {
+            if (result.GameForcing) {
+                Goal = BiddingGoal.Gf; // Żebym w następnym kółku nie spasował po moim własnym GF
+            }
+            return result;
+        }
+
+        if (isForced) {
+            return GetNaturalBid(hand, branches, isForced: isForced);
+        }
+
+        // Może zwrócić null, jak nic nie znajdzie lub jest confusing!
+        result = GetNaturalBid(hand, branches);
+        if (result.Type != BidType.Pass) { // debug
+            return result;
         }
 
         return result;
@@ -145,20 +206,55 @@ public partial class BidEngine : IBidInput {
             );
 
         // Potencjalne przeście na GF
-        var gameForcing = branches.Keys.All(e => e.IsGameForcing());
-        var anyNotGameForcing = branches.Keys.Any(e => !e.IsGameForcing());
+        //var anyNotGameForcing = branches.Keys.Any(e => !e.IsGameForcing()); // Po co to jest?
 
-        if (gameForcing) {
-            Goal = BiddingGoal.Gf;
+        // Potencjalne przeście na GF lub na jedno kółko
+        var isForced = false;
+        if (Goal == BiddingGoal.Gf) {
+            isForced = true; // Było GF zostaje GF
+        } else if (branches.Count > 0) {
+            // Czy odzywka partnera forsuje dalszą licytację
+            if (branches.Keys.All(e => e.IsGameForcing())) {
+                Goal = BiddingGoal.Gf;
+                isForced = true;
+            } else if (branches.Keys.All(e => e.OneRoundForcing == true) && !Auction.Interrupted()) {
+                isForced = true;
+            }
         }
 
-        var systemBid = GetBidFromSystemBranches(hand, branches.Keys);
-        if (systemBid != null || Goal == BiddingGoal.None) {
-            return systemBid;
+        // Potencjalne przejście na grę premiową
+        //var premiumGameBranches = branches.Where(e => e.Value.Partner.Points.Lower > 30 - hand.Points);
+        //if (branches.Count() != 0 && premiumGameBranches.Count() == branches.Count()) { // Gra premiowa wynika z systemu
+        //    Goal = BiddingGoal.Premium;
+        //}
+        //else if (false) { // Gra premiowa wynika z freestyle'u?
+
+        //}
+
+        var result = GetBidFromSystemBranches(hand, branches.Keys);
+        //if (systemBid != null || Goal == BiddingGoal.None) { // Dlaczego?
+        //    return systemBid;
+        //}
+
+        // jak można z systemu to z sytemu
+        if (result != null) {
+            if (result.GameForcing) {
+                Goal = BiddingGoal.Gf; // Żebym w następnym kółku nie spasował po moim własnym GF
+            }
+            return result;
         }
 
-        // Tutaj celem może być jedynie: Game, GameForcing, PremiumContract.
-        return GetNaturalBid(hand, branches);
+        if (isForced) {
+            return GetNaturalBid(hand, branches, isForced: isForced);
+        }
+
+        // Tutaj celem może być jedynie: Game, PremiumContract.
+        result = GetNaturalBid(hand, branches);
+        if (result.Type != BidType.Pass) { // debug
+            return result;
+        }
+
+        return result;
     }
 
 
@@ -169,7 +265,8 @@ public partial class BidEngine : IBidInput {
         var partnerBid = Auction.GetLastPlayerBid(PartnerPosition, passAsNull: true);
 
         if (selectedBidNode?.IsBidLegal(Auction) == false) {
-            Console.WriteLine("Illegal bid.");
+            throw new Exception("Nielegalna odzywka ma zostać zgłoszona!");
+            //Console.WriteLine("Illegal bid.");
         }
 
         if (selectedBidNode == null) {
@@ -218,24 +315,42 @@ public partial class BidEngine : IBidInput {
 
             // Oponenci i partner coś mówili!
             PartnerOpened = true;
-            return PlayInDefence(hand, lastOpponentsBid, lastPartnersBid) ?? PlayInOffence(hand, lastPartnersBid);
+            var bidToDefendAgainst = Auction.DefendingAgainst(Position); // Czy jest się przed czym bronić?
+            if (bidToDefendAgainst != null) {
+                return PlayInDefence(hand, bidToDefendAgainst, lastPartnersBid) ?? PlayInOffence(hand, lastPartnersBid); // Oni otworzyli pierwsi
+            }
+
+            return PlayInOffence(hand, lastPartnersBid); // My otworzyliśmy pierwsi
         }
 
         // Tutaj licytacja na pewno trwała dłużej niż jedno kółko.
         DetermineGoal();
 
+        var lastOwnBid = OwnBidsHistory.LastOrDefault();
+
         // Sprawdzamy drzewka obronne, na wszelki wypadek (szczególnie pod kątem dwukolorówek Michaelsa).
         if (Goal == BiddingGoal.Pass && lastOpponentsBid != null) {
-            return PlayInDefence(hand, lastOpponentsBid);
+            BidNode? defResponse = null;
+            if (lastPartnersBid == null) {
+                defResponse = PlayInDefence(hand, lastOpponentsBid);
+                if (defResponse != null && defResponse?.Type != BidType.Pass) {
+                    return defResponse;
+                }
+                return defResponse;
+            }
+
+            var bidToDefendAgainst = Auction.DefendingAgainst(Position); // Czy jest się przed czym bronić?
+            if (bidToDefendAgainst != null) {
+                defResponse = PlayInDefence(hand, bidToDefendAgainst, lastPartnersBid!, lastOwnBid);
+                if (defResponse != null && defResponse?.Type != BidType.Pass) {
+                    return defResponse;
+                }
+                return defResponse;
+            }
         }
 
         // TODO
         if (Goal == BiddingGoal.MinLoss || Goal == BiddingGoal.Penalty) {
-            return null;
-        }
-
-        // TODO
-        if (Goal == BiddingGoal.Premium) {
             return null;
         }
 
@@ -248,23 +363,31 @@ public partial class BidEngine : IBidInput {
             return null;
         }
 
-        // Odpowiedź wg systemu na odzywkę partnera.
-        var lastOwnBid = OwnBidsHistory.LastOrDefault();
+        // TODO
+        if (Goal == BiddingGoal.Premium) {
+            return PlayInOffence(hand, lastPartnersBid, lastOwnBid); //tmp
+        }
 
         // Jeżeli w drugim kółku wciąż nie wiadomo, kto jest grającym, to szukamy najpierw odpowiedzi w drzewku obron.
         if (Goal == BiddingGoal.None && lastOpponentsBid != null && lastPartnersBid != null) {
-            return PlayInDefence(hand, lastOpponentsBid, lastPartnersBid) ?? PlayInOffence(hand, lastPartnersBid, lastOwnBid);
+            var bidToDefendAgainst = Auction.DefendingAgainst(Position); // Czy jest się przed czym bronić?
+
+            return PlayInOffence(hand, lastPartnersBid);
         }
 
         var bidSequence = Auction.GetBidSequence().ToArray();
         var lastOpponentSubmition = Auction.GetLastSubmittedBid(RightOpponentPosition) ?? Auction.GetLastSubmittedBid(LeftOpponentPosition);
 
-        var result = PlayInOffence(hand, lastPartnersBid, lastOwnBid);
+        var result = PlayInOffence(hand, lastPartnersBid!, lastOwnBid);
         if (result == null && lastOpponentSubmition != null) {
-            var defenceResult = PlayInDefence(hand, lastOpponentSubmition, lastPartnersBid);
-            if (defenceResult != null) {
-                Goal = BiddingGoal.Game;
-                result = defenceResult;
+            var bidToDefendAgainst = Auction.DefendingAgainst(Position);
+            if (bidToDefendAgainst != null) { // Czy jest się przed czym bronić?
+                var defenceResult = PlayInDefence(hand, bidToDefendAgainst, lastPartnersBid!, lastOwnBid);
+
+                if (defenceResult != null) {
+                    Goal = BiddingGoal.Game;
+                    result = defenceResult;
+                }
             }
         }
 

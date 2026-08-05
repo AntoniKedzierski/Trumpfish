@@ -1,5 +1,6 @@
+import { Select } from '@/components/Select';
 import { bidColors, bidTypes, toNumber, type NumberRange } from '@/api/models';
-import { bidColorLabels, bidTypeLabels, type EditableBidNode } from '../model';
+import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
 
 type RangeField = 'pointsRange' | 'clubsCardRange' | 'diamondsCardRange' | 'heartsCardRange' | 'spadesCardRange';
 type StopsField = 'clubsStops' | 'diamondsStops' | 'heartsStops' | 'spadesStops';
@@ -49,18 +50,14 @@ export function BidEditorPanel({ node, onChange }: BidEditorPanelProps) {
       <input type="number" min={1} max={7} value={toNumber(node.value) ?? ''} onChange={(event) => onChange({ value: event.target.value === '' ? null : Number(event.target.value) })} />
 
       <label>Kolor</label>
-      <select value={node.color ?? 'NoColor'} onChange={(event) => onChange({ color: event.target.value as EditableBidNode['color'] })}>
-        {bidColors.map((color) => (
-          <option key={color} value={color}>{bidColorLabels[color]}</option>
-        ))}
-      </select>
+      <Select
+        value={node.color ?? 'NoColor'}
+        options={bidColors.map((color) => ({ value: color, label: bidColorLabels[color], labelClassName: suitClassName({ type: 'Submit', color }) }))}
+        onChange={(color) => onChange({ color })}
+      />
 
       <label>Typ</label>
-      <select value={node.type ?? 'Submit'} onChange={(event) => onChange({ type: event.target.value as EditableBidNode['type'] })}>
-        {bidTypes.map((type) => (
-          <option key={type} value={type}>{bidTypeLabels[type]}</option>
-        ))}
-      </select>
+      <Select value={node.type ?? 'Submit'} options={bidTypes.map((type) => ({ value: type, label: bidTypeLabels[type] }))} onChange={(type) => onChange({ type })} />
 
       <label>Znaczenie</label>
       <input value={node.condition ?? ''} onChange={(event) => onChange({ condition: event.target.value })} />

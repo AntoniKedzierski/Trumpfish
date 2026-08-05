@@ -14,13 +14,28 @@ body {
   font-size: 14px;
   font-weight: 300;
   line-height: 1.5;
-  background: var(--carbon-black);
-  color: var(--pearl-aqua);
+  background: var(--surface-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+/* A very soft accent wash in the corners keeps the flat dark background from looking dead. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 600px at 12% -10%, rgb(79 186 180 / 7%), transparent 60%),
+    radial-gradient(900px 520px at 92% 4%, rgb(255 181 21 / 5%), transparent 62%);
 }
 
 a {
-  color: var(--tropical-teal);
+  color: var(--accent);
   text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 a:hover {
@@ -34,35 +49,117 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
-  color: var(--pearl-aqua);
-  background: var(--onyx);
-  border: 1px solid var(--graphite);
-  border-radius: 4px;
-  padding: 6px 12px;
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+input:hover:not(:disabled),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Number fields are plain text boxes here: the native spinners are tiny, unthemeable and never used. */
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type='checkbox'] {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   flex: none;
   margin: 0;
   padding: 0;
-  accent-color: var(--tropical-teal);
+  accent-color: var(--accent);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+input[type='checkbox']:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+select {
+  cursor: pointer;
 }
 
 button {
   cursor: pointer;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
+/* Buttons animate on hover with a slight colour lift, and settle back down on press. */
 button:hover:not(:disabled) {
-  border-color: var(--tropical-teal);
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  color: var(--pearl-aqua);
+}
+
+button:active:not(:disabled) {
+  background: var(--accent-soft);
+  transition-duration: var(--duration-fast);
 }
 
 button:disabled {
-  color: var(--graphite);
-  cursor: default;
+  color: var(--text-muted);
+  background: var(--surface-base);
+  border-color: var(--border-subtle);
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 textarea {
   resize: vertical;
+  line-height: 1.5;
+}
+
+/* Shared page transition: every routed view fades and settles into place. */
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Users who prefer reduced motion keep the colour feedback but lose the movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

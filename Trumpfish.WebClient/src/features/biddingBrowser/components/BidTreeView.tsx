@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Chevron } from '@/components/Select';
 import { bidCode, suitClassName, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
 import { childPath, samePath } from '../tree';
 
@@ -37,27 +38,37 @@ interface TreeBranchProps {
 
 function TreeBranch({ label, target, children_, selection, onSelect, initiallyExpanded = false }: TreeBranchProps) {
   const [expanded, setExpanded] = useState(initiallyExpanded);
+  // Children mount on the first expand and then stay mounted, so the collapse can animate instead of snapping shut.
+  const [mounted, setMounted] = useState(initiallyExpanded);
   const selected = samePath(selection, target);
+  const leaf = children_.length === 0;
+
+  const toggle = () => {
+    if (leaf) {
+      return;
+    }
+
+    setMounted(true);
+    setExpanded((current) => !current);
+  };
 
   return (
     <li>
-      <div
-        className={`tree-row${selected ? ' selected' : ''}`}
-        onClick={() => onSelect(target)}
-        onDoubleClick={() => { if (children_.length > 0) { setExpanded(!expanded); } }}
-      >
-        <button type="button" className="tree-toggle" disabled={children_.length === 0} onClick={(event) => { event.stopPropagation(); setExpanded(!expanded); }}>
-          {children_.length === 0 ? '·' : expanded ? '▾' : '▸'}
+      <div className={`tree-row${selected ? ' selected' : ''}`} onClick={() => onSelect(target)} onDoubleClick={toggle}>
+        <button type="button" className={`tree-toggle${expanded ? ' expanded' : ''}${leaf ? ' leaf' : ''}`} disabled={leaf} onClick={(event) => { event.stopPropagation(); toggle(); }} aria-label={expanded ? 'Zwiń' : 'Rozwiń'}>
+          {leaf ? <span className="tree-leaf-dot" aria-hidden="true" /> : <Chevron />}
         </button>
         {label}
       </div>
 
-      {expanded && children_.length > 0 && (
-        <ul>
-          {children_.map((node, index) => (
-            <TreeBranch key={index} label={<BidLabel node={node} />} target={childPath(target, index)} children_={node.nextBids} selection={selection} onSelect={onSelect} />
-          ))}
-        </ul>
+      {mounted && !leaf && (
+        <div className={`tree-children${expanded ? ' expanded' : ''}`}>
+          <ul>
+            {children_.map((node, index) => (
+              <TreeBranch key={index} label={<BidLabel node={node} />} target={childPath(target, index)} children_={node.nextBids} selection={selection} onSelect={onSelect} />
+            ))}
+          </ul>
+        </div>
       )}
     </li>
   );

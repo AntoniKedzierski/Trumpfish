@@ -1,0 +1,131 @@
+.select {
+  position: relative;
+  display: inline-block;
+  min-width: 0;
+}
+
+.select-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+}
+
+.select-field.open {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-value.placeholder {
+  color: var(--text-muted);
+}
+
+.select-chevron {
+  flex: none;
+  font-size: 15px;
+  color: var(--text-muted);
+  transform: rotate(90deg);
+  transition:
+    transform var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out);
+}
+
+.select-field:hover:not(:disabled) .select-chevron,
+.select-field.open .select-chevron {
+  color: var(--accent);
+}
+
+.select-field.open .select-chevron {
+  transform: rotate(-90deg);
+}
+
+.select-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  max-height: 240px;
+  overflow: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  transform-origin: top center;
+  animation: select-open var(--duration-normal) var(--ease-out) both;
+}
+
+.select-list.drop-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+  transform-origin: bottom center;
+  animation-name: select-open-up;
+}
+
+@keyframes select-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes select-open-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scaleY(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.select-option {
+  position: relative;
+  padding: 8px 12px 8px 26px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.select-option.active {
+  background: var(--surface-hover);
+  color: var(--pearl-aqua);
+}
+
+.select-option.selected {
+  color: var(--accent);
+}
+
+/* Checkmark for the committed value, drawn in CSS so options stay a single element. */
+.select-option.selected::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 4px;
+  height: 8px;
+  margin-top: -3px;
+  border: solid currentcolor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

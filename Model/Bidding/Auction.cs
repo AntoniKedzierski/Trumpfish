@@ -1,4 +1,4 @@
-﻿using Model.Bidding.Bids;
+using Model.Bidding.Bids;
 using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json.Converters;
@@ -134,6 +134,53 @@ public class Auction {
         return null;
     }
 
+
+    /// <summary>
+    /// Znajduje na jaką odzywkę oponentów weszliśmy w obronę
+    /// </summary>
+    /// <returns>
+    /// Bid oponentów bezpośrednio przed pierwszym nie-pasem w parze obrońców (wejściem w obronę)
+    /// </returns>
+    public Bid? DefendingAgainst(PlayerPosition currentDefender) {
+        var partner = currentDefender.GetPartner();
+        var opener = (PlayerPosition)(((int)CurrentBidder - AuctionHistory.Count) % 4);
+        if (opener < 0) {
+            opener = (PlayerPosition)((int)opener + 4);
+        }
+
+        for (int i = 0; i < AuctionHistory.Count; i++) {
+            var bidder = GetBidder(i);
+
+            bool isDefendingPair =
+                bidder == currentDefender ||
+                bidder == partner;
+
+            if (!isDefendingPair) {
+                continue;
+            }
+
+            // To nie może być pierwsza odzywka w licytacji
+            if (i == 0) {
+                continue;
+            }
+
+            if (AuctionHistory[i].Type == BidType.Pass) {
+                continue;
+            }
+
+            // Wyjątek, gdzie goal nie był określony po pierwszym kółku (lub dalszym, ale to raczej nie), więc w drugim weszliśmy do obron, ale to my pierwsi otworzyliśmy licytację
+            // Jeżeli tego nie będzie, to odzywka obronna oponentów zostanie potraktowana jako ich normalne otwarcie
+            if (AuctionHistory.All(e => e.Type == BidType.Submit) && (currentDefender == opener || partner == opener)) {
+                continue;
+            }
+
+            return AuctionHistory[i - 1];
+        }
+
+        return null;
+    }
+
+
     public bool PlayerOpenedAuction(PlayerPosition bidderPosition) {
         for (int i = 0; i < AuctionHistory.Count; i++) {
             if (GetBidder(i) == bidderPosition) {
@@ -186,6 +233,21 @@ public class Auction {
                 yield return bid;
             }
         }
+    }
+
+
+
+    /// <summary>
+    /// Czy wystąpiła interwencja, ale tylko bezpośrednio przed currentBidder!
+    /// </summary>
+    /// <returns></returns>
+    public bool Interrupted(bool onlySubmit = false) {
+        var lastBid = AuctionHistory.LastOrDefault();
+
+        return lastBid != null && (onlySubmit
+            ? lastBid.Type == BidType.Submit
+            : lastBid.Type != BidType.Pass
+        );
     }
 
 

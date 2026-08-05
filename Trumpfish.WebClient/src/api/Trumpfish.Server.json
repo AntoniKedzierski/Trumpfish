@@ -197,6 +197,65 @@
           }
         }
       }
+    },
+    "/api/simulation/bidding": {
+      "post": {
+        "tags": [
+          "Simulation"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -454,6 +513,31 @@
           "Redouble"
         ]
       },
+      "CardColor": {
+        "enum": [
+          "Clubs",
+          "Diamonds",
+          "Hearts",
+          "Spades"
+        ]
+      },
+      "CardValue": {
+        "enum": [
+          "Two",
+          "Three",
+          "Four",
+          "Five",
+          "Six",
+          "Seven",
+          "Eight",
+          "Nine",
+          "Ten",
+          "Jack",
+          "Queen",
+          "King",
+          "Ace"
+        ]
+      },
       "NumberRange": {
         "type": "object",
         "properties": {
@@ -476,6 +560,14 @@
             "format": "int32"
           }
         }
+      },
+      "PlayerPosition": {
+        "enum": [
+          "North",
+          "East",
+          "South",
+          "West"
+        ]
       },
       "ProblemDetails": {
         "type": "object",
@@ -532,6 +624,346 @@
           }
         }
       },
+      "SimulationBid": {
+        "required": [
+          "index",
+          "bidder",
+          "type",
+          "color",
+          "value",
+          "isFromSystem",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "bidder": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "type": {
+            "$ref": "#/components/schemas/BidType"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isFromSystem": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "SimulationCard": {
+        "required": [
+          "value",
+          "color",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/CardValue"
+          },
+          "color": {
+            "$ref": "#/components/schemas/CardColor"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "SimulationContract": {
+        "required": [
+          "passed",
+          "declarer",
+          "value",
+          "color",
+          "isDoubled",
+          "isRedoubled",
+          "label",
+          "pairPoints",
+          "trumpCount"
+        ],
+        "type": "object",
+        "properties": {
+          "passed": {
+            "type": "boolean"
+          },
+          "declarer": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PlayerPosition"
+              }
+            ]
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "isDoubled": {
+            "type": "boolean"
+          },
+          "isRedoubled": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          },
+          "pairPoints": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "trumpCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SimulationDealRequest": {
+        "required": [
+          "dealer",
+          "hands"
+        ],
+        "type": "object",
+        "properties": {
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "hands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationHandRequest"
+            }
+          }
+        }
+      },
+      "SimulationDealResult": {
+        "required": [
+          "index",
+          "dealer",
+          "hands",
+          "bidding",
+          "contract",
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "hands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationHand"
+            }
+          },
+          "bidding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationBid"
+            }
+          },
+          "contract": {
+            "$ref": "#/components/schemas/SimulationContract"
+          },
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SimulationHand": {
+        "required": [
+          "position",
+          "cards",
+          "points",
+          "pointsNt",
+          "spades",
+          "hearts",
+          "diamonds",
+          "clubs"
+        ],
+        "type": "object",
+        "properties": {
+          "position": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationCard"
+            }
+          },
+          "points": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "pointsNt": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "spades": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "hearts": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "diamonds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "clubs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SimulationHandRequest": {
+        "required": [
+          "position",
+          "cards"
+        ],
+        "type": "object",
+        "properties": {
+          "position": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationCard"
+            }
+          }
+        }
+      },
+      "SimulationRequest": {
+        "required": [
+          "systemName",
+          "deals"
+        ],
+        "type": "object",
+        "properties": {
+          "systemName": {
+            "type": "string"
+          },
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationDealRequest"
+            }
+          }
+        }
+      },
+      "SimulationResponse": {
+        "required": [
+          "systemName",
+          "dealCount",
+          "failedCount",
+          "deals"
+        ],
+        "type": "object",
+        "properties": {
+          "systemName": {
+            "type": "string"
+          },
+          "dealCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "failedCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationDealResult"
+            }
+          }
+        }
+      },
       "ValidationIssue": {
         "required": [
           "severity",
@@ -569,6 +1001,9 @@
   "tags": [
     {
       "name": "BiddingSystems"
+    },
+    {
+      "name": "Simulation"
     }
   ]
 }

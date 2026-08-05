@@ -1,3 +1,4 @@
+import { Select } from '@/components/Select';
 import type { BiddingSystemSummary } from '@/api/models';
 
 interface ToolbarProps {
@@ -41,12 +42,14 @@ export function Toolbar(props: ToolbarProps) {
       <button type="button" onClick={props.onNew}>Nowy</button>
       <button type="button" onClick={props.onSave} disabled={busy}>Zapisz{dirty ? ' *' : ''}</button>
 
-      <select value="" onChange={(event) => event.target.value !== '' && props.onLoad(event.target.value)} disabled={busy}>
-        <option value="">Wczytaj z serwera…</option>
-        {savedSystems.map((system) => (
-          <option key={system.name} value={system.name}>{system.name} ({system.bidCount})</option>
-        ))}
-      </select>
+      <Select
+        className="load-select"
+        value=""
+        placeholder="Wczytaj z serwera…"
+        disabled={busy}
+        options={savedSystems.map((system) => ({ value: system.name ?? '', label: `${system.name} (${system.bidCount})` }))}
+        onChange={(name) => props.onLoad(name)}
+      />
 
       <span className="separator" />
 

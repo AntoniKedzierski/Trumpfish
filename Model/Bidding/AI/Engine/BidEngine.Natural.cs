@@ -1,4 +1,4 @@
-﻿using Model.Bidding.AI.Eval;
+using Model.Bidding.AI.Eval;
 using Model.Bidding.Bids;
 using Model.Enums;
 using Model.Helpers;
@@ -13,78 +13,7 @@ namespace Model.Bidding.AI.Engine;
 
 public partial class BidEngine {
 
-    /// <summary>
-    /// Otwarcie, tylko w pierwszym kółku.
-    /// </summary>
-    private BidNode TrueNaturalOpening(Hand hand) {
-        var longestColor = hand.GetLongestColor();
-        var strongestColors = hand.GetStrongestColors();
-
-        // Piątkę zawsze zgłaszamy.
-        if (hand.Points >= 12 && hand.Points <= 17 && hand.CountCards(longestColor) >= 5) {
-            // Chyba, że jest młodsza, bez figur.
-            if (longestColor.IsMajor() || hand.PointsCount(longestColor) > 0) {
-                return BidNode.SubmitLowest(Auction, longestColor.ToBidColor(), 2);
-            }
-        }
-
-        // Zgłaszanie BA
-        if (hand.PointsNt >= 15 && hand.PointsNt <= 17) {
-            return BidNode.SubmitLowest(Auction, BidColor.NoTrump, 1);
-        }
-
-        // Silne 2 trefle
-        if (hand.Points >= 18 && hand.PointsNt <= 20) {
-            return BidNode.SubmitLowest(Auction, BidColor.Clubs, 2);
-        }
-
-        if (hand.PointsNt >= 21 && hand.PointsNt <= 23) {
-            return Auction.GetLowestLegalValue(BidColor.NoTrump) >= 3
-                ? BidNode.SubmitLowest(Auction, BidColor.NoTrump, 3)
-                : BidNode.Submit(2, BidColor.NoTrump);
-        }
-
-        if (hand.PointsNt >= 24) {
-            return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump);
-        }
-
-        // Słabe dwa
-        if (hand.Points >= 7 && hand.Points <= 11 && hand.CountCards(longestColor) == 6) {
-            return BidNode.SubmitOrPass(Auction, 2, longestColor.ToBidColor());
-        }
-
-        if (hand.CountCards(longestColor) >= 7 && hand.PointsCount(longestColor) >= 3) {
-            return BidNode.SubmitOrPass(Auction, 3, longestColor.ToBidColor());
-        }
-
-        return BidNode.Pass();
-    }
-
-
-    /// <summary>
-    /// Odpowiedź, tylko w pierwszym kółku.
-    /// </summary>
-    private BidNode TrueNaturalResponse(Hand hand, Bid partnerBid) {
-        var tableEvaluations = TranslateNaturalOpening(partnerBid).ToDictionary(
-            e => e,
-            e => Evaluator.FromPartner(e, hand)
-        );
-
-        var chosenBidNodes = new List<BidNode>();
-        foreach (var branch in tableEvaluations) {
-            var chosenBidNode = branch.Key.Type == BidType.Pass
-                ? TrueNaturalOpening(hand)
-                : TrueNaturalResponse(hand, branch.Key, branch.Value);
-
-            if (chosenBidNode.Type != BidType.Pass) {
-                chosenBidNodes.Add(chosenBidNode);
-            }
-        }
-
-        return GetLowestSubmitOrPass(chosenBidNodes);
-    }
-
-
+    
     /// <summary>
     /// Odpowiedź w dowolnym momencie, partner niespasował.
     /// </summary>
@@ -294,8 +223,10 @@ public partial class BidEngine {
         }
 
         // Partner zgłosił inny kolor na nasz kolor (nie nasze BA).
+        // W naturalnej licytacji wszystki super, ale w systemie nie ma preferencji zgłaszania fitu, np. 12+ PC, 5+ kart w innym kolorze, możliwy fit w kolorze otwarcia!
         if (lastOwnBidColor.IsColorGame() && partnerBidNode.Color.IsColorGame()) {
             // Inny najlepszy kolor
+            // Potencjalny problem, partner mógł nie zgłosić fitu od razu, bo system priorytezuje wejście własnym kolorem przy 12+ PC (żeby było GF?)
             var bestFitColor = combinedHand.FindFit(lastOwnBidColor.ToCardColor());
 
             // One-over-one, słabe wejście, niezobowiązujące.
@@ -367,7 +298,7 @@ public partial class BidEngine {
             // Na silnej ręce obowiązują wyższe limity.
             return BidNode.SubmitLowest(Auction, bestFitColor, strongHand ? 3 : 2);
         }
-        
+
         // Partner zgłosił BA na nasz kolor.
         if (lastOwnBidColor.IsColorGame() && partnerBidNode.Color.IsNoTrumpGame()) {
             // Z przeskokiem - partner jest mocny
@@ -504,20 +435,64 @@ public partial class BidEngine {
         return BidNode.Pass();
     }
 
-
-    private BidNode GetNaturalBid(Hand hand, Dictionary<BidNode, TableEvaluation> partnerBranches) {
+    /// <summary>
+    /// Zwraca naturalną odpowiedź, na podstawie możliwych gałęzi partnera
+    /// </summary>
+    /// <returns></returns>
+    private BidNode GetNaturalBid(Hand hand, Dictionary<BidNode, TableEvaluation> partnerBranches, bool isForced = false) {
         var chosenBidNodes = new List<BidNode>();
-        foreach (var branch in partnerBranches) {
-            var chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value).AssertFreestyleIsntConfusing(branch.Key);
+        //foreach (var branch in partnerBranches) {
+        //    BidNode? chosenBidNode = null;
+        //    if (Auction.Interrupted(onlySubmit: true)) {
+        //        chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value); // Odpowiedzi po interwencji mogą być confusing!!!
+        //        // TODO: żeby partner źle nie zrozumiał naszej odpowiedzi po ich interwencji
+        //    } else {
+        //        chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value).AssertFreestyleIsntConfusing(branch.Key);
+        //    }
 
-            if (chosenBidNode != null && chosenBidNode.Type != BidType.Pass) {
-                chosenBidNodes.Add(chosenBidNode);
+        //    if (chosenBidNode != null && chosenBidNode.Type != BidType.Pass) {
+        //        chosenBidNodes.Add(chosenBidNode);
+        //    }
+        //}
+
+        var BidNodeToSubmit = GetLowestSubmitOrPass(chosenBidNodes);
+        if (isForced && BidNodeToSubmit.Type == BidType.Pass) {
+            return ForcedToBid(hand);
+        }
+
+        return BidNodeToSubmit;
+    }
+
+    /// <summary>
+    /// Należy wywołać tą funckję tylko jako ostateczność! Zakłada, że nie ma fitu, bo wtedy coś wcześniej zwróciłoby odpowiednią odzywkę?
+    /// TableEvaluation lub freestyle nie działa, trafiamy kiedy są punkty i fit!!
+    /// Zwraca pass tylko i wyłącznie, jeżeli poprzednia odzywka partnera jest rekontrą lub robi partię.
+    /// </summary>
+    private BidNode ForcedToBid(Hand hand) {
+        if (Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false)!.Type == BidType.Redouble || Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false)!.MakesGame()) {
+            return BidNode.Pass();
+        }
+
+        // Najsilniejszy kolor, którego jeszcze nie zgłaszaliśmy i ma on więcej niz 3 karty
+        BidNode? resultInColor = null;
+        foreach (CardColor color in hand.GetStrongestColors()) {
+            if (OwnBidsHistory.All(e => e.Color != color.ToBidColor()) && hand.OfColor(color).Count() > 3) {
+                resultInColor = BidNode.SubmitLowest(Auction, color.ToBidColor());
             }
         }
 
-        return GetLowestSubmitOrPass(chosenBidNodes);
-    }
+        // Lepiej zgłości 3 BA niż NOWY kolor na wysokości 4
+        if (resultInColor?.Value > 3) {
+            if (Auction.GetLowestLegalValue(BidColor.NoTrump) == 3) {
+                return BidNode.Submit(3, BidColor.NoTrump);
+            } else if (resultInColor != null) {
+                return resultInColor;
+            }
+        }
 
+        // Nie ma fitu z partnerem, zgłosiliśmy już swoje dobre kolory, więc mozliwie najniższe BA i niech on decyduje
+        return BidNode.SubmitLowest(Auction, BidColor.NoTrump);
+    }
 
     private BidNode GetLowestSubmitOrPass(IEnumerable<BidNode> bidCandidates) {
         return bidCandidates
@@ -526,112 +501,5 @@ public partial class BidEngine {
             .ThenByDescending(e => (int)e.Color)
             .FirstOrDefault()
             ?? BidNode.Pass();
-    }
-
-
-
-
-    private static IEnumerable<BidNode> TranslateNaturalOpening(Bid partnerBid) {
-        if (partnerBid.Type == BidType.Pass) {
-            yield return new BidNode(BidType.Pass, new(12, 14), new(0, 4), new(0, 4), new(0, 4), new(0, 4));
-            yield return new BidNode(BidType.Pass, new(0, 11), new(0, 5), new(0, 5), new(0, 5), new(0, 5));
-            yield return new BidNode(BidType.Pass, new(0, 6), new(0, 6), new(0, 6), new(0, 6), new(0, 6));
-            yield return new BidNode(BidType.Pass, new(0, 3), new(0, 7), new(0, 7), new(0, 7), new(0, 7));
-            yield break;
-        }
-
-        if (partnerBid.Value == 1) {
-            switch (partnerBid.Color) {
-                case BidColor.NoTrump:
-                    yield return new BidNode(1, BidColor.NoTrump, new(15, 18), new(2, 4), new(2, 4), new(2, 5), new(2, 5));
-                    break;
-                case BidColor.Spades:
-                    yield return new BidNode(1, BidColor.Spades, new(12, 17), new(5, null), new(), new(), new());
-                    break;
-                case BidColor.Hearts:
-                    yield return new BidNode(1, BidColor.Hearts, new(12, 17), new(), new(5, null), new(), new());
-                    break;
-                case BidColor.Diamonds:
-                    yield return new BidNode(1, BidColor.Diamonds, new(12, 17), new(), new(), new(5, null), new());
-                    break;
-                case BidColor.Clubs:
-                    yield return new BidNode(1, BidColor.Clubs, new(12, 17), new(), new(), new(), new(5, null));
-                    break;
-            }
-            yield break;
-        }
-
-        if (partnerBid.Value == 2) {
-            switch (partnerBid.Color) {
-                case BidColor.NoTrump:
-                    yield return new BidNode(1, BidColor.NoTrump, new(19, 23), new(2, 4), new(2, 4), new(2, 5), new(2, 5));
-                    break;
-                case BidColor.Spades:
-                    yield return new BidNode(2, BidColor.Spades, new(7, 11), new(6, 6), new(), new(), new());
-                    break;
-                case BidColor.Hearts:
-                    yield return new BidNode(2, BidColor.Hearts, new(7, 11), new(), new(6, 6), new(), new());
-                    break;
-                case BidColor.Diamonds:
-                    yield return new BidNode(2, BidColor.Diamonds, new(7, 11), new(), new(), new(6, 6), new());
-                    break;
-                case BidColor.Clubs:
-                    yield return new BidNode(2, BidColor.Clubs, new(18, 20), new(), new(), new(), new(6, 6));
-                    break;
-            }
-            yield break;
-        }
-
-        if (partnerBid.Value == 3) {
-            switch (partnerBid.Color) {
-                case BidColor.NoTrump:
-                    yield return new BidNode(1, BidColor.NoTrump, new(24, null), new(2, 4), new(2, 4), new(2, 5), new(2, 5));
-                    break;
-                case BidColor.Spades:
-                    yield return new BidNode(3, BidColor.Spades, new(3, 11), new(7, null), new(), new(), new());
-                    break;
-                case BidColor.Hearts:
-                    yield return new BidNode(3, BidColor.Hearts, new(3, 11), new(), new(7, null), new(), new());
-                    break;
-                case BidColor.Diamonds:
-                    yield return new BidNode(3, BidColor.Diamonds, new(3, 11), new(), new(), new(7, null), new());
-                    break;
-                case BidColor.Clubs:
-                    yield return new BidNode(3, BidColor.Clubs, new(3, 11), new(), new(), new(), new(7, null));
-                    break;
-            }
-            yield break;
-        }
-    }
-
-
-    public IEnumerable<BidNode> TranslateNaturalResponse(Hand hand, BidNode lastOwnBidNode, Bid partnerBid) {
-        // partnerPoints <= 18 - points 
-        if (partnerBid.Type == BidType.Pass) {
-            yield break;
-        }
-
-        // Kontry są karne, nic nie tłumaczą.
-        if (partnerBid.Type != BidType.Submit) {
-            yield break;
-        }
-
-        // Sign-off.
-        if (partnerBid.MakesGame()) {
-            yield break;
-        }
-
-        // Mamy fit, nie mamy partii.
-        if (lastOwnBidNode.Color == partnerBid.Color) {
-            var partnerLowestPossibleBid = Auction.GetLowestLegalValue(partnerBid.Color, 2);
-
-            var valueDiff = partnerBid.Value - lastOwnBidNode.Value;
-            var possibleDiff = partnerBid.Value - partnerLowestPossibleBid;
-
-            // Powiedział minimalnie jak mógł - strongHand!
-            if (valueDiff == possibleDiff) {
-
-            }
-        }
     }
 }

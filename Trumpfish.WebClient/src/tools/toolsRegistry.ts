@@ -16,6 +16,13 @@ export const tools: ToolDescriptor[] = [
     enabled: true,
   },
   {
+    id: 'simulation',
+    title: 'Symulacja licytacji',
+    description: 'Wygeneruj rozdania, pozwól silnikowi rozegrać licytację i przejrzyj ręce, punkty oraz przebieg licytacji.',
+    route: '/tools/simulation',
+    enabled: true,
+  },
+  {
     id: 'play-vs-ai',
     title: 'Gra z AI',
     description: 'Rozegraj licytację i rozgrywkę przeciwko silnikowi Trumpfish. W przygotowaniu.',
