@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Lato', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  background: var(--carbon-black);
+  color: var(--pearl-aqua);
+}
+
+a {
+  color: var(--tropical-teal);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--pearl-aqua);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: var(--pearl-aqua);
+  background: var(--onyx);
+  border: 1px solid var(--graphite);
+  border-radius: 4px;
+  padding: 6px 12px;
+}
+
+input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--tropical-teal);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--tropical-teal);
+}
+
+button:disabled {
+  color: var(--graphite);
+  cursor: default;
+}
+
+textarea {
+  resize: vertical;
+}

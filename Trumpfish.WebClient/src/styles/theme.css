@@ -1,0 +1,68 @@
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+/* Palette ported 1:1 from BiddingBrowser/Styles/Fonts.xaml. */
+:root {
+  --onyx: #191919;
+  --carbon-black: #1c1c1c;
+  --graphite: #333333;
+  --saddle-brown: #7a4024;
+  --spicy-orange: #c6511a;
+  --amber-earth: #e38318;
+  --amber-flame: #ffb515;
+  --tropical-teal: #4fbab4;
+  --pearl-aqua: #9bd2cf;
+  --alabaster-grey: #a8a8a8;
+  --no-trump: #e46ee0;
+  --spades: #3b65c7;
+  --hearts: #eb2727;
+  --diamonds: #ff9e28;
+  --clubs: #0ab357;
+  --white: #fdfdfd;
+  --light-gray: #d0d0d0;
+}
+
+.suit.clubs {
+  color: var(--clubs);
+}
+
+.suit.diamonds {
+  color: var(--diamonds);
+}
+
+.suit.hearts {
+  color: var(--hearts);
+}
+
+.suit.spades {
+  color: var(--spades);
+}
+
+.suit.notrump {
+  color: var(--no-trump);
+}

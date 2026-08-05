@@ -1,0 +1,324 @@
+﻿<UserControl 
+    x:Class="BiddingBrowser.BiddingTree.BiddingTree"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:BiddingBrowser.BiddingTree" 
+    xmlns:b="clr-namespace:BiddingBrowser.BiddingTree.Bids"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:converters="clr-namespace:BiddingBrowser.Converters"
+    SnapsToDevicePixels="True"
+    d:DataContext="{d:DesignInstance Type=local:BiddingTreeViewModel}"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="C" Modifiers="Control" Command="ApplicationCommands.Copy"/>
+        <KeyBinding Key="V" Modifiers="Control" Command="ApplicationCommands.Paste"/>
+    </UserControl.InputBindings>
+
+    <UserControl.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Copy" Executed="CopyExecuted" CanExecute="CopyCanExecute"/>
+        <CommandBinding Command="ApplicationCommands.Paste" Executed="PasteExecuted" CanExecute="PasteCanExecute"/>
+    </UserControl.CommandBindings>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:SingleToCollectionConverter x:Key="SingleToCollectionConverter"/>
+            <converters:VisibilityConverter x:Key="VisibilityConverter"/>
+            <converters:BidColorConverter x:Key="BidColorConverter"/>
+            <converters:BidTypeConverter x:Key="BidTypeConverter"/>
+            <converters:BidToBrushConverter x:Key="BidToBrushConverter"/>
+
+            <ObjectDataProvider 
+                MethodName="GetValues" 
+                ObjectType="{x:Type sys:Enum}" 
+                x:Key="BidColorValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="b:BidColor"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider 
+                MethodName="GetValues" 
+                ObjectType="{x:Type sys:Enum}" 
+                x:Key="BidTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="b:BidType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <!-- Template for Bid -->
+            <HierarchicalDataTemplate DataType="{x:Type b:Bid}" ItemsSource="{Binding NextBids}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Value}" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Code}" FontWeight="Bold">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BidToBrushConverter}">
+                                <Binding Path="Type"/>
+                                <Binding Path="Color"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                    <TextBlock Text=":" />
+                    <TextBlock 
+                        Text="{Binding Condition}"
+                        Margin="6,0,0,0"
+                        Foreground="{StaticResource AlabasterGreyBrush}"/>
+
+                    <TextBlock 
+                        Text="{Binding Convention, StringFormat=⟨ {0} ⟩}"
+                        Margin="6,0,0,0"
+                        Foreground="{StaticResource AlabasterGreyBrush}"
+                        Visibility="{Binding HasConvention, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <Image 
+                        Source="/Images/opener.png"
+                        ToolTip="Otwierający"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Height="16" Width="16"
+                        Margin="6,0,0,0"
+                        Visibility="{Binding OpenerBid, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <Image
+                        Source="/Images/resondent.png"
+                        ToolTip="Odpowiadający"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Height="16" Width="16"
+                        Margin="6,0,0,0"
+                        RenderTransformOrigin="0.5,0.5"
+                        Visibility="{Binding OpenerBid, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}, ConverterParameter={x:Static sys:Boolean.FalseString}}">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleX="-1"/>
+                        </Image.RenderTransform>
+                    </Image>
+
+                    <Image 
+                        Source="/Images/auto.png"
+                        ToolTip="Odzywka automatycza"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Height="12" Width="12"
+                        Margin="6,0,0,0"
+                        Visibility="{Binding AutomaticResponse, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <Image 
+                        Source="/Images/gameForcing.png"
+                        ToolTip="Forsująca do końcówki"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Height="12" Width="12"
+                        Margin="6,0,0,0"
+                        Visibility="{Binding GameForcing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <Image 
+                        Source="/Images/oneRoundForcing.png"
+                        ToolTip="Forsująca na jedno kółko"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Height="12" Width="12"
+                        Margin="6,0,0,0"
+                        Visibility="{Binding OneRoundForcing, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <Image 
+                        Source="/Images/signoff.png"
+                        ToolTip="Odzywka wyprzęgająca"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Height="12" Width="12"
+                        Margin="6,0,0,0"
+                        Visibility="{Binding SignOff, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            
+            <HierarchicalDataTemplate DataType="{x:Type b:Root}" ItemsSource="{Binding Bids, UpdateSourceTrigger=PropertyChanged}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="240"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="12,8">
+            <Button Content="Dodaj" Click="NewElementButton_Click"/>
+            <Button Content="Usuń" Click="DeleteElementButton_Click" Margin="4,0,0,0"/>
+            <Button Content="Zapisz" Click="SaveButton_Click" Margin="4,0,0,0"/>
+            <Button Content="Wczytaj" Click="OpenButton_Click" Margin="4,0,0,0"/>
+            <Button Content="Sortuj" Margin="4,0,0,0"/>
+            <Button Content="Sprawdź" Click="ValidateButton_Click" Margin="4,0,0,0"/>
+
+            <Border Margin="12,0,0,0" BorderThickness="0.5,0,0,0" BorderBrush="{StaticResource TropicalTealBrush}">
+                <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+                    <TextBlock Text="System:" FontSize="13"/>
+                    <TextBox Text="{Binding SystemName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0,0,0" Width="160"/>
+                    <Button Content="Utwórz" Click="NewElementButton_Click" Margin="4,0,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <TreeView 
+            x:Name="DataTree"
+            Grid.Row="1" 
+            Grid.Column="0" 
+            Background="Transparent"
+            ItemsSource="{Binding Roots, UpdateSourceTrigger=PropertyChanged}" 
+            SelectedItemChanged="BiddingTree_SelectedItemChanged"
+            BorderThickness="0">
+        </TreeView>
+
+        <ContentControl Grid.RowSpan="2" Grid.Column="1" Content="{Binding SelectedItem}">
+            <ContentControl.Resources>
+                <!-- Editor template for Bid -->
+                <DataTemplate DataType="{x:Type b:Bid}">
+                    <Border BorderThickness="0.5,0,0,0" BorderBrush="{StaticResource TropicalTealBrush}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="12,0" HorizontalAlignment="Stretch">
+
+                            <Label Content="Identyfikator" HorizontalAlignment="Left"/>
+                            <TextBox Text="{Binding Identifier, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="Wartość" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+
+                            <Label Content="Kolor" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <ComboBox 
+                                Height="22"
+                                VerticalContentAlignment="Center"
+                                ItemsSource="{Binding BidColorValues}" 
+                                SelectedItem="{Binding Color, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+                            <Label Content="Typ" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <ComboBox 
+                                Height="22"
+                                VerticalContentAlignment="Center"
+                                ItemsSource="{Binding BidTypeValues}" 
+                                SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+                            <Label Content="Znaczenie" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <TextBox 
+                                Text="{Binding Condition, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" 
+                                MinLines="3" 
+                                VerticalContentAlignment="Top"
+                                TextWrapping="WrapWithOverflow"/>
+
+                            <Label Content="Dodatkowy opis" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <TextBox 
+                                Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" 
+                                MinLines="5" 
+                                VerticalContentAlignment="Top"
+                                TextWrapping="WrapWithOverflow"/>
+
+                            <Label Content="Konwencja" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <TextBox 
+                                Text="{Binding Convention, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                                ToolTip="Puste = naturalna. 'Sztuczne' = sztuczna bez konwencji. Nazwa z dużej litery."/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Label Content="Jako otwierający" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding OpenerBid}" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Label Content="Odzywka wyprzęgająca" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding SignOff}" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Label Content="Odzywka automatyczna" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding AutomaticResponse}" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Label Content="Forsująca na jedno kółko" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding OneRoundForcing}" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Label Content="Forsująca do końcówki" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding GameForcing}" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                    <Label Content="Przejdź do otwarć" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <CheckBox IsChecked="{Binding GoToOpenings}" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                                </StackPanel>
+
+                                <Label Content="Zakres punktów" HorizontalAlignment="Left" Margin="0,14,0,0"/>
+                            <UniformGrid Columns="2">
+                                <TextBox Margin="0,0,2.5,0" Text="{Binding PointsRange.Lower, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                                <TextBox Margin="2.5,0,0,0" Text="{Binding PointsRange.Upper, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                            <Label Content="Układ trefli" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <UniformGrid Columns="2">
+                                <TextBox Margin="0,0,2.5,0" Text="{Binding ClubsCardRange.Lower, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                                <TextBox Margin="2.5,0,0,0" Text="{Binding ClubsCardRange.Upper, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                            <Label Content="Układ kar" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <UniformGrid Columns="2">
+                                <TextBox Margin="0,0,2.5,0" Text="{Binding DiamondsCardRange.Lower, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                                <TextBox Margin="2.5,0,0,0" Text="{Binding DiamondsCardRange.Upper, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                            <Label Content="Układ kierów" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <UniformGrid Columns="2">
+                                <TextBox Margin="0,0,2.5,0" Text="{Binding HeartsCardRange.Lower, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                                <TextBox Margin="2.5,0,0,0" Text="{Binding HeartsCardRange.Upper, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                            <Label Content="Układ pików" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <UniformGrid Columns="2">
+                                <TextBox Margin="0,0,2.5,0" Text="{Binding SpadesCardRange.Lower, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                                <TextBox Margin="2.5,0,0,0" Text="{Binding SpadesCardRange.Upper, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                            <Label Content="Rozkład kolorów"/>
+                            <TextBox 
+                                Text="{Binding ColorDistribution, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" 
+                                MinLines="3" 
+                                VerticalContentAlignment="Top"
+                                TextWrapping="WrapWithOverflow"/>
+
+                            <Label 
+                                Content="Liczba zatrzymań" 
+                                HorizontalAlignment="Left" 
+                                Margin="0,14,0,0" 
+                                FontWeight="SemiBold"
+                                ToolTip="As (1), drugi król (1), trzecia dama (1). Król singiel (0.5), druga dama (0.5)."/>
+                            <UniformGrid Margin="4,0" Columns="4" Rows="2">
+                                <TextBlock Grid.Column="0" Text="Trefle" Margin="1,0,0,0"/>
+                                <TextBlock Grid.Column="1" Text="Karo" Margin="6,0,0,0"/>
+                                <TextBlock Grid.Column="2" Text="Kiery" Margin="6,0,0,0"/>
+                                <TextBlock Grid.Column="3" Text="Piki" Margin="6,0,0,0"/>
+                                <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="{Binding ClubsStops, UpdateSourceTrigger=LostFocus, TargetNullValue=''}"/>
+                                <TextBox Grid.Column="1" Grid.Row="1" Margin="5,0,0,0" Text="{Binding DiamondsStops, UpdateSourceTrigger=LostFocus, TargetNullValue=''}"/>
+                                <TextBox Grid.Column="2" Grid.Row="1" Margin="5,0,0,0" Text="{Binding HeartsStops, UpdateSourceTrigger=LostFocus, TargetNullValue=''}"/>
+                                <TextBox Grid.Column="3" Grid.Row="1" Margin="5,0,0,0" Text="{Binding SpadesStops, UpdateSourceTrigger=LostFocus, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                            <UniformGrid Margin="4,0" Columns="2" Rows="2">
+                                <TextBlock Grid.Column="0" Text="Asy" Margin="1,0,0,0"/>
+                                <TextBlock Grid.Column="1" Text="Króle" Margin="6,0,0,0"/>
+                                <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="{Binding Aces, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                                <TextBox Grid.Column="1" Grid.Row="1" Margin="5,0,0,0" Text="{Binding Kings, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
+                            </UniformGrid>
+
+                        </StackPanel>
+
+
+                        </ScrollViewer>
+                    </Border>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+    </Grid>
+</UserControl>

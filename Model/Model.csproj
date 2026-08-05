@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>$(BackendVersion)</AssemblyVersion>
+    <FileVersion>$(BackendVersion)</FileVersion>
+    <Version>$(BackendVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Bidding\AI\LateBiddingStrategies\**" />
+    <Compile Remove="Bidding\AI\MiddleBiddingStrategies\**" />
+    <Compile Remove="Bidding\AI\OpeningStrategies\**" />
+    <EmbeddedResource Remove="Bidding\AI\LateBiddingStrategies\**" />
+    <EmbeddedResource Remove="Bidding\AI\MiddleBiddingStrategies\**" />
+    <EmbeddedResource Remove="Bidding\AI\OpeningStrategies\**" />
+    <None Remove="Bidding\AI\LateBiddingStrategies\**" />
+    <None Remove="Bidding\AI\MiddleBiddingStrategies\**" />
+    <None Remove="Bidding\AI\OpeningStrategies\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Bidding\Systems\Natural.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
