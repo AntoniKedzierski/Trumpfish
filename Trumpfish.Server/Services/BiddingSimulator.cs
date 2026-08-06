@@ -26,7 +26,7 @@ public class BiddingSimulator : IBiddingSimulator {
             results.Add(SimulateDeal(system, request.Deals[i], i));
         }
 
-        return new SimulationResponse(system.SystemName, results.Count, results.Count(e => e.Error != null), results);
+        return new SimulationResponse(system.SystemName, results.Count, results.Count(e => e.Error != null), results, request.Seed);
     }
 
 

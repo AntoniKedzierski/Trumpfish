@@ -400,6 +400,7 @@ export interface components {
         SimulationRequest: {
             systemName: string;
             deals: components["schemas"]["SimulationDealRequest"][];
+            seed?: null | string;
         };
         SimulationResponse: {
             systemName: string;
@@ -408,6 +409,7 @@ export interface components {
             /** Format: int32 */
             failedCount: number | string;
             deals: components["schemas"]["SimulationDealResult"][];
+            seed?: null | string;
         };
         ValidationIssue: {
             severity: components["schemas"]["ValidationSeverity"];

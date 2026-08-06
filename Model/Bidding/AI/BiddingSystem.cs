@@ -1,4 +1,4 @@
-﻿using Model.Bidding.Bids;
+using Model.Bidding.Bids;
 using Newtonsoft.Json;
 
 namespace Model.Bidding.AI;
@@ -39,12 +39,31 @@ public class BiddingSystem {
     }
 
 
+    public List<BidNode> GetDescendants(List<Bid> bidSequence) {
+        var children = Openings()!.Bids;
+
+        for (int i = 0; i < bidSequence.Count; ++i) {
+            children = GetMatchingChildren(children, bidSequence[i]);
+        }
+
+        return children;
+    }
+
+
     public IEnumerable<BidNode> GetDescendants(BidNode parent, Bid bid) {
         foreach (var child in parent.NextBids) {
             if (child.Matches(bid)) {
                 yield return child;
             }
         }
+    }
+
+
+    public List<BidNode> GetMatchingChildren(List<BidNode> parentNodes, Bid nextBid) {
+        return parentNodes
+            .Where(e => e.Equals(nextBid))
+            .SelectMany(e => e.NextBids)
+            .ToList();
     }
 
 

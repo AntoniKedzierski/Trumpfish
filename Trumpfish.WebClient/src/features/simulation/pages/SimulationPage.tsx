@@ -18,6 +18,7 @@ export function SimulationPage() {
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
   const [systemName, setSystemName] = useState('');
   const [dealCount, setDealCount] = useState(10);
+  const [seed, setSeed] = useState('');
   const [result, setResult] = useState<SimulationResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,14 +57,15 @@ export function SimulationPage() {
     setBusy(true);
     setError(null);
     try {
-      // Deals are generated here and shipped to the API, so the server only runs the engine.
-      setResult(await simulateBidding({ systemName, deals: generateDeals(dealCount) }));
+      // Deals are generated here and shipped to the API, so the server only runs the engine. The seed (when given) makes the batch reproducible.
+      const trimmedSeed = seed.trim();
+      setResult(await simulateBidding({ systemName, deals: generateDeals(dealCount, trimmedSeed), seed: trimmedSeed === '' ? null : trimmedSeed }));
     } catch (reason) {
       setError(describe(reason));
     } finally {
       setBusy(false);
     }
-  }, [dealCount, systemName]);
+  }, [dealCount, seed, systemName]);
 
   return (
     <div className="simulation">
@@ -97,6 +99,17 @@ export function SimulationPage() {
             value={dealCount}
             disabled={busy}
             onChange={(event) => setDealCount(clamp(Number(event.target.value)))}
+          />
+        </label>
+
+        <label className="inline">
+          <span>Ziarno</span>
+          <input
+            type="text"
+            value={seed}
+            placeholder="puste = losowe"
+            disabled={busy}
+            onChange={(event) => setSeed(event.target.value)}
           />
         </label>
 

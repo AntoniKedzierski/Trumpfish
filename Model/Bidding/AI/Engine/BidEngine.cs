@@ -194,10 +194,10 @@ public partial class BidEngine : IBidInput {
     }
 
 
-    public BidNode? PlayInOffence(Hand hand, Bid lastPartnerBid, BidNode? lastOwnBid = null, bool elevateSystem = false) {
-        var descendants = lastOwnBid == null
-            ? BiddingSystem.GetOpenings(lastPartnerBid)
-            : BiddingSystem.GetDescendants(lastOwnBid, lastPartnerBid);
+    public BidNode? PlayInOffence(Hand hand, List<Bid> bidSequence, bool elevateSystem = false) {
+        var descendants = bidSequence.Count == 1
+            ? BiddingSystem.GetOpenings(bidSequence[0])
+            : BiddingSystem.GetDescendants(bidSequence);
 
         var branches = descendants
             .ToDictionary(
@@ -305,7 +305,7 @@ public partial class BidEngine : IBidInput {
         if (Auction.Loop == 0) {
             // Oponenci się nie wcinali
             if (lastOpponentsBid == null) {
-                return lastPartnersBid == null ? PlayInOffence(hand) : PlayInOffence(hand, lastPartnersBid);
+                return lastPartnersBid == null ? PlayInOffence(hand) : PlayInOffence(hand, [lastPartnersBid]);
             }
 
             // Oponenci się wcinali, partner nic nie mówił
@@ -317,16 +317,17 @@ public partial class BidEngine : IBidInput {
             PartnerOpened = true;
             var bidToDefendAgainst = Auction.DefendingAgainst(Position); // Czy jest się przed czym bronić?
             if (bidToDefendAgainst != null) {
-                return PlayInDefence(hand, bidToDefendAgainst, lastPartnersBid) ?? PlayInOffence(hand, lastPartnersBid); // Oni otworzyli pierwsi
+                return PlayInDefence(hand, bidToDefendAgainst, lastPartnersBid) ?? PlayInOffence(hand, [lastPartnersBid]); // Oni otworzyli pierwsi
             }
 
-            return PlayInOffence(hand, lastPartnersBid); // My otworzyliśmy pierwsi
+            return PlayInOffence(hand, [lastPartnersBid]); // My otworzyliśmy pierwsi
         }
 
         // Tutaj licytacja na pewno trwała dłużej niż jedno kółko.
         DetermineGoal();
 
         var lastOwnBid = OwnBidsHistory.LastOrDefault();
+        var bidSequence = Auction.GetBidSequence().ToList();
 
         // Sprawdzamy drzewka obronne, na wszelki wypadek (szczególnie pod kątem dwukolorówek Michaelsa).
         if (Goal == BiddingGoal.Pass && lastOpponentsBid != null) {
@@ -365,20 +366,18 @@ public partial class BidEngine : IBidInput {
 
         // TODO
         if (Goal == BiddingGoal.Premium) {
-            return PlayInOffence(hand, lastPartnersBid, lastOwnBid); //tmp
+            return PlayInOffence(hand, bidSequence); //tmp
         }
 
         // Jeżeli w drugim kółku wciąż nie wiadomo, kto jest grającym, to szukamy najpierw odpowiedzi w drzewku obron.
         if (Goal == BiddingGoal.None && lastOpponentsBid != null && lastPartnersBid != null) {
             var bidToDefendAgainst = Auction.DefendingAgainst(Position); // Czy jest się przed czym bronić?
 
-            return PlayInOffence(hand, lastPartnersBid);
+            return PlayInOffence(hand, [lastPartnersBid]);
         }
-
-        var bidSequence = Auction.GetBidSequence().ToArray();
         var lastOpponentSubmition = Auction.GetLastSubmittedBid(RightOpponentPosition) ?? Auction.GetLastSubmittedBid(LeftOpponentPosition);
 
-        var result = PlayInOffence(hand, lastPartnersBid!, lastOwnBid);
+        var result = PlayInOffence(hand, bidSequence);
         if (result == null && lastOpponentSubmition != null) {
             var bidToDefendAgainst = Auction.DefendingAgainst(Position);
             if (bidToDefendAgainst != null) { // Czy jest się przed czym bronić?
@@ -391,7 +390,7 @@ public partial class BidEngine : IBidInput {
             }
         }
 
-        if (bidSequence.Length >= 2 && bidSequence.Last().Type == BidType.Double && lastPartnersBid.Type == BidType.Double && result == null && bidSequence.First().Color != BidColor.Diamonds) {
+        if (bidSequence.Count >= 2 && bidSequence.Last().Type == BidType.Double && lastPartnersBid.Type == BidType.Double && result == null && bidSequence.First().Color != BidColor.Diamonds) {
             Console.WriteLine("Coś się zjebało.");
         }
 

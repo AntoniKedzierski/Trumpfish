@@ -441,19 +441,19 @@ public partial class BidEngine {
     /// <returns></returns>
     private BidNode GetNaturalBid(Hand hand, Dictionary<BidNode, TableEvaluation> partnerBranches, bool isForced = false) {
         var chosenBidNodes = new List<BidNode>();
-        //foreach (var branch in partnerBranches) {
-        //    BidNode? chosenBidNode = null;
-        //    if (Auction.Interrupted(onlySubmit: true)) {
-        //        chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value); // Odpowiedzi po interwencji mogą być confusing!!!
-        //        // TODO: żeby partner źle nie zrozumiał naszej odpowiedzi po ich interwencji
-        //    } else {
-        //        chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value).AssertFreestyleIsntConfusing(branch.Key);
-        //    }
+        foreach (var branch in partnerBranches) {
+            BidNode? chosenBidNode;
+            if (Auction.Interrupted(onlySubmit: true)) {
+                chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value); // Odpowiedzi po interwencji mogą być confusing!!!
+                // TODO: żeby partner źle nie zrozumiał naszej odpowiedzi po ich interwencji
+            } else {
+                chosenBidNode = TrueNaturalResponse(hand, branch.Key, branch.Value).AssertFreestyleIsntConfusing(branch.Key);
+            }
 
-        //    if (chosenBidNode != null && chosenBidNode.Type != BidType.Pass) {
-        //        chosenBidNodes.Add(chosenBidNode);
-        //    }
-        //}
+            if (chosenBidNode != null && chosenBidNode.Type != BidType.Pass) {
+                chosenBidNodes.Add(chosenBidNode);
+            }
+        }
 
         var BidNodeToSubmit = GetLowestSubmitOrPass(chosenBidNodes);
         if (isForced && BidNodeToSubmit.Type == BidType.Pass) {
@@ -469,6 +469,14 @@ public partial class BidEngine {
     /// Zwraca pass tylko i wyłącznie, jeżeli poprzednia odzywka partnera jest rekontrą lub robi partię.
     /// </summary>
     private BidNode ForcedToBid(Hand hand) {
+        var lastPartnerBid = Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false);
+        var lastOwnBid = Auction.GetLastPlayerBid(Position, passAsNull: false);
+        var firstPartnerBid = Auction.FirstPlayerBid(PartnerPosition);
+
+        if (firstPartnerBid?.Equals(1, BidColor.Clubs) == true && lastPartnerBid?.Equals(2, BidColor.NoTrump) == true && lastOwnBid?.Equals(2, BidColor.Spades) == true) {
+            var test = 1;
+        }
+
         if (Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false)!.Type == BidType.Redouble || Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false)!.MakesGame()) {
             return BidNode.Pass();
         }
@@ -478,6 +486,7 @@ public partial class BidEngine {
         foreach (CardColor color in hand.GetStrongestColors()) {
             if (OwnBidsHistory.All(e => e.Color != color.ToBidColor()) && hand.OfColor(color).Count() > 3) {
                 resultInColor = BidNode.SubmitLowest(Auction, color.ToBidColor());
+                break;
             }
         }
 
@@ -485,9 +494,10 @@ public partial class BidEngine {
         if (resultInColor?.Value > 3) {
             if (Auction.GetLowestLegalValue(BidColor.NoTrump) == 3) {
                 return BidNode.Submit(3, BidColor.NoTrump);
-            } else if (resultInColor != null) {
-                return resultInColor;
-            }
+            } 
+        }
+        else if (resultInColor != null) {
+            return resultInColor;
         }
 
         // Nie ma fitu z partnerem, zgłosiliśmy już swoje dobre kolory, więc mozliwie najniższe BA i niech on decyduje

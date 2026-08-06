@@ -106,6 +106,11 @@ public class Bid : IEquatable<Bid> {
     }
 
 
+    public bool Equals(int value, BidColor color) {
+        return Color == color && Value == value && Type == BidType.Submit;
+    }
+
+
     public virtual bool Equals(Bid? other) {
         if (other == null) {
             return false;
