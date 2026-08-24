@@ -1,5 +1,6 @@
-﻿using Model.Bidding.AI.Eval;
+using Model.Bidding.AI.Eval;
 using Model.Bidding.Bids;
+using Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,32 @@ public partial class BidEngine {
 
 
     private BidNode? GetBidFromSystemBranches(Hand hand, IEnumerable<BidNode> branches) {
+        if (!branches.Any()) {
+            return null;
+        }
+
         var chosenBids = new List<BidNode>();
+        var depth = branches.First().GetDepth();
+
         foreach (var branchHead in branches) {
+            // Wyklucz gałęzie, które nie pasują skacząc po dziadkach, aż do korzenia.
+            if (depth > 0) {
+                var lastOwnBidCandidate = branchHead.Parent;
+                var invalidPath = false;
+
+                while (lastOwnBidCandidate != null) {
+                    if (!lastOwnBidCandidate.Matches(hand)) {
+                        invalidPath = true;
+                        break;
+                    }
+                    lastOwnBidCandidate = lastOwnBidCandidate.GetGrandparent();
+                }
+
+                if (invalidPath) {
+                    continue;
+                }
+            }
+
             // Weź wszystko, co pasuje do ręki i jest legalne, i wybierz z tego systemową odzywkę.
             var bidCandidates = FindNodesByHand(hand, branchHead)
                 .Where(e => e.IsBidLegal(Auction))
@@ -104,8 +129,7 @@ public partial class BidEngine {
         foreach (var bid in legalBids) {
             if (bid.Value < lowestBid.Value) {
                 lowestBid = bid;
-            }
-            else if (bid.Value == lowestBid.Value && bid.Color < lowestBid.Color) {
+            } else if (bid.Value == lowestBid.Value && bid.Color < lowestBid.Color) {
                 lowestBid = bid;
             }
         }

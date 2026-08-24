@@ -73,6 +73,22 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     }
 
 
+    public int GetDepth() {
+        var parent = Parent;
+        var i = 0;
+
+        while (parent != null) {
+            i++;
+            parent = parent.Parent;
+        }
+
+        return i;
+    }
+
+
+    public BidNode? GetGrandparent() => Parent?.Parent;
+
+
     public bool Matches(Hand hand) {
         return hand.Matches(PointsRange, SpadesCardRange, HeartsCardRange, DiamondsCardRange, ClubsCardRange, Aces, Kings);
     }

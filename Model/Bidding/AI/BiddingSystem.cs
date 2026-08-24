@@ -46,7 +46,11 @@ public class BiddingSystem {
             children = GetMatchingChildren(children, bidSequence[i]);
         }
 
-        return children;
+        return children
+            .Select(e => e?.Parent)
+            .Where(e => e != null)
+            .Distinct()
+            .ToList();
     }
 
 
