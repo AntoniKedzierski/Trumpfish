@@ -1,4 +1,4 @@
-﻿using Model.Bidding.Bids;
+using Model.Bidding.Bids;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace Model;
 
 public interface IBidInput {
 
-    public Bid Get(Hand hand);
+    public Bid Get(Hand hand, int? dealNumber = null);
 
     public void Reset();
 }

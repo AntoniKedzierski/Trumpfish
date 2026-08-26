@@ -1,24 +1,36 @@
 using Model.Bidding.Bids;
 using Model.Enums;
 using Model.Helpers;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Bidding;
 
 public class Auction {
 
+    /// <summary>
+    /// Wartość zwracana przez <see cref="GetLowestLegalValue"/>, gdy w danym kolorze
+    /// nie da się już wykonać żadnej legalnej odzywki (ostatnia to 7NT / 7 w wyższym kolorze).
+    /// </summary>
+    public const int NoLegalValue = 8;
+
+    /// <summary>
+    /// Gracz, który rozpoczyna licytację (odzywka o indeksie 0).
+    /// </summary>
+    public PlayerPosition Dealer { get; private set; }
+
     public PlayerPosition CurrentBidder { get; private set; }
 
-    public List<Bid> AuctionHistory { get; private set; }
+    public List<Bid> AuctionHistory { get; private set; } = [];
 
     public int Loop => AuctionHistory.Count / 4;
 
+    public Bid? LastBid => AuctionHistory.Count > 0 ? AuctionHistory[^1] : null;
+
+
     public void Start(PlayerPosition dealer) {
+        Dealer = dealer;
         CurrentBidder = dealer;
         AuctionHistory = [];
     }
@@ -26,6 +38,7 @@ public class Auction {
 
     public void Clear() {
         AuctionHistory.Clear();
+        CurrentBidder = Dealer;
     }
 
 
@@ -34,133 +47,153 @@ public class Auction {
     }
 
 
+    /// <summary>
+    /// Licytacja kończy się po trzech kolejnych pasach po jakiejkolwiek odzywce
+    /// oraz po czterech pasach na wejściu (przypadek brzegowy pokryty warunkiem Count >= 4).
+    /// </summary>
     public bool IsCompleted() {
-        if (AuctionHistory.Count >= 4) {    // edge case: 3 passes at the beginning of the auction
-            if (AuctionHistory[^1].Type == BidType.Pass
-                && AuctionHistory[^2].Type == BidType.Pass
-                && AuctionHistory[^3].Type == BidType.Pass) {
-                return true;
-            }
+        if (AuctionHistory.Count < 4) {
+            return false;
         }
 
-        return false;
+        return AuctionHistory[^1].Type == BidType.Pass
+            && AuctionHistory[^2].Type == BidType.Pass
+            && AuctionHistory[^3].Type == BidType.Pass;
     }
 
+
     public void Submit(Bid bid) {
-        if (!bid.IsBidLegal(this)) {
-            throw new Exception("Illegal bid!");
+        ArgumentNullException.ThrowIfNull(bid);
+
+        if (IsCompleted()) {
+            throw new InvalidOperationException("Auction is already completed!");
         }
+
+        if (!bid.IsBidLegal(this)) {
+            throw new InvalidOperationException("Illegal bid!");
+        }
+
         AuctionHistory.Add(bid);
         NextBidder();
     }
 
 
     public bool CanSubmit(int value, BidColor color) {
-        return new Bid(value, color).IsBidLegal(this);
+        return !IsCompleted() && new Bid(value, color).IsBidLegal(this);
     }
 
 
+    /// <summary>
+    /// Najniższy wysokość odzywki możliwy do zalicytowania w danym kolorze.
+    /// </summary>
+    /// <returns>Wartość 1-7, albo <see cref="NoLegalValue"/> gdy nie ma już legalnej odzywki.</returns>
     public int GetLowestLegalValue(BidColor color, int offset = 0) {
-        var lastSubmitions = GetLastSubmittedBid(onlySubmitions: true, offset: offset);
-        if (lastSubmitions == null) {
+        var lastSubmission = GetLastSubmittedBid(onlySubmitions: true, offset: offset);
+
+        if (lastSubmission?.Value == null) {
             return 1;
         }
 
-        if ((int)lastSubmitions.Color < (int)color) {
-            return lastSubmitions.Value!.Value;
-        }
-
-        return lastSubmitions.Value!.Value + 1;
+        // Kolor niższy od żądanego -> ta sama wysokość wystarczy; równy lub wyższy -> trzeba podbić.
+        return (int)lastSubmission.Color < (int)color
+            ? lastSubmission.Value.Value
+            : lastSubmission.Value.Value + 1;
     }
 
-
-    public PlayerPosition GetBidder(int i) {
-        var opener = ((int)CurrentBidder - AuctionHistory.Count) % 4;
-        if (opener < 0) {
-            opener += 4;
-        }
-
-        var number = (opener + i) % 4;
-        return (PlayerPosition)number;
-    }
 
     /// <summary>
-    /// Returns the last bid made by the specified player, or null if the player has not made any bids.
+    /// Gracz, który wykonał odzywkę o indeksie <paramref name="i"/> w historii licytacji.
     /// </summary>
-    /// <param name="bidderPosition"></param>
-    /// <returns></returns>
+    public PlayerPosition GetBidder(int i) {
+        if (i < 0 || i >= AuctionHistory.Count) {
+            throw new ArgumentOutOfRangeException(nameof(i));
+        }
+
+        return (PlayerPosition)(((int)Dealer + i) % 4);
+    }
+
+
+    /// <summary>
+    /// Ostatnia odzywka danego gracza.
+    /// </summary>
+    /// <param name="passAsNull">Gdy true, pas traktowany jest jak brak odzywki (null).</param>
     public Bid? GetLastPlayerBid(PlayerPosition bidderPosition, bool passAsNull = false) {
         for (int i = AuctionHistory.Count - 1; i >= 0; i--) {
-            if (GetBidder(i) == bidderPosition) {
-                var bid = AuctionHistory[i];
-                return bid.Type == BidType.Pass ? null : bid;
+            if (GetBidder(i) != bidderPosition) {
+                continue;
             }
+
+            var bid = AuctionHistory[i];
+            return passAsNull && bid.Type == BidType.Pass ? null : bid;
         }
+
         return null;
     }
 
+
+    /// <summary>
+    /// Ostatnia licytowana (nie kontra/pas) odzywka danego gracza.
+    /// </summary>
     public Bid? GetLastSubmittedBid(PlayerPosition bidderPosition) {
         for (int i = AuctionHistory.Count - 1; i >= 0; i--) {
-            var bidder = GetBidder(i);
-            if (bidder == bidderPosition) {
-                if (AuctionHistory[i].Type == BidType.Submit) {
-                    return AuctionHistory[i];
-                }
+            if (GetBidder(i) == bidderPosition && AuctionHistory[i].Type == BidType.Submit) {
+                return AuctionHistory[i];
             }
         }
+
         return null;
     }
 
+
+    /// <summary>
+    /// Ostatnia odzywka w licytacji.
+    /// </summary>
+    /// <param name="onlySubmitions">
+    /// true  - tylko odzywki typu <see cref="BidType.Submit"/> (pomija kontry i rekontry),
+    /// false - dowolna odzywka inna niż pas.
+    /// </param>
+    /// <param name="offset">Ile ostatnich pozycji historii pominąć.</param>
     public Bid? GetLastSubmittedBid(bool onlySubmitions = false, int offset = 0) {
         for (int i = AuctionHistory.Count - offset - 1; i >= 0; i--) {
-            if (onlySubmitions && AuctionHistory[i].Type == BidType.Submit) {
-                return AuctionHistory[i];
-            }
-            if (!onlySubmitions && AuctionHistory[i].Type != BidType.Pass) {
+            var type = AuctionHistory[i].Type;
+
+            if (onlySubmitions ? type == BidType.Submit : type != BidType.Pass) {
                 return AuctionHistory[i];
             }
         }
+
         return null;
     }
+
 
     public Bid? GetLastSubmittedBid(out PlayerPosition? bidderPosition) {
         bidderPosition = null;
+
         for (int i = AuctionHistory.Count - 1; i >= 0; i--) {
             if (AuctionHistory[i].Type == BidType.Submit) {
                 bidderPosition = GetBidder(i);
                 return AuctionHistory[i];
             }
         }
+
         return null;
     }
 
 
     /// <summary>
-    /// Znajduje na jaką odzywkę oponentów weszliśmy w obronę
+    /// Znajduje na jaką odzywkę oponentów weszliśmy w obronę.
     /// </summary>
     /// <returns>
-    /// Bid oponentów bezpośrednio przed pierwszym nie-pasem w parze obrońców (wejściem w obronę)
+    /// Ostatnia nie-pasowa odzywka oponentów poprzedzająca pierwszy nie-pas pary obrońców,
+    /// albo null jeżeli ta para sama otworzyła licytację (lub nie weszła do licytacji).
     /// </returns>
     public Bid? DefendingAgainst(PlayerPosition currentDefender) {
         var partner = currentDefender.GetPartner();
-        var opener = (PlayerPosition)(((int)CurrentBidder - AuctionHistory.Count) % 4);
-        if (opener < 0) {
-            opener = (PlayerPosition)((int)opener + 4);
-        }
 
         for (int i = 0; i < AuctionHistory.Count; i++) {
             var bidder = GetBidder(i);
 
-            bool isDefendingPair =
-                bidder == currentDefender ||
-                bidder == partner;
-
-            if (!isDefendingPair) {
-                continue;
-            }
-
-            // To nie może być pierwsza odzywka w licytacji
-            if (i == 0) {
+            if (bidder != currentDefender && bidder != partner) {
                 continue;
             }
 
@@ -168,27 +201,42 @@ public class Auction {
                 continue;
             }
 
-            // Wyjątek, gdzie goal nie był określony po pierwszym kółku (lub dalszym, ale to raczej nie), więc w drugim weszliśmy do obron, ale to my pierwsi otworzyliśmy licytację
-            // Jeżeli tego nie będzie, to odzywka obronna oponentów zostanie potraktowana jako ich normalne otwarcie
-            if (AuctionHistory.All(e => e.Type == BidType.Submit) && (currentDefender == opener || partner == opener)) {
-                continue;
+            // Pierwszy nie-pas naszej pary. Szukamy wstecz odzywki oponentów.
+            // Jeżeli jej nie ma, to my otworzyliśmy licytację i nie jesteśmy w obronie.
+            for (int j = i - 1; j >= 0; j--) {
+                var previousBidder = GetBidder(j);
+
+                if (previousBidder == currentDefender || previousBidder == partner) {
+                    continue;
+                }
+
+                if (AuctionHistory[j].Type != BidType.Pass) {
+                    return AuctionHistory[j];
+                }
             }
 
-            return AuctionHistory[i - 1];
+            return null;
         }
 
         return null;
     }
 
 
+    /// <summary>
+    /// Czy dany gracz otworzył licytację, tzn. wykonał pierwszą nie-pasową odzywkę rozdania.
+    /// </summary>
     public bool PlayerOpenedAuction(PlayerPosition bidderPosition) {
         for (int i = 0; i < AuctionHistory.Count; i++) {
-            if (GetBidder(i) == bidderPosition) {
-                return AuctionHistory[i].Type == BidType.Submit;
+            if (AuctionHistory[i].Type == BidType.Pass) {
+                continue;
             }
+
+            return GetBidder(i) == bidderPosition;
         }
+
         return false;
     }
+
 
     public Bid? FirstPlayerBid(PlayerPosition bidderPosition) {
         for (int i = 0; i < AuctionHistory.Count; i++) {
@@ -196,13 +244,18 @@ public class Auction {
                 return AuctionHistory[i];
             }
         }
+
         return null;
     }
 
 
+    /// <summary>
+    /// Wszystkie odzywki pary danego gracza, w kolejności chronologicznej (łącznie z pasami).
+    /// </summary>
+    /// <param name="openingPlayer">Gracz z tej pary, który wykonał jej pierwszą nie-pasową odzywkę.</param>
     public List<Bid> GetPlayersSequence(PlayerPosition bidderPosition, out PlayerPosition? openingPlayer) {
         var playerBids = new List<Bid>();
-        var partnerPosition = (PlayerPosition)(((int)bidderPosition + 2) % 4);
+        var partnerPosition = bidderPosition.GetPartner();
 
         openingPlayer = null;
 
@@ -225,62 +278,119 @@ public class Auction {
 
 
     public IEnumerable<Bid> GetBidSequence(bool includePass = false) {
-        foreach (var bid in AuctionHistory) {
-            if (includePass && bid.Type == BidType.Pass) {
-                yield return bid;
-            }
-            else if (bid.Type != BidType.Pass) {
-                yield return bid;
-            }
-        }
+        return AuctionHistory.Where(bid => includePass || bid.Type != BidType.Pass);
     }
 
+
+    /// <summary>
+    /// Sprawdza, czy któraś z par zalicytowała dokładnie podaną sekwencję odzywek
+    /// (od początku swojej licytacji, pomijając początkowe pasy).
+    /// </summary>
+    /// <param name="sequence">Sekwencja odzywek rozdzielona przecinkami, np. "1S,2S".</param>
+    public bool ContainsPairSequence(string sequence) {
+        if (string.IsNullOrWhiteSpace(sequence)) {
+            return false;
+        }
+
+        var pattern = sequence
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(e => new Bid(e))
+            .ToList();
+
+        if (pattern.Count == 0) {
+            return false;
+        }
+
+        var pair1Sequence = GetPlayersSequence(PlayerPosition.North, out _);
+        var pair2Sequence = GetPlayersSequence(PlayerPosition.East, out _);
+
+        return StartsWithSequence(pair1Sequence, pattern)
+            || StartsWithSequence(pair2Sequence, pattern);
+    }
+
+
+    private static bool StartsWithSequence(IReadOnlyList<Bid> pairSequence, IReadOnlyList<Bid> pattern) {
+        var start = SkipLeadingPasses(pairSequence);
+        var patternStart = SkipLeadingPasses(pattern);
+
+        var patternLength = pattern.Count - patternStart;
+
+        if (patternLength == 0 || pairSequence.Count - start < patternLength) {
+            return false;
+        }
+
+        for (int i = 0; i < patternLength; i++) {
+            if (!pairSequence[start + i].Equals(pattern[patternStart + i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    private static int SkipLeadingPasses(IReadOnlyList<Bid> bids) {
+        int i = 0;
+        while (i < bids.Count && bids[i].Type == BidType.Pass) {
+            i++;
+        }
+        return i;
+    }
 
 
     /// <summary>
     /// Czy wystąpiła interwencja, ale tylko bezpośrednio przed currentBidder!
     /// </summary>
-    /// <returns></returns>
     public bool Interrupted(bool onlySubmit = false) {
-        var lastBid = AuctionHistory.LastOrDefault();
+        var lastBid = LastBid;
 
-        return lastBid != null && (onlySubmit
+        if (lastBid == null) {
+            return false;
+        }
+
+        return onlySubmit
             ? lastBid.Type == BidType.Submit
-            : lastBid.Type != BidType.Pass
-        );
+            : lastBid.Type != BidType.Pass;
     }
 
 
+    /// <summary>
+    /// Rozgrywającym jest ten z pary, który jako pierwszy zalicytował kolor końcowego kontraktu.
+    /// </summary>
     public PlayerPosition GetAuctionWinner(PlayerPosition onePlayerFromPlayingPair, BidColor color) {
-        for (int i = 0; i < AuctionHistory.Count; ++i) {
-            var bidder = GetBidder(i);
-            if (bidder == onePlayerFromPlayingPair && AuctionHistory[i].Color == color) {
-                return bidder;
+        var partner = onePlayerFromPlayingPair.GetPartner();
+
+        for (int i = 0; i < AuctionHistory.Count; i++) {
+            if (AuctionHistory[i].Type != BidType.Submit || AuctionHistory[i].Color != color) {
+                continue;
             }
-            if (bidder.GetPartner() == onePlayerFromPlayingPair && AuctionHistory[i].Color == color) {
+
+            var bidder = GetBidder(i);
+            if (bidder == onePlayerFromPlayingPair || bidder == partner) {
                 return bidder;
             }
         }
 
-        throw new Exception("Invalid bidder sequence.");
+        throw new InvalidOperationException(
+            $"No {color} bid found for the pair of {onePlayerFromPlayingPair} in the auction history.");
     }
 
 
     public Contract GetContract(Player[] players) {
         var lastSubmit = GetLastSubmittedBid(out var bidderPosition);
-        var lastBid = GetLastSubmittedBid();
+        var lastNonPass = GetLastSubmittedBid();
 
-        if (NobodyBidsYet() || lastSubmit == null || lastBid == null || bidderPosition == null) {
+        if (NobodyBidsYet() || lastSubmit?.Value == null || lastNonPass == null || bidderPosition == null) {
             return new() {
                 Passed = true
             };
         }
 
         return new() {
-            Value = lastSubmit.Value!.Value,
+            Value = lastSubmit.Value.Value,
             Color = lastSubmit.Color,
-            IsDoubled = lastBid.Type == BidType.Double,
-            IsRedoubled = lastBid.Type == BidType.Redouble,
+            IsDoubled = lastNonPass.Type == BidType.Double,
+            IsRedoubled = lastNonPass.Type == BidType.Redouble,
             Player = GetAuctionWinner(bidderPosition.Value, lastSubmit.Color)
         };
     }
@@ -289,5 +399,5 @@ public class Auction {
     public bool NobodyBidsYet() => AuctionHistory.All(e => e.Type == BidType.Pass);
 
 
-    public bool ReachedGameLevel() => GetLastSubmittedBid()?.MakesGame() ?? false;
+    public bool ReachedGameLevel() => GetLastSubmittedBid(onlySubmitions: true)?.MakesGame() ?? false;
 }

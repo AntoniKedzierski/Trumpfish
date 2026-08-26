@@ -54,7 +54,7 @@ public class BiddingSimulator : IBiddingSimulator {
                     break;
                 }
 
-                auction.Submit(players[(int)auction.CurrentBidder].MakeBid());
+                auction.Submit(players[(int)auction.CurrentBidder].MakeBid(index));
             }
         }
         catch (Exception exception) {

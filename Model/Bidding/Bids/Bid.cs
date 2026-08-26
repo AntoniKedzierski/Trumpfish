@@ -30,6 +30,21 @@ public class Bid : IEquatable<Bid> {
         Color = color;
     }
 
+
+    public Bid(string label) : this() {
+        Value = int.Parse(label[0].ToString());
+        var color = label[1..];
+
+        Color = color switch {
+            "S" => BidColor.Spades,
+            "H" => BidColor.Hearts,
+            "D" => BidColor.Diamonds,
+            "C" => BidColor.Clubs,
+            "NT" => BidColor.NoTrump
+        };
+    }
+
+
     public bool MakesGame() {
         if (Type != BidType.Submit) {
             return false;

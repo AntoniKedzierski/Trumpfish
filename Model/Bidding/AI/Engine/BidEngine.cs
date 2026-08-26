@@ -205,6 +205,11 @@ public partial class BidEngine : IBidInput {
                 e => Evaluator.FromPartner(e, hand, Auction, Position)
             );
 
+
+        if (Auction.ContainsPairSequence("1D,1S,2D")) {
+            var a = 1;
+        }
+
         // Potencjalne przeście na GF
         //var anyNotGameForcing = branches.Keys.Any(e => !e.IsGameForcing()); // Po co to jest?
 
@@ -258,7 +263,7 @@ public partial class BidEngine : IBidInput {
     }
 
 
-    public Bid Get(Hand hand) {
+    public Bid Get(Hand hand, int? dealNumber = null) {
         var selectedBidNode = SelectOptimalBid(hand);
         Console.Write($"{Position}: {selectedBidNode}");
 

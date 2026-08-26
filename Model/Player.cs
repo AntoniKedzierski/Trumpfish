@@ -1,4 +1,4 @@
-﻿using Model.Bidding.Bids;
+using Model.Bidding.Bids;
 using Model.Enums;
 
 namespace Model;
@@ -28,8 +28,8 @@ public class Player {
     }
 
 
-    public virtual Bid MakeBid() {
-        return BidInput.Get(Hand);
+    public virtual Bid MakeBid(int? dealNumber = null) {
+        return BidInput.Get(Hand, dealNumber);
     }
 
 

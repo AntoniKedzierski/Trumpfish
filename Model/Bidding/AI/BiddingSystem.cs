@@ -42,13 +42,12 @@ public class BiddingSystem {
     public List<BidNode> GetDescendants(List<Bid> bidSequence) {
         var children = Openings()!.Bids;
 
-        for (int i = 0; i < bidSequence.Count; ++i) {
+        for (int i = 0; i < bidSequence.Count - 1; ++i) {
             children = GetMatchingChildren(children, bidSequence[i]);
         }
 
         return children
-            .Select(e => e?.Parent)
-            .Where(e => e != null)
+            .Where(e => e.Equals(bidSequence[bidSequence.Count - 1]))
             .Distinct()
             .ToList();
     }
