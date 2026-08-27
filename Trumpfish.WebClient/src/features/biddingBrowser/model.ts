@@ -3,6 +3,8 @@ import type { BidColor, BiddingSystem, BidNode, BidType, Root } from '@/api/mode
 /** Editing copy of `BidNode` where the children collection is always materialised, which keeps the tree code free of `?? []` noise. */
 export interface EditableBidNode extends Omit<BidNode, 'nextBids'> {
   nextBids: EditableBidNode[];
+  /** Mirrors `BidNode.IsPreferred`; declared here until `schema.d.ts` is regenerated from the OpenAPI document. */
+  isPreferred?: boolean;
 }
 
 export interface EditableRoot extends Omit<Root, 'bids'> {
@@ -26,8 +28,13 @@ export function createEmptySystem(systemName = 'NewSystem'): EditableSystem {
   return { systemName, roots: defaultRootNames.map((name) => ({ name, bids: [] })) };
 }
 
-export function createBidNode(openerBid: boolean): EditableBidNode {
-  return { type: 'Submit', color: 'NoColor', value: null, openerBid, nextBids: [] };
+export function createBidNode(color: BidColor | undefined, value: number | string | undefined, openerBid: boolean): EditableBidNode {
+  return { nodeId: newNodeId(), type: 'Submit', color: color ?? 'NoColor', value: value ?? null, openerBid, nextBids: [] };
+}
+
+/** Identity used to address a single bid; `crypto.randomUUID` is unavailable over plain HTTP, hence the fallback. */
+function newNodeId(): string {
+  return typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}`;
 }
 
 export function normalizeSystem(system: BiddingSystem): EditableSystem {
@@ -35,12 +42,12 @@ export function normalizeSystem(system: BiddingSystem): EditableSystem {
 }
 
 function normalizeNode(node: BidNode): EditableBidNode {
-  return { ...node, nextBids: (node.nextBids ?? []).map(normalizeNode) };
+  return { ...node, nodeId: node.nodeId ?? newNodeId(), nextBids: (node.nextBids ?? []).map(normalizeNode) };
 }
 
-/** Deep clone used by copy/paste so pasted subtrees never share references with the source. */
+/** Deep clone used by copy/paste so pasted subtrees never share references - or identities - with the source. */
 export function cloneNode(node: EditableBidNode): EditableBidNode {
-  return { ...node, nextBids: node.nextBids.map(cloneNode) };
+  return { ...node, nodeId: newNodeId(), nextBids: node.nextBids.map(cloneNode) };
 }
 
 export function bidCode(node: Pick<EditableBidNode, 'type' | 'color'>): string {

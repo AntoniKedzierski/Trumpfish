@@ -1,12 +1,14 @@
 import { Select } from '@/components/Select';
 import { bidColors, bidTypes, toNumber, type NumberRange } from '@/api/models';
+import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
 import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
 
-type RangeField = 'pointsRange' | 'clubsCardRange' | 'diamondsCardRange' | 'heartsCardRange' | 'spadesCardRange';
 type StopsField = 'clubsStops' | 'diamondsStops' | 'heartsStops' | 'spadesStops';
 
 interface BidEditorPanelProps {
   node: EditableBidNode | null;
+  /** Ranges promised by the same player earlier in the sequence - shown as placeholders only, never written back to the node. */
+  inherited: InheritedRanges;
   onChange: (patch: Partial<EditableBidNode>) => void;
 }
 
@@ -25,6 +27,7 @@ const flagFields: { field: keyof EditableBidNode; label: string }[] = [
   { field: 'oneRoundForcing', label: 'Forsująca na jedno kółko' },
   { field: 'gameForcing', label: 'Forsująca do końcówki' },
   { field: 'goToOpenings', label: 'Przejdź do otwarć' },
+  { field: 'isPreferred', label: 'Odzywka preferowana' },
 ];
 
 const stopsFields: { field: StopsField; label: string }[] = [
@@ -34,7 +37,7 @@ const stopsFields: { field: StopsField; label: string }[] = [
   { field: 'spadesStops', label: 'Piki' },
 ];
 
-export function BidEditorPanel({ node, onChange }: BidEditorPanelProps) {
+export function BidEditorPanel({ node, inherited, onChange }: BidEditorPanelProps) {
   if (node === null) {
     return <aside className="editor empty">Wybierz odzywkę, aby edytować jej szczegóły.</aside>;
   }
@@ -79,15 +82,32 @@ export function BidEditorPanel({ node, onChange }: BidEditorPanelProps) {
         </label>
       ))}
 
-      {rangeFields.map(({ field, label }) => (
-        <div key={field}>
-          <label>{label}</label>
-          <div className="pair">
-            <input type="number" value={toNumber((node[field] as NumberRange | null)?.lower) ?? ''} onChange={(event) => changeRange(field, 'lower', event.target.value)} />
-            <input type="number" value={toNumber((node[field] as NumberRange | null)?.upper) ?? ''} onChange={(event) => changeRange(field, 'upper', event.target.value)} />
+      {rangeFields.map(({ field, label }) => {
+        const range = node[field] as NumberRange | null;
+        const hint = inherited[field];
+
+        return (
+          <div key={field}>
+            <label>{label}</label>
+            <div className="pair">
+              <input
+                type="number"
+                className={conflicts(hint, range, 'lower') ? 'conflict' : undefined}
+                placeholder={placeholderFor(hint, 'lower')}
+                value={toNumber(range?.lower) ?? ''}
+                onChange={(event) => changeRange(field, 'lower', event.target.value)}
+              />
+              <input
+                type="number"
+                className={conflicts(hint, range, 'upper') ? 'conflict' : undefined}
+                placeholder={placeholderFor(hint, 'upper')}
+                value={toNumber(range?.upper) ?? ''}
+                onChange={(event) => changeRange(field, 'upper', event.target.value)}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       <label>Rozkład kolorów</label>
       <input value={node.colorDistribution ?? ''} onChange={(event) => onChange({ colorDistribution: event.target.value })} />

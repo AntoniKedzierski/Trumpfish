@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chevron } from '@/components/Select';
 import { bidCode, suitClassName, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
-import { childPath, samePath } from '../tree';
+import { childPath, containsPath, samePath } from '../tree';
 
 interface BidTreeViewProps {
   system: EditableSystem;
@@ -40,29 +40,44 @@ function TreeBranch({ label, target, children_, selection, onSelect, initiallyEx
   const [expanded, setExpanded] = useState(initiallyExpanded);
   // Children mount on the first expand and then stay mounted, so the collapse can animate instead of snapping shut.
   const [mounted, setMounted] = useState(initiallyExpanded);
+  const rowRef = useRef<HTMLDivElement>(null);
   const selected = samePath(selection, target);
   const leaf = children_.length === 0;
+  const holdsSelection = containsPath(target, selection);
+  // A branch on the way to the selection is open by definition, so picking a node from outside the tree reveals it without extra state.
+  const open = expanded || holdsSelection;
+
+  useEffect(() => {
+    if (selected) {
+      rowRef.current?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selected]);
 
   const toggle = () => {
     if (leaf) {
       return;
     }
 
+    // Collapsing a branch that holds the selection would be ignored, so move the selection onto the branch itself.
+    if (open && holdsSelection) {
+      onSelect(target);
+    }
+
     setMounted(true);
-    setExpanded((current) => !current);
+    setExpanded(!open);
   };
 
   return (
     <li>
-      <div className={`tree-row${selected ? ' selected' : ''}`} onClick={() => onSelect(target)} onDoubleClick={toggle}>
-        <button type="button" className={`tree-toggle${expanded ? ' expanded' : ''}${leaf ? ' leaf' : ''}`} disabled={leaf} onClick={(event) => { event.stopPropagation(); toggle(); }} aria-label={expanded ? 'Zwiń' : 'Rozwiń'}>
+      <div ref={rowRef} className={`tree-row${selected ? ' selected' : ''}`} onClick={() => onSelect(target)} onDoubleClick={toggle}>
+        <button type="button" className={`tree-toggle${open ? ' expanded' : ''}${leaf ? ' leaf' : ''}`} disabled={leaf} onClick={(event) => { event.stopPropagation(); toggle(); }} aria-label={open ? 'Zwiń' : 'Rozwiń'}>
           {leaf ? <span className="tree-leaf-dot" aria-hidden="true" /> : <Chevron />}
         </button>
         {label}
       </div>
 
-      {mounted && !leaf && (
-        <div className={`tree-children${expanded ? ' expanded' : ''}`}>
+      {(mounted || holdsSelection) && !leaf && (
+        <div className={`tree-children${open ? ' expanded' : ''}`}>
           <ul>
             {children_.map((node, index) => (
               <TreeBranch key={index} label={<BidLabel node={node} />} target={childPath(target, index)} children_={node.nextBids} selection={selection} onSelect={onSelect} />
@@ -97,6 +112,7 @@ function BidBadges({ node }: { node: EditableBidNode }) {
       {node.gameForcing && <img src="/images/gameForcing.png" className="badge small" alt="" title="Forsująca do końcówki" />}
       {node.oneRoundForcing && <img src="/images/oneRoundForcing.png" className="badge small" alt="" title="Forsująca na jedno kółko" />}
       {node.signOff && <img src="/images/signoff.png" className="badge small" alt="" title="Odzywka wyprzęgająca" />}
+      {node.isPreferred && <span className="badge-preferred" title="Odzywka preferowana">!</span>}
     </span>
   );
 }

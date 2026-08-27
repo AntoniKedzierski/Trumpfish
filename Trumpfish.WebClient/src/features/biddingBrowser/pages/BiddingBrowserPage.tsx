@@ -6,9 +6,10 @@ import { BidEditorPanel } from '../components/BidEditorPanel';
 import { BidTreeView } from '../components/BidTreeView';
 import { Toolbar } from '../components/Toolbar';
 import { ValidationPanel } from '../components/ValidationPanel';
+import { inheritedRanges } from '../constraints';
 import { createEmptySystem, normalizeSystem } from '../model';
 import { browserReducer, initialBrowserState } from '../state';
-import { getNode } from '../tree';
+import { findNodeById, getNode, resolveIssuePath } from '../tree';
 import './BiddingBrowserPage.css';
 
 export function BiddingBrowserPage() {
@@ -126,10 +127,19 @@ export function BiddingBrowserPage() {
 
       <div className="workspace">
         <BidTreeView system={state.system} selection={state.selection} onSelect={(target) => dispatch({ kind: 'select', target })} />
-        <BidEditorPanel node={selectedNode} onChange={(patch) => dispatch({ kind: 'updateNode', patch })} />
+        <BidEditorPanel node={selectedNode} inherited={inheritedRanges(state.system, state.selection)} onChange={(patch) => dispatch({ kind: 'updateNode', patch })} />
       </div>
 
-      <ValidationPanel issues={state.issues} onClose={() => dispatch({ kind: 'setIssues', issues: null })} />
+      <ValidationPanel
+        issues={state.issues}
+        onSelectIssue={(issue) => {
+          const target = findNodeById(state.system, issue.nodeId) ?? resolveIssuePath(state.system, issue.path);
+          if (target !== null) {
+            dispatch({ kind: 'select', target });
+          }
+        }}
+        onClose={() => dispatch({ kind: 'setIssues', issues: null })}
+      />
     </div>
   );
 }

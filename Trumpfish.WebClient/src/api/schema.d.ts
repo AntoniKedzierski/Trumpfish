@@ -272,6 +272,8 @@ export interface components {
             modifiedUtc: string;
         };
         BidNode: {
+            /** Format: uuid */
+            nodeId?: string;
             description?: null | string;
             condition?: null | string;
             convention?: null | string;
@@ -299,6 +301,7 @@ export interface components {
             gameForcing?: boolean;
             automaticResponse?: boolean;
             goToOpenings?: boolean;
+            isPreferred?: boolean;
             nextBids?: components["schemas"]["BidNode"][];
             realizedGoal?: components["schemas"]["BiddingGoal"];
             aiSource?: null | string;
@@ -415,6 +418,8 @@ export interface components {
             severity: components["schemas"]["ValidationSeverity"];
             message: string;
             path: string;
+            /** Format: uuid */
+            nodeId?: null | string;
             conventionContext?: null | string;
         };
         /** @enum {unknown} */

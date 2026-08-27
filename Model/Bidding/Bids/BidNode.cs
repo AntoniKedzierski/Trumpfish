@@ -8,8 +8,7 @@ namespace Model.Bidding.Bids;
 
 public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, IComparable<BidNode> {
 
-    /// <summary>Runtime-only identity of the node, never serialized.</summary>
-    [JsonIgnore, TextJsonIgnore]
+    /// <summary>Stable identity of the node, serialized so clients can address one exact bid even when several share the same path.</summary>
     public Guid NodeId { get; set; } = Guid.NewGuid();
 
     public string? Description { get; set; }
@@ -33,6 +32,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public bool GameForcing { get; set; }
     public bool AutomaticResponse { get; set; }
     public bool GoToOpenings { get; set; }
+    public bool IsPreferred { get; set; }
     public List<BidNode> NextBids { get; set; } = [];
 
     /// <summary>Back-reference assigned after deserialization. Never serialized, otherwise the tree becomes cyclic.</summary>

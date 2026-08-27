@@ -1,6 +1,8 @@
-import type { ValidationIssue } from '@/api/models';
+import { toNumber, type BidColor, type ValidationIssue } from '@/api/models';
 import { cloneNode, compareBids, createBidNode, createEmptySystem, type EditableBidNode, type EditableSystem, type NodePath } from './model';
 import { childPath, getNode, parentPath, samePath, updateChildrenAt, updateNodeAt } from './tree';
+
+const suitLadder: readonly BidColor[] = ['Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
 
 export interface BrowserState {
   system: EditableSystem;
@@ -78,12 +80,27 @@ function addBid(state: BrowserState): BrowserState {
   }
 
   const parent = getNode(state.system, state.selection);
-  // Mirrors the WPF behaviour: a child always speaks for the other player than its parent, root level bids belong to the opener.
-  const child = createBidNode(parent === null ? true : !parent.openerBid);
-  const system = updateChildrenAt(state.system, state.selection, (children) => [...children, child]);
-  const insertedIndex = (getNode(system, state.selection)?.nextBids.length ?? system.roots[state.selection.rootIndex].bids.length) - 1;
+  const siblings = parent === null ? state.system.roots[state.selection.rootIndex]?.bids ?? [] : parent.nextBids;
 
-  return { ...state, system, selection: childPath(state.selection, insertedIndex), dirty: true };
+  // With siblings around we continue after the last one, otherwise the first child continues after the parent bid itself.
+  const { color, value } = bidAfter(siblings.length === 0 ? parent ?? undefined : siblings[siblings.length - 1]);
+
+  // Mirrors the WPF behaviour: a child always speaks for the other player than its parent, root level bids belong to the opener.
+  const child = createBidNode(color, value, parent === null ? true : !parent.openerBid);
+  const system = updateChildrenAt(state.system, state.selection, (children) => [...children, child]);
+
+  return { ...state, system, selection: childPath(state.selection, siblings.length), dirty: true };
+}
+
+/** Continues the previous sibling along the ladder (♣ → ♦ → ♥ → ♠ → NT, then NT rolls over to ♣ one level higher); anything else starts a blank bid. */
+function bidAfter(previous: EditableBidNode | undefined): { color: BidColor | undefined; value: number | undefined } {
+  const index = previous?.type === 'Submit' ? suitLadder.indexOf(previous.color ?? 'NoColor') : -1;
+  if (index < 0) {
+    return { color: undefined, value: undefined };
+  }
+
+  const level = toNumber(previous?.value) ?? 1;
+  return index === suitLadder.length - 1 ? { color: 'Clubs', value: level + 1 } : { color: suitLadder[index + 1], value: level };
 }
 
 function deleteBid(state: BrowserState): BrowserState {

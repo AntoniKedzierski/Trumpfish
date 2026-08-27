@@ -2,10 +2,11 @@ import type { ValidationIssue } from '@/api/models';
 
 interface ValidationPanelProps {
   issues: ValidationIssue[] | null;
+  onSelectIssue: (issue: ValidationIssue) => void;
   onClose: () => void;
 }
 
-export function ValidationPanel({ issues, onClose }: ValidationPanelProps) {
+export function ValidationPanel({ issues, onSelectIssue, onClose }: ValidationPanelProps) {
   if (issues === null) {
     return null;
   }
@@ -19,11 +20,13 @@ export function ValidationPanel({ issues, onClose }: ValidationPanelProps) {
 
       <ul>
         {issues.map((issue, index) => (
-          <li key={index} className={`issue ${issue.severity.toLowerCase()}`}>
-            <strong>{issue.severity}</strong>
-            <span>{issue.message}</span>
-            <span className="issue-path">{issue.path}</span>
-            {issue.conventionContext && <span className="issue-convention">{issue.conventionContext}</span>}
+          <li key={index}>
+            <button type="button" className={`issue ${issue.severity.toLowerCase()}`} onClick={() => onSelectIssue(issue)} title="Pokaż odzywkę w drzewku">
+              <strong>{issue.severity}</strong>
+              <span>{issue.message}</span>
+              <span className="issue-path">{issue.path}</span>
+              {issue.conventionContext && <span className="issue-convention">{issue.conventionContext}</span>}
+            </button>
           </li>
         ))}
       </ul>

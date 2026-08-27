@@ -307,6 +307,13 @@
   transform: scaleX(-1);
 }
 
+.badge-preferred {
+  color: var(--hearts);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .editor {
   display: flex;
   flex-direction: column;
@@ -403,6 +410,11 @@
   width: 100%;
 }
 
+.editor input.conflict {
+  border-color: var(--hearts);
+  box-shadow: 0 0 0 1px var(--hearts);
+}
+
 .validation {
   max-height: 280px;
   overflow: auto;
@@ -445,8 +457,15 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+  width: 100%;
   padding: 10px 12px;
+  background: none;
+  border: none;
   border-radius: var(--radius-sm);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
@@ -454,7 +473,7 @@
   background: var(--surface-hover);
 }
 
-.issue + .issue {
+.validation li + li .issue {
   border-top: 1px solid var(--border-subtle);
 }
 

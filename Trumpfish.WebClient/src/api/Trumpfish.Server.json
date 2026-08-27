@@ -324,6 +324,10 @@
       "BidNode": {
         "type": "object",
         "properties": {
+          "nodeId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "description": {
             "type": [
               "null",
@@ -468,6 +472,9 @@
             "type": "boolean"
           },
           "goToOpenings": {
+            "type": "boolean"
+          },
+          "isPreferred": {
             "type": "boolean"
           },
           "nextBids": {
@@ -992,6 +999,13 @@
           },
           "path": {
             "type": "string"
+          },
+          "nodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           },
           "conventionContext": {
             "type": [

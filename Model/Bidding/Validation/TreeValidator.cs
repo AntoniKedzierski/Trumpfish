@@ -2,6 +2,7 @@ using Model.Bidding.AI;
 using Model.Bidding.Bids;
 using Model.Bidding.Validation.Constraints;
 using Model.Enums;
+using System.Text.RegularExpressions;
 
 namespace Model.Bidding.Validation;
 
@@ -16,6 +17,14 @@ public sealed class TreeValidator {
     private const int MaxCards = 13;
 
     private static readonly BidColor[] Suits = [BidColor.Clubs, BidColor.Diamonds, BidColor.Hearts, BidColor.Spades];
+
+    /// <summary>Explicit range written anywhere in the text, e.g. "12-14 PC".</summary>
+    private static readonly Regex PcRangePattern = new(@"(?<lower>\d{1,2})\s*[-–—]\s*(?<upper>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    /// <summary>Open ended declarations, honoured only when they open the text, e.g. "Poniżej 9 PC" / "Powyżej 8 PC".</summary>
+    private static readonly Regex BelowPcPattern = new(@"^\s*poniżej\s+(?<upper>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static readonly Regex AbovePcPattern = new(@"^\s*powyżej\s+(?<lower>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 
     public List<ValidationIssue> Validate(BiddingSystem system) {
@@ -54,7 +63,13 @@ public sealed class TreeValidator {
         if (!TryApplyPcConstraint(current, currentPath, issues, con, out var nextCon)) {
             return;
         }
+
+        ValidateDeclaredPcText(current, nextCon, currentPath, issues);
+
         if (!TryApplySuitLengthConstraints(current, currentPath, issues, nextCon, out nextCon)) {
+            return;
+        }
+        if (!ValidateHandSuitTotals(nextCon, current, currentPath, issues)) {
             return;
         }
         if (!ValidatePartnershipPc(nextCon, current, currentPath, issues)) {
@@ -107,6 +122,58 @@ public sealed class TreeValidator {
         if (upper.HasValue && (upper.Value < minDomain || upper.Value > maxDomain)) {
             issues.Add(Issue(bid, path, $"{rangeName}.Upper ({upper}) is outside domain [{minDomain}, {maxDomain}]."));
         }
+    }
+
+
+    /// <summary>
+    /// Compares the point range spelled out in the bid text ("12-14 PC", "Poniżej 9 PC", "Powyżej 8 PC") with everything the same player
+    /// has already promised, because earlier bids may have capped one side of the range and later ones the other.
+    /// A range without any text is fine - only a text contradicting the constraints is reported.
+    /// </summary>
+    private static void ValidateDeclaredPcText(BidNode bid, BiddingCon con, string path, List<ValidationIssue> issues) {
+        var effective = bid.OpenerBid ? con.Opener.Pc : con.Responder.Pc;
+
+        ValidateDeclaredPcText("Condition", bid.Condition, effective, bid, path, issues);
+    }
+
+
+    private static void ValidateDeclaredPcText(string fieldName, string? text, NumberRange effective, BidNode bid, string path, List<ValidationIssue> issues) {
+        var declared = ParseDeclaredPc(text);
+        if (declared == null) {
+            return;
+        }
+
+        if (declared.Lower.HasValue && declared.Lower != effective.Lower) {
+            issues.Add(Issue(bid, path, $"{fieldName} declares lower PC bound {declared.Lower} but the bidding so far implies {effective}."));
+        }
+        if (declared.Upper.HasValue && declared.Upper != effective.Upper) {
+            issues.Add(Issue(bid, path, $"{fieldName} declares upper PC bound {declared.Upper} but the bidding so far implies {effective}."));
+        }
+    }
+
+
+    private static NumberRange? ParseDeclaredPc(string? text) {
+        if (string.IsNullOrWhiteSpace(text)) {
+            return null;
+        }
+
+        var range = PcRangePattern.Match(text);
+        if (range.Success) {
+            return new NumberRange(int.Parse(range.Groups["lower"].Value), int.Parse(range.Groups["upper"].Value));
+        }
+
+        // "Poniżej N PC" means at most N - 1, "Powyżej N PC" at least N + 1; both count only when they open the text.
+        var below = BelowPcPattern.Match(text);
+        if (below.Success) {
+            return new NumberRange(null, int.Parse(below.Groups["upper"].Value) - 1);
+        }
+
+        var above = AbovePcPattern.Match(text);
+        if (above.Success) {
+            return new NumberRange(int.Parse(above.Groups["lower"].Value) + 1, null);
+        }
+
+        return null;
     }
 
 
@@ -177,6 +244,24 @@ public sealed class TreeValidator {
     }
 
 
+    /// <summary>A single hand holds exactly 13 cards, so the minimum lengths promised in all four suits must not exceed that.</summary>
+    private static bool ValidateHandSuitTotals(BiddingCon con, BidNode current, string currentPath, List<ValidationIssue> issues) {
+        foreach (var isOpener in new[] { true, false }) {
+            var lengths = Suits.Select(suit => con.GetSuitLength(isOpener, suit)).ToArray();
+            var minSum = lengths.Sum(length => length.Lower ?? MinCards);
+
+            if (minSum > MaxCards) {
+                var role = isOpener ? "opener" : "responder";
+                var details = string.Join(", ", Suits.Select((suit, index) => $"{suit} {lengths[index]}"));
+                issues.Add(Issue(current, currentPath, $"Hand impossible ({role}): min suit lengths sum to {minSum} > {MaxCards}. {details}."));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     private static bool ValidatePartnershipSuitTotals(BiddingCon con, BidNode current, string currentPath, List<ValidationIssue> issues) {
         foreach (var suit in Suits) {
             var opener = con.GetSuitLength(opener: true, suit);
@@ -205,7 +290,7 @@ public sealed class TreeValidator {
 
 
     private static ValidationIssue Issue(BidNode bid, string path, string message) {
-        return new ValidationIssue(ValidationSeverity.Error, message, path, GetConventionContext(bid));
+        return new ValidationIssue(ValidationSeverity.Error, message, path, GetConventionContext(bid), bid.NodeId);
     }
 
 

@@ -1,4 +1,4 @@
-import type { EditableBidNode, EditableSystem, NodePath } from './model';
+import { formatBid, type EditableBidNode, type EditableSystem, type NodePath } from './model';
 
 type NodeUpdater = (node: EditableBidNode) => EditableBidNode | null;
 type ChildrenUpdater = (children: EditableBidNode[]) => EditableBidNode[];
@@ -76,6 +76,82 @@ function withRootBids(system: EditableSystem, rootIndex: number, updater: Childr
 
 export function parentPath(target: NodePath): NodePath {
   return { rootIndex: target.rootIndex, path: target.path.slice(0, -1) };
+}
+
+/** True when `candidate` sits strictly below `container` in the same root. */
+export function containsPath(container: NodePath, candidate: NodePath | null): boolean {
+  if (candidate === null || container.rootIndex !== candidate.rootIndex || container.path.length >= candidate.path.length) {
+    return false;
+  }
+
+  return container.path.every((value, index) => value === candidate.path[index]);
+}
+
+/**
+ * Turns a `ValidationIssue.path` such as `Otwarcia > 1♣ > 1♥` back into a tree address, matching every segment against the
+ * label produced by `formatBid` - the same format the server writes.
+ */
+export function resolveIssuePath(system: EditableSystem, issuePath: string | null | undefined): NodePath | null {
+  const segments = (issuePath ?? '').split('>').map((segment) => segment.trim()).filter((segment) => segment.length > 0);
+  if (segments.length < 2) {
+    return null;
+  }
+
+  const [rootName, ...bidLabels] = segments;
+  const rootIndex = system.roots.findIndex((root) => (root.name ?? '').trim() === rootName || (rootName === '<root>' && (root.name ?? '').trim() === ''));
+  if (rootIndex < 0) {
+    return null;
+  }
+
+  const path: number[] = [];
+  let nodes = system.roots[rootIndex].bids;
+
+  for (const label of bidLabels) {
+    const index = nodes.findIndex((node) => formatBid(node) === label);
+    if (index < 0) {
+      return path.length === 0 ? null : { rootIndex, path };
+    }
+
+    path.push(index);
+    nodes = nodes[index].nextBids;
+  }
+
+  return { rootIndex, path };
+}
+
+/**
+ * Locates the bid carrying `nodeId`. This is the precise counterpart of {@link resolveIssuePath}, which can only match on
+ * labels and therefore picks the first of several identically named branches.
+ */
+export function findNodeById(system: EditableSystem, nodeId: string | null | undefined): NodePath | null {
+  if (nodeId === null || nodeId === undefined || nodeId.length === 0) {
+    return null;
+  }
+
+  const search = (nodes: EditableBidNode[], path: number[]): number[] | null => {
+    for (let index = 0; index < nodes.length; index++) {
+      const candidate = [...path, index];
+      if (nodes[index].nodeId === nodeId) {
+        return candidate;
+      }
+
+      const found = search(nodes[index].nextBids, candidate);
+      if (found !== null) {
+        return found;
+      }
+    }
+
+    return null;
+  };
+
+  for (let rootIndex = 0; rootIndex < system.roots.length; rootIndex++) {
+    const path = search(system.roots[rootIndex].bids, []);
+    if (path !== null) {
+      return { rootIndex, path };
+    }
+  }
+
+  return null;
 }
 
 export function childPath(target: NodePath, index: number): NodePath {
