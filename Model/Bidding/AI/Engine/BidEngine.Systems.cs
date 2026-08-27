@@ -124,16 +124,8 @@ public partial class BidEngine {
             }
         }
 
-        // Lower bids are preferred
-        var lowestBid = legalBids[0];
-        foreach (var bid in legalBids) {
-            if (bid.Value < lowestBid.Value) {
-                lowestBid = bid;
-            } else if (bid.Value == lowestBid.Value && bid.Color < lowestBid.Color) {
-                lowestBid = bid;
-            }
-        }
-
+        // Najpierw preferowane odzwyki, potem najmniejsza.
+        var lowestBid = legalBids.OrderByDescending(e => e.IsPreferred ? 1 : 0).ThenBy(e => e).First();
         lowestBid.IsFromSystem = true;
         return lowestBid;
     }

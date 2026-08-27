@@ -205,11 +205,6 @@ public partial class BidEngine : IBidInput {
                 e => Evaluator.FromPartner(e, hand, Auction, Position)
             );
 
-
-        if (Auction.ContainsPairSequence("1D,1S,2D")) {
-            var a = 1;
-        }
-
         // Potencjalne przeście na GF
         //var anyNotGameForcing = branches.Keys.Any(e => !e.IsGameForcing()); // Po co to jest?
 
@@ -332,7 +327,6 @@ public partial class BidEngine : IBidInput {
         DetermineGoal();
 
         var lastOwnBid = OwnBidsHistory.LastOrDefault();
-        var bidSequence = Auction.GetBidSequence().ToList();
 
         // Sprawdzamy drzewka obronne, na wszelki wypadek (szczególnie pod kątem dwukolorówek Michaelsa).
         if (Goal == BiddingGoal.Pass && lastOpponentsBid != null) {
@@ -368,6 +362,9 @@ public partial class BidEngine : IBidInput {
             // 2. Czy opłaca się ponownie zgłaszać ustalony kontrakt?
             return null;
         }
+
+        // Bierzemy tylko naszą sekwencję.
+        var bidSequence = Auction.GetPlayersSequence(Position, out var _).Where(e => e.Type != BidType.Pass).ToList();
 
         // TODO
         if (Goal == BiddingGoal.Premium) {
