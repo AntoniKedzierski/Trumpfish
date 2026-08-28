@@ -67,7 +67,7 @@ public partial class BidEngine : IBidInput {
         }
 
         if (selectedBidNode == null) {
-            return Bid.Pass();
+            return Bid.Pass("Nie znaleziono żadnej pasującej odzywki w systemie ani naturalnie.");
         }
 
         OwnBidsHistory.Add(selectedBidNode);

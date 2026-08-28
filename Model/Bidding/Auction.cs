@@ -78,11 +78,6 @@ public class Auction {
     }
 
 
-    public bool CanSubmit(int value, BidColor color) {
-        return !IsCompleted() && new Bid(value, color).IsBidLegal(this);
-    }
-
-
     /// <summary>
     /// Najniższy wysokość odzywki możliwy do zalicytowania w danym kolorze.
     /// </summary>
@@ -274,67 +269,6 @@ public class Auction {
         }
 
         return playerBids;
-    }
-
-
-    public IEnumerable<Bid> GetBidSequence(bool includePass = false) {
-        return AuctionHistory.Where(bid => includePass || bid.Type != BidType.Pass);
-    }
-
-
-    /// <summary>
-    /// Sprawdza, czy któraś z par zalicytowała dokładnie podaną sekwencję odzywek
-    /// (od początku swojej licytacji, pomijając początkowe pasy).
-    /// </summary>
-    /// <param name="sequence">Sekwencja odzywek rozdzielona przecinkami, np. "1S,2S".</param>
-    public bool ContainsPairSequence(string sequence) {
-        if (string.IsNullOrWhiteSpace(sequence)) {
-            return false;
-        }
-
-        var pattern = sequence
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(e => new Bid(e))
-            .ToList();
-
-        if (pattern.Count == 0) {
-            return false;
-        }
-
-        var pair1Sequence = GetPlayersSequence(PlayerPosition.North, out _);
-        var pair2Sequence = GetPlayersSequence(PlayerPosition.East, out _);
-
-        return StartsWithSequence(pair1Sequence, pattern)
-            || StartsWithSequence(pair2Sequence, pattern);
-    }
-
-
-    private static bool StartsWithSequence(IReadOnlyList<Bid> pairSequence, IReadOnlyList<Bid> pattern) {
-        var start = SkipLeadingPasses(pairSequence);
-        var patternStart = SkipLeadingPasses(pattern);
-
-        var patternLength = pattern.Count - patternStart;
-
-        if (patternLength == 0 || pairSequence.Count - start < patternLength) {
-            return false;
-        }
-
-        for (int i = 0; i < patternLength; i++) {
-            if (!pairSequence[start + i].Equals(pattern[patternStart + i])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
-    private static int SkipLeadingPasses(IReadOnlyList<Bid> bids) {
-        int i = 0;
-        while (i < bids.Count && bids[i].Type == BidType.Pass) {
-            i++;
-        }
-        return i;
     }
 
 

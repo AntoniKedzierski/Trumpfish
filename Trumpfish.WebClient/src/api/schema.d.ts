@@ -261,6 +261,7 @@ export interface components {
             /** Format: int32 */
             value?: null | number | string;
             isFromSystem?: boolean;
+            explanation?: null | string;
         };
         /** @enum {unknown} */
         BidColor: "NoColor" | "Clubs" | "Diamonds" | "Hearts" | "Spades" | "NoTrump";
@@ -318,6 +319,7 @@ export interface components {
             /** Format: int32 */
             value?: null | number | string;
             isFromSystem?: boolean;
+            explanation?: null | string;
         };
         /** @enum {unknown} */
         BidType: "Pass" | "Submit" | "Double" | "Redouble";

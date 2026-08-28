@@ -280,6 +280,12 @@
           },
           "isFromSystem": {
             "type": "boolean"
+          },
+          "explanation": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -542,6 +548,12 @@
           },
           "isFromSystem": {
             "type": "boolean"
+          },
+          "explanation": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

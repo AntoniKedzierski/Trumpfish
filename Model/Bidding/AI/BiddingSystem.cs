@@ -97,8 +97,8 @@ public class BiddingSystem {
     }
 
 
-    public Root? Openings() {
-        return Roots.FirstOrDefault(e => e.Name == OpeningsRootName);
+    public Root Openings() {
+        return Roots.FirstOrDefault(e => e.Name == OpeningsRootName) ?? throw new Exception("Nie znaleziono otwarć.");
     }
 
 

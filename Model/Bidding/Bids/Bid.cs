@@ -15,33 +15,17 @@ public class Bid : IEquatable<Bid> {
 
     public bool IsFromSystem { get; set; } = false;
 
+    public string? Explanation { get; set; }
+
     [JsonIgnore, TextJsonIgnore]
     public string? StackTrace { get; set; }
 
 
-    public Bid() {
-#if DEBUG
-        StackTrace = new StackTrace(true).ToString();
-#endif
-    }
-
-    public Bid(int value, BidColor color) : this() {
-        Value = value;
-        Color = color;
-    }
+    public Bid() { }
 
 
-    public Bid(string label) : this() {
-        Value = int.Parse(label[0].ToString());
-        var color = label[1..];
-
-        Color = color switch {
-            "S" => BidColor.Spades,
-            "H" => BidColor.Hearts,
-            "D" => BidColor.Diamonds,
-            "C" => BidColor.Clubs,
-            "NT" => BidColor.NoTrump
-        };
+    public Bid(string explanation) {
+        Explanation = explanation;
     }
 
 
@@ -106,18 +90,18 @@ public class Bid : IEquatable<Bid> {
 
     public override string ToString() {
         if (Type == BidType.Pass) {
-            return "Pass" + (IsFromSystem ? "" : " F");
+            return "Pass";
         }
 
         if (Type == BidType.Double) {
-            return "X" + (IsFromSystem ? "" : " F");
+            return "X";
         }
 
         if (Type == BidType.Redouble) {
-            return "XX" + (IsFromSystem ? "" : " F");
+            return "XX";
         }
 
-        return $"{Value}{Color.ColorMark()}" + (IsFromSystem ? "" : " F");
+        return $"{Value}{Color.ColorMark()}";
     }
 
 
@@ -134,8 +118,8 @@ public class Bid : IEquatable<Bid> {
         return other.Color == Color && other.Type == Type && (other.Value?.Equals(Value) ?? true);
     }
 
-    public static Bid Pass() {
-        return new Bid { Type = BidType.Pass };
+    public static Bid Pass(string? explanation = null) {
+        return new Bid { Type = BidType.Pass, Explanation = explanation };
     }
 }
 
