@@ -1,22 +1,10 @@
-using Model.Bidding.AI.Eval;
 using Model.Bidding.Bids;
-using Model.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Bidding.AI.Engine;
 
 public partial class BidEngine {
 
-    private BidNode? GetBidFromSystemBranches(Hand hand, BidNode branchHead) {
-        return GetBidFromSystemBranches(hand, [branchHead]);
-    }
-
-
-    private BidNode? GetBidFromSystemBranches(Hand hand, IEnumerable<BidNode> branches) {
+    private BidNode? GetBidFromSystemBranches(Hand hand, List<BidNode> branches, Bid? lastOpponentsBid = null) {
         if (!branches.Any()) {
             return null;
         }
@@ -44,11 +32,9 @@ public partial class BidEngine {
             }
 
             // Weź wszystko, co pasuje do ręki i jest legalne, i wybierz z tego systemową odzywkę.
-            var bidCandidates = FindNodesByHand(hand, branchHead)
-                .Where(e => e.IsBidLegal(Auction))
-                .ToList();
+            var bidCandidates = FindMatchingBids(hand, branchHead);
+            var chosenBid = ChooseBidFromSystem(bidCandidates, lastOpponentsBid);
 
-            var chosenBid = ChooseBidFromSystem(bidCandidates);
             if (chosenBid != null) {
                 chosenBids.Add(chosenBid);
             }
@@ -60,72 +46,46 @@ public partial class BidEngine {
 
         var firstChosenBid = chosenBids[0];
         if (!chosenBids.All(e => e.EqualsByColorAndValue(firstChosenBid))) {
-            Console.WriteLine("Multiple tree branches possible: " + string.Join(", ", chosenBids.Distinct()));
-            return null;
+            throw new Exception("Multiple tree branches possible: " + string.Join(", ", chosenBids.Distinct()));
         }
 
         return firstChosenBid;
     }
 
 
-    private TResult? GetCommonBranchesValue<TResult>(Dictionary<BidNode, TableEvaluation> branches, Func<BidNode, TResult> property) {
-        TResult? currentValue = default;
-        var valueFound = false;
-
-        foreach (var branchHead in branches.Keys) {
-            if (!valueFound) {
-                currentValue = property.Invoke(branchHead);
-                continue;
-            }
-
-            if (valueFound && !currentValue.Equals(property.Invoke(branchHead))) {
-                Console.WriteLine($"Property mismatch across branches. Current value was {currentValue}, but {branchHead} has different value {property.Invoke(branchHead)}.");
-            }
-        }
-
-        return currentValue;
-    }
+    public List<BidNode> FindMatchingBids(Hand hand, BidNode head) => [.. head
+        .NextBids
+        .Where(e => e.IsBidLegal(Auction))
+        .Where(e => e.Matches(hand))];
 
 
-    public List<BidNode> FindNodesByHand(Hand hand, BidNode head) {
-        List<BidNode> foundBidNodes = new();
-        foreach (BidNode bidNode in head.NextBids) {
-            if (bidNode.Matches(hand)) {
-                foundBidNodes.Add(bidNode);
-            }
-        }
-
-        return foundBidNodes;
-    }
+    public List<BidNode> FindNodesByHand(Hand hand, Root root) => [.. root
+        .Bids
+        .Where(e => e.IsBidLegal(Auction))
+        .Where(e => e.Matches(hand))];
 
 
-    public List<BidNode> FindNodesByHand(Hand hand, Root root) {
-        List<BidNode> foundBidNodes = new();
-        foreach (BidNode bidNode in root.Bids) {
-            if (bidNode.Matches(hand)) {
-                foundBidNodes.Add(bidNode);
-            }
-        }
-
-        return foundBidNodes;
-    }
-
-
-    public static BidNode? ChooseBidFromSystem(List<BidNode> legalBids, bool preferConventions = false) {
+    public static BidNode? ChooseBidFromSystem(List<BidNode> legalBids, Bid? lastOpponentsBid = null, bool preferConventions = false) {
         if (legalBids.Count == 0) {
             return null;
         }
 
-        if (preferConventions) {
-            foreach (var bid in legalBids) {
-                if (bid.Convention != null) {
-                    return bid;
-                }
-            }
+        // Jeżeli przeciwnicy się nie wtrącili, to wywalamy wszystkie odzywki po wtrąceniach.
+        var bidsToChooseFrom = lastOpponentsBid == null
+            ? legalBids.Where(e => e.Interjection == null).ToList()
+            : legalBids.Where(e => e.Interjection == null || e.Interjection.Equals(lastOpponentsBid)).ToList();
+
+        if (bidsToChooseFrom.Count == 0) {
+            return null;
         }
 
         // Najpierw preferowane odzwyki, potem najmniejsza.
-        var lowestBid = legalBids.OrderByDescending(e => e.IsPreferred ? 1 : 0).ThenBy(e => e).First();
+        var lowestBid = bidsToChooseFrom
+            .OrderByDescending(e => e.IsPreferred ? 1 : 0)
+            .ThenByDescending(e => preferConventions ? (e.Convention != null ? 1 : 0) : 0) 
+            .ThenBy(e => e)
+            .First();
+
         lowestBid.IsFromSystem = true;
         return lowestBid;
     }

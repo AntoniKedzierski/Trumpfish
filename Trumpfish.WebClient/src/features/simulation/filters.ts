@@ -6,7 +6,7 @@ import { makesGame } from './sorting';
 export type SideFilterKey = 'any' | 'oneSide' | 'twoSide';
 
 /** Contract level filters, independent of who bid. */
-export type GameFilterKey = 'any' | 'game' | 'gameWithPoints' | 'gameWithoutPoints' | 'pointsWithoutGame' | 'anyGame' | 'slam' | 'grandSlam';
+export type GameFilterKey = 'any' | 'game' | 'gameWithPoints' | 'gameWithoutPoints' | 'pointsWithoutGame' | 'errors' | 'anyGame' | 'slam' | 'grandSlam';
 
 export const sideFilterLabels: Record<SideFilterKey, string> = {
   any: 'Dowolna licytacja',
@@ -20,6 +20,7 @@ export const gameFilterLabels: Record<GameFilterKey, string> = {
   gameWithPoints: 'Partie z pokryciem',
   gameWithoutPoints: 'Partie bez pokrycia',
   pointsWithoutGame: 'Pokrycie bez partii',
+  errors: 'Błędy',
   anyGame: 'Partie i szlemy',
   slam: 'Szlemiki i szlemy (6+)',
   grandSlam: 'Szlemy (7)',
@@ -36,7 +37,7 @@ const gameRequirements: Record<string, { points: number; trumps?: number }> = {
 
 export function filterDeals(deals: readonly SimulationDealResult[], side: SideFilterKey, game: GameFilterKey, bidSearch: string): SimulationDealResult[] {
   const wanted = parseBid(bidSearch);
-  return deals.filter((deal) => matchesSide(deal, side) && matchesGame(deal.contract, game) && matchesBid(deal, wanted));
+  return deals.filter((deal) => matchesSide(deal, side) && matchesGame(deal, game) && matchesBid(deal, wanted));
 }
 
 function matchesSide(deal: SimulationDealResult, filter: SideFilterKey): boolean {
@@ -50,8 +51,9 @@ function matchesSide(deal: SimulationDealResult, filter: SideFilterKey): boolean
   }
 }
 
-function matchesGame(contract: SimulationContract, filter: GameFilterKey): boolean {
+function matchesGame(deal: SimulationDealResult, filter: GameFilterKey): boolean {
   // "Game" here means exactly game level, so slams can be inspected separately; "anyGame" covers game level and above.
+  const contract = deal.contract;
   const game = makesGame(contract) && !atLeastLevel(contract, 6);
 
   switch (filter) {
@@ -63,6 +65,8 @@ function matchesGame(contract: SimulationContract, filter: GameFilterKey): boole
       return game && !hasGameValues(contract);
     case 'pointsWithoutGame':
       return !makesGame(contract) && hasGameValues(contract);
+    case 'errors':
+      return hasErrors(deal);
     case 'anyGame':
       return makesGame(contract);
     case 'slam':
@@ -105,6 +109,10 @@ function hasGameValues(contract: SimulationContract): boolean {
 function atLeastLevel(contract: SimulationContract, level: number): boolean {
   const value = toNumber(contract.value);
   return !contract.passed && value !== null && value >= level;
+}
+
+function hasErrors(deal: SimulationDealResult): boolean {
+  return Boolean(deal.error);
 }
 
 interface BidQuery {

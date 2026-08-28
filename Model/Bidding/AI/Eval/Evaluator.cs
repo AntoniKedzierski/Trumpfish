@@ -1,4 +1,4 @@
-﻿using Model.Bidding.Bids;
+using Model.Bidding.Bids;
 using Model.Enums;
 using System;
 using System.Collections.Generic;
@@ -67,6 +67,11 @@ public static class Evaluator {
         result.RightOpponent.Evaluate(combinedHandEvaluation);
 
         return result;
+    }
+
+
+    public static TableEvaluation FromSequence(Hand hand, List<Bid> bidSequence) {
+        throw new NotImplementedException();
     }
    
 }

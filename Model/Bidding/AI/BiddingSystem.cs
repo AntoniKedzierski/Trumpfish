@@ -43,13 +43,30 @@ public class BiddingSystem {
         var children = Openings()!.Bids;
 
         for (int i = 0; i < bidSequence.Count - 1; ++i) {
-            children = GetMatchingChildren(children, bidSequence[i]);
+            children = GetMatchingChildren(children, bidSequence[i]).ToList();
         }
 
-        return children
+        return [.. children
             .Where(e => e.Equals(bidSequence[bidSequence.Count - 1]))
-            .Distinct()
-            .ToList();
+            .Distinct()];
+    }
+
+
+    public List<BidNode> GetSystemLeaves(List<Bid> bidSequence) {
+        var children = Openings()!.Bids;
+
+        for (int i = 0; i < bidSequence.Count; ++i) {
+            var nextChildren = GetMatchingChildren(children, bidSequence[i]).ToList();
+
+            // Skończył się system, wszystkie pozostałe odzywki są naturalne (nie dają informacji).
+            if (nextChildren.Count == 0) {
+                return children.Where(e => e.Matches(bidSequence[i])).ToList();
+            }
+
+            children = nextChildren;
+        }
+
+        return children;
     }
 
 

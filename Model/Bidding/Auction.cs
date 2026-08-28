@@ -400,4 +400,6 @@ public class Auction {
 
 
     public bool ReachedGameLevel() => GetLastSubmittedBid(onlySubmitions: true)?.MakesGame() ?? false;
+
+    public bool AnySubmits() => AuctionHistory.Any(e => e.Type == BidType.Submit);
 }

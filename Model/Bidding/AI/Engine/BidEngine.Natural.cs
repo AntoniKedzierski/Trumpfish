@@ -455,12 +455,38 @@ public partial class BidEngine {
             }
         }
 
-        var BidNodeToSubmit = GetLowestSubmitOrPass(chosenBidNodes);
-        if (isForced && BidNodeToSubmit.Type == BidType.Pass) {
+        var chosenBid = GetLowestSubmitOrPass(chosenBidNodes);
+        if (isForced && chosenBid.Type == BidType.Pass) {
             return ForcedToBid(hand);
         }
 
-        return BidNodeToSubmit;
+        return chosenBid;
+    }
+
+
+    private BidNode GetNaturalBid(Hand hand, Dictionary<BidNode, List<TableEvaluation>> partnerPossibleEvaluations, bool isForced = false) {
+        var chosenBidNodes = new List<BidNode>();
+        foreach (var branch in partnerPossibleEvaluations) {
+            foreach (var possibleEvaluation in branch.Value) {
+                BidNode? chosenBidNode;
+                if (Auction.Interrupted(onlySubmit: true)) {
+                    chosenBidNode = TrueNaturalResponse(hand, branch.Key, possibleEvaluation);
+                } else {
+                    chosenBidNode = TrueNaturalResponse(hand, branch.Key, possibleEvaluation).AssertFreestyleIsntConfusing(branch.Key);
+                }
+
+                if (chosenBidNode != null && chosenBidNode.Type != BidType.Pass) {
+                    chosenBidNodes.Add(chosenBidNode);
+                }
+            }
+        }
+
+        var chosenBid = GetLowestSubmitOrPass(chosenBidNodes);
+        if (isForced && chosenBid.Type == BidType.Pass) {
+            return ForcedToBid(hand);
+        }
+
+        return chosenBid;
     }
 
     /// <summary>
@@ -472,10 +498,6 @@ public partial class BidEngine {
         var lastPartnerBid = Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false);
         var lastOwnBid = Auction.GetLastPlayerBid(Position, passAsNull: false);
         var firstPartnerBid = Auction.FirstPlayerBid(PartnerPosition);
-
-        if (firstPartnerBid?.Equals(1, BidColor.Clubs) == true && lastPartnerBid?.Equals(2, BidColor.NoTrump) == true && lastOwnBid?.Equals(2, BidColor.Spades) == true) {
-            var test = 1;
-        }
 
         if (Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false)!.Type == BidType.Redouble || Auction.GetLastPlayerBid(PartnerPosition, passAsNull: false)!.MakesGame()) {
             return BidNode.Pass();
