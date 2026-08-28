@@ -286,11 +286,7 @@ public partial class BidEngine : IBidInput {
             // Do odtworzenia w GetNaturalBid.
 
             // Pobieramy finalne odzywki wynikające z sekwencji, które pasują do systemu.
-            var systemLeaves = BiddingSystem.GetSystemLeaves(bidSequence);
-
-            // Ostatnia odzywka partnera na pewno nie będzie w systemLeaves, bo inaczej istaniały by 'branches'.
-            // Cofamy się zatem w górę w systemLeaves dwukrotnie.
-            var partnerSystemLeaves = GoUp(systemLeaves, 2);
+            var partnerSystemLeaves = BiddingSystem.GetLastPartnerSystemBid(bidSequence, PartnerOpened);
 
             // Wyznaczamy prawdopodobne układy ręki partnera.
             // Dla jednakowych odzywek mogą to być różne ewaluacje.

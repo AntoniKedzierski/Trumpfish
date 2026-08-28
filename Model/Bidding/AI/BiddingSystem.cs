@@ -70,6 +70,33 @@ public class BiddingSystem {
     }
 
 
+    public List<BidNode> GetLastPartnerSystemBid(List<Bid> bidSequence, bool partnerOpened) {
+        var children = Openings()!.Bids;
+
+        for (int i = 0; i < bidSequence.Count; ++i) {
+            var nextChildren = GetMatchingChildren(children, bidSequence[i]).ToList();
+
+            // Skończył się system, wszystkie pozostałe odzywki są naturalne (nie dają informacji).
+            if (nextChildren.Count == 0) {
+                // Pasujące odzywki z ostatniego poziomu.
+                var matchingNodes = children.Where(e => e.Matches(bidSequence[i])).ToList();
+
+                // Partner ma parzyste indeksy.
+                if (partnerOpened && i % 2 == 1 || !partnerOpened && i % 2 == 0) {
+                    return matchingNodes.Select(e => e.Parent).Where(e => e != null).Select(e => e!).ToList();
+                }
+                else {
+                    return matchingNodes;
+                }
+            }
+
+            children = nextChildren;
+        }
+
+        return [];
+    }
+
+
     public IEnumerable<BidNode> GetDescendants(BidNode parent, Bid bid) {
         foreach (var child in parent.NextBids) {
             if (child.Matches(bid)) {
