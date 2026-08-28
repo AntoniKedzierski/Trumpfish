@@ -684,7 +684,8 @@
           "color",
           "value",
           "isFromSystem",
-          "label"
+          "label",
+          "explanation"
         ],
         "type": "object",
         "properties": {
@@ -719,6 +720,12 @@
           },
           "label": {
             "type": "string"
+          },
+          "explanation": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

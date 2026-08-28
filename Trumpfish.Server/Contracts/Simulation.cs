@@ -20,8 +20,8 @@ public record SimulationRequest(string SystemName, IReadOnlyList<SimulationDealR
 /// <summary>Hand echoed back together with everything the client needs to render it.</summary>
 public record SimulationHand(PlayerPosition Position, IReadOnlyList<SimulationCard> Cards, int Points, int PointsNt, int Spades, int Hearts, int Diamonds, int Clubs);
 
-/// <summary>A single entry of the auction, already attributed to the player who made it.</summary>
-public record SimulationBid(int Index, PlayerPosition Bidder, BidType Type, BidColor Color, int? Value, bool IsFromSystem, string Label);
+/// <summary>A single entry of the auction, already attributed to the player who made it. <paramref name="Explanation"/> is the reasoning behind the bid, shown on demand in the client.</summary>
+public record SimulationBid(int Index, PlayerPosition Bidder, BidType Type, BidColor Color, int? Value, bool IsFromSystem, string Label, string? Explanation);
 
 /// <summary>
 /// Final contract of a simulated auction. <paramref name="PairPoints"/> is the combined strength of the declaring pair - honour points for a suit contract,

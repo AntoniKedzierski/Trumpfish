@@ -107,7 +107,7 @@ public class BiddingSimulator : IBiddingSimulator {
 
         for (var i = 0; i < auction.AuctionHistory.Count; i++) {
             var bid = auction.AuctionHistory[i];
-            bids.Add(new SimulationBid(i, auction.GetBidder(i), bid.Type, bid.Color, bid.Value, bid.IsFromSystem, Describe(bid)));
+            bids.Add(new SimulationBid(i, auction.GetBidder(i), bid.Type, bid.Color, bid.Value, bid.IsFromSystem, Describe(bid), bid.Explanation));
         }
 
         return bids;

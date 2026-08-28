@@ -125,6 +125,7 @@
 }
 
 .deal-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -134,6 +135,11 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   animation: card-rise var(--duration-slow) var(--ease-out) both;
+}
+
+/* Cards later in the grid are painted on top, so the one holding an open explanation has to be lifted above them. */
+.deal-card:has(.bid-explanation) {
+  z-index: 30;
 }
 
 @keyframes card-rise {
@@ -276,6 +282,89 @@
 .bidding-table td {
   padding: 5px 8px;
   text-align: center;
+  color: var(--text-primary);
+}
+
+/* Anchor for the explanation bubble so it floats above the table instead of stretching the row. */
+.bid-cell {
+  position: relative;
+  display: inline-block;
+}
+
+.bid-chip {
+  position: relative;
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.bid-chip:hover,
+.bid-chip.open {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+/* Bids the engine had to invent are flagged before the user hovers anything. */
+.off-system-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--amber-flame);
+}
+
+.bid-explanation {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 220px;
+  padding: 8px 10px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+  white-space: normal;
+  transform: translateX(-50%);
+  animation: bid-explanation-open var(--duration-normal) var(--ease-out) both;
+}
+
+/* Own keyframes: the shared select-open animation ends on transform:none, which would undo the centering. */
+@keyframes bid-explanation-open {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px) scaleY(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+.bid-explanation-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.bid-explanation-text {
+  font-size: 12px;
+  line-height: 1.45;
   color: var(--text-primary);
 }
 

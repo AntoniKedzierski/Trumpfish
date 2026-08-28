@@ -357,6 +357,7 @@ export interface components {
             value: null | number | string;
             isFromSystem: boolean;
             label: string;
+            explanation: null | string;
         };
         SimulationCard: {
             value: components["schemas"]["CardValue"];

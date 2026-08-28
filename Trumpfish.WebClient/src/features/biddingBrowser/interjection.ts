@@ -1,4 +1,5 @@
 import type { BidColor } from '@/api/models';
+import { toNumber } from '@/api/models';
 import { colorMark, type EditableBidNode, type InterjectionBid } from './model';
 
 export type InterjectionOptionKind = 'submit' | 'double' | 'clear' | 'empty';
@@ -26,8 +27,8 @@ function outbids(candidate: InterjectionBid, current: InterjectionBid | null): b
     return true;
   }
 
-  const candidateValue = candidate.value ?? 0;
-  const currentValue = current.value ?? 0;
+  const candidateValue = toNumber(candidate.value) ?? 0;
+  const currentValue = toNumber(current.value) ?? 0;
   return candidateValue > currentValue || (candidateValue === currentValue && colorRank(candidate.color) > colorRank(current.color));
 }
 
@@ -50,7 +51,7 @@ export function highestBidBefore(ancestors: readonly EditableBidNode[]): Interje
 }
 
 function toInterjectionBid(node: EditableBidNode): InterjectionBid {
-  return { type: node.type ?? 'Submit', color: node.color ?? 'NoColor', value: typeof node.value === 'number' ? node.value : Number(node.value ?? 0) };
+  return { type: node.type ?? 'Submit', color: node.color ?? 'NoColor', value: toNumber(node.value) ?? 0 };
 }
 
 /** A `Submit` interjection is legal only when it outbids everything said earlier in the sequence. */

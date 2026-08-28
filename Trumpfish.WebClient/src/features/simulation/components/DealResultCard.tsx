@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { cardLabel, suitOfCard } from '../deals';
 import { makesGame } from '../sorting';
 import { colorMark } from '@/features/biddingBrowser/model';
@@ -94,6 +95,9 @@ function HandView({ hand }: { hand: SimulationHand }) {
 }
 
 function BiddingTable({ deal }: { deal: SimulationDealResult }) {
+  // Only one explanation popup is open at a time, keyed by the index of the bid inside the auction.
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   if (deal.bidding.length === 0) {
     return <p className="bidding-empty">Brak licytacji.</p>;
   }
@@ -120,13 +124,79 @@ function BiddingTable({ deal }: { deal: SimulationDealResult }) {
           <tr key={row}>
             {cells.slice(row * 4, row * 4 + 4).map((bid, column) => (
               <td key={column} className={bid === null ? 'empty' : ''}>
-                {bid === null ? '' : <BidLabel bid={bid} />}
+                {bid === null ? '' : (
+                  <BidCell
+                    bid={bid}
+                    open={openIndex === (toNumber(bid.index) ?? -1)}
+                    onToggle={() => {
+                      const index = toNumber(bid.index) ?? -1;
+                      setOpenIndex((current) => (current === index ? null : index));
+                    }}
+                    onClose={() => setOpenIndex(null)}
+                  />
+                )}
               </td>
             ))}
           </tr>
         ))}
       </tbody>
     </table>
+  );
+}
+
+interface BidCellProps {
+  bid: SimulationBid;
+  open: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+}
+
+/** A bid reacts to the pointer and reveals the engine's reasoning on click; bids invented outside the system get a small dot. */
+function BidCell({ bid, open, onToggle, onClose }: BidCellProps) {
+  const container = useRef<HTMLSpanElement>(null);
+
+  // A pass is never really "outside the system", so flagging it would only add noise to the table.
+  const offSystem = !bid.isFromSystem && bid.type !== 'Pass';
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!container.current?.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onClose]);
+
+  return (
+    <span className="bid-cell" ref={container}>
+      <button type="button" className={`bid-chip${offSystem ? ' off-system' : ''}${open ? ' open' : ''}`} onClick={onToggle}>
+        <BidLabel bid={bid} />
+        {offSystem ? <span className="off-system-dot" title="Odzywka spoza systemu" /> : null}
+      </button>
+      {open ? (
+        <span className="bid-explanation" role="tooltip">
+          <span className="bid-explanation-title">
+            {bid.bidder} · {bid.isFromSystem ? 'z systemu' : 'spoza systemu'}
+          </span>
+          <span className="bid-explanation-text">{bid.explanation ?? 'Brak wyjaśnienia.'}</span>
+        </span>
+      ) : null}
+    </span>
   );
 }
 
