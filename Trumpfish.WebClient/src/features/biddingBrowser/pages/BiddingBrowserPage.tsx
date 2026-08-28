@@ -9,7 +9,7 @@ import { ValidationPanel } from '../components/ValidationPanel';
 import { inheritedRanges } from '../constraints';
 import { createEmptySystem, normalizeSystem } from '../model';
 import { browserReducer, initialBrowserState } from '../state';
-import { findNodeById, getNode, resolveIssuePath } from '../tree';
+import { findNodeById, getNode, resolveIssuePath, ancestorNodes } from '../tree';
 import './BiddingBrowserPage.css';
 
 export function BiddingBrowserPage() {
@@ -127,7 +127,12 @@ export function BiddingBrowserPage() {
 
       <div className="workspace">
         <BidTreeView system={state.system} selection={state.selection} onSelect={(target) => dispatch({ kind: 'select', target })} />
-        <BidEditorPanel node={selectedNode} inherited={inheritedRanges(state.system, state.selection)} onChange={(patch) => dispatch({ kind: 'updateNode', patch })} />
+        <BidEditorPanel
+          node={selectedNode}
+          inherited={inheritedRanges(state.system, state.selection)}
+          ancestors={ancestorNodes(state.system, state.selection)}
+          onChange={(patch) => dispatch({ kind: 'updateNode', patch })}
+        />
       </div>
 
       <ValidationPanel

@@ -2,6 +2,7 @@ import { Select } from '@/components/Select';
 import { bidColors, bidTypes, toNumber, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
 import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
+import { InterjectionPicker } from './InterjectionPicker';
 
 type StopsField = 'clubsStops' | 'diamondsStops' | 'heartsStops' | 'spadesStops';
 
@@ -9,6 +10,8 @@ interface BidEditorPanelProps {
   node: EditableBidNode | null;
   /** Ranges promised by the same player earlier in the sequence - shown as placeholders only, never written back to the node. */
   inherited: InheritedRanges;
+  /** Bids said before the edited one, from the root down to its parent - they decide which interjections are legal. */
+  ancestors: readonly EditableBidNode[];
   onChange: (patch: Partial<EditableBidNode>) => void;
 }
 
@@ -37,7 +40,7 @@ const stopsFields: { field: StopsField; label: string }[] = [
   { field: 'spadesStops', label: 'Piki' },
 ];
 
-export function BidEditorPanel({ node, inherited, onChange }: BidEditorPanelProps) {
+export function BidEditorPanel({ node, inherited, ancestors, onChange }: BidEditorPanelProps) {
   if (node === null) {
     return <aside className="editor empty">Wybierz odzywkę, aby edytować jej szczegóły.</aside>;
   }
@@ -61,6 +64,9 @@ export function BidEditorPanel({ node, inherited, onChange }: BidEditorPanelProp
 
       <label>Typ</label>
       <Select value={node.type ?? 'Submit'} options={bidTypes.map((type) => ({ value: type, label: bidTypeLabels[type] }))} onChange={(type) => onChange({ type })} />
+
+      <label>Wtrącenie</label>
+      <InterjectionPicker value={node.interjection} ancestors={ancestors} onChange={(interjection) => onChange({ interjection })} />
 
       <label>Znaczenie</label>
       <input value={node.condition ?? ''} onChange={(event) => onChange({ condition: event.target.value })} />

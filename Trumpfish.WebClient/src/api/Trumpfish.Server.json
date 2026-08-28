@@ -260,6 +260,29 @@
   },
   "components": {
     "schemas": {
+      "Bid": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/BidType"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isFromSystem": {
+            "type": "boolean"
+          }
+        }
+      },
       "BidColor": {
         "enum": [
           "NoColor",
@@ -476,6 +499,16 @@
           },
           "isPreferred": {
             "type": "boolean"
+          },
+          "interjection": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Bid"
+              }
+            ]
           },
           "nextBids": {
             "type": "array",

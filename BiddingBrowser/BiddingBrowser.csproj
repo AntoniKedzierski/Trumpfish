@@ -92,4 +92,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BiddingTree\Controls\" />
+  </ItemGroup>
+
 </Project>

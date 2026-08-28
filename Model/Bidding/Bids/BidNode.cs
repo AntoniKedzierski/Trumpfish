@@ -33,6 +33,10 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public bool AutomaticResponse { get; set; }
     public bool GoToOpenings { get; set; }
     public bool IsPreferred { get; set; }
+
+    /// <summary>Bid made by the preceding opponent, so sequences with interjections can be described. Only <see cref="BidType.Submit"/> or <see cref="BidType.Double"/> make sense here.</summary>
+    public Bid? Interjection { get; set; }
+
     public List<BidNode> NextBids { get; set; } = [];
 
     /// <summary>Back-reference assigned after deserialization. Never serialized, otherwise the tree becomes cyclic.</summary>

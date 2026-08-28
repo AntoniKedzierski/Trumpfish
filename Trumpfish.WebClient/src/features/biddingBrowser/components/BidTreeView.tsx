@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Chevron } from '@/components/Select';
 import { bidCode, suitClassName, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
+import { formatInterjection } from '../interjection';
 import { childPath, containsPath, samePath } from '../tree';
 
 interface BidTreeViewProps {
@@ -97,6 +98,11 @@ function BidLabel({ node }: { node: EditableBidNode }) {
         <span className={suitClassName(node)}>{bidCode(node)}</span>
       </span>
       <span className="bid-separator">:</span>
+      {node.interjection && (
+        <span className="bid-interjection">
+          (po. <span className={suitClassName(node.interjection)}>{formatInterjection(node.interjection)}</span>)
+        </span>
+      )}
       <span className="bid-condition">{node.condition}</span>
       {node.convention && <span className="bid-convention">⟨ {node.convention} ⟩</span>}
       <BidBadges node={node} />

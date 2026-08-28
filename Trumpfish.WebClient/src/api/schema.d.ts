@@ -255,6 +255,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Bid: {
+            type?: components["schemas"]["BidType"];
+            color?: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            value?: null | number | string;
+            isFromSystem?: boolean;
+        };
         /** @enum {unknown} */
         BidColor: "NoColor" | "Clubs" | "Diamonds" | "Hearts" | "Spades" | "NoTrump";
         BiddingGoal: number;
@@ -302,6 +309,7 @@ export interface components {
             automaticResponse?: boolean;
             goToOpenings?: boolean;
             isPreferred?: boolean;
+            interjection?: null | components["schemas"]["Bid"];
             nextBids?: components["schemas"]["BidNode"][];
             realizedGoal?: components["schemas"]["BiddingGoal"];
             aiSource?: null | string;

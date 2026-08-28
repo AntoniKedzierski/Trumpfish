@@ -1,10 +1,19 @@
 import type { BidColor, BiddingSystem, BidNode, BidType, Root } from '@/api/models';
 
+/** Bid made by the preceding opponent, squeezed between the parent bid and this one. Only `Submit` and `Double` are allowed. */
+export interface InterjectionBid {
+  type: BidType;
+  color: BidColor;
+  value: number | null;
+}
+
 /** Editing copy of `BidNode` where the children collection is always materialised, which keeps the tree code free of `?? []` noise. */
 export interface EditableBidNode extends Omit<BidNode, 'nextBids'> {
   nextBids: EditableBidNode[];
   /** Mirrors `BidNode.IsPreferred`; declared here until `schema.d.ts` is regenerated from the OpenAPI document. */
   isPreferred?: boolean;
+  /** Mirrors `BidNode.Interjection`; declared here until `schema.d.ts` is regenerated from the OpenAPI document. */
+  interjection?: InterjectionBid | null;
 }
 
 export interface EditableRoot extends Omit<Root, 'bids'> {

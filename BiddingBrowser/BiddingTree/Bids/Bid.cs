@@ -1,4 +1,4 @@
-﻿using Model.Bidding;
+using Model.Bidding;
 using Model.Enums;
 using Newtonsoft.Json;
 using System;

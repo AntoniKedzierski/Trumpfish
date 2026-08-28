@@ -281,6 +281,11 @@
   font-size: 12px;
 }
 
+.bid-interjection {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 .bid-badges {
   display: flex;
   align-items: center;
@@ -413,6 +418,53 @@
 .editor input.conflict {
   border-color: var(--hearts);
   box-shadow: 0 0 0 1px var(--hearts);
+}
+
+/* Bidding box dropped by the interjection field: seven levels x five suits, then the double and the bin. */
+.interjection-popup {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  min-width: 100%;
+  padding: 6px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  transform-origin: top center;
+  animation: select-open var(--duration-normal) var(--ease-out) both;
+}
+
+.interjection-cell {
+  padding: 6px 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.interjection-cell:hover:not(:disabled):not(.empty) {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+/* Bids that clash with what has already been said stay readable, but clearly out of reach. */
+.interjection-cell.unavailable {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.interjection-cell.empty {
+  cursor: default;
 }
 
 .validation {

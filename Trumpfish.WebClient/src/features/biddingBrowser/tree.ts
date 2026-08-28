@@ -30,6 +30,28 @@ export function getNode(system: EditableSystem, target: NodePath | null): Editab
   return node ?? null;
 }
 
+/** Bids said before the selected one, ordered from the root down to its parent; empty when the selection sits at the top level. */
+export function ancestorNodes(system: EditableSystem, target: NodePath | null): EditableBidNode[] {
+  const ancestors: EditableBidNode[] = [];
+  if (target === null) {
+    return ancestors;
+  }
+
+  let nodes = system.roots[target.rootIndex]?.bids ?? [];
+
+  for (const index of target.path.slice(0, -1)) {
+    const node = nodes[index];
+    if (node === undefined) {
+      return ancestors;
+    }
+
+    ancestors.push(node);
+    nodes = node.nextBids;
+  }
+
+  return ancestors;
+}
+
 /** Applies `updater` to the node addressed by `path`; returning `null` from the updater removes the node. */
 function replaceAt(nodes: EditableBidNode[], path: number[], updater: NodeUpdater): EditableBidNode[] {
   const [index, ...rest] = path;
