@@ -92,10 +92,16 @@ public partial class BidEngine : IBidInput {
             return TrySoloDefend(hand, (rightOpponentBid ?? leftOpponentBid)!) ?? TryOpen(hand);
         }
 
+        // W pierwszym kółku: partner coś mówił.
         if (Auction.Loop == 0 && lastPartnerBid != null) {
+            var firsPartnersSubmit = Auction.FirstPlayerBid(PartnerPosition)!;
+            // Trzeba znaleźć odzywkę przed pierwszą odzywką partnera, czyli tą z której weszliśmy do obron.
+            var defendingAgainst = Auction.AuctionHistory  
+                .Take(Auction.AuctionHistory.IndexOf(firsPartnersSubmit))
+                .LastOrDefault(e => e.Type == BidType.Submit);
             return partnerOpened
                 ? TryRespondToOpening(hand, lastPartnerBid, rightOpponentBid)
-                : TryContinueSystemDefence(hand, lastPartnerBid, rightOpponentBid);
+                : TryContinueSystemDefence(hand, lastPartnerBid, defendingAgainst);
         }
 
         // Tutaj licytacja na pewno trwała dłużej niż jedno kółko.
@@ -197,9 +203,9 @@ public partial class BidEngine : IBidInput {
     /// <summary>
     /// Wejście w obrony po partnerze
     /// </summary>
-    public BidNode? TryContinueSystemDefence(Hand hand, Bid lastPartnerBid, Bid? lastOpponentBid) {
+    public BidNode? TryContinueSystemDefence(Hand hand, Bid lastPartnerBid, Bid? defenceHead) {
         var defences = BiddingSystem.Defences() ?? throw new Exception("Defences not found.");
-        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(lastOpponentBid));
+        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(defenceHead));
 
         // Póki co brak obrony spoza systemu.
         if (defenceBranch == null) {
