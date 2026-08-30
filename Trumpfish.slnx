@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="BiddingBrowser/BiddingBrowser.csproj" />
   <Project Path="Model/Model.csproj" />
   <Project Path="Trumpfish.Server/Trumpfish.Server.csproj" />
   <Project Path="Trumpfish.WebClient/Trumpsfish.WebClient.esproj">
