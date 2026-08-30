@@ -41,10 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Seed\**\*.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
 
     <!-- The JavaScript SDK is not available inside the .NET SDK container image, and the container build supplies its own SPA output. -->

@@ -15,7 +15,8 @@ interface ToolbarProps {
   onSort: () => void;
   onValidate: () => void;
   onSave: () => void;
-  onLoad: (name: string) => void;
+  /** Systems are addressed by id: a fork may carry the same name as the seed it came from. */
+  onLoad: (id: string) => void;
   onNew: () => void;
   onImport: (file: File) => void;
   onExport: () => void;
@@ -47,8 +48,8 @@ export function Toolbar(props: ToolbarProps) {
         value=""
         placeholder="Wczytaj z serwera…"
         disabled={busy}
-        options={savedSystems.map((system) => ({ value: system.name ?? '', label: `${system.name} (${system.bidCount})` }))}
-        onChange={(name) => props.onLoad(name)}
+        options={savedSystems.map((system) => ({ value: system.id, label: `${system.name} (${system.bidCount})` }))}
+        onChange={(id) => props.onLoad(id)}
       />
 
       <span className="separator" />

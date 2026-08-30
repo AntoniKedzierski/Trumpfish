@@ -10,7 +10,7 @@ services:
     volumes:
       - trumpfish-db:/var/lib/postgresql/data
     healthcheck:
-      # The server calls EnsureCreatedAsync on startup, so it must not start before Postgres accepts connections.
+      # The server applies EF Core migrations on startup, so it must not start before Postgres accepts connections.
       test: ["CMD-SHELL", "pg_isready -U postgres -d trumpfish"]
       interval: 5s
       timeout: 5s

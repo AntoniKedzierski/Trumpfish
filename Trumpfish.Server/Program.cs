@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Trumpfish.Server.Configuration;
 using Trumpfish.Server.Data;
 using Trumpfish.Server.Services;
 
@@ -22,9 +24,38 @@ public partial class Program {
         // without ever resolving the context, and must not require a configured database.
         // Supplied by the ConnectionStrings__Trumpfish environment variable in Azure App Service.
         builder.Services.AddDbContext<TrumpfishDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Trumpfish") ?? throw new InvalidOperationException("Connection string 'Trumpfish' is not configured. Set ConnectionStrings__Trumpfish in the environment or appsettings.Development.json.")));
+
+        builder.Services.Configure<SeedOptions>(builder.Configuration.GetSection(SeedOptions.SectionName));
+
+        builder.Services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IBiddingSystemStore, BiddingSystemStore>();
+        builder.Services.AddScoped<LegacyDatabaseUpgrader>();
         builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
         builder.Services.AddHostedService<DatabaseInitializer>();
+
+        // A plain authentication cookie: the client is served from the same origin, so there is no token to hand around.
+        // SameSite=Lax is what keeps a cross-site form from riding along on the cookie, since there is no antiforgery token yet.
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+            options.Cookie.Name = "trumpfish.auth";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            options.ExpireTimeSpan = TimeSpan.FromDays(14);
+            options.SlidingExpiration = true;
+
+            // The API has no login page to redirect to; the SPA routes to one itself once it sees the status code.
+            options.Events.OnRedirectToLogin = context => {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            };
+            options.Events.OnRedirectToAccessDenied = context => {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                return Task.CompletedTask;
+            };
+        });
+
+        builder.Services.AddAuthorization();
 
         builder.Services.AddOpenApi();
 
@@ -53,6 +84,7 @@ public partial class Program {
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

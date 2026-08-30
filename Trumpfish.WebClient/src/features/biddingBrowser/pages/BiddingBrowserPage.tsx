@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getBiddingSystem, listBiddingSystems, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
+import { Link, useSearchParams } from 'react-router-dom';
+import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import type { BiddingSystem, BiddingSystemSummary } from '@/api/models';
+import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
 import { BidTreeView } from '../components/BidTreeView';
 import { Toolbar } from '../components/Toolbar';
@@ -13,16 +14,33 @@ import { findNodeById, getNode, resolveIssuePath, ancestorNodes } from '../tree'
 import './BiddingBrowserPage.css';
 
 export function BiddingBrowserPage() {
+  const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [state, dispatch] = useReducer(browserReducer, initialBrowserState);
   const [savedSystems, setSavedSystems] = useState<BiddingSystemSummary[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const isAdmin = user?.isAdmin ?? false;
+  const current = savedSystems.find((system) => system.id === state.systemId) ?? null;
 
   const refreshSavedSystems = useCallback(async () => {
+    const systems = await listBiddingSystems();
+    setSavedSystems(systems);
+    return systems;
+  }, []);
+
+  const run = useCallback(async (operation: () => Promise<void>) => {
+    setBusy(true);
+    setError(null);
+    setNotice(null);
     try {
-      setSavedSystems(await listBiddingSystems());
+      await operation();
     } catch (reason) {
       setError(describe(reason));
+    } finally {
+      setBusy(false);
     }
   }, []);
 
@@ -36,6 +54,37 @@ export function BiddingBrowserPage() {
 
     return () => { cancelled = true; };
   }, []);
+
+  // The manage page links here with the system to open. The parameter is dropped once it has been honoured, which re-runs this
+  // effect with nothing left to do - all state is written from the promise callbacks so the effect body itself stays inert.
+  const requestedId = searchParams.get('system');
+  useEffect(() => {
+    if (requestedId === null) {
+      return;
+    }
+
+    let cancelled = false;
+    getBiddingSystem(requestedId).then(
+      (system) => {
+        if (cancelled) {
+          return;
+        }
+
+        dispatch({ kind: 'loadSystem', system: normalizeSystem(system), systemId: requestedId });
+        setSearchParams({}, { replace: true });
+      },
+      (reason) => {
+        if (cancelled) {
+          return;
+        }
+
+        setError(describe(reason));
+        setSearchParams({}, { replace: true });
+      },
+    );
+
+    return () => { cancelled = true; };
+  }, [requestedId, setSearchParams]);
 
   // Ctrl+C / Ctrl+V mirror the WPF clipboard commands, but stay inside the app so the copied subtree keeps its structure.
   useEffect(() => {
@@ -55,34 +104,29 @@ export function BiddingBrowserPage() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const run = useCallback(async (operation: () => Promise<void>) => {
-    setBusy(true);
-    setError(null);
-    try {
-      await operation();
-    } catch (reason) {
-      setError(describe(reason));
-    } finally {
-      setBusy(false);
-    }
-  }, []);
-
+  // A system with no id has never been stored, so saving it creates one. For an administrator that new system is a seed.
   const handleSave = () => run(async () => {
-    await saveBiddingSystem(state.system.systemName, state.system as BiddingSystem);
-    dispatch({ kind: 'markSaved' });
+    const summary = state.systemId === null
+      ? await createBiddingSystem(state.system.systemName, state.system as BiddingSystem)
+      : await saveBiddingSystem(state.systemId, state.system as BiddingSystem);
+
+    dispatch({ kind: 'markSaved', systemId: summary.id });
     await refreshSavedSystems();
+    setNotice(state.systemId === null && isAdmin ? `Zapisano „${summary.name}” jako system wzorcowy.` : `Zapisano „${summary.name}”.`);
   });
 
-  const handleLoad = (name: string) => run(async () => {
-    dispatch({ kind: 'loadSystem', system: normalizeSystem(await getBiddingSystem(name)) });
+  const handleLoad = (id: string) => run(async () => {
+    dispatch({ kind: 'loadSystem', system: normalizeSystem(await getBiddingSystem(id)), systemId: id });
   });
 
   const handleValidate = () => run(async () => {
     dispatch({ kind: 'setIssues', issues: await validateBiddingSystem(state.system as BiddingSystem) });
   });
 
+  // An imported tree is a brand new system until it is saved, so it deliberately arrives without an id.
   const handleImport = (file: File) => run(async () => {
-    dispatch({ kind: 'loadSystem', system: normalizeSystem(JSON.parse(await file.text()) as BiddingSystem) });
+    dispatch({ kind: 'loadSystem', system: normalizeSystem(JSON.parse(await file.text()) as BiddingSystem), systemId: null });
+    setNotice(isAdmin ? 'Zaimportowano. Zapisz, aby dodać go jako system wzorcowy.' : 'Zaimportowano. Zapisz, aby dodać go do swoich systemów.');
   });
 
   const handleExport = () => {
@@ -94,6 +138,19 @@ export function BiddingBrowserPage() {
     URL.revokeObjectURL(url);
   };
 
+  const handleRefork = () => {
+    if (current === null || !window.confirm(`Pobrać nową wersję „${current.forkedFromName}”? Twoje zmiany w tej kopii zostaną nadpisane.`)) {
+      return;
+    }
+
+    return run(async () => {
+      await reforkSystem(current.id);
+      dispatch({ kind: 'loadSystem', system: normalizeSystem(await getBiddingSystem(current.id)), systemId: current.id });
+      await refreshSavedSystems();
+      setNotice('Kopia została zaktualizowana do bieżącej wersji wzorca.');
+    });
+  };
+
   const selectedNode = getNode(state.system, state.selection);
 
   return (
@@ -101,9 +158,19 @@ export function BiddingBrowserPage() {
       <header className="page-header">
         <Link to="/" className="back-link">← Narzędzia</Link>
         <h1>Bidding Browser</h1>
+        <Link to="/tools/bidding-browser/systems" className="manage-link">Zarządzaj systemami</Link>
         {busy && <span className="status">Pracuję…</span>}
+        {notice && <span className="status notice">{notice}</span>}
         {error && <span className="status error">{error}</span>}
       </header>
+
+      {/* Only a fork can fall behind, and only its owner is offered the update - an administrator edits the seed itself. */}
+      {current?.seedUpdateAvailable && (
+        <div className="seed-update">
+          <span>System wzorcowy „{current.forkedFromName}” został zmieniony po utworzeniu tej kopii.</span>
+          <button type="button" onClick={handleRefork} disabled={busy}>Pobierz zmiany</button>
+        </div>
+      )}
 
       <Toolbar
         systemName={state.system.systemName}
@@ -120,7 +187,7 @@ export function BiddingBrowserPage() {
         onValidate={handleValidate}
         onSave={handleSave}
         onLoad={handleLoad}
-        onNew={() => dispatch({ kind: 'loadSystem', system: createEmptySystem() })}
+        onNew={() => dispatch({ kind: 'loadSystem', system: createEmptySystem(), systemId: null })}
         onImport={handleImport}
         onExport={handleExport}
       />

@@ -10,6 +10,13 @@ export class ApiError extends Error {
   }
 }
 
+let onUnauthorized: (() => void) | null = null;
+
+/** Lets the auth provider drop the signed in user the moment any call comes back 401, so an expired cookie routes to the login page. */
+export function setUnauthorizedHandler(handler: (() => void) | null): void {
+  onUnauthorized = handler;
+}
+
 async function send(path: string, init?: RequestInit): Promise<Response> {
   const response = await fetch(`${apiRoot}${path}`, {
     ...init,
@@ -17,6 +24,10 @@ async function send(path: string, init?: RequestInit): Promise<Response> {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      onUnauthorized?.();
+    }
+
     throw new ApiError(response.status, (await response.text()) || `${response.status} ${response.statusText}`);
   }
 
@@ -33,6 +44,11 @@ export async function putJson<TResponse>(path: string, body: unknown): Promise<T
 
 export async function postJson<TResponse>(path: string, body: unknown): Promise<TResponse> {
   return (await send(path, { method: 'POST', body: JSON.stringify(body) })).json() as Promise<TResponse>;
+}
+
+/** For endpoints that answer 204: there is no body to parse, and asking for one would throw. */
+export async function postNoContent(path: string, body: unknown): Promise<void> {
+  await send(path, { method: 'POST', body: JSON.stringify(body) });
 }
 
 export async function remove(path: string): Promise<void> {
