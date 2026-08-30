@@ -53,6 +53,42 @@
   color: var(--hearts);
 }
 
+.status.notice {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.page-header .manage-link {
+  font-size: 13px;
+}
+
+/* Sits directly under the header so an out-of-date fork is impossible to miss on opening it. */
+.seed-update {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 28px;
+  font-size: 13px;
+  color: var(--amber-flame);
+  background: rgb(255 181 21 / 10%);
+  border-bottom: 1px solid rgb(255 181 21 / 30%);
+}
+
+.seed-update button {
+  padding: 5px 12px;
+  font-size: 13px;
+  color: var(--amber-flame);
+  border-color: rgb(255 181 21 / 40%);
+  background: transparent;
+}
+
+.seed-update button:hover:not(:disabled) {
+  color: var(--amber-flame);
+  border-color: var(--amber-flame);
+  background: rgb(255 181 21 / 16%);
+}
+
 @keyframes chip-in {
   from {
     opacity: 0;

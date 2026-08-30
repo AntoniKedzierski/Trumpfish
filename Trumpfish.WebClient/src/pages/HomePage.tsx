@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/auth/useAuth';
 import { tools } from '@/tools/toolsRegistry';
 import './HomePage.css';
 
 export function HomePage() {
+  const { user } = useAuth();
+
   return (
     <div className="home">
       <header>
@@ -11,6 +14,12 @@ export function HomePage() {
           <h1>Trumpfish</h1>
           <p>Narzędzia brydżowe: systemy licytacyjne, analiza i gra z silnikiem.</p>
         </div>
+        {user !== null && (
+          <Link to="/account" className="account-chip">
+            <span className="name">{user.displayName ?? user.username}</span>
+            <span className="role">{user.isAdmin ? 'Administrator' : 'Konto'}</span>
+          </Link>
+        )}
       </header>
 
       <section className="tool-grid">

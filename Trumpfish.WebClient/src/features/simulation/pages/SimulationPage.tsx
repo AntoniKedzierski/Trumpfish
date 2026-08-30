@@ -16,7 +16,7 @@ const maxDeals = 500;
 
 export function SimulationPage() {
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
-  const [systemName, setSystemName] = useState('');
+  const [systemId, setSystemId] = useState('');
   const [dealCount, setDealCount] = useState(10);
   const [seed, setSeed] = useState('');
   const [result, setResult] = useState<SimulationResponse | null>(null);
@@ -39,7 +39,7 @@ export function SimulationPage() {
       (loaded) => {
         if (!cancelled) {
           setSystems(loaded);
-          setSystemName((current) => (current === '' ? (loaded[0]?.name ?? '') : current));
+          setSystemId((current) => (current === '' ? (loaded[0]?.id ?? '') : current));
         }
       },
       (reason) => { if (!cancelled) { setError(describe(reason)); } },
@@ -49,7 +49,7 @@ export function SimulationPage() {
   }, []);
 
   const run = useCallback(async () => {
-    if (systemName === '') {
+    if (systemId === '') {
       setError('Wybierz system licytacyjny.');
       return;
     }
@@ -59,13 +59,13 @@ export function SimulationPage() {
     try {
       // Deals are generated here and shipped to the API, so the server only runs the engine. The seed (when given) makes the batch reproducible.
       const trimmedSeed = seed.trim();
-      setResult(await simulateBidding({ systemName, deals: generateDeals(dealCount, trimmedSeed), seed: trimmedSeed === '' ? null : trimmedSeed }));
+      setResult(await simulateBidding({ systemId, deals: generateDeals(dealCount, trimmedSeed), seed: trimmedSeed === '' ? null : trimmedSeed }));
     } catch (reason) {
       setError(describe(reason));
     } finally {
       setBusy(false);
     }
-  }, [dealCount, seed, systemName]);
+  }, [dealCount, seed, systemId]);
 
   return (
     <div className="simulation">
@@ -82,9 +82,9 @@ export function SimulationPage() {
         <label className="inline">
           <span>System</span>
           <Select
-            value={systemName}
-            options={systems.map((system) => ({ value: system.name, label: system.name }))}
-            onChange={setSystemName}
+            value={systemId}
+            options={systems.map((system) => ({ value: system.id, label: system.name }))}
+            onChange={setSystemId}
             placeholder="Brak zapisanych systemów"
             disabled={busy || systems.length === 0}
           />
@@ -113,7 +113,7 @@ export function SimulationPage() {
           />
         </label>
 
-        <button type="button" className="primary" onClick={() => void run()} disabled={busy || systemName === ''}>
+        <button type="button" className="primary" onClick={() => void run()} disabled={busy || systemId === ''}>
           Symuluj
         </button>
 

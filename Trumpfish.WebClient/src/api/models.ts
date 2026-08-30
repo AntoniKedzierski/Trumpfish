@@ -8,6 +8,13 @@ type Schemas = components['schemas'];
  */
 export type BiddingSystem = Schemas['BiddingSystem'];
 export type BiddingSystemSummary = Schemas['BiddingSystemSummary'];
+export type CurrentUser = Schemas['CurrentUser'];
+export type LoginRequest = Schemas['LoginRequest'];
+export type RegisterRequest = Schemas['RegisterRequest'];
+export type ChangePasswordRequest = Schemas['ChangePasswordRequest'];
+export type UpdateProfileRequest = Schemas['UpdateProfileRequest'];
+export type RenameSystemRequest = Schemas['RenameSystemRequest'];
+export type SaveSystemRequest = Schemas['SaveSystemRequest'];
 export type Root = Schemas['Root'];
 export type BidNode = Schemas['BidNode'];
 export type NumberRange = Schemas['NumberRange'];

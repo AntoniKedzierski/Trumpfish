@@ -15,7 +15,7 @@ public record SimulationDealRequest(PlayerPosition Dealer, IReadOnlyList<Simulat
 /// Batch of deals to simulate with the given bidding system. <paramref name="Seed"/> is the (optional) seed the client used to generate the deals -
 /// reusing it reproduces exactly the same deals, which makes a run debuggable. When it is null the deals were truly random.
 /// </summary>
-public record SimulationRequest(string SystemName, IReadOnlyList<SimulationDealRequest> Deals, string? Seed = null);
+public record SimulationRequest(Guid SystemId, IReadOnlyList<SimulationDealRequest> Deals, string? Seed = null);
 
 /// <summary>Hand echoed back together with everything the client needs to render it.</summary>
 public record SimulationHand(PlayerPosition Position, IReadOnlyList<SimulationCard> Cards, int Points, int PointsNt, int Spades, int Hearts, int Diamonds, int Clubs);

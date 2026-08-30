@@ -8,10 +8,18 @@
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:62850</SpaProxyServerUrl>
 
-    <!-- Emit the OpenAPI document into the web client so TypeScript models can be generated from it. -->
+    <!-- Emit the OpenAPI document into the web client so TypeScript models can be generated from it.
+         Generation is opt-in because the tooling starts the full host, which would require a live database on every build and in CI.
+         Regenerate with: dotnet build Trumpfish.Server -p:OpenApiGenerateDocumentsOnBuild=true (needs a reachable database). -->
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
-    <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+    <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
     <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)\..\Trumpfish.WebClient\src\api</OpenApiDocumentsDirectory>
+
+    <!-- Visual Studio Container Tools. The Dockerfile lives at the repository root because it copies both Model and the web client,
+         so the build context has to be the solution folder rather than the project folder. -->
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileFile>..\Dockerfile</DockerfileFile>
+    <DockerfileContext>..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,22 +31,37 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Seed\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
-    <ProjectReference Include="..\Trumpfish.WebClient\Trumpsfish.WebClient.esproj" />
+
+    <!-- The JavaScript SDK is not available inside the .NET SDK container image, and the container build supplies its own SPA output. -->
+    <ProjectReference Include="..\Trumpfish.WebClient\Trumpsfish.WebClient.esproj" Condition="'$(SkipSpaBuild)' != 'true'" />
   </ItemGroup>
+
+  <!-- Folds the production SPA bundle into wwwroot of the published output, so a single site serves both the API and the client from the same origin.
+       Set SkipSpaBuild=true to reuse an existing dist folder instead of invoking npm; the container build uses this to keep Node out of the SDK image. -->
+  <Target Name="PublishSpa" BeforeTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm ci" Condition="'$(SkipSpaBuild)' != 'true' and !Exists('$(SpaRoot)\node_modules')" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" Condition="'$(SkipSpaBuild)' != 'true'" />
+    <Error Text="The SPA output folder '$(SpaRoot)\dist' does not exist. Run 'npm run build' in $(SpaRoot) or omit SkipSpaBuild." Condition="!Exists('$(SpaRoot)\dist')" />
+    <ItemGroup>
+      <SpaDistFiles Include="$(SpaRoot)\dist\**" />
+      <ResolvedFileToPublish Include="@(SpaDistFiles->'%(FullPath)')">
+        <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />

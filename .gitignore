@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Local SQLite databases. The application targets PostgreSQL; these are only ever a developer's scratch file.
+*.db
+*.db-shm
+*.db-wal

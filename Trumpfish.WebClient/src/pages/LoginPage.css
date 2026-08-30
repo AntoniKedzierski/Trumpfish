@@ -1,0 +1,120 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 32px 20px;
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 380px;
+  padding: 32px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: view-enter var(--duration-slow) var(--ease-out) both;
+}
+
+.login-card > header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.login-card > header img {
+  width: 40px;
+  height: 40px;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.login-card > header p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.login-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.login-card .optional {
+  color: var(--border-strong);
+}
+
+.login-card input {
+  width: 100%;
+}
+
+.login-error {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--hearts);
+  background: rgb(235 39 39 / 10%);
+  border: 1px solid rgb(235 39 39 / 35%);
+  border-radius: var(--radius-sm);
+}
+
+.login-card .primary {
+  margin-top: 4px;
+  padding: 10px 12px;
+  font-weight: 400;
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.login-card .primary:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+.login-switch {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* A button that reads as a link, so switching between sign in and sign up stays keyboard reachable. */
+.login-switch .link,
+.account .link {
+  padding: 0;
+  color: var(--accent);
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.login-switch .link:hover:not(:disabled),
+.account .link:hover:not(:disabled) {
+  color: var(--pearl-aqua);
+  background: none;
+  border: none;
+  text-decoration: underline;
+}
+
+.auth-pending {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  color: var(--text-muted);
+}

@@ -8,11 +8,9 @@ export interface InterjectionBid {
 }
 
 /** Editing copy of `BidNode` where the children collection is always materialised, which keeps the tree code free of `?? []` noise. */
-export interface EditableBidNode extends Omit<BidNode, 'nextBids'> {
+export interface EditableBidNode extends Omit<BidNode, 'nextBids' | 'interjection'> {
   nextBids: EditableBidNode[];
-  /** Mirrors `BidNode.IsPreferred`; declared here until `schema.d.ts` is regenerated from the OpenAPI document. */
-  isPreferred?: boolean;
-  /** Mirrors `BidNode.Interjection`; declared here until `schema.d.ts` is regenerated from the OpenAPI document. */
+  /** Narrows the generated `Bid` down to the handful of fields an interjection actually uses. */
   interjection?: InterjectionBid | null;
 }
 

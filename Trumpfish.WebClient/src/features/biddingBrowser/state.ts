@@ -6,6 +6,8 @@ const suitLadder: readonly BidColor[] = ['Clubs', 'Diamonds', 'Hearts', 'Spades'
 
 export interface BrowserState {
   system: EditableSystem;
+  /** Id of the stored system being edited, or null for one that has never been saved. Saving decides create versus update on it. */
+  systemId: string | null;
   selection: NodePath | null;
   clipboard: EditableBidNode | null;
   issues: ValidationIssue[] | null;
@@ -13,7 +15,7 @@ export interface BrowserState {
 }
 
 export type BrowserAction =
-  | { kind: 'loadSystem'; system: EditableSystem }
+  | { kind: 'loadSystem'; system: EditableSystem; systemId: string | null }
   | { kind: 'setSystemName'; name: string }
   | { kind: 'select'; target: NodePath | null }
   | { kind: 'addBid' }
@@ -25,14 +27,14 @@ export type BrowserAction =
   | { kind: 'paste' }
   | { kind: 'sort' }
   | { kind: 'setIssues'; issues: ValidationIssue[] | null }
-  | { kind: 'markSaved' };
+  | { kind: 'markSaved'; systemId: string };
 
-export const initialBrowserState: BrowserState = { system: createEmptySystem(), selection: null, clipboard: null, issues: null, dirty: false };
+export const initialBrowserState: BrowserState = { system: createEmptySystem(), systemId: null, selection: null, clipboard: null, issues: null, dirty: false };
 
 export function browserReducer(state: BrowserState, action: BrowserAction): BrowserState {
   switch (action.kind) {
     case 'loadSystem':
-      return { ...initialBrowserState, system: action.system, clipboard: state.clipboard };
+      return { ...initialBrowserState, system: action.system, systemId: action.systemId, clipboard: state.clipboard };
 
     case 'setSystemName':
       return { ...state, system: { ...state.system, systemName: action.name }, dirty: true };
@@ -70,7 +72,7 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
       return { ...state, issues: action.issues };
 
     case 'markSaved':
-      return { ...state, dirty: false };
+      return { ...state, systemId: action.systemId, dirty: false };
   }
 }
 

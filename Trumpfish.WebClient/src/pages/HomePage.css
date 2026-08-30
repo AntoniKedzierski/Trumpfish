@@ -17,6 +17,38 @@
   height: 52px;
 }
 
+/* Pushed to the far edge of the header, so the account is always reachable without competing with the title. */
+.account-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: auto;
+  padding: 10px 16px;
+  text-align: right;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: inherit;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+}
+
+.account-chip:hover {
+  background: var(--surface-overlay);
+  border-color: var(--accent);
+  color: inherit;
+}
+
+.account-chip .name {
+  font-weight: 400;
+}
+
+.account-chip .role {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 .home h1 {
   margin: 0;
   font-size: 34px;
