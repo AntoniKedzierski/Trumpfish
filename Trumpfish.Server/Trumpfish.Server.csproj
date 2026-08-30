@@ -40,4 +40,18 @@
     <ProjectReference Include="..\Trumpfish.WebClient\Trumpsfish.WebClient.esproj" />
   </ItemGroup>
 
+  <!-- Produces the production SPA bundle and folds it into wwwroot of the published output, so a single IIS site serves both the API and the client from the same origin. -->
+  <Target Name="PublishSpa" BeforeTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm ci" Condition="!Exists('$(SpaRoot)\node_modules')" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+    <ItemGroup>
+      <SpaDistFiles Include="$(SpaRoot)\dist\**" />
+      <ResolvedFileToPublish Include="@(SpaDistFiles->'%(FullPath)')">
+        <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
 </Project>

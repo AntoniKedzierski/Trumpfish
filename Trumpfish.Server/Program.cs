@@ -27,8 +27,11 @@ public partial class Program {
 
         await DatabaseInitializer.InitializeAsync(app.Services);
 
+        // The SPA is copied into wwwroot at publish time, so it is not part of the build-time
+        // static asset manifest that MapStaticAssets relies on. Vite already fingerprints the
+        // emitted file names, so plain static file serving is sufficient.
         app.UseDefaultFiles();
-        app.MapStaticAssets();
+        app.UseStaticFiles();
 
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
