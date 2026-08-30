@@ -4,8 +4,21 @@ using Trumpfish.Server.Data;
 
 namespace Trumpfish.Server.Services;
 
-/// <summary>Creates the database on startup and seeds the bundled bidding systems on a fresh install.</summary>
-public static class DatabaseInitializer {
+/// <summary>
+/// Creates the database on startup and seeds the bundled bidding systems on a fresh install.
+/// Runs as a hosted service so schema creation and seeding are tied to the host lifetime rather than the entry point.
+/// </summary>
+public sealed class DatabaseInitializer : IHostedService {
+
+    private readonly IServiceProvider _services;
+
+    public DatabaseInitializer(IServiceProvider services) {
+        _services = services;
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken) => InitializeAsync(_services, cancellationToken);
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     public static async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken = default) {
         using var scope = services.CreateScope();

@@ -1,0 +1,36 @@
+# Build output
+**/bin/
+**/obj/
+**/dist/
+**/publish/
+**/*.tsbuildinfo
+
+# Node
+**/node_modules/
+
+# Local SQLite database, superseded by PostgreSQL and never wanted in an image
+**/trumpfish.db
+**/trumpfish.db-shm
+**/trumpfish.db-wal
+
+# Local developer settings and secrets
+**/appsettings.Development.json
+**/*.user
+**/.env
+**/.env.*
+
+# Source control and tooling
+.git/
+.gitignore
+.github/
+.vs/
+**/.vscode/
+docs/
+
+# Desktop client is not part of the container image
+BiddingBrowser/
+
+# Docker
+Dockerfile
+.dockerignore
+compose.yaml
