@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Select } from '@/components/Select';
 import { bidColors, bidTypes, toNumber, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
@@ -11,6 +12,8 @@ interface BidEditorPanelProps {
   node: EditableBidNode | null;
   /** Name of the root the edited bid lives under; the outermost level of the path shown above the fields. */
   rootName: string | null;
+  /** Bumped whenever a bid was just added, which is the moment to put the caret in "Znaczenie". */
+  focusConditionKey: number;
   /** Ranges promised by the same player earlier in the sequence - shown as placeholders only, never written back to the node. */
   inherited: InheritedRanges;
   /** Bids said before the edited one, from the root down to its parent - they decide which interjections are legal. */
@@ -44,7 +47,17 @@ const stopsFields: { field: StopsField; label: string }[] = [
   { field: 'spadesStops', label: 'Piki' },
 ];
 
-export function BidEditorPanel({ node, rootName, inherited, ancestors, onChange }: BidEditorPanelProps) {
+export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, ancestors, onChange }: BidEditorPanelProps) {
+  const conditionRef = useRef<HTMLInputElement>(null);
+
+  // Runs on the render that follows the new bid, so the field it reaches for is the one belonging to that bid.
+  useEffect(() => {
+    if (focusConditionKey > 0) {
+      conditionRef.current?.focus();
+      conditionRef.current?.select();
+    }
+  }, [focusConditionKey]);
+
   if (node === null) {
     return (
       <aside className="editor-pane">
@@ -80,7 +93,7 @@ export function BidEditorPanel({ node, rootName, inherited, ancestors, onChange 
         <InterjectionPicker value={node.interjection} ancestors={ancestors} onChange={(interjection) => onChange({ interjection })} />
 
         <label>Znaczenie</label>
-        <input value={node.condition ?? ''} onChange={(event) => onChange({ condition: event.target.value })} />
+        <input ref={conditionRef} value={node.condition ?? ''} onChange={(event) => onChange({ condition: event.target.value })} />
 
         <label>Dodatkowy opis</label>
         <input value={node.description ?? ''} onChange={(event) => onChange({ description: event.target.value })} />

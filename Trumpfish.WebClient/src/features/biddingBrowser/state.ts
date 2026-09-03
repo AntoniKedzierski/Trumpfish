@@ -19,6 +19,9 @@ export type BrowserAction =
   | { kind: 'setSystemName'; name: string }
   | { kind: 'select'; target: NodePath | null }
   | { kind: 'addBid' }
+  | { kind: 'addSibling' }
+  | { kind: 'duplicate' }
+  | { kind: 'cut' }
   | { kind: 'deleteBid' }
   | { kind: 'moveUp' }
   | { kind: 'moveDown' }
@@ -44,6 +47,17 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
 
     case 'addBid':
       return addBid(state);
+
+    case 'addSibling':
+      return addSibling(state);
+
+    case 'duplicate':
+      return duplicate(state);
+
+    case 'cut': {
+      const node = getNode(state.system, state.selection);
+      return node === null ? state : deleteBid({ ...state, clipboard: cloneNode(node) });
+    }
 
     case 'deleteBid':
       return deleteBid(state);
@@ -92,6 +106,40 @@ function addBid(state: BrowserState): BrowserState {
   const system = updateChildrenAt(state.system, state.selection, (children) => [...children, child]);
 
   return { ...state, system, selection: childPath(state.selection, siblings.length), dirty: true };
+}
+
+/**
+ * Adds a bid beside the selected one instead of under it, which is how a level of the auction is continued. A root has no
+ * parent to hang a sibling from, so the selection has to be an actual bid.
+ */
+function addSibling(state: BrowserState): BrowserState {
+  const selected = getNode(state.system, state.selection);
+  if (state.selection === null || selected === null) {
+    return state;
+  }
+
+  // The new bid follows the selected one along the ladder and speaks for the same player, being on the same level.
+  const { color, value } = bidAfter(selected);
+  return insertAfter(state, state.selection, createBidNode(color, value, selected.openerBid ?? false));
+}
+
+function duplicate(state: BrowserState): BrowserState {
+  const selected = getNode(state.system, state.selection);
+  if (state.selection === null || selected === null) {
+    return state;
+  }
+
+  // cloneNode reissues every identity in the subtree, so the copy never shares a nodeId with the original.
+  return insertAfter(state, state.selection, cloneNode(selected));
+}
+
+/** Places `node` directly after the selected bid, under the same parent, and moves the selection onto it. */
+function insertAfter(state: BrowserState, selection: NodePath, node: EditableBidNode): BrowserState {
+  const container = parentPath(selection);
+  const index = selection.path[selection.path.length - 1];
+  const system = updateChildrenAt(state.system, container, (children) => [...children.slice(0, index + 1), node, ...children.slice(index + 1)]);
+
+  return { ...state, system, selection: childPath(container, index + 1), dirty: true };
 }
 
 /** Continues the previous sibling along the ladder (♣ → ♦ → ♥ → ♠ → NT, then NT rolls over to ♣ one level higher); anything else starts a blank bid. */

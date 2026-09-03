@@ -89,6 +89,54 @@
   background: rgb(255 181 21 / 16%);
 }
 
+/* Sits above everything, including the interjection bidding box, so a held-back navigation cannot be ignored. */
+.unsaved-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 55%);
+  animation: chip-in var(--duration-fast) var(--ease-out) both;
+}
+
+.unsaved-dialog {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.unsaved-dialog h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.unsaved-dialog p {
+  margin: 0 0 20px;
+  color: var(--text-muted);
+}
+
+.unsaved-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.unsaved-actions .danger:hover:not(:disabled) {
+  color: var(--hearts);
+  border-color: var(--hearts);
+  background: rgb(235 39 39 / 12%);
+}
+
 @keyframes chip-in {
   from {
     opacity: 0;

@@ -7,10 +7,12 @@ import { childPath, containsPath, samePath } from '../tree';
 interface BidTreeViewProps {
   system: EditableSystem;
   selection: NodePath | null;
+  /** Bumped to scroll the selected bid back into view on demand, even though the selection itself has not moved. */
+  revealKey: number;
   onSelect: (target: NodePath) => void;
 }
 
-export function BidTreeView({ system, selection, onSelect }: BidTreeViewProps) {
+export function BidTreeView({ system, selection, revealKey, onSelect }: BidTreeViewProps) {
   return (
     <ul className="tree">
       {system.roots.map((root, rootIndex) => (
@@ -20,6 +22,7 @@ export function BidTreeView({ system, selection, onSelect }: BidTreeViewProps) {
           target={{ rootIndex, path: [] }}
           children_={root.bids}
           selection={selection}
+          revealKey={revealKey}
           onSelect={onSelect}
           initiallyExpanded
         />
@@ -33,13 +36,14 @@ interface TreeBranchProps {
   target: NodePath;
   children_: EditableBidNode[];
   selection: NodePath | null;
+  revealKey: number;
   onSelect: (target: NodePath) => void;
   /** Marks the branch as switched off. Only the head of the branch is told; the styling reaches the rest through the cascade. */
   disabled?: boolean;
   initiallyExpanded?: boolean;
 }
 
-function TreeBranch({ label, target, children_, selection, onSelect, disabled = false, initiallyExpanded = false }: TreeBranchProps) {
+function TreeBranch({ label, target, children_, selection, revealKey, onSelect, disabled = false, initiallyExpanded = false }: TreeBranchProps) {
   const [expanded, setExpanded] = useState(initiallyExpanded);
   // Children mount on the first expand and then stay mounted, so the collapse can animate instead of snapping shut.
   const [mounted, setMounted] = useState(initiallyExpanded);
@@ -50,11 +54,12 @@ function TreeBranch({ label, target, children_, selection, onSelect, disabled = 
   // A branch on the way to the selection is open by definition, so picking a node from outside the tree reveals it without extra state.
   const open = expanded || holdsSelection;
 
+  // `revealKey` is in the deps so the "go to the selected bid" command re-runs this even when the selection itself is unchanged.
   useEffect(() => {
     if (selected) {
       rowRef.current?.scrollIntoView({ block: 'nearest' });
     }
-  }, [selected]);
+  }, [selected, revealKey]);
 
   const toggle = () => {
     if (leaf) {
@@ -91,6 +96,7 @@ function TreeBranch({ label, target, children_, selection, onSelect, disabled = 
                 target={childPath(target, index)}
                 children_={node.nextBids}
                 selection={selection}
+                revealKey={revealKey}
                 onSelect={onSelect}
                 disabled={node.isDisabled}
               />
