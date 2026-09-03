@@ -24,7 +24,8 @@ const dash = String.raw`[-–—]`;
 const pointsPatterns: { pattern: RegExp; read: (match: RegExpExecArray) => NumberRange }[] = [
   { pattern: new RegExp(String.raw`(\d+)\s*${dash}\s*(\d+)\s*pc\b`, 'i'), read: (match) => ({ lower: Number(match[1]), upper: Number(match[2]) }) },
   { pattern: /(\d+)\s*\+\s*pc\b/i, read: (match) => ({ lower: Number(match[1]), upper: null }) },
-  { pattern: /poni[żz]ej\s+(\d+)\s*pc\b/i, read: (match) => ({ lower: null, upper: Number(match[1]) - 1 }) },
+  // "Poniżej N PC" names the bound rather than excluding it: it means N or fewer, not N-1 or fewer.
+  { pattern: /poni[żz]ej\s+(\d+)\s*pc\b/i, read: (match) => ({ lower: null, upper: Number(match[1]) }) },
 ];
 
 const suitPatterns: { pattern: RegExp; read: (count: number) => Partial<Bounds> }[] = [

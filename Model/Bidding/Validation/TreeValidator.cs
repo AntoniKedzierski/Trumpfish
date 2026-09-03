@@ -95,17 +95,17 @@ public sealed class TreeValidator {
         }
 
         if (parent.OpenerBid == current.OpenerBid) {
-            issues.Add(Issue(current, currentPath, "Invalid speaker alternation: child has the same OpenerBid as parent."));
+            issues.Add(Issue(current, currentPath, "Nieprawidłowa kolejność graczy: odzywka należy do tego samego gracza co jej rodzic."));
         }
     }
 
 
     private static void ValidateBidRanges(BidNode bid, string path, List<ValidationIssue> issues) {
-        ValidateRange("PointsRange", bid.PointsRange, MinPc, MaxPc, bid, path, issues);
-        ValidateRange("ClubsCardRange", bid.ClubsCardRange, MinCards, MaxCards, bid, path, issues);
-        ValidateRange("DiamondsCardRange", bid.DiamondsCardRange, MinCards, MaxCards, bid, path, issues);
-        ValidateRange("HeartsCardRange", bid.HeartsCardRange, MinCards, MaxCards, bid, path, issues);
-        ValidateRange("SpadesCardRange", bid.SpadesCardRange, MinCards, MaxCards, bid, path, issues);
+        ValidateRange("Zakres punktów", bid.PointsRange, MinPc, MaxPc, bid, path, issues);
+        ValidateRange("Układ trefli", bid.ClubsCardRange, MinCards, MaxCards, bid, path, issues);
+        ValidateRange("Układ kar", bid.DiamondsCardRange, MinCards, MaxCards, bid, path, issues);
+        ValidateRange("Układ kierów", bid.HeartsCardRange, MinCards, MaxCards, bid, path, issues);
+        ValidateRange("Układ pików", bid.SpadesCardRange, MinCards, MaxCards, bid, path, issues);
     }
 
 
@@ -118,13 +118,13 @@ public sealed class TreeValidator {
         var upper = range.Upper;
 
         if (lower.HasValue && upper.HasValue && lower.Value > upper.Value) {
-            issues.Add(Issue(bid, path, $"{rangeName} is invalid: Lower ({lower}) > Upper ({upper})."));
+            issues.Add(Issue(bid, path, $"{rangeName}: dolny limit ({lower}) jest większy od górnego ({upper})."));
         }
         if (lower.HasValue && (lower.Value < minDomain || lower.Value > maxDomain)) {
-            issues.Add(Issue(bid, path, $"{rangeName}.Lower ({lower}) is outside domain [{minDomain}, {maxDomain}]."));
+            issues.Add(Issue(bid, path, $"{rangeName}: dolny limit ({lower}) jest poza dopuszczalnym przedziałem [{minDomain}, {maxDomain}]."));
         }
         if (upper.HasValue && (upper.Value < minDomain || upper.Value > maxDomain)) {
-            issues.Add(Issue(bid, path, $"{rangeName}.Upper ({upper}) is outside domain [{minDomain}, {maxDomain}]."));
+            issues.Add(Issue(bid, path, $"{rangeName}: górny limit ({upper}) jest poza dopuszczalnym przedziałem [{minDomain}, {maxDomain}]."));
         }
     }
 
@@ -137,7 +137,7 @@ public sealed class TreeValidator {
     private static void ValidateDeclaredPcText(BidNode bid, BiddingCon con, string path, List<ValidationIssue> issues) {
         var effective = bid.OpenerBid ? con.Opener.Pc : con.Responder.Pc;
 
-        ValidateDeclaredPcText("Condition", bid.Condition, effective, bid, path, issues);
+        ValidateDeclaredPcText("Znaczenie", bid.Condition, effective, bid, path, issues);
     }
 
 
@@ -147,11 +147,21 @@ public sealed class TreeValidator {
             return;
         }
 
+        // Which side is wrong follows from the direction of the disagreement, and the two repairs are exclusive because of it.
+        // A description stating a tighter bound than the ranges is a promise the ranges failed to record, so the ranges are
+        // repaired. A looser one cannot be met anyway - an earlier bid of the same player already imposes the narrower value -
+        // so the description is the thing overstating, and it is rewritten to what the auction really implies.
         if (declared.Lower.HasValue && declared.Lower != effective.Lower) {
-            issues.Add(Issue(bid, path, $"{fieldName} declares lower PC bound {declared.Lower} but the bidding so far implies {effective}."));
+            var tightens = declared.Lower > (effective.Lower ?? MinPc);
+            issues.Add(Issue(bid, path, $"{fieldName} podaje dolny limit {declared.Lower} PC, ale z dotychczasowej licytacji wynika {effective}.",
+                tightens ? new RangeRepair("pointsRange", "lower", declared.Lower.Value) : null,
+                tightens ? null : RepairedPcText(text, effective)));
         }
         if (declared.Upper.HasValue && declared.Upper != effective.Upper) {
-            issues.Add(Issue(bid, path, $"{fieldName} declares upper PC bound {declared.Upper} but the bidding so far implies {effective}."));
+            var tightens = declared.Upper < (effective.Upper ?? MaxPc);
+            issues.Add(Issue(bid, path, $"{fieldName} podaje górny limit {declared.Upper} PC, ale z dotychczasowej licytacji wynika {effective}.",
+                tightens ? new RangeRepair("pointsRange", "upper", declared.Upper.Value) : null,
+                tightens ? null : RepairedPcText(text, effective)));
         }
     }
 
@@ -173,13 +183,51 @@ public sealed class TreeValidator {
         foreach (var (suit, declared) in ConditionReader.ReadSuitLengths(bid.Condition)) {
             var effective = con.GetSuitLength(bid.OpenerBid, suit);
 
+            // Every one of these is settled by writing the stated bound: it tightens the range, which is what was missing.
             if (declared.Lower.HasValue && declared.Lower > (effective.Lower ?? MinCards)) {
-                issues.Add(Issue(bid, path, $"Condition promises at least {declared.Lower} {suit} but the ranges only imply {effective}."));
+                issues.Add(Issue(bid, path, $"Znaczenie obiecuje co najmniej {declared.Lower} kart w kolorze {SuitName(suit)}, ale z zakresów wynika tylko {effective}.", new RangeRepair(SuitField(suit), "lower", declared.Lower.Value)));
             }
             if (declared.Upper.HasValue && declared.Upper < (effective.Upper ?? MaxCards)) {
-                issues.Add(Issue(bid, path, $"Condition promises at most {declared.Upper} {suit} but the ranges only imply {effective}."));
+                issues.Add(Issue(bid, path, $"Znaczenie obiecuje najwyżej {declared.Upper} kart w kolorze {SuitName(suit)}, ale z zakresów wynika tylko {effective}.", new RangeRepair(SuitField(suit), "upper", declared.Upper.Value)));
             }
         }
+    }
+
+
+    /// <summary>
+    /// The description with its point range rewritten to what the bidding implies, or null when there is nothing to rewrite.
+    /// Only the phrase the parser recognised is touched; the prose around it is left exactly as the author wrote it.
+    /// </summary>
+    private static string? RepairedPcText(string? text, NumberRange effective) {
+        var replacement = FormatPc(effective);
+        if (text == null || replacement == null) {
+            return null;
+        }
+
+        foreach (var pattern in new[] { PcRangePattern, BelowPcPattern, AbovePcPattern, AbovePcPulsPattern }) {
+            var match = pattern.Match(text);
+            if (!match.Success) {
+                continue;
+            }
+
+            var repaired = string.Concat(text.AsSpan(0, match.Index), replacement, text.AsSpan(match.Index + match.Length));
+            return repaired == text ? null : repaired;
+        }
+
+        return null;
+    }
+
+
+    /// <summary>Writes a point range the way the descriptions write them, so a repaired text still reads like the rest.</summary>
+    private static string? FormatPc(NumberRange range) {
+        if (range.Lower.HasValue && range.Upper.HasValue) {
+            return $"{range.Lower}-{range.Upper} PC";
+        }
+        if (range.Lower.HasValue) {
+            return $"{range.Lower}+ PC";
+        }
+
+        return range.Upper.HasValue ? $"Poniżej {range.Upper} PC" : null;
     }
 
 
@@ -193,7 +241,8 @@ public sealed class TreeValidator {
             return new NumberRange(int.Parse(range.Groups["lower"].Value), int.Parse(range.Groups["upper"].Value));
         }
 
-        // "Poniżej N PC" means at most N - 1, "Powyżej N PC" at least N + 1; both count only when they open the text.
+        // "Poniżej N PC" means N or fewer and "Powyżej N PC" N or more: the phrase names the bound rather than excluding it.
+        // Both count only when they open the text.
         var below = BelowPcPattern.Match(text);
         if (below.Success) {
             return new NumberRange(null, int.Parse(below.Groups["upper"].Value));
@@ -221,11 +270,11 @@ public sealed class TreeValidator {
             return true;
         }
 
-        var role = current.OpenerBid ? "opener" : "responder";
+        var role = RoleName(current.OpenerBid);
         var currentRange = current.OpenerBid ? con.Opener.Pc : con.Responder.Pc;
 
         if (!RangeCon.TryIntersect(currentRange, constraint, out var narrowed)) {
-            issues.Add(Issue(current, currentPath, $"Bid is impossible due to PC constraints ({role}). Constraint: {constraint}, Current: {currentRange}."));
+            issues.Add(Issue(current, currentPath, $"Odzywka niemożliwa przez ograniczenia punktowe ({role}). Warunek: {constraint}, dotychczas: {currentRange}."));
             return false;
         }
 
@@ -258,8 +307,7 @@ public sealed class TreeValidator {
         var currentRange = con.GetSuitLength(isOpener, suit);
 
         if (!RangeCon.TryIntersect(currentRange, constraint, out var narrowed)) {
-            var role = isOpener ? "opener" : "responder";
-            issues.Add(Issue(current, currentPath, $"Bid is impossible due to suit length constraints ({role}). {suit}: Constraint: {constraint}, Current: {currentRange}."));
+            issues.Add(Issue(current, currentPath, $"Odzywka niemożliwa przez długość koloru ({RoleName(isOpener)}), {SuitName(suit)}. Warunek: {constraint}, dotychczas: {currentRange}."));
             return false;
         }
 
@@ -272,7 +320,7 @@ public sealed class TreeValidator {
         var minSum = (con.Opener.Pc.Lower ?? MinPc) + (con.Responder.Pc.Lower ?? MinPc);
 
         if (minSum > MaxPc) {
-            issues.Add(Issue(current, currentPath, $"Partnership PC impossible: min sum {minSum} > {MaxPc}. Opener {con.Opener.Pc}, Responder {con.Responder.Pc}."));
+            issues.Add(Issue(current, currentPath, $"Punkty pary niemożliwe: minimalna suma {minSum} przekracza {MaxPc}. Otwierający {con.Opener.Pc}, odpowiadający {con.Responder.Pc}."));
             return false;
         }
 
@@ -287,9 +335,8 @@ public sealed class TreeValidator {
             var minSum = lengths.Sum(length => length.Lower ?? MinCards);
 
             if (minSum > MaxCards) {
-                var role = isOpener ? "opener" : "responder";
-                var details = string.Join(", ", Suits.Select((suit, index) => $"{suit} {lengths[index]}"));
-                issues.Add(Issue(current, currentPath, $"Hand impossible ({role}): min suit lengths sum to {minSum} > {MaxCards}. {details}."));
+                var details = string.Join(", ", Suits.Select((suit, index) => $"{SuitName(suit)} {lengths[index]}"));
+                issues.Add(Issue(current, currentPath, $"Ręka niemożliwa ({RoleName(isOpener)}): minimalne długości kolorów sumują się do {minSum}, a ręka ma {MaxCards} kart. {details}."));
                 return false;
             }
         }
@@ -305,7 +352,7 @@ public sealed class TreeValidator {
             var minSum = (opener.Lower ?? MinCards) + (responder.Lower ?? MinCards);
 
             if (minSum > MaxCards) {
-                issues.Add(Issue(current, currentPath, $"Partnership {suit} length impossible: min sum {minSum} > {MaxCards}. Opener {opener}, Responder {responder}."));
+                issues.Add(Issue(current, currentPath, $"Długość koloru {SuitName(suit)} u pary niemożliwa: minimalna suma {minSum} przekracza {MaxCards}. Otwierający {opener}, odpowiadający {responder}."));
                 return false;
             }
         }
@@ -325,9 +372,32 @@ public sealed class TreeValidator {
     }
 
 
-    private static ValidationIssue Issue(BidNode bid, string path, string message) {
-        return new ValidationIssue(ValidationSeverity.Error, message, path, GetConventionContext(bid), bid.NodeId);
+    private static ValidationIssue Issue(BidNode bid, string path, string message, RangeRepair? repair = null, string? conditionRepair = null) {
+        return new ValidationIssue(ValidationSeverity.Error, message, path, GetConventionContext(bid), bid.NodeId, repair, conditionRepair);
     }
+
+
+    /// <summary>Suit as the messages name it; the enum spells them in English, the messages are read in Polish.</summary>
+    private static string SuitName(BidColor suit) => suit switch {
+        BidColor.Clubs => "trefle",
+        BidColor.Diamonds => "kara",
+        BidColor.Hearts => "kiery",
+        BidColor.Spades => "piki",
+        BidColor.NoTrump => "bez atu",
+        _ => "brak koloru"
+    };
+
+
+    private static string RoleName(bool isOpener) => isOpener ? "otwierający" : "odpowiadający";
+
+
+    /// <summary>Range field of a suit, named as the wire spells it, so the client can apply a repair without translating.</summary>
+    private static string SuitField(BidColor suit) => suit switch {
+        BidColor.Clubs => "clubsCardRange",
+        BidColor.Diamonds => "diamondsCardRange",
+        BidColor.Hearts => "heartsCardRange",
+        _ => "spadesCardRange"
+    };
 
 
     private static string FormatBid(BidNode bid) {

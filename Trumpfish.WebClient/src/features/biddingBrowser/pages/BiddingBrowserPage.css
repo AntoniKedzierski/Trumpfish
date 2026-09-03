@@ -711,12 +711,32 @@
   list-style: none;
 }
 
+/* The row carries the issue and its repair side by side, so the separator has to sit on the row rather than on the issue. */
+.validation li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px;
+}
+
+.validation li + li {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.issue-repair {
+  flex: none;
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
 .issue {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  width: 100%;
+  flex: 1;
+  /* Long messages must wrap inside the row instead of pushing the repair button out of it. */
+  min-width: 0;
   padding: 10px 12px;
   background: none;
   border: none;
@@ -732,9 +752,6 @@
   background: var(--surface-hover);
 }
 
-.validation li + li .issue {
-  border-top: 1px solid var(--border-subtle);
-}
 
 .issue strong {
   padding: 2px 10px;

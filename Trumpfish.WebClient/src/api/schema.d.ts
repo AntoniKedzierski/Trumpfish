@@ -922,6 +922,12 @@ export interface components {
             detail?: null | string;
             instance?: null | string;
         };
+        RangeRepair: {
+            field: string;
+            bound: string;
+            /** Format: int32 */
+            value: number | string;
+        };
         RegisterRequest: {
             username: string;
             password: string;
@@ -1027,6 +1033,8 @@ export interface components {
             /** Format: uuid */
             nodeId?: null | string;
             conventionContext?: null | string;
+            repair?: components["schemas"]["RangeRepair"];
+            conditionRepair?: null | string;
         };
         /** @enum {unknown} */
         ValidationSeverity: "Info" | "Warning" | "Error";

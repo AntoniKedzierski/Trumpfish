@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Link, useBlocker, useSearchParams } from 'react-router-dom';
 import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
-import type { BiddingSystem, BiddingSystemSummary } from '@/api/models';
+import { toNumber, type BiddingSystem, type BiddingSystemSummary, type NumberRange, type ValidationIssue } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
 import { BidTreeView } from '../components/BidTreeView';
@@ -9,8 +9,8 @@ import { PaneSplitter } from '../components/PaneSplitter';
 import { Toolbar } from '../components/Toolbar';
 import { UnsavedChangesPrompt } from '../components/UnsavedChangesPrompt';
 import { ValidationPanel } from '../components/ValidationPanel';
-import { inheritedRanges } from '../constraints';
-import { createEmptySystem, normalizeSystem } from '../model';
+import { inheritedRanges, type RangeField } from '../constraints';
+import { createEmptySystem, normalizeSystem, type EditableBidNode } from '../model';
 import { browserReducer, initialBrowserState, type BrowserAction } from '../state';
 import { findNodeById, getNode, resolveIssuePath, ancestorNodes } from '../tree';
 import { removeUnreachable, type CleanupResult } from '../unreachable';
@@ -173,6 +173,42 @@ export function BiddingBrowserPage() {
     });
   };
 
+  /**
+   * Applies a repair the validator worked out, to the bid the issue belongs to. The bid is selected on the way, so the change
+   * happens in front of the author rather than somewhere off screen.
+   */
+  const repairIssue = (issue: ValidationIssue, patchFor: (node: EditableBidNode) => Partial<EditableBidNode> | null) => {
+    const target = findNodeById(state.system, issue.nodeId) ?? resolveIssuePath(state.system, issue.path);
+    const node = target === null ? null : getNode(state.system, target);
+    const patch = node === null ? null : patchFor(node);
+    if (target === null || patch === null) {
+      return;
+    }
+
+    dispatch({ kind: 'select', target });
+    dispatch({ kind: 'updateNode', patch });
+
+    // The rest of the list is still whatever the last run found; only the issue just settled is known to be gone.
+    dispatch({ kind: 'setIssues', issues: (state.issues ?? []).filter((candidate) => candidate !== issue) });
+  };
+
+  /** The description was right and the ranges lagged behind: write the stated bound into the bid. */
+  const handleRepairRanges = (issue: ValidationIssue) => repairIssue(issue, (node) => {
+    const repair = issue.repair;
+    if (!repair) {
+      return null;
+    }
+
+    const field = repair.field as RangeField;
+    const current = (node[field] ?? {}) as NumberRange;
+    return { [field]: { ...current, [repair.bound]: toNumber(repair.value) } } as Partial<EditableBidNode>;
+  });
+
+  /** The ranges were right and the description overstated them: replace the text with what the auction implies. */
+  const handleRepairCondition = (issue: ValidationIssue) => repairIssue(issue, () => (
+    issue.conditionRepair ? { condition: issue.conditionRepair } : null
+  ));
+
   // Clears the branch of bids the auction can never arrive at. Destructive and potentially large, so the tally is shown first.
   const handleRemoveUnreachable = () => {
     const result = removeUnreachable(state.system, state.selection);
@@ -328,6 +364,8 @@ export function BiddingBrowserPage() {
 
       <ValidationPanel
         issues={state.issues}
+        onRepairRanges={handleRepairRanges}
+        onRepairCondition={handleRepairCondition}
         onSelectIssue={(issue) => {
           const target = findNodeById(state.system, issue.nodeId) ?? resolveIssuePath(state.system, issue.path);
           if (target !== null) {

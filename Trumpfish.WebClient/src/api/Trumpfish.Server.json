@@ -1269,6 +1269,30 @@
           }
         }
       },
+      "RangeRepair": {
+        "required": [
+          "field",
+          "bound",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "bound": {
+            "type": "string"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "RegisterRequest": {
         "required": [
           "username",
@@ -1733,6 +1757,15 @@
             "format": "uuid"
           },
           "conventionContext": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "repair": {
+            "$ref": "#/components/schemas/RangeRepair"
+          },
+          "conditionRepair": {
             "type": [
               "null",
               "string"
