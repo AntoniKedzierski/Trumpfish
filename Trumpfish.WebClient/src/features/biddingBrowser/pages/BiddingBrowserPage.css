@@ -174,13 +174,32 @@
   min-width: 210px;
 }
 
+/* The middle column is the drag handle; its own margins supply the gap that used to come from `gap`. */
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) auto 360px;
   flex: 1;
   min-height: 0;
   padding: 20px 28px;
+}
+
+.workspace-splitter {
+  width: 6px;
+  margin: 0 7px;
+  border-radius: 999px;
+  background: transparent;
+  cursor: col-resize;
+  /* Keeps a touch drag from scrolling the page instead of moving the divider. */
+  touch-action: none;
+  transition: background-color var(--duration-normal) var(--ease-out);
+}
+
+.workspace-splitter:hover,
+.workspace-splitter:focus-visible,
+.workspace-splitter.dragging {
+  background: var(--accent);
+  outline: none;
+  box-shadow: none;
 }
 
 .tree {
@@ -192,6 +211,47 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+}
+
+/* Stack of enclosing levels, pinned above the tree. Inert by design: it reports position, it does not offer navigation. */
+/* No padding of its own: the rows carry all the spacing, so the first and last sit flush against the frame like the rest. */
+.tree-path {
+  flex: none;
+  padding: 0;
+  background: var(--surface-overlay);
+  border-bottom: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  cursor: default;
+  user-select: none;
+  pointer-events: none;
+}
+
+/*
+ * Every level is exactly one row tall, and nothing inside may change that. The rows hold different things - an uppercase 12px
+ * root label, a 13px bid code whose suit mark comes from a fallback font - so any height grown from content would come out
+ * slightly different for each. The fixed height plus `align-items: center` gives identical boxes and identical centring;
+ * `line-height: 1` keeps the text box tight so the font's own leading cannot lean on it either.
+ * Longhand padding on purpose: the indent per level arrives as an inline padding-left, which a shorthand here would fight.
+ */
+.tree-path-row {
+  display: flex;
+  align-items: center;
+  margin: 4px 0px;
+  gap: 0px;
+  height: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  padding-right: 14px;
+  overflow: hidden;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-muted);
+}
+
+.tree-path-row .bid-condition {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Guide rail that makes deep nesting readable, and lights up under the hovered branch. */
@@ -368,16 +428,28 @@
   line-height: 1;
 }
 
-.editor {
+/* The card is the pane, so the path can sit above the scrolling fields instead of scrolling away with them. */
+.editor-pane {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  overflow: auto;
-  padding: 20px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  /* Without this a flex item refuses to shrink below its content, and the fields would push the pane instead of scrolling. */
+  min-height: 0;
+  gap: 6px;
+  overflow: auto;
+  padding: 20px;
 }
 
 .editor.empty {

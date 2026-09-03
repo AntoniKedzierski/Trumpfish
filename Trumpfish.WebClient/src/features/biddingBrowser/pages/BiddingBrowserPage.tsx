@@ -5,6 +5,7 @@ import type { BiddingSystem, BiddingSystemSummary } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
 import { BidTreeView } from '../components/BidTreeView';
+import { PaneSplitter } from '../components/PaneSplitter';
 import { Toolbar } from '../components/Toolbar';
 import { ValidationPanel } from '../components/ValidationPanel';
 import { inheritedRanges } from '../constraints';
@@ -21,6 +22,7 @@ export function BiddingBrowserPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [editorWidth, setEditorWidth] = useState(360);
 
   const isAdmin = user?.isAdmin ?? false;
   const current = savedSystems.find((system) => system.id === state.systemId) ?? null;
@@ -202,10 +204,13 @@ export function BiddingBrowserPage() {
         onExportSeeds={handleExportSeeds}
       />
 
-      <div className="workspace">
+      {/* The editor column is what the splitter sizes; the tree takes whatever is left. */}
+      <div className="workspace" style={{ gridTemplateColumns: `minmax(0, 1fr) auto ${editorWidth}px` }}>
         <BidTreeView system={state.system} selection={state.selection} onSelect={(target) => dispatch({ kind: 'select', target })} />
+        <PaneSplitter width={editorWidth} onWidthChange={setEditorWidth} />
         <BidEditorPanel
           node={selectedNode}
+          rootName={state.system.roots[state.selection?.rootIndex ?? -1]?.name ?? null}
           inherited={inheritedRanges(state.system, state.selection)}
           ancestors={ancestorNodes(state.system, state.selection)}
           onChange={(patch) => dispatch({ kind: 'updateNode', patch })}

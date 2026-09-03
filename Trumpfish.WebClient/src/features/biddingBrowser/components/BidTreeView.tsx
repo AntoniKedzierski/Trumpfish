@@ -70,8 +70,10 @@ function TreeBranch({ label, target, children_, selection, onSelect, initiallyEx
 
   return (
     <li>
+      {/* A double click both selects the row and expands it: the click that opens the branch is also the one that picks it. */}
       <div ref={rowRef} className={`tree-row${selected ? ' selected' : ''}`} onClick={() => onSelect(target)} onDoubleClick={toggle}>
-        <button type="button" className={`tree-toggle${open ? ' expanded' : ''}${leaf ? ' leaf' : ''}`} disabled={leaf} onClick={(event) => { event.stopPropagation(); toggle(); }} aria-label={open ? 'Zwiń' : 'Rozwiń'}>
+        {/* The chevron toggles on its own, so the row must not treat a double click on it as a second toggle. */}
+        <button type="button" className={`tree-toggle${open ? ' expanded' : ''}${leaf ? ' leaf' : ''}`} disabled={leaf} onClick={(event) => { event.stopPropagation(); toggle(); }} onDoubleClick={(event) => event.stopPropagation()} aria-label={open ? 'Zwiń' : 'Rozwiń'}>
           {leaf ? <span className="tree-leaf-dot" aria-hidden="true" /> : <Chevron />}
         </button>
         {label}
