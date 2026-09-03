@@ -13624,6 +13624,9 @@
               "nodeId": "72aa7db4-eaf0-4cc7-a67d-40df77478383",
               "condition": "12\u002B PC, pytanie o zatrzymanie.",
               "convention": "Wej\u015Bcie kolorem przeciwnik\u00F3w",
+              "pointsRange": {
+                "lower": 12
+              },
               "openerBid": false,
               "signOff": false,
               "oneRoundForcing": false,
@@ -18127,6 +18130,9 @@
                     {
                       "nodeId": "71677e83-6ba5-4684-84c6-2fb757c1f2a7",
                       "condition": "10\u002B PC, 4\u002B kiery,  brak 5 pik\u00F3w, pytanie o zatrzymanie trefl.",
+                      "pointsRange": {
+                        "lower": 10
+                      },
                       "spadesCardRange": {
                         "upper": 4
                       },
@@ -18333,6 +18339,9 @@
                     {
                       "nodeId": "5380bab7-bce5-4e7c-b391-b579305cfb3f",
                       "condition": "10\u002B PC, 4\u002B kiery, brak 5 pik\u00F3w, pytanie o zatrzymanie trefl.",
+                      "pointsRange": {
+                        "lower": 10
+                      },
                       "spadesCardRange": {
                         "upper": 4
                       },
@@ -20959,6 +20968,9 @@
               "nodeId": "011a7829-2b7e-4c99-80b9-2f335b34e9db",
               "condition": "12\u002B PC, pytanie o zatrzymanie.",
               "convention": "Wej\u015Bcie kolorem przeciwnik\u00F3w",
+              "pointsRange": {
+                "lower": 12
+              },
               "openerBid": false,
               "signOff": false,
               "oneRoundForcing": false,
@@ -24299,6 +24311,7 @@
                       "nodeId": "c78610e2-4b16-454b-9663-e00c822f1527",
                       "condition": "15\u002B PC, brak 5, zatrzymanie pik",
                       "pointsRange": {
+                        "lower": 15,
                         "upper": 15
                       },
                       "spadesCardRange": {
@@ -26822,10 +26835,14 @@
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "a3c72193-7fd3-47e9-950b-910ef0975973",
-                      "condition": "7-9 PC, minimum",
+                      "nodeId": "cdb6a217-0c31-4a72-aff1-8c081c97c995",
+                      "condition": "8-9 PC, dobre kiery.",
                       "pointsRange": {
+                        "lower": 8,
                         "upper": 9
+                      },
+                      "heartsCardRange": {
+                        "lower": 4
                       },
                       "openerBid": false,
                       "signOff": true,
@@ -26837,8 +26854,9 @@
                       "isDisabled": false,
                       "nextBids": [],
                       "realizedGoal": "None",
-                      "type": "Pass",
-                      "color": "NoColor",
+                      "type": "Submit",
+                      "color": "Hearts",
+                      "value": 4,
                       "isFromSystem": false
                     },
                     {
@@ -30655,10 +30673,14 @@
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "7ce5cab6-9e97-48d6-b519-f6656f03018f",
-                      "condition": "7-8 PC, minimum",
+                      "nodeId": "69e25865-1aa4-4774-96e5-6b81023cdd0a",
+                      "condition": "8-9 PC, dobre piki.",
                       "pointsRange": {
-                        "upper": 8
+                        "lower": 8,
+                        "upper": 9
+                      },
+                      "spadesCardRange": {
+                        "lower": 4
                       },
                       "openerBid": false,
                       "signOff": true,
@@ -30670,15 +30692,16 @@
                       "isDisabled": false,
                       "nextBids": [],
                       "realizedGoal": "None",
-                      "type": "Pass",
-                      "color": "NoColor",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 4,
                       "isFromSystem": false
                     },
                     {
                       "nodeId": "825aec5b-f14d-4321-902f-a4dffbab94db",
                       "condition": "9-11 PC, maksimum",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 10
                       },
                       "openerBid": false,
                       "signOff": true,
@@ -31362,6 +31385,9 @@
                       "nodeId": "ed7deab7-d7c0-4b55-ab1e-777f27a79663",
                       "condition": "10\u002B PC, 5 pik\u00F3w i 4 kiery.",
                       "convention": "Smole\u0144",
+                      "pointsRange": {
+                        "lower": 10
+                      },
                       "spadesCardRange": {
                         "lower": 5,
                         "upper": 5
@@ -31460,6 +31486,9 @@
                       "nodeId": "90d44c4f-cfdd-48b3-8291-753055e62d8c",
                       "condition": "10\u002B PC, 4 piki i 5 kier\u00F3w.",
                       "convention": "Smole\u0144",
+                      "pointsRange": {
+                        "lower": 10
+                      },
                       "spadesCardRange": {
                         "lower": 4,
                         "upper": 4
@@ -31964,6 +31993,9 @@
                     {
                       "nodeId": "75edbd99-f8fb-445e-b51d-b4bc855d1584",
                       "condition": "10\u002B PC, 5 pik\u00F3w i 4 kiery [Smole\u0144].",
+                      "pointsRange": {
+                        "lower": 10
+                      },
                       "spadesCardRange": {
                         "lower": 5,
                         "upper": 5
@@ -31990,6 +32022,9 @@
                     {
                       "nodeId": "c7d980cc-bab4-4b16-907c-fe0def5bba5a",
                       "condition": "10\u002B PC, 4 piki i 5 kier\u00F3w [Smole\u0144].",
+                      "pointsRange": {
+                        "lower": 10
+                      },
                       "spadesCardRange": {
                         "lower": 4,
                         "upper": 4
@@ -38060,7 +38095,7 @@
               "nodeId": "e2d66f7a-2bea-4430-ad89-6c8a55d2b40f",
               "condition": "13\u002B PC, 5\u002B pik\u00F3w z figur\u0105",
               "pointsRange": {
-                "lower": 12
+                "lower": 13
               },
               "spadesCardRange": {
                 "lower": 5
@@ -38269,7 +38304,7 @@
               "nodeId": "f4d14a10-46eb-49dd-962b-b7f4c4389b65",
               "condition": "17\u002B PC, 6\u002B pik\u00F3w z 2 figurami",
               "pointsRange": {
-                "lower": 13
+                "lower": 17
               },
               "spadesCardRange": {
                 "lower": 6
@@ -38378,7 +38413,7 @@
               "nodeId": "f95fbd66-47e2-4cb5-9d8e-7673fcb84ef3",
               "condition": "13\u002B PC, 5\u002B pik\u00F3w z figur\u0105",
               "pointsRange": {
-                "lower": 12
+                "lower": 13
               },
               "spadesCardRange": {
                 "lower": 5
@@ -38587,7 +38622,7 @@
               "nodeId": "2cdcb705-b84a-4a22-aff2-b1227eb02aab",
               "condition": "17\u002B PC, 6\u002B pik\u00F3w z 2 figurami",
               "pointsRange": {
-                "lower": 13
+                "lower": 17
               },
               "spadesCardRange": {
                 "lower": 6
@@ -38856,7 +38891,7 @@
               "nodeId": "55c33524-ec30-464a-b379-f5ca2fe2e6b9",
               "condition": "17\u002B PC, 6\u002B kier\u00F3w z 2 figurami",
               "pointsRange": {
-                "lower": 13
+                "lower": 17
               },
               "heartsCardRange": {
                 "lower": 6
@@ -39149,7 +39184,7 @@
               "nodeId": "7d24f37e-4324-4e29-87ac-99c36ca67d4d",
               "condition": "17\u002B PC, 6\u002B kier\u00F3w z 2 figurami",
               "pointsRange": {
-                "lower": 13
+                "lower": 17
               },
               "heartsCardRange": {
                 "lower": 6
@@ -39539,7 +39574,7 @@
               "description": "karta analogiczna jak na otwarcie 1 BA",
               "condition": "15\u002B PC, brak starszej 5",
               "pointsRange": {
-                "lower": 13
+                "lower": 15
               },
               "spadesCardRange": {
                 "lower": 2,
@@ -39728,7 +39763,7 @@
               "description": "karta analogiczna jak na otwarcie 1 BA",
               "condition": "15\u002B PC, brak starszej 5",
               "pointsRange": {
-                "lower": 13
+                "lower": 15
               },
               "spadesCardRange": {
                 "lower": 2,
@@ -39892,7 +39927,7 @@
               "description": "karta analogiczna jak na otwarcie 1 BA",
               "condition": "15\u002B PC, brak starszej 5",
               "pointsRange": {
-                "lower": 13
+                "lower": 15
               },
               "spadesCardRange": {
                 "lower": 2,
@@ -40007,7 +40042,7 @@
               "description": "karta analogiczna jak na otwarcie 1 BA",
               "condition": "15\u002B PC, brak starszej 5",
               "pointsRange": {
-                "lower": 13
+                "lower": 15
               },
               "spadesCardRange": {
                 "lower": 2,
@@ -40643,6 +40678,9 @@
             {
               "nodeId": "55db14ef-5105-4eb3-8080-e514db591dab",
               "condition": "19\u002B PC, inwit do szlema.",
+              "pointsRange": {
+                "lower": 19
+              },
               "aces": 3,
               "openerBid": false,
               "signOff": false,
@@ -41308,6 +41346,9 @@
             {
               "nodeId": "8fcf9a3d-b4b6-4492-8bad-782b68f35723",
               "condition": "19\u002B PC, inwit do szlema.",
+              "pointsRange": {
+                "lower": 19
+              },
               "aces": 3,
               "openerBid": false,
               "signOff": false,
@@ -43199,6 +43240,9 @@
               "nodeId": "901574e4-889d-4514-a74c-b0ae7e6eb7c0",
               "condition": "7\u002B PC, 5\u002B pik\u00F3w.",
               "convention": "Off-System",
+              "pointsRange": {
+                "lower": 7
+              },
               "spadesCardRange": {
                 "lower": 5
               },
