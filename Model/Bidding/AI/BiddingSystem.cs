@@ -39,11 +39,11 @@ public class BiddingSystem {
     }
 
 
-    public List<BidNode> GetDescendants(List<Bid> bidSequence) {
+    public List<BidNode> GetDescendants(List<InterruptedBid> bidSequence) {
         var children = Openings()!.Bids;
 
         for (int i = 0; i < bidSequence.Count - 1; ++i) {
-            children = GetMatchingChildren(children, bidSequence[i]).ToList();
+            children = [.. GetMatchingChildren(children, bidSequence[i])];
         }
 
         return [.. children
@@ -103,6 +103,21 @@ public class BiddingSystem {
                 yield return child;
             }
         }
+    }
+
+
+    public List<BidNode> GetMatchingChildren(List<BidNode> parentNodes, InterruptedBid nextBid) {
+        if (nextBid.Interruption == null) {
+            return parentNodes
+                .Where(e => e.Equals(nextBid))
+                .SelectMany(e => e.NextBids)
+                .ToList();
+        }
+
+        return parentNodes
+            .Where(e => e.Equals(nextBid) && e.Interjection != null && e.Interjection.Equals(nextBid))
+            .SelectMany(e => e.NextBids)
+            .ToList();
     }
 
 

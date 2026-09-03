@@ -273,7 +273,7 @@ public partial class BidEngine : IBidInput {
     }
 
 
-    public BidNode? TryContinueSystemOrNatural(Hand hand, List<Bid> bidSequence) {
+    public BidNode? TryContinueSystemOrNatural(Hand hand, List<InterruptedBid> bidSequence) {
         if (bidSequence.Count <= 1) {
             throw new Exception("Próba odpowiedzi na jednoelementowy sekwens odzywek.");
         }

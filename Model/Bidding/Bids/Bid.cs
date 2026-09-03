@@ -17,9 +17,6 @@ public class Bid : IEquatable<Bid> {
 
     public string? Explanation { get; set; }
 
-    [JsonIgnore, TextJsonIgnore]
-    public string? StackTrace { get; set; }
-
 
     public Bid() { }
 

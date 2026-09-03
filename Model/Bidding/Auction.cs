@@ -248,8 +248,8 @@ public class Auction {
     /// Wszystkie odzywki pary danego gracza, w kolejności chronologicznej (łącznie z pasami).
     /// </summary>
     /// <param name="openingPlayer">Gracz z tej pary, który wykonał jej pierwszą nie-pasową odzywkę.</param>
-    public List<Bid> GetPlayersSequence(PlayerPosition bidderPosition, out PlayerPosition? openingPlayer) {
-        var playerBids = new List<Bid>();
+    public List<InterruptedBid> GetPlayersSequence(PlayerPosition bidderPosition, out PlayerPosition? openingPlayer) {
+        var playerBids = new List<InterruptedBid>();
         var partnerPosition = bidderPosition.GetPartner();
 
         openingPlayer = null;
@@ -265,7 +265,13 @@ public class Auction {
                 openingPlayer = bidPlayer;
             }
 
-            playerBids.Add(AuctionHistory[i]);
+            var bid = new InterruptedBid(AuctionHistory[i]);
+            var interruption = i >= 1 ? AuctionHistory[i - 1] : null;
+            if (interruption != null && interruption.Type != BidType.Pass) {
+                bid.Interruption = interruption;
+            }
+
+            playerBids.Add(bid);
         }
 
         return playerBids;

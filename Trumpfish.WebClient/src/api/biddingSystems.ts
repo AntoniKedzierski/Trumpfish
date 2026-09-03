@@ -1,5 +1,5 @@
 import { getJson, postJson, putJson, remove } from './client';
-import type { BiddingSystem, BiddingSystemSummary, SeedExportResult, ValidationIssue } from './models';
+import type { BiddingSystem, BiddingSystemSummary, ValidationIssue } from './models';
 
 const route = '/bidding-systems';
 
@@ -45,12 +45,4 @@ export function reforkSystem(id: string): Promise<BiddingSystemSummary> {
 
 export function validateBiddingSystem(system: BiddingSystem): Promise<ValidationIssue[]> {
   return postJson<ValidationIssue[]>(`${route}/validate`, system);
-}
-
-/**
- * Writes every seed into the server's `Seed` folder so it can be committed. Only meaningful for an administrator on a Debug
- * server - `CurrentUser.isDebugBuild` says whether that is the case, so never offer this without it.
- */
-export function exportSeeds(): Promise<SeedExportResult> {
-  return postJson<SeedExportResult>(`${route}/export-seeds`, {});
 }

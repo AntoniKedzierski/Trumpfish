@@ -22,10 +22,28 @@ namespace Trumpfish.Server.Controllers;
 public class BiddingSystemsController : ControllerBase {
 
     private readonly IBiddingSystemStore _store;
+    private readonly ISeedExporter _seedExporter;
 
 
-    public BiddingSystemsController(IBiddingSystemStore store) {
+    public BiddingSystemsController(IBiddingSystemStore store, ISeedExporter seedExporter) {
         _store = store;
+        _seedExporter = seedExporter;
+    }
+
+
+    /// <summary>
+    /// Writes the seed files back out after a change that touched them, so a developer's edits reach the working copy without
+    /// a separate command and can simply be committed.
+    /// </summary>
+    /// <remarks>
+    /// Only an administrator can write a seed - that is what <c>CanWrite</c> allows - so their writes are exactly the ones the
+    /// files have to follow. The exporter reports itself unavailable on a Release build, where the files are the input and
+    /// never the output, which is what keeps a deployed server from touching them.
+    /// </remarks>
+    private async Task ExportSeedsAsync(CancellationToken cancellationToken) {
+        if (User.IsAdmin() && _seedExporter.IsAvailable) {
+            await _seedExporter.ExportAllAsync(cancellationToken);
+        }
     }
 
 
@@ -69,6 +87,7 @@ public class BiddingSystemsController : ControllerBase {
             return Problem(operation.Result);
         }
 
+        await ExportSeedsAsync(cancellationToken);
         return CreatedAtAction(nameof(Get), new { id = operation.Value!.Id }, operation.Value);
     }
 
@@ -79,7 +98,12 @@ public class BiddingSystemsController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BiddingSystemSummary>> Save(Guid id, [FromBody] BiddingSystem system, CancellationToken cancellationToken) {
         var operation = await _store.SaveAsync(id, system, User.RequireUserId(), User.IsAdmin(), cancellationToken);
-        return operation.Result == SystemAccessResult.Success ? Ok(operation.Value) : Problem(operation.Result);
+        if (operation.Result != SystemAccessResult.Success) {
+            return Problem(operation.Result);
+        }
+
+        await ExportSeedsAsync(cancellationToken);
+        return Ok(operation.Value);
     }
 
 
@@ -93,7 +117,13 @@ public class BiddingSystemsController : ControllerBase {
         }
 
         var operation = await _store.RenameAsync(id, request.Name.Trim(), User.RequireUserId(), User.IsAdmin(), cancellationToken);
-        return operation.Result == SystemAccessResult.Success ? Ok(operation.Value) : Problem(operation.Result);
+        if (operation.Result != SystemAccessResult.Success) {
+            return Problem(operation.Result);
+        }
+
+        // A rename moves the file too: the exporter names files after the systems and clears away the ones left behind.
+        await ExportSeedsAsync(cancellationToken);
+        return Ok(operation.Value);
     }
 
 
@@ -103,7 +133,12 @@ public class BiddingSystemsController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken) {
         var result = await _store.DeleteAsync(id, User.RequireUserId(), User.IsAdmin(), cancellationToken);
-        return result == SystemAccessResult.Success ? NoContent() : Problem(result);
+        if (result != SystemAccessResult.Success) {
+            return Problem(result);
+        }
+
+        await ExportSeedsAsync(cancellationToken);
+        return NoContent();
     }
 
 
@@ -137,24 +172,6 @@ public class BiddingSystemsController : ControllerBase {
     [ProducesResponseType<IReadOnlyList<ValidationIssue>>(StatusCodes.Status200OK)]
     public ActionResult<IReadOnlyList<ValidationIssue>> Validate([FromBody] BiddingSystem system) {
         return Ok(new TreeValidator().Validate(system));
-    }
-
-
-    /// <summary>
-    /// Writes every seed into the server's own <c>Seed</c> folder so a developer can commit them, and deletes the files that no
-    /// longer match a seed. This is how work done against the in-memory development database reaches the repository, and from
-    /// there both the team and production. Only an administrator on a Debug build can reach it.
-    /// </summary>
-    [HttpPost("export-seeds")]
-    [Authorize(Roles = Roles.Admin)]
-    [ProducesResponseType<SeedExportResult>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<SeedExportResult>> ExportSeeds([FromServices] ISeedExporter exporter, CancellationToken cancellationToken) {
-        if (!exporter.IsAvailable) {
-            return NotFound("Eksport seedów jest dostępny tylko w konfiguracji Debug.");
-        }
-
-        return Ok(await exporter.ExportAllAsync(cancellationToken));
     }
 
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Link, useBlocker, useSearchParams } from 'react-router-dom';
-import { createBiddingSystem, exportSeeds, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
+import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import type { BiddingSystem, BiddingSystemSummary } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
@@ -172,14 +172,6 @@ export function BiddingBrowserPage() {
     });
   };
 
-  // Writes straight into the server's Seed folder instead of downloading, which is the whole point: the files land where git
-  // can see them, so the team pulls them and production applies them on its next start.
-  const handleExportSeeds = () => run(async () => {
-    const result = await exportSeeds();
-    const removed = result.removed.length === 0 ? '' : `, usunięto nieaktualne: ${result.removed.length}`;
-    setNotice(`Zapisano seedy do repozytorium: ${result.written.length} plik(ów)${removed}.`);
-  });
-
   // Adding a bid hands the caret straight to "Znaczenie", the field that actually gets filled in next. Pasting is left out:
   // a pasted subtree already carries its descriptions.
   const addAndDescribe = (action: BrowserAction) => {
@@ -285,8 +277,6 @@ export function BiddingBrowserPage() {
         onNew={() => dispatch({ kind: 'loadSystem', system: createEmptySystem(), systemId: null })}
         onImport={handleImport}
         onExport={handleExport}
-        canExportSeeds={(user?.isAdmin ?? false) && (user?.isDebugBuild ?? false)}
-        onExportSeeds={handleExportSeeds}
       />
 
       {/* The editor column is what the splitter sizes; the tree takes whatever is left. */}
