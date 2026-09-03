@@ -57,4 +57,22 @@ public interface IBiddingSystemStore {
 
     /// <summary>Overwrites a fork with its seed's current tree, so the owner picks up the changes the administrator made.</summary>
     Task<SystemOperation<BiddingSystemSummary>> ReforkAsync(Guid id, Guid userId, bool isAdmin, CancellationToken cancellationToken = default);
+
+
+    // --- Seed maintenance. Driven by the seed files rather than by a request, so these bypass the permission rules above. ---
+
+    /// <summary>
+    /// Writes a seed from its file, replacing the tree of one that already carries that name. Applied unprompted on every
+    /// start, which is what makes the files - and therefore the repository - the source of truth for the curated systems.
+    /// </summary>
+    Task UpsertSeedAsync(string name, BiddingSystem system, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Drops the seeds whose file is gone, so deleting a file removes the system everywhere. Forks of a removed seed survive
+    /// and simply lose their ancestry. Returns the names that were removed.
+    /// </summary>
+    Task<IReadOnlyList<string>> DeleteSeedsExceptAsync(IReadOnlySet<string> keepNames, CancellationToken cancellationToken = default);
+
+    /// <summary>Every seed with its full tree, each carrying its own name, ready to be written back out as files.</summary>
+    Task<IReadOnlyList<BiddingSystem>> LoadAllSeedsAsync(CancellationToken cancellationToken = default);
 }

@@ -747,6 +747,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/bidding-systems/export-seeds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SeedExportResult"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/simulation/bidding": {
         parameters: {
             query?: never;
@@ -899,6 +943,7 @@ export interface components {
             username: string;
             displayName: null | string;
             isAdmin: boolean;
+            isDebugBuild: boolean;
         };
         LoginRequest: {
             username: string;
@@ -935,6 +980,11 @@ export interface components {
         SaveSystemRequest: {
             name: string;
             system: components["schemas"]["BiddingSystem"];
+        };
+        SeedExportResult: {
+            directory: string;
+            written: string[];
+            removed: string[];
         };
         SimulationBid: {
             /** Format: int32 */

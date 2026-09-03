@@ -110,6 +110,15 @@ public class BiddingSystemStore : IBiddingSystemStore {
             return SystemAccessResult.Forbidden;
         }
 
+        await RemoveAsync(record, cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
+        return SystemAccessResult.Success;
+    }
+
+
+    /// <summary>Deletes a system and everything hanging off it, whether the caller was a request or the seed synchronisation.</summary>
+    private async Task RemoveAsync(BiddingSystemRecord record, CancellationToken cancellationToken) {
         // The forks outlive their seed. The database clears the reference itself, but the recorded version would be left
         // behind pointing at nothing, so it goes here - a fork whose seed is gone is simply an ordinary system.
         if (record.IsSeed) {
@@ -120,10 +129,7 @@ public class BiddingSystemStore : IBiddingSystemStore {
 
         await ClearTreeAsync(record.Id, cancellationToken);
         _db.BiddingSystems.Remove(record);
-
         await _db.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-        return SystemAccessResult.Success;
     }
 
 
@@ -177,6 +183,45 @@ public class BiddingSystemStore : IBiddingSystemStore {
         await WriteTreeAsync(record, BiddingSystemMapper.ToDomain(seed), replaceExisting: true, cancellationToken);
 
         return SystemOperation<BiddingSystemSummary>.Ok(await SummarizeAsync(record.Id, cancellationToken));
+    }
+
+
+    public async Task UpsertSeedAsync(string name, BiddingSystem system, CancellationToken cancellationToken = default) {
+        var record = await _db.BiddingSystems.FirstOrDefaultAsync(entity => entity.IsSeed && entity.Name == name, cancellationToken);
+        var exists = record != null;
+
+        if (record == null) {
+            record = new BiddingSystemRecord { Name = name, OwnerId = null, IsSeed = true };
+            _db.BiddingSystems.Add(record);
+        }
+
+        await WriteTreeAsync(record, system, replaceExisting: exists, cancellationToken);
+    }
+
+
+    public async Task<IReadOnlyList<string>> DeleteSeedsExceptAsync(IReadOnlySet<string> keepNames, CancellationToken cancellationToken = default) {
+        var stale = await _db.BiddingSystems.Where(system => system.IsSeed).ToListAsync(cancellationToken);
+        var removed = new List<string>();
+
+        foreach (var record in stale.Where(record => !keepNames.Contains(record.Name))) {
+            await RemoveAsync(record, cancellationToken);
+            removed.Add(record.Name);
+        }
+
+        return removed;
+    }
+
+
+    public async Task<IReadOnlyList<BiddingSystem>> LoadAllSeedsAsync(CancellationToken cancellationToken = default) {
+        var records = await _db.BiddingSystems
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(system => system.Roots).ThenInclude(root => root.Bids)
+            .Where(system => system.IsSeed)
+            .OrderBy(system => system.Name)
+            .ToListAsync(cancellationToken);
+
+        return records.Select(BiddingSystemMapper.ToDomain).ToList();
     }
 
 

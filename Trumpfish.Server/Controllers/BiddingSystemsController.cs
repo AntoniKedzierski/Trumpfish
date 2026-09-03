@@ -140,6 +140,24 @@ public class BiddingSystemsController : ControllerBase {
     }
 
 
+    /// <summary>
+    /// Writes every seed into the server's own <c>Seed</c> folder so a developer can commit them, and deletes the files that no
+    /// longer match a seed. This is how work done against the in-memory development database reaches the repository, and from
+    /// there both the team and production. Only an administrator on a Debug build can reach it.
+    /// </summary>
+    [HttpPost("export-seeds")]
+    [Authorize(Roles = Roles.Admin)]
+    [ProducesResponseType<SeedExportResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<SeedExportResult>> ExportSeeds([FromServices] ISeedExporter exporter, CancellationToken cancellationToken) {
+        if (!exporter.IsAvailable) {
+            return NotFound("Eksport seedów jest dostępny tylko w konfiguracji Debug.");
+        }
+
+        return Ok(await exporter.ExportAllAsync(cancellationToken));
+    }
+
+
     private ObjectResult Problem(SystemAccessResult result) => result switch {
         SystemAccessResult.NotFound => Problem("Nie znaleziono systemu.", statusCode: StatusCodes.Status404NotFound),
         SystemAccessResult.Forbidden => Problem("Nie masz uprawnień do tego systemu.", statusCode: StatusCodes.Status403Forbidden),

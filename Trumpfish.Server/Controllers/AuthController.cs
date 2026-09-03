@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Trumpfish.Server.Configuration;
 using Trumpfish.Server.Contracts;
 using Trumpfish.Server.Data;
 using Trumpfish.Server.Services;
@@ -128,6 +129,6 @@ public class AuthController : ControllerBase {
 
 
     private static CurrentUser Describe(UserRecord user) {
-        return new CurrentUser(user.Id, user.Username, user.DisplayName, user.IsAdmin);
+        return new CurrentUser(user.Id, user.Username, user.DisplayName, user.IsAdmin, BuildInfo.IsDebug);
     }
 }

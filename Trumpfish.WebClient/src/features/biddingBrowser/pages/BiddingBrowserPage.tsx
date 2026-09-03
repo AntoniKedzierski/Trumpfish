@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
+import { createBiddingSystem, exportSeeds, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import type { BiddingSystem, BiddingSystemSummary } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
@@ -151,6 +151,14 @@ export function BiddingBrowserPage() {
     });
   };
 
+  // Writes straight into the server's Seed folder instead of downloading, which is the whole point: the files land where git
+  // can see them, so the team pulls them and production applies them on its next start.
+  const handleExportSeeds = () => run(async () => {
+    const result = await exportSeeds();
+    const removed = result.removed.length === 0 ? '' : `, usunięto nieaktualne: ${result.removed.length}`;
+    setNotice(`Zapisano seedy do repozytorium: ${result.written.length} plik(ów)${removed}.`);
+  });
+
   const selectedNode = getNode(state.system, state.selection);
 
   return (
@@ -190,6 +198,8 @@ export function BiddingBrowserPage() {
         onNew={() => dispatch({ kind: 'loadSystem', system: createEmptySystem(), systemId: null })}
         onImport={handleImport}
         onExport={handleExport}
+        canExportSeeds={(user?.isAdmin ?? false) && (user?.isDebugBuild ?? false)}
+        onExportSeeds={handleExportSeeds}
       />
 
       <div className="workspace">

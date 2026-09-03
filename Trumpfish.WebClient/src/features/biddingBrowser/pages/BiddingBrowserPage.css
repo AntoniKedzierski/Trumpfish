@@ -114,6 +114,19 @@
   padding: 7px 14px;
 }
 
+/* A developer-only command, tinted so it never gets mistaken for one of the normal buttons. */
+.toolbar button.seed-export {
+  color: var(--amber-flame);
+  border-color: rgb(255 181 21 / 35%);
+  background: rgb(255 181 21 / 8%);
+}
+
+.toolbar button.seed-export:hover:not(:disabled) {
+  color: var(--amber-flame);
+  border-color: var(--amber-flame);
+  background: rgb(255 181 21 / 16%);
+}
+
 .toolbar .separator {
   width: 1px;
   height: 22px;

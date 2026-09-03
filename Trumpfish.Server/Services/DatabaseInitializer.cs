@@ -1,22 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Model.Bidding.AI;
+using System.Text.Json;
 using Trumpfish.Server.Configuration;
 using Trumpfish.Server.Data;
 
 namespace Trumpfish.Server.Services;
 
 /// <summary>
-/// Brings the database up to date on startup and creates the bootstrap account.
+/// Brings the database up to date on startup, creates the bootstrap account, and applies the seed files over the curated systems.
 /// Runs as a hosted service so schema work is tied to the host lifetime rather than the entry point.
 /// </summary>
 /// <remarks>
-/// The order matters: a pre-migration database is drained and dropped first (see <see cref="LegacyDatabaseUpgrader"/>), then the
-/// migrations build the schema, then the administrator exists to carry out whatever the upgrade rescued.
-/// <para>
-/// Nothing else is seeded. Seed systems are ordinary rows curated through the application by an administrator, so a fresh
-/// database deliberately starts empty rather than importing anything from disk.
-/// </para>
+/// The seed files are the source of truth for seeds. They are applied on every start, unprompted, so a deployment picks up
+/// whatever the repository now says; a developer's in-memory database is empty each run and is filled from the same files.
 /// </remarks>
 public sealed class DatabaseInitializer : IHostedService {
 
@@ -40,12 +37,29 @@ public sealed class DatabaseInitializer : IHostedService {
         var logger = provider.GetRequiredService<ILogger<DatabaseInitializer>>();
         var db = provider.GetRequiredService<TrumpfishDbContext>();
 
-        var carriedOver = await provider.GetRequiredService<LegacyDatabaseUpgrader>().CaptureAndDropLegacyDataAsync(cancellationToken);
-
-        await db.Database.MigrateAsync(cancellationToken);
+        var carriedOver = await CreateSchemaAsync(provider, db, logger, cancellationToken);
 
         var admin = await EnsureAdminAsync(provider, logger, cancellationToken);
         await RestoreCarriedOverAsync(provider, db, admin, carriedOver, logger, cancellationToken);
+        await ApplySeedFilesAsync(provider, logger, cancellationToken);
+    }
+
+
+    /// <summary>
+    /// Builds the schema the way the provider in use requires: migrations against PostgreSQL, which is also where a
+    /// pre-migration database has to be drained first, and a plain create for the throwaway development database, whose
+    /// schema comes from the model and never needs versioning.
+    /// </summary>
+    private static async Task<IReadOnlyList<BiddingSystem>> CreateSchemaAsync(IServiceProvider provider, TrumpfishDbContext db, ILogger logger, CancellationToken cancellationToken) {
+        if (!db.Database.IsNpgsql()) {
+            await db.Database.EnsureCreatedAsync(cancellationToken);
+            logger.LogInformation("Running on an in-memory database. It starts empty and is discarded when the server stops.");
+            return [];
+        }
+
+        var carriedOver = await provider.GetRequiredService<LegacyDatabaseUpgrader>().CaptureAndDropLegacyDataAsync(cancellationToken);
+        await db.Database.MigrateAsync(cancellationToken);
+        return carriedOver;
     }
 
 
@@ -68,8 +82,56 @@ public sealed class DatabaseInitializer : IHostedService {
 
 
     /// <summary>
-    /// Stores whatever the legacy upgrade rescued, as seeds. Systems from before this change had no owner concept, so the
-    /// administrator's curated set is the only sensible home for them.
+    /// Makes the curated systems match the seed files exactly: every file is written over whatever the database held, and any
+    /// seed whose file is gone is removed. Systems owned by an account are never touched.
+    /// </summary>
+    private static async Task ApplySeedFilesAsync(IServiceProvider provider, ILogger logger, CancellationToken cancellationToken) {
+        var directory = SeedFiles.Directory;
+        if (!Directory.Exists(directory)) {
+            logger.LogWarning("No seed folder at {Directory}; no curated systems will be available.", directory);
+            return;
+        }
+
+        var store = provider.GetRequiredService<IBiddingSystemStore>();
+        var applied = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var path in Directory.EnumerateFiles(directory, "*.json")) {
+            BiddingSystem? system;
+            try {
+                system = await BiddingSystemJson.ReadFileAsync(path, cancellationToken);
+            }
+            catch (JsonException exception) {
+                // A malformed seed file is a mistake in the repository, not a reason to refuse to start.
+                logger.LogError(exception, "Could not read the seed file {Path}. Skipping it.", path);
+                continue;
+            }
+
+            if (system == null) {
+                continue;
+            }
+
+            // The name inside the file wins, so renaming a system is done by editing it rather than the file name.
+            var name = string.IsNullOrWhiteSpace(system.SystemName) ? Path.GetFileNameWithoutExtension(path) : system.SystemName;
+            if (!applied.Add(name)) {
+                logger.LogWarning("Two seed files both declare the system '{System}'. Only the first was applied.", name);
+                continue;
+            }
+
+            await store.UpsertSeedAsync(name, system, cancellationToken);
+        }
+
+        var removed = await store.DeleteSeedsExceptAsync(applied, cancellationToken);
+        foreach (var name in removed) {
+            logger.LogInformation("Removed the seed '{System}', which no longer has a file.", name);
+        }
+
+        logger.LogInformation("Applied {Count} seed file(s) from {Directory}.", applied.Count, directory);
+    }
+
+
+    /// <summary>
+    /// Stores whatever the legacy upgrade rescued, as seeds. Systems from before the owner concept existed have no other
+    /// sensible home, and this only ever runs once, on the first start after the upgrade.
     /// </summary>
     private static async Task RestoreCarriedOverAsync(IServiceProvider provider, TrumpfishDbContext db, UserRecord admin, IReadOnlyList<BiddingSystem> carriedOver, ILogger logger, CancellationToken cancellationToken) {
         if (carriedOver.Count == 0) {

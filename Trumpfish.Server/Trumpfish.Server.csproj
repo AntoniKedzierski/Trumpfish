@@ -9,8 +9,9 @@
     <SpaProxyServerUrl>https://localhost:62850</SpaProxyServerUrl>
 
     <!-- Emit the OpenAPI document into the web client so TypeScript models can be generated from it.
-         Generation is opt-in because the tooling starts the full host, which would require a live database on every build and in CI.
-         Regenerate with: dotnet build Trumpfish.Server -p:OpenApiGenerateDocumentsOnBuild=true (needs a reachable database). -->
+         Generation is opt-in because the tooling starts the full host, which costs a few seconds on every build and in CI.
+         Regenerate with: dotnet build Trumpfish.Server -p:OpenApiGenerateDocumentsOnBuild=true
+         A Debug build starts on its in-memory database, so this no longer needs PostgreSQL to be running. -->
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
     <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)\..\Trumpfish.WebClient\src\api</OpenApiDocumentsDirectory>
@@ -31,6 +32,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,6 +40,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.4" />
+  </ItemGroup>
+
+  <!-- The curated systems ship with the server: a deployed instance applies them over its database on every start. -->
+  <ItemGroup>
+    <Content Update="Seed\**\*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

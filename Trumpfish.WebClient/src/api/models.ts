@@ -15,6 +15,7 @@ export type ChangePasswordRequest = Schemas['ChangePasswordRequest'];
 export type UpdateProfileRequest = Schemas['UpdateProfileRequest'];
 export type RenameSystemRequest = Schemas['RenameSystemRequest'];
 export type SaveSystemRequest = Schemas['SaveSystemRequest'];
+export type SeedExportResult = Schemas['SeedExportResult'];
 export type Root = Schemas['Root'];
 export type BidNode = Schemas['BidNode'];
 export type NumberRange = Schemas['NumberRange'];

@@ -31,9 +31,14 @@ public class TrumpfishDbContext : DbContext {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
 
-            // Names only have to be unique per owner: two accounts may each keep their own "Wspólny Język". Seeds share a null
-            // owner, so the nulls have to compare equal for the same index to keep seed names unique among themselves too.
-            entity.HasIndex(e => new { e.OwnerId, e.Name }).IsUnique().AreNullsDistinct(false);
+            // Names only have to be unique per owner: two accounts may each keep their own "Wspólny Język".
+            var name = entity.HasIndex(e => new { e.OwnerId, e.Name }).IsUnique();
+
+            // Seeds share a null owner, so the nulls have to compare equal for that same index to keep seed names unique among
+            // themselves. Only PostgreSQL can express it; the development database relies on the store's own name check instead.
+            if (Database.IsNpgsql()) {
+                name.AreNullsDistinct(false);
+            }
 
             entity.HasIndex(e => e.IsSeed);
             entity.HasIndex(e => e.ForkedFromId);

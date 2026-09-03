@@ -20,10 +20,13 @@ interface ToolbarProps {
   onNew: () => void;
   onImport: (file: File) => void;
   onExport: () => void;
+  /** True only for an administrator on a Debug server; the server sends the flag, the toolbar just renders what it is told. */
+  canExportSeeds: boolean;
+  onExportSeeds: () => void;
 }
 
 export function Toolbar(props: ToolbarProps) {
-  const { systemName, savedSystems, busy, dirty, canEditNode } = props;
+  const { systemName, savedSystems, busy, dirty, canEditNode, canExportSeeds } = props;
 
   return (
     <div className="toolbar">
@@ -59,6 +62,12 @@ export function Toolbar(props: ToolbarProps) {
         <input type="file" accept="application/json,.json" onChange={(event) => { const file = event.target.files?.[0]; if (file) { props.onImport(file); } event.target.value = ''; }} />
       </label>
       <button type="button" onClick={props.onExport}>Eksportuj JSON</button>
+
+      {canExportSeeds && (
+        <button type="button" className="seed-export" onClick={props.onExportSeeds} disabled={busy} title="Zapisuje wszystkie systemy wzorcowe do katalogu Seed w repozytorium, nadpisując istniejące pliki i usuwając nieaktualne.">
+          Eksportuj seedy…
+        </button>
+      )}
     </div>
   );
 }

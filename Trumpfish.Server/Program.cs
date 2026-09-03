@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Trumpfish.Server.Configuration;
@@ -20,10 +21,25 @@ public partial class Program {
             options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // Resolved lazily inside the options lambda: build-time OpenAPI document generation builds the host
-        // without ever resolving the context, and must not require a configured database.
-        // Supplied by the ConnectionStrings__Trumpfish environment variable in Azure App Service.
-        builder.Services.AddDbContext<TrumpfishDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Trumpfish") ?? throw new InvalidOperationException("Connection string 'Trumpfish' is not configured. Set ConnectionStrings__Trumpfish in the environment or appsettings.Development.json.")));
+        var database = builder.Configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? new DatabaseOptions();
+
+        // A Release build has no in-memory branch compiled into it at all, so production cannot be talked into running on a
+        // throwaway database by configuration alone.
+        if (BuildInfo.IsDebug && database.UseInMemory) {
+            // The shared-cache database is discarded once the last connection to it closes, so one is held open for the
+            // lifetime of the host. Registering it in the container is what ties that lifetime to the application's.
+            var keepAlive = new SqliteConnection(DatabaseOptions.InMemoryConnectionString);
+            keepAlive.Open();
+            builder.Services.AddSingleton(keepAlive);
+
+            builder.Services.AddDbContext<TrumpfishDbContext>(options => options.UseSqlite(DatabaseOptions.InMemoryConnectionString));
+        }
+        else {
+            // Resolved lazily inside the options lambda: build-time OpenAPI document generation builds the host
+            // without ever resolving the context, and must not require a configured database.
+            // Supplied by the ConnectionStrings__Trumpfish environment variable in Azure App Service.
+            builder.Services.AddDbContext<TrumpfishDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Trumpfish") ?? throw new InvalidOperationException("Connection string 'Trumpfish' is not configured. Set ConnectionStrings__Trumpfish in the environment or appsettings.Development.json.")));
+        }
 
         builder.Services.Configure<SeedOptions>(builder.Configuration.GetSection(SeedOptions.SectionName));
 
@@ -31,6 +47,13 @@ public partial class Program {
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IBiddingSystemStore, BiddingSystemStore>();
         builder.Services.AddScoped<LegacyDatabaseUpgrader>();
+
+        // Writing seed files back into the working copy is a developer command, so the real implementation only exists in a Debug build.
+#if DEBUG
+        builder.Services.AddScoped<ISeedExporter, SeedExporter>();
+#else
+        builder.Services.AddScoped<ISeedExporter, DisabledSeedExporter>();
+#endif
         builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
         builder.Services.AddHostedService<DatabaseInitializer>();
 

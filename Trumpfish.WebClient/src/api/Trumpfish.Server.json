@@ -716,6 +716,35 @@
         }
       }
     },
+    "/api/bidding-systems/export-seeds": {
+      "post": {
+        "tags": [
+          "BiddingSystems"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeedExportResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/simulation/bidding": {
       "post": {
         "tags": [
@@ -1156,7 +1185,8 @@
           "id",
           "username",
           "displayName",
-          "isAdmin"
+          "isAdmin",
+          "isDebugBuild"
         ],
         "type": "object",
         "properties": {
@@ -1174,6 +1204,9 @@
             ]
           },
           "isAdmin": {
+            "type": "boolean"
+          },
+          "isDebugBuild": {
             "type": "boolean"
           }
         }
@@ -1324,6 +1357,31 @@
           },
           "system": {
             "$ref": "#/components/schemas/BiddingSystem"
+          }
+        }
+      },
+      "SeedExportResult": {
+        "required": [
+          "directory",
+          "written",
+          "removed"
+        ],
+        "type": "object",
+        "properties": {
+          "directory": {
+            "type": "string"
+          },
+          "written": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "removed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
