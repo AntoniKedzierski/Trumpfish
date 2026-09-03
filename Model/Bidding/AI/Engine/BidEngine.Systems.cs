@@ -5,7 +5,7 @@ namespace Model.Bidding.AI.Engine;
 public partial class BidEngine {
 
     private BidNode? GetBidFromSystemBranches(Hand hand, List<BidNode> branches, Bid? lastOpponentsBid = null) {
-        if (!branches.Any()) {
+        if (branches.Count == 0) {
             return null;
         }
 
@@ -55,12 +55,14 @@ public partial class BidEngine {
 
     public List<BidNode> FindMatchingBids(Hand hand, BidNode head) => [.. head
         .NextBids
+        .Where(e => !e.IsDisabled)
         .Where(e => e.IsBidLegal(Auction))
         .Where(e => e.Matches(hand))];
 
 
     public List<BidNode> FindNodesByHand(Hand hand, Root root) => [.. root
         .Bids
+        .Where(e => !e.IsDisabled)
         .Where(e => e.IsBidLegal(Auction))
         .Where(e => e.Matches(hand))];
 

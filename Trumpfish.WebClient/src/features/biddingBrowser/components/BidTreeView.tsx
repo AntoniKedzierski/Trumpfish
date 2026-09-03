@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Chevron } from '@/components/Select';
 import { bidCode, suitClassName, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
 import { formatInterjection } from '../interjection';
-import { childPath, containsPath, samePath } from '../tree';
+import { childPath, containsPath, folderPathUnder, holdsInterjected, interjectedCount, samePath } from '../tree';
 
 interface BidTreeViewProps {
   system: EditableSystem;
@@ -89,21 +89,102 @@ function TreeBranch({ label, target, children_, selection, revealKey, onSelect, 
       {(mounted || holdsSelection) && !leaf && (
         <div className={`tree-children${open ? ' expanded' : ''}`}>
           <ul>
-            {children_.map((node, index) => (
-              <TreeBranch
-                key={index}
-                label={<BidLabel node={node} />}
-                target={childPath(target, index)}
-                children_={node.nextBids}
-                selection={selection}
-                revealKey={revealKey}
-                onSelect={onSelect}
-                disabled={node.isDisabled}
-              />
-            ))}
+            <TreeChildren container={target} children_={children_} selection={selection} revealKey={revealKey} onSelect={onSelect} />
           </ul>
         </div>
       )}
+    </li>
+  );
+}
+
+interface TreeChildrenProps {
+  container: NodePath;
+  children_: EditableBidNode[];
+  selection: NodePath | null;
+  revealKey: number;
+  onSelect: (target: NodePath) => void;
+}
+
+/**
+ * Lays out one list of bids: the interjected ones gathered into a folder at the top, everything else below it.
+ *
+ * The folder is drawn, not stored. Interjected bids are kept at the front of the list, so it is simply the leading run of that
+ * list given a heading - which is why the positions the rest of the browser addresses stay exactly what they were.
+ */
+function TreeChildren({ container, children_, selection, revealKey, onSelect }: TreeChildrenProps) {
+  const count = interjectedCount(children_);
+
+  return (
+    <>
+      {count > 0 && (
+        <InterjectionFolder container={container} held={children_.slice(0, count)} selection={selection} revealKey={revealKey} onSelect={onSelect} />
+      )}
+
+      {children_.slice(count).map((node, offset) => (
+        <TreeBranch
+          key={node.nodeId ?? count + offset}
+          label={<BidLabel node={node} />}
+          target={childPath(container, count + offset)}
+          children_={node.nextBids}
+          selection={selection}
+          revealKey={revealKey}
+          onSelect={onSelect}
+          disabled={node.isDisabled}
+        />
+      ))}
+    </>
+  );
+}
+
+interface InterjectionFolderProps {
+  container: NodePath;
+  held: EditableBidNode[];
+  selection: NodePath | null;
+  revealKey: number;
+  onSelect: (target: NodePath) => void;
+}
+
+/** Heading over the bids said after an opponent call. Selectable, so a bid can be added into it, but it is not a bid itself. */
+function InterjectionFolder({ container, held, selection, revealKey, onSelect }: InterjectionFolderProps) {
+  const target = folderPathUnder(container);
+  const [expanded, setExpanded] = useState(false);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const selected = samePath(selection, target);
+  const holdsSelection = holdsInterjected(container, selection, held.length);
+  const open = expanded || holdsSelection;
+
+  useEffect(() => {
+    if (selected) {
+      rowRef.current?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selected, revealKey]);
+
+  return (
+    <li>
+      <div ref={rowRef} className={`tree-row interjection-folder${selected ? ' selected' : ''}`} onClick={() => onSelect(target)} onDoubleClick={() => setExpanded(!open)}>
+        <button type="button" className={`tree-toggle${open ? ' expanded' : ''}`} onClick={(event) => { event.stopPropagation(); setExpanded(!open); }} onDoubleClick={(event) => event.stopPropagation()} aria-label={open ? 'Zwiń' : 'Rozwiń'}>
+          <Chevron />
+        </button>
+        <span className="tree-folder-label">Wtrącenia</span>
+        <span className="tree-folder-count">{held.length}</span>
+      </div>
+
+      <div className={`tree-children${open ? ' expanded' : ''}`}>
+        <ul>
+          {held.map((node, index) => (
+            <TreeBranch
+              key={node.nodeId ?? index}
+              label={<BidLabel node={node} />}
+              target={childPath(container, index)}
+              children_={node.nextBids}
+              selection={selection}
+              revealKey={revealKey}
+              onSelect={onSelect}
+              disabled={node.isDisabled}
+            />
+          ))}
+        </ul>
+      </div>
     </li>
   );
 }

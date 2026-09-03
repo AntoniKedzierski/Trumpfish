@@ -45,11 +45,31 @@ function newNodeId(): string {
 }
 
 export function normalizeSystem(system: BiddingSystem): EditableSystem {
-  return { systemName: system.systemName ?? 'NewSystem', roots: (system.roots ?? []).map((root) => ({ ...root, bids: (root.bids ?? []).map(normalizeNode) })) };
+  return { systemName: system.systemName ?? 'NewSystem', roots: (system.roots ?? []).map((root) => ({ ...root, bids: groupInterjected((root.bids ?? []).map(normalizeNode)) })) };
 }
 
 function normalizeNode(node: BidNode): EditableBidNode {
-  return { ...node, nodeId: node.nodeId ?? newNodeId(), nextBids: (node.nextBids ?? []).map(normalizeNode) };
+  return { ...node, nodeId: node.nodeId ?? newNodeId(), nextBids: groupInterjected((node.nextBids ?? []).map(normalizeNode)) };
+}
+
+export function hasInterjection(node: EditableBidNode): boolean {
+  return node.interjection !== null && node.interjection !== undefined;
+}
+
+/**
+ * Puts the bids that carry an interjection at the front of a list, keeping their order among themselves.
+ *
+ * The tree shows them inside a folder, and that folder is drawn over a leading run of the list rather than being a node of its
+ * own - so this ordering is what makes the folder possible at all. Applied when a tree is loaded, since a file may have been
+ * written before the grouping existed.
+ */
+export function groupInterjected(children: EditableBidNode[]): EditableBidNode[] {
+  const interjected = children.filter(hasInterjection);
+  if (interjected.length === 0 || interjected.length === children.length) {
+    return children;
+  }
+
+  return [...interjected, ...children.filter((node) => !hasInterjection(node))];
 }
 
 /** Deep clone used by copy/paste so pasted subtrees never share references - or identities - with the source. */
@@ -104,6 +124,16 @@ export function formatBid(node: EditableBidNode): string {
 
 /** Ordering used by the "Sort" command: level first, then ♣ < ♦ < ♥ < ♠ < NT - the same rule as `BidNode.CompareTo` on the server. */
 export function compareBids(left: EditableBidNode, right: EditableBidNode): number {
+  return compareByRank(left, right);
+}
+
+/** Orders the bids inside the interjection folder: by the bid itself first, then by the opponent call that precedes it. */
+export function compareWithInterjection(left: EditableBidNode, right: EditableBidNode): number {
+  const byBid = compareByRank(left, right);
+  return byBid !== 0 ? byBid : compareByRank(left.interjection ?? {}, right.interjection ?? {});
+}
+
+function compareByRank(left: { color?: BidColor; value?: number | string | null }, right: { color?: BidColor; value?: number | string | null }): number {
   const leftValue = Number(left.value ?? 0);
   const rightValue = Number(right.value ?? 0);
   if (leftValue !== rightValue) {

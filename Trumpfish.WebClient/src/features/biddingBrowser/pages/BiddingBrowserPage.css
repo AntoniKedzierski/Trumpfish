@@ -358,6 +358,24 @@
   opacity: 0.5;
 }
 
+/* Heading over the interjected bids. Reads as a container rather than a bid, so it never competes with the calls around it. */
+.tree-row.interjection-folder .tree-folder-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pearl-aqua);
+}
+
+.tree-row.interjection-folder .tree-folder-count {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
 .tree-toggle {
   width: 28px;
   height: 28px;

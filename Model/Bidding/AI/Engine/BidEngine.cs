@@ -89,6 +89,12 @@ public partial class BidEngine : IBidInput {
 
         // W pierwszym kółku: oponenci coś mówili, partner pasował lub jeszcze się nie odzywał.
         if (Auction.Loop == 0 && (leftOpponentBid != null || rightOpponentBid != null) && lastPartnerBid == null) {
+            // Jeżeli obaj się odzywali, to tylko obrona wchodzi w grę.
+            if (leftOpponentBid != null && rightOpponentBid != null) {
+                return TrySoloDefend(hand, rightOpponentBid);
+            }
+
+            // Jeżeli tylko jeden, to możemy zaryzykować otwarcie.
             return TrySoloDefend(hand, (rightOpponentBid ?? leftOpponentBid)!) ?? TryOpen(hand);
         }
 
@@ -185,15 +191,15 @@ public partial class BidEngine : IBidInput {
     public BidNode? TrySoloDefend(Hand hand, Bid bidToDefendAgainst) {
         // Gałąź z konwencjami obronnymi na ostatnią odzywkę przeciwników.
         var defences = BiddingSystem.Defences() ?? throw new Exception("Defences not found.");
-        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(bidToDefendAgainst));
+        var result = defences
+            .Bids
+            .Where(e => !e.IsDisabled && e.Interjection != null)
+            .Where(e => e.Interjection!.Equals(bidToDefendAgainst))
+            .FirstOrDefault(e => e.Matches(hand));
 
-        // Nie pasuje nam żadna linia obrony.
-        if (defenceBranch == null) {
-            return null;
+        if (result != null) {
+            result.IsFromSystem = true;
         }
-
-        // Szukamy w gałęziach obronnych.
-        var result = GetBidFromSystemBranches(hand, [defenceBranch]);
 
         // Jeżeli znaleziona odzywka nakazuje otworzyć.
         return result?.GoToOpenings == true ? TryOpen(hand) : result;
@@ -205,7 +211,11 @@ public partial class BidEngine : IBidInput {
     /// </summary>
     public BidNode? TryContinueSystemDefence(Hand hand, Bid lastPartnerBid, Bid? defenceHead) {
         var defences = BiddingSystem.Defences() ?? throw new Exception("Defences not found.");
-        var defenceBranch = defences.Bids.FirstOrDefault(e => e.EqualsByColorAndValue(defenceHead));
+        var defenceBranch = defences
+            .Bids
+            .Where(e => !e.IsDisabled && e.Interjection != null)
+            .Where(e => e.Interjection!.Equals(defenceHead))
+            .FirstOrDefault(e => e.Equals(lastPartnerBid));
 
         // Póki co brak obrony spoza systemu.
         if (defenceBranch == null) {
@@ -213,7 +223,7 @@ public partial class BidEngine : IBidInput {
         }
 
         var descendants = LastOwnBid == null
-            ? BiddingSystem.GetDescendants(defenceBranch, lastPartnerBid)
+            ? BiddingSystem.GetDescendants(defences, lastPartnerBid)
             : BiddingSystem.GetDescendants(LastOwnBid, lastPartnerBid);
 
         var branches = descendants
@@ -308,7 +318,8 @@ public partial class BidEngine : IBidInput {
             // Proponowanie nowego koloru po systemie nie wchodzi w grę (od tego jest system)!
             // Jeżeli odzywka partnera nie robi gry, to znaczy, że to inwit.
             if (!lastPartnerBid.MakesGame()) {
-                return TrySelectContract(hand, previousBranches, Goal == BiddingGoal.Gf, lastPartnerBid.Color);
+                return TrySelectContract(hand, previousBranches, Goal == BiddingGoal.Gf, lastPartnerBid.Color)
+                    ?? TryInvite(hand, previousBranches, Goal == BiddingGoal.Gf);
             }
 
             // Próbujemy gier premiowych.
@@ -372,17 +383,6 @@ public partial class BidEngine : IBidInput {
         }
 
         return allBranchesGf;
-    }
-
-
-    private static List<BidNode> GoUp(List<BidNode> nodes, int steps) {
-        var result = nodes;
-        for (int i = 0; i < steps; ++i) {
-            result = [.. result
-                .Where(e => e.Parent != null)
-                .Select(e => e.Parent!)];
-        }
-        return result;
     }
 
 }

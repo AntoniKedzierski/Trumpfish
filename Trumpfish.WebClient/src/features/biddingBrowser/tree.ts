@@ -1,4 +1,50 @@
-import { formatBid, type EditableBidNode, type EditableSystem, type NodePath } from './model';
+import { formatBid, hasInterjection, type EditableBidNode, type EditableSystem, type NodePath } from './model';
+
+/**
+ * Index standing for the interjection folder, which is drawn by the tree but is not a child of anything.
+ *
+ * Being a negative index is what keeps it harmless: it can never collide with a real position, and `getNode` returns null for
+ * it, so every command that needs an actual bid declines on its own. Only the commands that mean something for a folder -
+ * adding into it, and sorting what it holds - check for it explicitly.
+ */
+export const interjectionFolder = -1;
+
+export function folderPathUnder(container: NodePath): NodePath {
+  return { rootIndex: container.rootIndex, path: [...container.path, interjectionFolder] };
+}
+
+export function isFolderPath(target: NodePath | null): boolean {
+  return target !== null && target.path[target.path.length - 1] === interjectionFolder;
+}
+
+/** Children of a container: a root's own bids when the path is empty, otherwise the addressed bid's continuations. */
+export function childrenAt(system: EditableSystem, container: NodePath): EditableBidNode[] {
+  return container.path.length === 0 ? system.roots[container.rootIndex]?.bids ?? [] : getNode(system, container)?.nextBids ?? [];
+}
+
+/** Length of the leading run of interjected bids, which is exactly what the folder holds. */
+export function interjectedCount(children: readonly EditableBidNode[]): number {
+  let count = 0;
+  while (count < children.length && hasInterjection(children[count])) {
+    count += 1;
+  }
+
+  return count;
+}
+
+/** True when the selection sits on, or below, one of the bids the folder under `container` is holding. */
+export function holdsInterjected(container: NodePath, selection: NodePath | null, count: number): boolean {
+  if (selection === null || selection.rootIndex !== container.rootIndex || selection.path.length <= container.path.length) {
+    return false;
+  }
+
+  if (!container.path.every((value, index) => value === selection.path[index])) {
+    return false;
+  }
+
+  const next = selection.path[container.path.length];
+  return next >= 0 && next < count;
+}
 
 type NodeUpdater = (node: EditableBidNode) => EditableBidNode | null;
 type ChildrenUpdater = (children: EditableBidNode[]) => EditableBidNode[];

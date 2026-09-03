@@ -46,59 +46,41 @@ public class BiddingSystem {
             children = [.. GetMatchingChildren(children, bidSequence[i])];
         }
 
-        return [.. children
-            .Where(e => e.Equals(bidSequence[bidSequence.Count - 1]))
-            .Distinct()];
-    }
-
-
-    public List<BidNode> GetSystemLeaves(List<Bid> bidSequence) {
-        var children = Openings()!.Bids;
-
-        for (int i = 0; i < bidSequence.Count; ++i) {
-            var nextChildren = GetMatchingChildren(children, bidSequence[i]).ToList();
-
-            // Skończył się system, wszystkie pozostałe odzywki są naturalne (nie dają informacji).
-            if (nextChildren.Count == 0) {
-                return children.Where(e => e.Matches(bidSequence[i])).ToList();
-            }
-
-            children = nextChildren;
+        var lastBid = bidSequence.Last();
+        if (lastBid.Interruption != null) {
+            return children
+                .Where(e => e.Equals(lastBid) && !e.IsDisabled)
+                .Where(e => e.Interjection != null && e.Interjection.Equals(lastBid.Interruption))
+                .ToList();
         }
-
-        return children;
-    }
-
-
-    public List<BidNode> GetLastPartnerSystemBid(List<Bid> bidSequence, bool partnerOpened) {
-        var children = Openings()!.Bids;
-
-        for (int i = 0; i < bidSequence.Count; ++i) {
-            var nextChildren = GetMatchingChildren(children, bidSequence[i]).ToList();
-
-            // Skończył się system, wszystkie pozostałe odzywki są naturalne (nie dają informacji).
-            if (nextChildren.Count == 0) {
-                // Pasujące odzywki z ostatniego poziomu.
-                var matchingNodes = children.Where(e => e.Matches(bidSequence[i])).ToList();
-
-                // Partner ma parzyste indeksy.
-                if (partnerOpened && i % 2 == 1 || !partnerOpened && i % 2 == 0) {
-                    return matchingNodes.Select(e => e.Parent).Where(e => e != null).Select(e => e!).ToList();
-                }
-                else {
-                    return matchingNodes;
-                }
-            }
-
-            children = nextChildren;
+        else {
+            return children
+                .Where(e => e.Equals(lastBid) && !e.IsDisabled && e.Interjection == null)
+                .Distinct()
+                .ToList();
         }
-
-        return [];
     }
 
 
     public IEnumerable<BidNode> GetDescendants(BidNode parent, Bid bid) {
         foreach (var child in parent.NextBids) {
+            if (child.IsDisabled) {
+                continue;
+            }
+
+            if (child.Matches(bid)) {
+                yield return child;
+            }
+        }
+    }
+
+
+    public IEnumerable<BidNode> GetDescendants(Root root, Bid bid) {
+        foreach (var child in root.Bids) {
+            if (child.IsDisabled) {
+                continue;
+            }
+
             if (child.Matches(bid)) {
                 yield return child;
             }
@@ -109,14 +91,16 @@ public class BiddingSystem {
     public List<BidNode> GetMatchingChildren(List<BidNode> parentNodes, InterruptedBid nextBid) {
         if (nextBid.Interruption == null) {
             return parentNodes
-                .Where(e => e.Equals(nextBid))
+                .Where(e => e.Equals(nextBid) && e.Interjection == null)
                 .SelectMany(e => e.NextBids)
+                .Where(e => !e.IsDisabled)
                 .ToList();
         }
 
         return parentNodes
-            .Where(e => e.Equals(nextBid) && e.Interjection != null && e.Interjection.Equals(nextBid))
+            .Where(e => e.Equals(nextBid) && e.Interjection != null && e.Interjection.Equals(nextBid.Interruption))
             .SelectMany(e => e.NextBids)
+            .Where(e => !e.IsDisabled)
             .ToList();
     }
 
@@ -125,6 +109,7 @@ public class BiddingSystem {
         return parentNodes
             .Where(e => e.Equals(nextBid))
             .SelectMany(e => e.NextBids)
+            .Where(e => !e.IsDisabled)
             .ToList();
     }
 
@@ -132,6 +117,10 @@ public class BiddingSystem {
     public IEnumerable<BidNode> GetOpenings(Bid bid) {
         var bids = Openings()?.Bids ?? [];
         foreach (var child in bids) {
+            if (child.IsDisabled) {
+                continue;
+            }
+
             if (child.Matches(bid)) {
                 yield return child;
             }
