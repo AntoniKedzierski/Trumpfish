@@ -13,7 +13,7 @@ import { inheritedRanges } from '../constraints';
 import { createEmptySystem, normalizeSystem } from '../model';
 import { browserReducer, initialBrowserState, type BrowserAction } from '../state';
 import { findNodeById, getNode, resolveIssuePath, ancestorNodes } from '../tree';
-import { removeUnreachable } from '../unreachable';
+import { removeUnreachable, type CleanupResult } from '../unreachable';
 import './BiddingBrowserPage.css';
 
 export function BiddingBrowserPage() {
@@ -173,20 +173,21 @@ export function BiddingBrowserPage() {
     });
   };
 
-  // Clears the branch of bids the auction can never arrive at. Destructive and potentially large, so the count is shown first.
+  // Clears the branch of bids the auction can never arrive at. Destructive and potentially large, so the tally is shown first.
   const handleRemoveUnreachable = () => {
     const result = removeUnreachable(state.system, state.selection);
-    if (result.removed === 0) {
-      setNotice('Nie znaleziono nieosiągalnych odzywek.');
+    const summary = summariseCleanup(result);
+    if (summary === null) {
+      setNotice('Nie znaleziono nic do wyczyszczenia.');
       return;
     }
 
-    if (!window.confirm(`Usunąć ${unreachableBids(result.removed)}? Tej operacji nie można cofnąć.`)) {
+    if (!window.confirm(`Wyczyścić: ${summary}? Tej operacji nie można cofnąć.`)) {
       return;
     }
 
     dispatch({ kind: 'replaceSystem', system: result.system });
-    setNotice(`Usunięto ${unreachableBids(result.removed)}.`);
+    setNotice(`Wyczyszczono: ${summary}.`);
   };
 
   // Adding a bid hands the caret straight to "Znaczenie", the field that actually gets filled in next. Pasting is left out:
@@ -343,13 +344,28 @@ function describe(reason: unknown): string {
   return reason instanceof Error ? reason.message : String(reason);
 }
 
-/** Polish inflects both the adjective and the noun, and in three ways, so the whole phrase is built rather than a suffix. */
-function unreachableBids(count: number): string {
+/** What the cleanup would do, or null when there is nothing to do. */
+function summariseCleanup(result: CleanupResult): string | null {
+  const parts: string[] = [];
+
+  if (result.removed > 0) {
+    parts.push(inflect(result.removed, 'nieosiągalną odzywkę', 'nieosiągalne odzywki', 'nieosiągalnych odzywek'));
+  }
+
+  if (result.relaxed > 0) {
+    parts.push(inflect(result.relaxed, 'zbędny górny limit', 'zbędne górne limity', 'zbędnych górnych limitów'));
+  }
+
+  return parts.length === 0 ? null : parts.join(' oraz ');
+}
+
+/** Polish inflects both the adjective and the noun, and in three ways, so the whole phrase is picked rather than a suffix. */
+function inflect(count: number, one: string, few: string, many: string): string {
   if (count === 1) {
-    return '1 nieosiągalną odzywkę';
+    return `1 ${one}`;
   }
 
   const tens = count % 100;
   const units = count % 10;
-  return units >= 2 && units <= 4 && (tens < 12 || tens > 14) ? `${count} nieosiągalne odzywki` : `${count} nieosiągalnych odzywek`;
+  return `${count} ${units >= 2 && units <= 4 && (tens < 12 || tens > 14) ? few : many}`;
 }

@@ -70,6 +70,9 @@ public sealed class TreeValidator {
         if (!TryApplySuitLengthConstraints(current, currentPath, issues, nextCon, out nextCon)) {
             return;
         }
+
+        ValidateDeclaredSuitText(current, nextCon, currentPath, issues);
+
         if (!ValidateHandSuitTotals(nextCon, current, currentPath, issues)) {
             return;
         }
@@ -149,6 +152,33 @@ public sealed class TreeValidator {
         }
         if (declared.Upper.HasValue && declared.Upper != effective.Upper) {
             issues.Add(Issue(bid, path, $"{fieldName} declares upper PC bound {declared.Upper} but the bidding so far implies {effective}."));
+        }
+    }
+
+
+    /// <summary>
+    /// Compares the suit lengths spelled out in the bid text ("5+ kierów", "brak 4 pików", "dokładnie 3 trefle") with what the
+    /// same player has actually promised through the range fields, once everything said earlier is taken into account.
+    /// </summary>
+    /// <remarks>
+    /// Only a description promising <em>more</em> than the ranges do is reported. The engine reads the ranges alone, so a
+    /// length stated in prose and nowhere else is a promise nobody acts on.
+    /// <para>
+    /// Restating a length the sequence already guarantees is how these systems are written and must stay silent - a bid saying
+    /// "5+ pików" need not repeat the range when an earlier bid of the same player established it. That holds whether the
+    /// restatement is exact or looser than what was established; it only says something already true.
+    /// </para>
+    /// </remarks>
+    private static void ValidateDeclaredSuitText(BidNode bid, BiddingCon con, string path, List<ValidationIssue> issues) {
+        foreach (var (suit, declared) in ConditionReader.ReadSuitLengths(bid.Condition)) {
+            var effective = con.GetSuitLength(bid.OpenerBid, suit);
+
+            if (declared.Lower.HasValue && declared.Lower > (effective.Lower ?? MinCards)) {
+                issues.Add(Issue(bid, path, $"Condition promises at least {declared.Lower} {suit} but the ranges only imply {effective}."));
+            }
+            if (declared.Upper.HasValue && declared.Upper < (effective.Upper ?? MaxCards)) {
+                issues.Add(Issue(bid, path, $"Condition promises at most {declared.Upper} {suit} but the ranges only imply {effective}."));
+            }
         }
     }
 

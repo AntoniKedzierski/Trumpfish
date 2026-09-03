@@ -33,7 +33,7 @@ export function Toolbar(props: ToolbarProps) {
       <button type="button" onClick={props.onMoveUp} disabled={!canEditNode}>▲</button>
       <button type="button" onClick={props.onMoveDown} disabled={!canEditNode}>▼</button>
       <button type="button" onClick={props.onSort}>Sortuj</button>
-      <button type="button" onClick={props.onRemoveUnreachable} title="Usuwa z zaznaczonej gałęzi odzywki, których punkty lub długości kolorów wykluczają się z tym, co ten gracz już obiecał. Bez zaznaczenia czyści cały system.">
+      <button type="button" onClick={props.onRemoveUnreachable} title="W zaznaczonej gałęzi: usuwa odzywki, których punkty lub długości kolorów wykluczają się z tym, co ten gracz już obiecał, oraz czyści górne limity leżące powyżej obiecanych. Dolnych limitów nie rusza. Bez zaznaczenia czyści cały system.">
         Wyczyść nieosiągalne
       </button>
       <button type="button" onClick={props.onValidate} disabled={busy}>Sprawdź</button>
