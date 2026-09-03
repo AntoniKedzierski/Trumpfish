@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { Select } from '@/components/Select';
 import { bidColors, bidTypes, toNumber, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
 import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
+import { readCondition } from '../conditionReader';
 import { BidPath } from './BidPath';
 import { InterjectionPicker } from './InterjectionPicker';
 
@@ -71,6 +72,21 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
     onChange({ [field]: { ...current, [bound]: raw === '' ? null : Number(raw) } } as Partial<EditableBidNode>);
   };
 
+  // Shift+Enter fills the point range and the suit lengths in from the description, so they never have to be typed twice.
+  const readFromCondition = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter' || !event.shiftKey) {
+      return;
+    }
+
+    event.preventDefault();
+    const patch = readCondition(node.condition ?? '', inherited);
+
+    // Nothing recognised means nothing to write; an empty patch would only mark the system dirty for no reason.
+    if (Object.keys(patch).length > 0) {
+      onChange(patch);
+    }
+  };
+
   return (
     <aside className="editor-pane">
       <BidPath rootName={rootName} ancestors={ancestors} />
@@ -93,7 +109,13 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
         <InterjectionPicker value={node.interjection} ancestors={ancestors} onChange={(interjection) => onChange({ interjection })} />
 
         <label>Znaczenie</label>
-        <input ref={conditionRef} value={node.condition ?? ''} onChange={(event) => onChange({ condition: event.target.value })} />
+        <input
+          ref={conditionRef}
+          value={node.condition ?? ''}
+          title="Shift+Enter odczytuje z treści punkty i długości kolorów."
+          onChange={(event) => onChange({ condition: event.target.value })}
+          onKeyDown={readFromCondition}
+        />
 
         <label>Dodatkowy opis</label>
         <input value={node.description ?? ''} onChange={(event) => onChange({ description: event.target.value })} />
