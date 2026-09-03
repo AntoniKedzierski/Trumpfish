@@ -165,12 +165,12 @@ public sealed class TreeValidator {
         // "Poniżej N PC" means at most N - 1, "Powyżej N PC" at least N + 1; both count only when they open the text.
         var below = BelowPcPattern.Match(text);
         if (below.Success) {
-            return new NumberRange(null, int.Parse(below.Groups["upper"].Value) - 1);
+            return new NumberRange(null, int.Parse(below.Groups["upper"].Value));
         }
 
         var above = AbovePcPattern.Match(text);
         if (above.Success) {
-            return new NumberRange(int.Parse(above.Groups["lower"].Value) + 1, null);
+            return new NumberRange(int.Parse(above.Groups["lower"].Value), null);
         }
 
         return null;

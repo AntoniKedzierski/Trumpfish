@@ -95,6 +95,9 @@ public class BidNodeRecord {
 
     public bool IsPreferred { get; set; }
 
+    /// <summary>Excluded from the simulation together with everything below it. Only the head of the branch carries the flag.</summary>
+    public bool IsDisabled { get; set; }
+
     public BiddingGoal RealizedGoal { get; set; }
 
     public string? AiSource { get; set; }

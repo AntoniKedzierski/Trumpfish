@@ -34,10 +34,12 @@ interface TreeBranchProps {
   children_: EditableBidNode[];
   selection: NodePath | null;
   onSelect: (target: NodePath) => void;
+  /** Marks the branch as switched off. Only the head of the branch is told; the styling reaches the rest through the cascade. */
+  disabled?: boolean;
   initiallyExpanded?: boolean;
 }
 
-function TreeBranch({ label, target, children_, selection, onSelect, initiallyExpanded = false }: TreeBranchProps) {
+function TreeBranch({ label, target, children_, selection, onSelect, disabled = false, initiallyExpanded = false }: TreeBranchProps) {
   const [expanded, setExpanded] = useState(initiallyExpanded);
   // Children mount on the first expand and then stay mounted, so the collapse can animate instead of snapping shut.
   const [mounted, setMounted] = useState(initiallyExpanded);
@@ -69,7 +71,7 @@ function TreeBranch({ label, target, children_, selection, onSelect, initiallyEx
   };
 
   return (
-    <li>
+    <li className={disabled ? 'disabled' : undefined}>
       {/* A double click both selects the row and expands it: the click that opens the branch is also the one that picks it. */}
       <div ref={rowRef} className={`tree-row${selected ? ' selected' : ''}`} onClick={() => onSelect(target)} onDoubleClick={toggle}>
         {/* The chevron toggles on its own, so the row must not treat a double click on it as a second toggle. */}
@@ -83,7 +85,15 @@ function TreeBranch({ label, target, children_, selection, onSelect, initiallyEx
         <div className={`tree-children${open ? ' expanded' : ''}`}>
           <ul>
             {children_.map((node, index) => (
-              <TreeBranch key={index} label={<BidLabel node={node} />} target={childPath(target, index)} children_={node.nextBids} selection={selection} onSelect={onSelect} />
+              <TreeBranch
+                key={index}
+                label={<BidLabel node={node} />}
+                target={childPath(target, index)}
+                children_={node.nextBids}
+                selection={selection}
+                onSelect={onSelect}
+                disabled={node.isDisabled}
+              />
             ))}
           </ul>
         </div>

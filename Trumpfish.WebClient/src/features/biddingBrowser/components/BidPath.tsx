@@ -18,6 +18,9 @@ export function BidPath({ rootName, ancestors }: BidPathProps) {
     return null;
   }
 
+  // A disabled ancestor switches off everything below it, so the greying carries on down the rest of the path.
+  const disabledFrom = ancestors.findIndex((node) => node.isDisabled);
+
   return (
     <div className="tree-path" aria-hidden="true">
       <div className="tree-path-row" style={{ paddingLeft: indentFor(0) }}>
@@ -25,7 +28,11 @@ export function BidPath({ rootName, ancestors }: BidPathProps) {
       </div>
 
       {ancestors.map((node, depth) => (
-        <div key={node.nodeId ?? depth} className="tree-path-row" style={{ paddingLeft: indentFor(depth + 1) }}>
+        <div
+          key={node.nodeId ?? depth}
+          className={`tree-path-row${disabledFrom >= 0 && depth >= disabledFrom ? ' disabled' : ''}`}
+          style={{ paddingLeft: indentFor(depth + 1) }}
+        >
           <span className="bid-code">
             {node.value ?? ''}
             <span className={suitClassName(node)}>{bidCode(node)}</span>

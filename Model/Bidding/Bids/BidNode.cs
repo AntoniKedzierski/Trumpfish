@@ -54,6 +54,12 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
     public bool IsPreferred { get; set; }
 
+    /// <summary>
+    /// Takes this bid, and with it everything below it, out of the simulation without deleting it. Children are not marked in
+    /// turn: a branch is reached through its parent, so switching the parent off is enough to switch the whole branch off.
+    /// </summary>
+    public bool IsDisabled { get; set; }
+
     /// <summary>Bid made by the preceding opponent, so sequences with interjections can be described. Only <see cref="BidType.Submit"/> or <see cref="BidType.Double"/> make sense here.</summary>
     public Bid? Interjection { get; set; }
 

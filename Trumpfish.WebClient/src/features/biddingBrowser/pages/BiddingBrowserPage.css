@@ -254,6 +254,14 @@
   text-overflow: ellipsis;
 }
 
+/* Matches the tree: once a level is switched off, it and everything below it read as greyed out. */
+.tree-path-row.disabled,
+.tree-path-row.disabled .suit,
+.tree-path-row.disabled .bid-condition,
+.tree-path-row.disabled .bid-interjection {
+  color: var(--text-muted);
+}
+
 /* Guide rail that makes deep nesting readable, and lights up under the hovered branch. */
 .tree ul {
   margin: 0;
@@ -288,6 +296,31 @@
 .tree-row.selected {
   background: var(--accent-soft);
   box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/*
+ * A branch taken out of the simulation. Only its head carries the class - the descendant selectors below are what carry the
+ * look down to every bid underneath, so a child is greyed without being disabled itself. The branch stays fully usable: it can
+ * be selected, edited and expanded, it just reads as switched off.
+ * The selectors have to out-specify the suit colours (`.suit.clubs` and friends), hence naming the row on the way down.
+ */
+.tree li.disabled .tree-row,
+.tree li.disabled .tree-row .suit,
+.tree li.disabled .tree-row .bid-condition,
+.tree li.disabled .tree-row .bid-interjection,
+.tree li.disabled .tree-row .bid-convention,
+.tree li.disabled .tree-row .badge-preferred {
+  color: var(--text-muted);
+}
+
+.tree li.disabled .tree-row .bid-convention {
+  background: rgb(255 255 255 / 6%);
+}
+
+/* The badges are images, so only a filter can take the colour out of them. */
+.tree li.disabled .tree-row .badge {
+  filter: grayscale(1);
+  opacity: 0.5;
 }
 
 .tree-toggle {

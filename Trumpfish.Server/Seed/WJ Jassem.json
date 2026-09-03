@@ -2208,7 +2208,7 @@
                       "nodeId": "ab4b71ee-b8c5-4f7b-8e99-6d6d7ec737f6",
                       "condition": "9-11 PC, *wysoce sztuczne!!*",
                       "pointsRange": {
-                        "lower": 8
+                        "lower": 9
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -4220,7 +4220,7 @@
                       "nodeId": "b7b0a3f0-5d1a-4d1c-b144-a76db052f04f",
                       "condition": "9-11 PC, *wysoce sztuczne!!*",
                       "pointsRange": {
-                        "lower": 8
+                        "lower": 9
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -5037,7 +5037,8 @@
                       "nodeId": "ca6ee395-3425-480b-b745-206ed89c768f",
                       "condition": "9-11 PC, 2 trefle lub mniej, force na 1 k\u00F3\u0142ko",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "upper": 2
@@ -5081,7 +5082,8 @@
                       "nodeId": "8f4ff900-6233-4c51-a459-a38a57ae6f94",
                       "condition": "9-11 PC, 3\u002B trefli",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "lower": 3
@@ -5505,7 +5507,8 @@
                       "nodeId": "77f9f9e6-06c3-484e-9f17-43f5370c0f9c",
                       "condition": "9-11 PC, 2 trefle lub mniej, force na 1 k\u00F3\u0142ko",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "upper": 2
@@ -5570,7 +5573,8 @@
                       "nodeId": "166b55f3-093d-4257-bc96-781d4bbd0bf5",
                       "condition": "9-11 PC, 3\u002B trefli",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "lower": 3
@@ -6631,7 +6635,7 @@
                       "nodeId": "9a088560-9e4a-4f84-bbc2-c8042c7f85e8",
                       "condition": "9-11 PC, *wysoce sztuczne!!*",
                       "pointsRange": {
-                        "lower": 8
+                        "lower": 9
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -7448,7 +7452,8 @@
                       "nodeId": "f5235bab-c45b-488e-aa9a-ef30ee850c27",
                       "condition": "9-11 PC, 2 trefle lub mniej, force na 1 k\u00F3\u0142ko",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "upper": 2
@@ -7492,7 +7497,8 @@
                       "nodeId": "846b2ceb-bc23-40e9-841b-32fb1d739320",
                       "condition": "9-11 PC, 3\u002B trefli",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "lower": 3
@@ -7916,7 +7922,8 @@
                       "nodeId": "7334a3d5-5157-421d-a00c-47295b25573f",
                       "condition": "9-11 PC, 2 trefle lub mniej, force na 1 k\u00F3\u0142ko",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "upper": 2
@@ -7981,7 +7988,8 @@
                       "nodeId": "cf6f3088-9f41-4e0a-8f1b-f81b73d29c7e",
                       "condition": "9-11 PC, 3\u002B trefli",
                       "pointsRange": {
-                        "lower": 9
+                        "lower": 9,
+                        "upper": 11
                       },
                       "clubsCardRange": {
                         "lower": 3
@@ -9214,6 +9222,9 @@
                 {
                   "nodeId": "8780cbae-c115-4f29-b321-5f83bca7290d",
                   "condition": "18-19 PC, 5\u002B pik\u00F3w",
+                  "pointsRange": {
+                    "upper": 19
+                  },
                   "spadesCardRange": {
                     "lower": 5
                   },
@@ -9614,7 +9625,7 @@
                       "nodeId": "ccd8b4cd-b33d-49da-9fa6-7a70bf86a76e",
                       "condition": "7-8 PC, dok\u0142adnie 4 kiery",
                       "pointsRange": {
-                        "upper": 10
+                        "upper": 8
                       },
                       "heartsCardRange": {
                         "lower": 4,
@@ -10051,7 +10062,7 @@
                       "nodeId": "abe09ddd-04ec-4ec4-9a0e-f04d7231203a",
                       "condition": "7-8 PC, dok\u0142adnie 4 pik\u00F3w",
                       "pointsRange": {
-                        "upper": 10
+                        "upper": 8
                       },
                       "spadesCardRange": {
                         "lower": 4,
@@ -12894,7 +12905,7 @@
                 },
                 {
                   "nodeId": "3e353004-98be-4f8b-b4a6-2055fd585873",
-                  "condition": "14-17 PC, 3\u002B kier\u00F3w.",
+                  "condition": "14 PC, 3\u002B kier\u00F3w.",
                   "pointsRange": {
                     "lower": 14
                   },
@@ -13767,6 +13778,9 @@
                 {
                   "nodeId": "3a94d3af-53f3-4792-8313-992b576894f7",
                   "condition": "12-14 PC, 6\u002B karo, brak 3 pik\u00F3w.",
+                  "pointsRange": {
+                    "upper": 14
+                  },
                   "spadesCardRange": {
                     "upper": 2
                   },
@@ -15034,6 +15048,9 @@
                         {
                           "nodeId": "a8c4302e-2c61-424a-ba53-d0a9bf59cb12",
                           "condition": "15-17 PC, zatrzymanie w pikach.",
+                          "pointsRange": {
+                            "lower": 15
+                          },
                           "spadesStops": 1.0,
                           "openerBid": true,
                           "signOff": false,
@@ -16267,6 +16284,10 @@
                     {
                       "nodeId": "6cdaf227-c768-4a33-9e92-67c6462423e9",
                       "condition": "10-12 PC, 5\u002B kier\u00F3w.",
+                      "pointsRange": {
+                        "lower": 10,
+                        "upper": 12
+                      },
                       "heartsCardRange": {
                         "lower": 5
                       },
@@ -16605,6 +16626,9 @@
                         {
                           "nodeId": "406f2114-8bc4-4600-b702-dcb5a683fce6",
                           "condition": "15-17 PC, zatrzymanie w kierach.",
+                          "pointsRange": {
+                            "lower": 15
+                          },
                           "heartsStops": 1.0,
                           "openerBid": true,
                           "signOff": false,
@@ -17219,6 +17243,9 @@
                     {
                       "nodeId": "5ff86fdc-9791-4d6a-9071-01a90c4ced20",
                       "condition": "5-9 PC, nieforsuj\u0105ce",
+                      "pointsRange": {
+                        "upper": 9
+                      },
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
@@ -17499,6 +17526,9 @@
                     {
                       "nodeId": "3ea66178-72db-4b50-b53f-5271ca4fd428",
                       "condition": "5-9 PC, nieforsuj\u0105ce",
+                      "pointsRange": {
+                        "upper": 9
+                      },
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
@@ -17780,8 +17810,8 @@
                   "condition": "15-17 PC, 4 piki, singlowy kier.",
                   "convention": "Splinter",
                   "pointsRange": {
-                    "lower": 12,
-                    "upper": 14
+                    "lower": 15,
+                    "upper": 17
                   },
                   "spadesCardRange": {
                     "lower": 4,

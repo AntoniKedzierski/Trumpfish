@@ -916,6 +916,7 @@ export interface components {
             automaticResponse?: boolean;
             goToOpenings?: boolean;
             isPreferred?: boolean;
+            isDisabled?: boolean;
             interjection?: null | components["schemas"]["Bid"];
             nextBids?: components["schemas"]["BidNode"][];
             realizedGoal?: components["schemas"]["BiddingGoal"];

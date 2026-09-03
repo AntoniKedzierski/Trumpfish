@@ -34,6 +34,7 @@ const flagFields: { field: keyof EditableBidNode; label: string }[] = [
   { field: 'gameForcing', label: 'Forsująca do końcówki' },
   { field: 'goToOpenings', label: 'Przejdź do otwarć' },
   { field: 'isPreferred', label: 'Odzywka preferowana' },
+  { field: 'isDisabled', label: 'Wyłączona z symulacji' },
 ];
 
 const stopsFields: { field: StopsField; label: string }[] = [

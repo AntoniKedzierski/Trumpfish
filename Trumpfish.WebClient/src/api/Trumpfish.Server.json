@@ -1081,6 +1081,9 @@
           "isPreferred": {
             "type": "boolean"
           },
+          "isDisabled": {
+            "type": "boolean"
+          },
           "interjection": {
             "oneOf": [
               {

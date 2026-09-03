@@ -90,6 +90,7 @@ public static class BiddingSystemMapper {
                 AutomaticResponse = record.AutomaticResponse,
                 GoToOpenings = record.GoToOpenings,
                 IsPreferred = record.IsPreferred,
+                IsDisabled = record.IsDisabled,
                 RealizedGoal = record.RealizedGoal,
                 AiSource = record.AiSource,
                 Interjection = ToInterjection(record)
@@ -150,6 +151,7 @@ public static class BiddingSystemMapper {
                 AutomaticResponse = node.AutomaticResponse,
                 GoToOpenings = node.GoToOpenings,
                 IsPreferred = node.IsPreferred,
+                IsDisabled = node.IsDisabled,
                 RealizedGoal = node.RealizedGoal,
                 AiSource = node.AiSource,
                 InterjectionType = node.Interjection?.Type,
