@@ -33200,7 +33200,7 @@
               "gameForcing": true,
               "automaticResponse": false,
               "goToOpenings": false,
-              "isPreferred": false,
+              "isPreferred": true,
               "isDisabled": false,
               "nextBids": [],
               "realizedGoal": "None",
@@ -33226,7 +33226,7 @@
               "gameForcing": true,
               "automaticResponse": false,
               "goToOpenings": false,
-              "isPreferred": false,
+              "isPreferred": true,
               "isDisabled": false,
               "nextBids": [
                 {
@@ -33274,7 +33274,7 @@
               "gameForcing": true,
               "automaticResponse": false,
               "goToOpenings": false,
-              "isPreferred": false,
+              "isPreferred": true,
               "isDisabled": false,
               "nextBids": [
                 {
@@ -33318,7 +33318,7 @@
               "gameForcing": false,
               "automaticResponse": false,
               "goToOpenings": false,
-              "isPreferred": false,
+              "isPreferred": true,
               "isDisabled": false,
               "nextBids": [],
               "realizedGoal": "None",
