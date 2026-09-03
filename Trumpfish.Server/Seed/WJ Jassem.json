@@ -23023,7 +23023,117 @@
                       "goToOpenings": false,
                       "isPreferred": false,
                       "isDisabled": false,
-                      "nextBids": [],
+                      "nextBids": [
+                        {
+                          "nodeId": "f0d53770-4ac8-4c96-8b12-796e416e0bda",
+                          "condition": "4 trefle.",
+                          "clubsCardRange": {
+                            "lower": 4
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "8ed2a87e-c052-493a-a7f3-fead009ba09e",
+                          "condition": "4 kara.",
+                          "diamondsCardRange": {
+                            "lower": 4
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "9ce3f8d8-b025-4e61-9939-f37bb34e2d14",
+                          "condition": "7\u002B kier\u00F3w.",
+                          "heartsCardRange": {
+                            "lower": 7
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Hearts",
+                          "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "0c61ebee-e695-4e38-9f17-da3f44776fe0",
+                          "condition": "3 piki.",
+                          "spadesCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Spades",
+                          "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "2ff7affc-c13c-47d8-af1d-7935e2f7db07",
+                          "condition": "6 kier\u00F3w, bez trzech pik\u00F3w.",
+                          "spadesCardRange": {
+                            "lower": 2,
+                            "upper": 2
+                          },
+                          "heartsCardRange": {
+                            "upper": 6
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 3,
+                          "isFromSystem": false
+                        }
+                      ],
                       "realizedGoal": "None",
                       "type": "Submit",
                       "color": "NoTrump",
@@ -23474,27 +23584,6 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "4835f61f-2ceb-41d4-a21d-38f9d1b550e4",
-                          "condition": "Dok\u0142adnie 4 piki.",
-                          "spadesCardRange": {
-                            "lower": 4
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Spades",
-                          "value": 3,
-                          "isFromSystem": false
-                        },
-                        {
                           "nodeId": "fb8a991b-7e69-4fce-baa7-6f87bb1cf7ea",
                           "condition": "5 kier\u00F3w.",
                           "heartsCardRange": {
@@ -23741,7 +23830,56 @@
                   "goToOpenings": false,
                   "isPreferred": false,
                   "isDisabled": false,
-                  "nextBids": [],
+                  "nextBids": [
+                    {
+                      "nodeId": "daf3d4cb-994f-4e66-9107-9765a5973c17",
+                      "condition": "10-11 PC, 5\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 10
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "f77ade27-68f3-40cb-bd35-fe43e603ae05",
+                      "condition": "8-11 PC, 4\u002B trefle.",
+                      "pointsRange": {
+                        "lower": 8
+                      },
+                      "clubsCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 3,
+                      "isFromSystem": false
+                    }
+                  ],
                   "realizedGoal": "None",
                   "type": "Submit",
                   "color": "Clubs",
@@ -32161,7 +32299,7 @@
         },
         {
           "nodeId": "d361ab41-255a-4a9c-8acf-6b659d049f5d",
-          "condition": "12-14 PC, 5\u002B trefli i 4 piki, mog\u0105 by\u0107 4 kiery",
+          "condition": "12-14 PC, 5\u002B trefli i 4 piki, mog\u0105 by\u0107 4 kiery.",
           "pointsRange": {
             "lower": 12,
             "upper": 14
