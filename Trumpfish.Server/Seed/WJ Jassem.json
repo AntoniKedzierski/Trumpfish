@@ -30656,9 +30656,9 @@
                   "nextBids": [
                     {
                       "nodeId": "7ce5cab6-9e97-48d6-b519-f6656f03018f",
-                      "condition": "7-9 PC, minimum",
+                      "condition": "7-8 PC, minimum",
                       "pointsRange": {
-                        "upper": 9
+                        "upper": 8
                       },
                       "openerBid": false,
                       "signOff": true,
@@ -30676,9 +30676,9 @@
                     },
                     {
                       "nodeId": "825aec5b-f14d-4321-902f-a4dffbab94db",
-                      "condition": "10-11 PC, maksimum",
+                      "condition": "9-11 PC, maksimum",
                       "pointsRange": {
-                        "lower": 10
+                        "lower": 9
                       },
                       "openerBid": false,
                       "signOff": true,

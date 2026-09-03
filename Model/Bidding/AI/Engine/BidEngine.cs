@@ -247,7 +247,7 @@ public partial class BidEngine : IBidInput {
             Goal = BiddingGoal.Gf;
         }
 
-        return result ?? GetNaturalBid(hand, branches, isForced: isForced);
+        return result;
     }
 
 
@@ -278,6 +278,7 @@ public partial class BidEngine : IBidInput {
             throw new Exception("Próba odpowiedzi na jednoelementowy sekwens odzywek.");
         }
 
+        var lastPartnerBid = Auction.GetLastPlayerBid(PartnerPosition, passAsNull: true);
         var branches = BiddingSystem
             .GetDescendants(bidSequence)
             .ToDictionary(
@@ -285,27 +286,33 @@ public partial class BidEngine : IBidInput {
                 e => Evaluator.FromPartner(e, hand, Auction, Position)
             );
 
-        // Nie mamy dopasowanych gałęzi systemu.
+
+        // Nie ma dopasowań, czyli partner mówił naturalnie.
         if (branches.Count == 0) {
-            // Odpowiadamy naturalnie na ostatnią odzywkę partnera.
-            // Powinno być tu uwzględnione więcej rzeczy, jak historia licytacji.
-            // Do odtworzenia w GetNaturalBid.
+            // Jeżeli bidSequence.Count <= 2, to znaczy, że partner nie odzywał się wcześniej.
+            // Zwracamy null, bo po pierwszej odzywce nie wolno mówić naturalnie.
+            if (bidSequence.Count <= 2 || lastPartnerBid == null) {
+                return null;
+            }
 
-            // Pobieramy finalne odzywki wynikające z sekwencji, które pasują do systemu.
-            var partnerSystemLeaves = BiddingSystem.GetLastPartnerSystemBid(bidSequence, PartnerOpened);
+            // Cofamy się o jedno kółko, żeby określić siłę partnera na podstawie jego systemowych odzywek.
+            var previousLoopBidSequence = bidSequence[0..(bidSequence.Count - 2)];
+            var previousBranches = BiddingSystem
+                .GetDescendants(previousLoopBidSequence)
+                .ToDictionary(
+                    e => e,
+                    e => Evaluator.FromPartner(e, hand, Auction, Position)
+                );
 
-            // Wyznaczamy prawdopodobne układy ręki partnera.
-            // Dla jednakowych odzywek mogą to być różne ewaluacje.
-            var partnerEvaulations = partnerSystemLeaves
-                .Select(e => new {
-                    Bid = e,
-                    Evaluation = Evaluator.FromPartner(e, hand, Auction, Position)
-                })
-                .GroupBy(e => e.Bid)
-                .ToDictionary(e => e.Key, e => e.Select(f => f.Evaluation).ToList());
+            // Partner mógł zgłosić inwit lub partię.
+            // Proponowanie nowego koloru po systemie nie wchodzi w grę (od tego jest system)!
+            // Jeżeli odzywka partnera nie robi gry, to znaczy, że to inwit.
+            if (!lastPartnerBid.MakesGame()) {
+                return TrySelectContract(hand, previousBranches, Goal == BiddingGoal.Gf, lastPartnerBid.Color);
+            }
 
-            // Używamy ich do znalezienia optymalnej odzywki.
-            return GetNaturalBid(hand, partnerEvaulations, isForced: Goal == BiddingGoal.Gf);
+            // Próbujemy gier premiowych.
+            return TrySlamConventions(hand, branches);
         }
 
         // Sprawdzenie GameForcingu.
@@ -337,7 +344,16 @@ public partial class BidEngine : IBidInput {
             Goal = BiddingGoal.Gf;
         }
 
-        return result ?? GetNaturalBid(hand, branches, isForced: isForced);
+        // Koniec systemu.
+        return result
+            ?? TrySlamConventions(hand, branches)
+            ?? TrySelectContract(hand, branches, isForced: isForced)
+            ?? TryInvite(hand, branches, isForced: isForced);
+    }
+
+
+    private BidNode? TrySlamConventions(Hand hand, Dictionary<BidNode, TableEvaluation> branches) {
+        return null;
     }
 
 

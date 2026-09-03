@@ -25,6 +25,7 @@ public sealed class TreeValidator {
     private static readonly Regex BelowPcPattern = new(@"^\s*poniżej\s+(?<upper>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private static readonly Regex AbovePcPattern = new(@"^\s*powyżej\s+(?<lower>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex AbovePcPulsPattern = new(@"^(?<lower>\d{1,2})\+\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 
     public List<ValidationIssue> Validate(BiddingSystem system) {
@@ -171,6 +172,11 @@ public sealed class TreeValidator {
         var above = AbovePcPattern.Match(text);
         if (above.Success) {
             return new NumberRange(int.Parse(above.Groups["lower"].Value), null);
+        }
+
+        var abovePlus = AbovePcPulsPattern.Match(text);
+        if (abovePlus.Success) {
+            return new NumberRange(int.Parse(abovePlus.Groups["lower"].Value), null);
         }
 
         return null;

@@ -1,4 +1,4 @@
-﻿using Model.Bidding;
+using Model.Bidding;
 using Model.Bidding.AI.Engine;
 using Model.Bidding.Bids;
 using Model.Enums;
@@ -134,16 +134,11 @@ public class HandEvaluation {
     }
 
 
-    public float Precision() {
-        return 1f 
-            - 0.15f * (Points.Upper.Value - Points.Lower.Value) / 40f
-            + 0.15f * (Spades.Upper.Value - Spades.Lower.Value) / 13f
-            + 0.15f * (Hearts.Upper.Value - Hearts.Lower.Value) / 13f
-            + 0.15f * (Diamonds.Upper.Value - Diamonds.Lower.Value) / 13f
-            + 0.15f * (Clubs.Upper.Value - Clubs.Lower.Value) / 13f
-            + 0.125f * (Aces.HasValue ? 1 : 0)
-            + 0.125f * (Kings.HasValue ? 1 : 0);
-    }
+    public Dictionary<CardColor, int> GetLowerColorBoundries() => GetColorRanges()
+        .OrderByDescending(e => e.Value.Lower ?? 0)     // Najpierw pewna informacja o dolnych ograniczeniach.
+        .ThenByDescending(e => e.Value.Upper ?? 0)      // Potem informacja o górnych ograniczeniach.
+        .ThenByDescending(e => e.Key)                   // Preferencja kolorów starszych.
+        .ToDictionary(e => e.Key, e => e.Value.Lower ?? 0);
 
 
     public NumberRange GetSuit(CardColor color) {
@@ -154,6 +149,14 @@ public class HandEvaluation {
             CardColor.Clubs => Clubs,
             _ => throw new InvalidOperationException()
         };
+    }
+
+
+    public bool GoodToPlayColor(CardColor color) {
+        var suitLength = GetSuit(color);
+        return color.IsMajor()
+            ? Points >= 24 && suitLength >= 8 || Points >= 23 && suitLength >= 9 || Points >= 22 && suitLength >= 10
+            : Points >= 27 && suitLength >= 8 || Points >= 25 && suitLength >= 9 || Points >= 24 && suitLength >= 10;
     }
 
 

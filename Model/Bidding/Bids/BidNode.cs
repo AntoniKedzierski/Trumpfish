@@ -175,15 +175,14 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
     public static BidNode SubmitLowestLegalGameOrDouble(Auction auction, BidColor color, string explanation) {
         var lowestValue = auction.GetLowestLegalValue(color);
-        if (lowestValue >= 5) {
-            return Double("Zgłoszenie odzywki odbyłoby się na poziomie 5 lub wyższym, dlatego wystosowano kontrę. " + explanation);
-        }
+
+        // Póki co brak kontry.
 
         return color switch {
             BidColor.NoTrump => Submit(Math.Max(3, lowestValue), BidColor.NoTrump, explanation),
             BidColor.Spades => Submit(Math.Max(4, lowestValue), BidColor.Spades, explanation),
-            BidColor.Hearts => Submit(Math.Min(4, lowestValue), BidColor.Hearts, explanation),
-            BidColor.Diamonds => Submit(Math.Min(5, lowestValue), BidColor.Diamonds, explanation),
+            BidColor.Hearts => Submit(Math.Max(4, lowestValue), BidColor.Hearts, explanation),
+            BidColor.Diamonds => Submit(Math.Max(5, lowestValue), BidColor.Diamonds, explanation),
             BidColor.Clubs => Submit(Math.Max(5, lowestValue), BidColor.Clubs, explanation),
             _ => throw new Exception("Invalid color.")
         };
