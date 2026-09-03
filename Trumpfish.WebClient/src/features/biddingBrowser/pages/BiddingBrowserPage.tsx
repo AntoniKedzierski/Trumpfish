@@ -13,6 +13,7 @@ import { inheritedRanges } from '../constraints';
 import { createEmptySystem, normalizeSystem } from '../model';
 import { browserReducer, initialBrowserState, type BrowserAction } from '../state';
 import { findNodeById, getNode, resolveIssuePath, ancestorNodes } from '../tree';
+import { removeUnreachable } from '../unreachable';
 import './BiddingBrowserPage.css';
 
 export function BiddingBrowserPage() {
@@ -172,6 +173,22 @@ export function BiddingBrowserPage() {
     });
   };
 
+  // Clears the branch of bids the auction can never arrive at. Destructive and potentially large, so the count is shown first.
+  const handleRemoveUnreachable = () => {
+    const result = removeUnreachable(state.system, state.selection);
+    if (result.removed === 0) {
+      setNotice('Nie znaleziono nieosiągalnych odzywek.');
+      return;
+    }
+
+    if (!window.confirm(`Usunąć ${unreachableBids(result.removed)}? Tej operacji nie można cofnąć.`)) {
+      return;
+    }
+
+    dispatch({ kind: 'replaceSystem', system: result.system });
+    setNotice(`Usunięto ${unreachableBids(result.removed)}.`);
+  };
+
   // Adding a bid hands the caret straight to "Znaczenie", the field that actually gets filled in next. Pasting is left out:
   // a pasted subtree already carries its descriptions.
   const addAndDescribe = (action: BrowserAction) => {
@@ -185,11 +202,22 @@ export function BiddingBrowserPage() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (!event.ctrlKey) {
+      const key = event.key.toLowerCase();
+
+      // Alt rather than Ctrl+Shift, which Chrome keeps for its own developer tools. Ctrl must be absent: on a Polish keyboard
+      // AltGr reports itself as Ctrl+Alt, so requiring plain Alt is what keeps AltGr+C ("ć") out of this.
+      if (event.altKey && !event.ctrlKey) {
+        if (key === 'c') {
+          event.preventDefault();
+          dispatch({ kind: 'copyChildren' });
+        }
+
         return;
       }
 
-      const key = event.key.toLowerCase();
+      if (!event.ctrlKey) {
+        return;
+      }
 
       // Ctrl+Shift commands stay live while a field has the caret: describing one bid and then adding the next is a single
       // flow, and none of these chords mean anything to a text field.
@@ -211,6 +239,9 @@ export function BiddingBrowserPage() {
           case 'f':
             event.preventDefault();
             return setRevealKey((current) => current + 1);
+          case 'x':
+            event.preventDefault();
+            return dispatch({ kind: 'cutChildren' });
           default:
             return;
         }
@@ -271,6 +302,7 @@ export function BiddingBrowserPage() {
         onMoveUp={() => dispatch({ kind: 'moveUp' })}
         onMoveDown={() => dispatch({ kind: 'moveDown' })}
         onSort={() => dispatch({ kind: 'sort' })}
+        onRemoveUnreachable={handleRemoveUnreachable}
         onValidate={handleValidate}
         onSave={handleSave}
         onLoad={handleLoad}
@@ -309,4 +341,15 @@ export function BiddingBrowserPage() {
 
 function describe(reason: unknown): string {
   return reason instanceof Error ? reason.message : String(reason);
+}
+
+/** Polish inflects both the adjective and the noun, and in three ways, so the whole phrase is built rather than a suffix. */
+function unreachableBids(count: number): string {
+  if (count === 1) {
+    return '1 nieosiągalną odzywkę';
+  }
+
+  const tens = count % 100;
+  const units = count % 10;
+  return units >= 2 && units <= 4 && (tens < 12 || tens > 14) ? `${count} nieosiągalne odzywki` : `${count} nieosiągalnych odzywek`;
 }

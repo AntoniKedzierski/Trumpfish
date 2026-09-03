@@ -13,6 +13,7 @@ interface ToolbarProps {
   onMoveUp: () => void;
   onMoveDown: () => void;
   onSort: () => void;
+  onRemoveUnreachable: () => void;
   onValidate: () => void;
   onSave: () => void;
   /** Systems are addressed by id: a fork may carry the same name as the seed it came from. */
@@ -32,6 +33,9 @@ export function Toolbar(props: ToolbarProps) {
       <button type="button" onClick={props.onMoveUp} disabled={!canEditNode}>▲</button>
       <button type="button" onClick={props.onMoveDown} disabled={!canEditNode}>▼</button>
       <button type="button" onClick={props.onSort}>Sortuj</button>
+      <button type="button" onClick={props.onRemoveUnreachable} title="Usuwa z zaznaczonej gałęzi odzywki, których punkty lub długości kolorów wykluczają się z tym, co ten gracz już obiecał. Bez zaznaczenia czyści cały system.">
+        Wyczyść nieosiągalne
+      </button>
       <button type="button" onClick={props.onValidate} disabled={busy}>Sprawdź</button>
 
       <span className="separator" />

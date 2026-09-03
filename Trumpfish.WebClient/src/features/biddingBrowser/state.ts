@@ -10,7 +10,8 @@ export interface BrowserState {
   /** Id of the stored system being edited, or null for one that has never been saved. Saving decides create versus update on it. */
   systemId: string | null;
   selection: NodePath | null;
-  clipboard: EditableBidNode | null;
+  /** Always a list, so copying one bid and copying a whole set of children paste through exactly the same path. */
+  clipboard: EditableBidNode[] | null;
   issues: ValidationIssue[] | null;
   dirty: boolean;
 }
@@ -28,8 +29,11 @@ export type BrowserAction =
   | { kind: 'moveDown' }
   | { kind: 'updateNode'; patch: Partial<EditableBidNode> }
   | { kind: 'copy' }
+  | { kind: 'copyChildren' }
+  | { kind: 'cutChildren' }
   | { kind: 'paste' }
   | { kind: 'sort' }
+  | { kind: 'replaceSystem'; system: EditableSystem }
   | { kind: 'setIssues'; issues: ValidationIssue[] | null }
   | { kind: 'markSaved'; systemId: string };
 
@@ -57,7 +61,7 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
 
     case 'cut': {
       const node = getNode(state.system, state.selection);
-      return node === null ? state : deleteBid({ ...state, clipboard: cloneNode(node) });
+      return node === null ? state : deleteBid({ ...state, clipboard: [cloneNode(node)] });
     }
 
     case 'deleteBid':
@@ -74,14 +78,27 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
 
     case 'copy': {
       const node = getNode(state.system, state.selection);
-      return node === null ? state : { ...state, clipboard: cloneNode(node) };
+      return node === null ? state : { ...state, clipboard: [cloneNode(node)] };
     }
+
+    case 'copyChildren': {
+      const children = selectedChildren(state);
+      return children.length === 0 ? state : { ...state, clipboard: children.map(cloneNode) };
+    }
+
+    case 'cutChildren':
+      return cutChildren(state);
 
     case 'paste':
       return paste(state);
 
     case 'sort':
       return sort(state);
+
+    // A tree rewritten wholesale outside the reducer. The selection survives because every such rewrite only ever removes
+    // things below what is selected, never the selected bid itself.
+    case 'replaceSystem':
+      return { ...state, system: action.system, dirty: true };
 
     case 'setIssues':
       return { ...state, issues: action.issues };
@@ -275,13 +292,37 @@ function updateSelected(state: BrowserState, patch: Partial<EditableBidNode>): B
   };
 }
 
+/**
+ * Everything the selected bid continues into, or a root's own bids. The folder holds nothing of its own - what it shows lives
+ * in the list belonging to the container beneath it - so it copies as nothing, which keeps it out of these commands too.
+ */
+function selectedChildren(state: BrowserState): EditableBidNode[] {
+  return state.selection === null || isFolderPath(state.selection) ? [] : childrenAt(state.system, state.selection);
+}
+
+function cutChildren(state: BrowserState): BrowserState {
+  const selection = state.selection;
+  if (selection === null || isFolderPath(selection)) {
+    return state;
+  }
+
+  const children = childrenAt(state.system, selection);
+  if (children.length === 0) {
+    return state;
+  }
+
+  return { ...state, clipboard: children.map(cloneNode), system: updateChildrenAt(state.system, selection, () => []), dirty: true };
+}
+
 function paste(state: BrowserState): BrowserState {
   if (state.selection === null || state.clipboard === null) {
     return state;
   }
 
-  // A pasted bid that carries an interjection belongs in the folder, so it is placed rather than simply appended.
-  const system = updateChildrenAt(state.system, state.selection, (children) => place(children, cloneNode(state.clipboard!)));
+  const clipboard = state.clipboard;
+
+  // Each pasted bid is placed rather than appended: one carrying an interjection has to land inside the folder, not after it.
+  const system = updateChildrenAt(state.system, state.selection, (children) => clipboard.reduce((current, node) => place(current, cloneNode(node)), children));
   return { ...state, system, dirty: true };
 }
 

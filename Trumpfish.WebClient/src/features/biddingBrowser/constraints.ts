@@ -69,6 +69,29 @@ function narrow(accumulated: InheritedRange | undefined, range: NumberRange | nu
   };
 }
 
+/** Folds the ranges a bid declares into the window its speaker has already promised, giving the window that holds below it. */
+export function narrowInto(promised: InheritedRanges, node: EditableBidNode): InheritedRanges {
+  const next: InheritedRanges = { ...promised };
+  for (const field of rangeFields) {
+    next[field] = narrow(promised[field], node[field] as NumberRange | null | undefined);
+  }
+
+  return next;
+}
+
+/**
+ * Whether a bid can never be said: one of its ranges has nothing in common with what its speaker already promised.
+ *
+ * This is emptiness of the intersection, not merely being outside the promised window. A bid that restates a wider range than
+ * the sequence allows is sloppy - the editor already outlines it - but it is still reachable, and must survive a cleanup.
+ */
+export function contradictsPromised(promised: InheritedRanges, node: EditableBidNode): boolean {
+  return rangeFields.some((field) => {
+    const merged = narrow(promised[field], node[field] as NumberRange | null | undefined);
+    return merged !== undefined && merged.lower !== null && merged.upper !== null && merged.lower > merged.upper;
+  });
+}
+
 /** Renders the inherited range as a greyed out placeholder such as `14` / `17`; `null` means there is nothing to hint. */
 export function placeholderFor(inherited: InheritedRange | undefined, bound: keyof NumberRange): string | undefined {
   const value = inherited?.[bound];
