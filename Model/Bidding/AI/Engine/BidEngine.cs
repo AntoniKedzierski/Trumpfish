@@ -33,34 +33,22 @@ public partial class BidEngine : IBidInput {
 
     public bool PartnerOpened { get; private set; } = false;
 
-
-    public BidEngine(Auction auction, PlayerPosition position) {
-        Auction = auction;
-        BiddingSystem = new BiddingSystem(BiddingSystemPath);   // hardcoded path for now
-        Position = position;
-        Goal = BiddingGoal.None;
-    }
-
+    public int DealNumber { get; private set; }
 
     /// <summary>
     /// Creates an engine on top of an already loaded system, so hosts (server simulation) do not depend on the file system.
     /// </summary>
-    public BidEngine(Auction auction, PlayerPosition position, BiddingSystem biddingSystem) {
+    public BidEngine(Auction auction, PlayerPosition position, BiddingSystem biddingSystem, int dealNumber) {
         Auction = auction;
         BiddingSystem = biddingSystem;
         Position = position;
         Goal = BiddingGoal.None;
+        DealNumber = dealNumber;
     }
 
 
-    public void Reset() {
-        OwnBidsHistory.Clear();
-        Goal = BiddingGoal.None;
-    }
-
-
-    public Bid Get(Hand hand, int? dealNumber = null) {
-        var selectedBidNode = SelectOptimalBid(hand, dealNumber);
+    public Bid Get(Hand hand) {
+        var selectedBidNode = SelectOptimalBid(hand);
 
         if (selectedBidNode?.IsBidLegal(Auction) == false) {
             throw new Exception("Nielegalna odzywka ma zostać zgłoszona!");
@@ -75,7 +63,7 @@ public partial class BidEngine : IBidInput {
     }
 
 
-    private BidNode? SelectOptimalBid(Hand hand, int? dealNumber = null) {
+    private BidNode? SelectOptimalBid(Hand hand) {
         // Najpierw ten po prawej, potem po lewej.
         var rightOpponentBid = Auction.GetLastPlayerBid(RightOpponentPosition, passAsNull: true);
         var leftOpponentBid = Auction.GetLastPlayerBid(LeftOpponentPosition, passAsNull: true);
@@ -88,7 +76,7 @@ public partial class BidEngine : IBidInput {
         }
 
         // W pierwszym kółku: oponenci coś mówili, partner pasował lub jeszcze się nie odzywał.
-        if (Auction.Loop == 0 && (leftOpponentBid != null || rightOpponentBid != null) && lastPartnerBid == null) {
+        if (Auction.FirstLoop() && (leftOpponentBid != null || rightOpponentBid != null) && lastPartnerBid == null) {
             // Jeżeli obaj się odzywali, to tylko obrona wchodzi w grę.
             if (leftOpponentBid != null && rightOpponentBid != null) {
                 return TrySoloDefend(hand, rightOpponentBid);
@@ -99,15 +87,14 @@ public partial class BidEngine : IBidInput {
         }
 
         // W pierwszym kółku: partner coś mówił.
-        if (Auction.Loop == 0 && lastPartnerBid != null) {
-            var firsPartnersSubmit = Auction.FirstPlayerBid(PartnerPosition)!;
-            // Trzeba znaleźć odzywkę przed pierwszą odzywką partnera, czyli tą z której weszliśmy do obron.
-            var defendingAgainst = Auction.AuctionHistory  
-                .Take(Auction.AuctionHistory.IndexOf(firsPartnersSubmit))
-                .LastOrDefault(e => e.Type == BidType.Submit);
+        if (Auction.FirstLoop() && lastPartnerBid != null) {
+            var interruptedPartnerBid = new InterruptedBid(lastPartnerBid) {
+                Interruption = rightOpponentBid
+            };
+
             return partnerOpened
-                ? TryRespondToOpening(hand, lastPartnerBid, rightOpponentBid)
-                : TryContinueSystemDefence(hand, lastPartnerBid, defendingAgainst);
+                ? TryRespondToOpening(hand, interruptedPartnerBid)
+                : TryContinueSystemDefence(hand, interruptedPartnerBid);
         }
 
         // Tutaj licytacja na pewno trwała dłużej niż jedno kółko.
@@ -128,7 +115,11 @@ public partial class BidEngine : IBidInput {
         // Jeżeli partner tylko otworzył (jedna odzywka z naszym sekwensie),
         // to próbujemy mu odpowiedzieć.
         if (bidSequence.Count == 1) {
-            return TryRespondToOpening(hand, lastPartnerBid, rightOpponentBid);
+            var interruptedPartnerBid = new InterruptedBid(lastPartnerBid) {
+                Interruption = rightOpponentBid
+            };
+
+            return TryRespondToOpening(hand, interruptedPartnerBid);
         }
 
         // Szukamy odzywki w systemie.
@@ -209,24 +200,9 @@ public partial class BidEngine : IBidInput {
     /// <summary>
     /// Wejście w obrony po partnerze
     /// </summary>
-    public BidNode? TryContinueSystemDefence(Hand hand, Bid lastPartnerBid, Bid? defenceHead) {
-        var defences = BiddingSystem.Defences() ?? throw new Exception("Defences not found.");
-        var defenceBranch = defences
-            .Bids
-            .Where(e => !e.IsDisabled && e.Interjection != null)
-            .Where(e => e.Interjection!.Equals(defenceHead))
-            .FirstOrDefault(e => e.Equals(lastPartnerBid));
-
-        // Póki co brak obrony spoza systemu.
-        if (defenceBranch == null) {
-            return null;
-        }
-
-        var descendants = LastOwnBid == null
-            ? BiddingSystem.GetDescendants(defences, lastPartnerBid)
-            : BiddingSystem.GetDescendants(LastOwnBid, lastPartnerBid);
-
-        var branches = descendants
+    public BidNode? TryContinueSystemDefence(Hand hand, InterruptedBid interruptedPartnerBid) {
+        var branches = BiddingSystem
+            .GetDescendants([interruptedPartnerBid])
             .ToDictionary(
                 e => e,
                 e => Evaluator.FromPartner(e, hand, Auction, Position)
@@ -269,7 +245,7 @@ public partial class BidEngine : IBidInput {
     }
 
 
-    public BidNode? TryRespondToOpening(Hand hand, Bid partnerBid, Bid? rightOpponentBid) {
+    public BidNode? TryRespondToOpening(Hand hand, InterruptedBid partnerBid) {
         var branches = BiddingSystem
             .GetOpenings(partnerBid)
             .ToDictionary(
@@ -279,7 +255,7 @@ public partial class BidEngine : IBidInput {
 
         // Bezpośrednio po otwarciu nie ma GameForcingu, nie ma Forcingu na jedno kółko, po prostu odpowiedź z systemu.
         // Nie dajemy również odpowiedzi off-system z licytacji naturalnej, system ma to zawierać (jeżeli nie zawiera, to pass).
-        return GetBidFromSystemBranches(hand, [.. branches.Keys], rightOpponentBid);
+        return GetBidFromSystemBranches(hand, [.. branches.Keys], partnerBid.Interruption);
     }
 
 

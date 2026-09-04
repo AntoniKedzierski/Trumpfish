@@ -1660,7 +1660,6 @@
           "bidIndex",
           "bid",
           "promised",
-          "hand",
           "suggested",
           "suggestedMeaning"
         ],
@@ -1682,9 +1681,6 @@
               "null",
               "string"
             ]
-          },
-          "hand": {
-            "type": "string"
           },
           "suggested": {
             "oneOf": [

@@ -28,13 +28,8 @@ public class Player {
     }
 
 
-    public virtual Bid MakeBid(int? dealNumber = null) {
-        return BidInput.Get(Hand, dealNumber);
-    }
-
-
-    public void Reset() {
-        BidInput.Reset();
+    public virtual Bid MakeBid() {
+        return BidInput.Get(Hand);
     }
 
 }

@@ -336,8 +336,26 @@ public class Auction {
     }
 
 
-    public bool NobodyBidsYet() => AuctionHistory.All(e => e.Type == BidType.Pass);
+    /// <summary>
+    /// Nie nie tyle oznacza pierwsze kółko, co cztery odzwyki po pierwszym submicie.
+    /// </summary>
+    /// <returns></returns>
+    public bool FirstLoop() {
+        if (AuctionHistory.Count >= 8) {
+            return false;
+        }
 
+        var firstSubmit = AuctionHistory.FirstOrDefault(e => e.Type == BidType.Submit);
+        if (firstSubmit == null) {
+            return true;
+        }
+
+        var firstSumbitIndex = AuctionHistory.IndexOf(firstSubmit);
+        return firstSumbitIndex + 3 >= AuctionHistory.Count;
+    }
+
+
+    public bool NobodyBidsYet() => AuctionHistory.All(e => e.Type == BidType.Pass);
 
     public bool ReachedGameLevel() => GetLastSubmittedBid(onlySubmitions: true)?.MakesGame() ?? false;
 

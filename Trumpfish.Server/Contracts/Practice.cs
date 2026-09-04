@@ -26,7 +26,7 @@ public record PracticeBidLabel(BidType Type, BidColor Color, int? Value, string 
 /// says that bid shows - null when the system does not have the bid at that point at all - and <paramref name="Suggested"/> is
 /// what the engine would have said in his seat.
 /// </summary>
-public record PracticeWarning(int BidIndex, PracticeBidLabel Bid, string? Promised, string Hand, PracticeBidLabel? Suggested, string? SuggestedMeaning);
+public record PracticeWarning(int BidIndex, PracticeBidLabel Bid, string? Promised, PracticeBidLabel? Suggested, string? SuggestedMeaning);
 
 /// <summary>One bid made by the human, against the opaque state handed out with the previous answer.</summary>
 public record PracticeBidRequest(string State, BidType Type, BidColor Color, int? Value);

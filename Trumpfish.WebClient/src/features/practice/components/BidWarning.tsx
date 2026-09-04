@@ -16,7 +16,7 @@ export function BidWarning({ warnings }: { warnings: readonly PracticeWarning[] 
 
       {warnings.map((warning) => (
         <dl key={warning.bidIndex}>
-          <dt>Powiedziałeś</dt>
+          <dt>Twoja odzywka</dt>
           <dd>
             <strong><BidLabel bid={warning.bid} /></strong>
             {warning.promised === null || warning.promised === undefined
@@ -24,12 +24,9 @@ export function BidWarning({ warnings }: { warnings: readonly PracticeWarning[] 
               : ` — ${warning.promised}`}
           </dd>
 
-          <dt>A masz</dt>
-          <dd>{warning.hand}</dd>
-
           {warning.suggested === null || warning.suggested === undefined ? null : (
             <>
-              <dt>System mówi</dt>
+              <dt>Silnik</dt>
               <dd>
                 <strong><BidLabel bid={warning.suggested} /></strong>
                 {warning.suggestedMeaning === null || warning.suggestedMeaning === undefined ? null : ` — ${warning.suggestedMeaning}`}

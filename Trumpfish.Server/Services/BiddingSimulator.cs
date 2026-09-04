@@ -38,7 +38,7 @@ public class BiddingSimulator : IBiddingSimulator {
         var players = new Player[4];
 
         foreach (var position in Enum.GetValues<PlayerPosition>()) {
-            players[(int)position] = new Player("bot", position, new BidEngine(auction, position, system));
+            players[(int)position] = new Player("bot", position, new BidEngine(auction, position, system, index));
             players[(int)position].GiveHand(hands[position]);
         }
 
@@ -52,7 +52,7 @@ public class BiddingSimulator : IBiddingSimulator {
                     break;
                 }
 
-                auction.Submit(players[(int)auction.CurrentBidder].MakeBid(index));
+                auction.Submit(players[(int)auction.CurrentBidder].MakeBid());
             }
         }
         catch (Exception exception) {

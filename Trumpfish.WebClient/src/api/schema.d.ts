@@ -1152,7 +1152,6 @@ export interface components {
             bidIndex: number | string;
             bid: components["schemas"]["PracticeBidLabel"];
             promised: null | string;
-            hand: string;
             suggested: null | components["schemas"]["PracticeBidLabel"];
             suggestedMeaning: null | string;
         };

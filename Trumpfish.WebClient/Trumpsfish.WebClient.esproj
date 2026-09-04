@@ -5,6 +5,9 @@
     <JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
     <!-- Allows the build (or compile) script located on package.json to run on Build -->
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- The SDK hangs npm audit off every build and clean, and it is a network round trip: it was costing a full minute of a
+         clean that otherwise takes 20 ms. Run `npm audit` by hand, or through CI, when the dependencies actually change. -->
+    <ShouldRunNpmAudit>false</ShouldRunNpmAudit>
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>

@@ -9,7 +9,5 @@ namespace Model;
 
 public interface IBidInput {
 
-    public Bid Get(Hand hand, int? dealNumber = null);
-
-    public void Reset();
+    public Bid Get(Hand hand);
 }

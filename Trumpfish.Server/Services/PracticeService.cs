@@ -125,7 +125,7 @@ public class PracticeService : IPracticeService {
         var players = new Player[4];
 
         foreach (var position in Enum.GetValues<PlayerPosition>()) {
-            players[(int)position] = new Player("bot", position, new BidEngine(auction, position, system));
+            players[(int)position] = new Player("bot", position, new BidEngine(auction, position, system, data.DealIndex));
             players[(int)position].GiveHand(hands[position]);
         }
 
@@ -147,7 +147,7 @@ public class PracticeService : IPracticeService {
                 if (auction.CurrentBidder == data.Player) {
                     // Always asked, and asked before the human speaks: the engine reasons from its own bids, so skipping a turn
                     // would leave it out of step with the auction. Whether anyone gets to read the answer is decided elsewhere.
-                    var advice = Advice(players[(int)data.Player], data.DealIndex);
+                    var advice = Advice(players[(int)data.Player]);
 
                     if (pending.Count == 0) {
                         waiting = true;
@@ -169,7 +169,7 @@ public class PracticeService : IPracticeService {
                     }
                 }
                 else {
-                    auction.Submit(players[(int)auction.CurrentBidder].MakeBid(data.DealIndex));
+                    auction.Submit(players[(int)auction.CurrentBidder].MakeBid());
                 }
             }
         }
@@ -217,9 +217,9 @@ public class PracticeService : IPracticeService {
     /// What the engine would have said in the human's seat, or null when it cannot answer here. Asking it moves its own line of
     /// thought forward, so it must be asked at every turn of that seat rather than only at the interesting ones.
     /// </summary>
-    private static Bid? Advice(Player player, int dealIndex) {
+    private static Bid? Advice(Player player) {
         try {
-            return player.MakeBid(dealIndex);
+            return player.MakeBid();
         }
         catch (Exception) {
             // A system that leads the engine into an illegal bid is a fault of the tree, not something to fail the deal over.
@@ -229,15 +229,16 @@ public class PracticeService : IPracticeService {
 
 
     /// <summary>
-    /// Whether the bid the human just made can be true of the hand he is holding. It cannot when the system does not have the
-    /// bid here at all, or has it but under conditions this hand does not meet - which is exactly the mistake worth naming.
+    /// Whether the bid the human just made was the wrong thing to say holding this hand. It was when the system has the bid
+    /// here but under conditions the hand does not meet, or does not have it at all and the engine would have said something
+    /// else. A bid the engine itself would have made is right by definition: the tree simply left room for a natural call.
     /// </summary>
     /// <remarks>
     /// Only a suit or no-trump bid is judged. A pass, a double and a redouble say nothing about points or shape on their own,
     /// so there is no promise to hold them to.
     /// </remarks>
     private static PracticeWarning? Check(Bid bid, List<BidNode> matches, Hand hand, Bid? advice, int bidIndex) {
-        if (bid.Type != BidType.Submit || matches.Any(node => node.Matches(hand))) {
+        if (bid.Type != BidType.Submit || matches.Any(node => node.Matches(hand)) || Same(bid, advice)) {
             return null;
         }
 
@@ -245,9 +246,17 @@ public class PracticeService : IPracticeService {
             bidIndex,
             Label(bid),
             matches.Count == 0 ? null : bid.Explanation,
-            $"{hand.Points} PC, {hand.SpadesCount}-{hand.HeartsCount}-{hand.DiamondsCount}-{hand.ClubsCount}",
             advice == null ? null : Label(advice),
             advice?.Explanation);
+    }
+
+
+    /// <summary>
+    /// Whether two bids are the same call. Compared field by field rather than with <c>Bid.Equals</c>, which treats a missing
+    /// level as matching any level - fine for looking a bid up in the tree, far too generous for judging one.
+    /// </summary>
+    private static bool Same(Bid bid, Bid? other) {
+        return other != null && bid.Type == other.Type && bid.Color == other.Color && bid.Value == other.Value;
     }
 
 
