@@ -716,6 +716,183 @@
         }
       }
     },
+    "/api/practice/deal": {
+      "post": {
+        "tags": [
+          "Practice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeStartRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeStartRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PracticeState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/practice/bid": {
+      "post": {
+        "tags": [
+          "Practice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeBidRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeBidRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeBidRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PracticeState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/practice/hint": {
+      "post": {
+        "tags": [
+          "Practice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeHintRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeHintRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PracticeHintRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PracticeHint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/simulation/bidding": {
       "post": {
         "tags": [
@@ -1230,6 +1407,302 @@
           "South",
           "West"
         ]
+      },
+      "PracticeBidLabel": {
+        "required": [
+          "type",
+          "color",
+          "value",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/BidType"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "PracticeBidRequest": {
+        "required": [
+          "state",
+          "type",
+          "color",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/BidType"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "PracticeHint": {
+        "required": [
+          "bid",
+          "meaning"
+        ],
+        "type": "object",
+        "properties": {
+          "bid": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PracticeBidLabel"
+              }
+            ]
+          },
+          "meaning": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PracticeHintRequest": {
+        "required": [
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string"
+          }
+        }
+      },
+      "PracticeLegalBids": {
+        "required": [
+          "minimumLevel",
+          "canDouble",
+          "canRedouble"
+        ],
+        "type": "object",
+        "properties": {
+          "minimumLevel": {
+            "type": "object",
+            "additionalProperties": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          "canDouble": {
+            "type": "boolean"
+          },
+          "canRedouble": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PracticeRole": {
+        "enum": [
+          "Opener",
+          "Responder"
+        ]
+      },
+      "PracticeStartRequest": {
+        "required": [
+          "systemId",
+          "dealIndex",
+          "seed",
+          "openingNodeId",
+          "role",
+          "checkBids"
+        ],
+        "type": "object",
+        "properties": {
+          "systemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dealIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "seed": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "openingNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PracticeRole"
+          },
+          "checkBids": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PracticeState": {
+        "required": [
+          "state",
+          "dealIndex",
+          "dealer",
+          "player",
+          "playerHand",
+          "bidding",
+          "warnings",
+          "playerToBid",
+          "legal",
+          "finished",
+          "result",
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string"
+          },
+          "dealIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "player": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "playerHand": {
+            "$ref": "#/components/schemas/SimulationHand"
+          },
+          "bidding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationBid"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PracticeWarning"
+            }
+          },
+          "playerToBid": {
+            "type": "boolean"
+          },
+          "legal": {
+            "$ref": "#/components/schemas/PracticeLegalBids"
+          },
+          "finished": {
+            "type": "boolean"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SimulationDealResult"
+              }
+            ]
+          },
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PracticeWarning": {
+        "required": [
+          "bidIndex",
+          "bid",
+          "promised",
+          "hand",
+          "suggested",
+          "suggestedMeaning"
+        ],
+        "type": "object",
+        "properties": {
+          "bidIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "bid": {
+            "$ref": "#/components/schemas/PracticeBidLabel"
+          },
+          "promised": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "hand": {
+            "type": "string"
+          },
+          "suggested": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PracticeBidLabel"
+              }
+            ]
+          },
+          "suggestedMeaning": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
       },
       "ProblemDetails": {
         "type": "object",
@@ -1788,6 +2261,9 @@
     },
     {
       "name": "BiddingSystems"
+    },
+    {
+      "name": "Practice"
     },
     {
       "name": "Simulation"

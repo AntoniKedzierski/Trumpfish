@@ -15772,643 +15772,14 @@
               "isDisabled": false,
               "nextBids": [
                 {
-                  "nodeId": "6dc83ff1-ec12-479c-a720-45303de13e83",
-                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                  "pointsRange": {
-                    "lower": 18,
-                    "upper": 21
-                  },
-                  "heartsCardRange": {
-                    "lower": 4,
-                    "upper": 4
-                  },
-                  "clubsCardRange": {
-                    "lower": 5
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "isDisabled": false,
-                  "nextBids": [
-                    {
-                      "nodeId": "9c1fc1ff-12c9-4872-80fe-71b8be509b1f",
-                      "condition": "4-6 PC, 4\u002B piki.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 6
-                      },
-                      "spadesCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "c5c6c114-4c9e-415d-840c-bffdf00a38f9",
-                          "condition": "18-20 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18,
-                            "upper": 20
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 2,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "f9897205-99bc-4bd1-a719-51b3efa99769",
-                          "condition": "21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 21
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 3,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 1,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "bba659ee-7a44-4f9f-bdfb-4de1d250db11",
-                      "condition": "4-6 PC, brak 4 pik\u00F3w.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 6
-                      },
-                      "spadesCardRange": {
-                        "upper": 3
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "0c970db8-c048-4b49-a142-bf80c795d32f",
-                          "condition": "18-20 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18,
-                            "upper": 20
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 2,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "baf31c47-7b2f-4285-8d18-a25a5ad42229",
-                          "condition": "21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 21
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 3,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "NoTrump",
-                      "value": 1,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "6220976d-0a2a-42cf-bbdf-eac4c801f123",
-                      "condition": "4-6 PC, 5\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 4
-                      },
-                      "clubsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "6465ba32-59f9-455e-bace-5ffe1f74d0b4",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "heartsCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Clubs",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "f97c9f1e-3005-432d-8ded-e6c26122c8c7",
-                      "condition": "4-6 PC, 5\u002B karo.",
-                      "pointsRange": {
-                        "lower": 4
-                      },
-                      "diamondsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "019dc922-dbfe-4c2e-955e-87bdea3270bc",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "heartsCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "67b03e16-fc24-4a02-bae7-47fa84a93be6",
-                      "condition": "4-6 PC, 4\u002B kiery.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 6
-                      },
-                      "heartsCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "68a27745-6118-4f5e-ac7f-df8fa9530113",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "heartsCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Hearts",
-                      "value": 2,
-                      "isFromSystem": false
-                    }
-                  ],
-                  "realizedGoal": "None",
-                  "type": "Submit",
-                  "color": "Hearts",
-                  "value": 1,
-                  "isFromSystem": false
-                },
-                {
-                  "nodeId": "954603db-4451-441b-a297-f52b053c7414",
-                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                  "pointsRange": {
-                    "lower": 18,
-                    "upper": 21
-                  },
-                  "spadesCardRange": {
-                    "lower": 4,
-                    "upper": 4
-                  },
-                  "clubsCardRange": {
-                    "lower": 5
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "isDisabled": false,
-                  "nextBids": [
-                    {
-                      "nodeId": "583f8453-3f7e-489e-b29c-078a69b5df08",
-                      "condition": "4-6 PC, brak 4 pik\u00F3w.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 6
-                      },
-                      "spadesCardRange": {
-                        "upper": 3
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "5d5da661-877b-46b7-9c31-dfcd9420e625",
-                          "condition": "18-20 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18,
-                            "upper": 20
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 2,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "3949a01f-7f9c-47cf-82f5-80422d689e29",
-                          "condition": "21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 21
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 3,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "NoTrump",
-                      "value": 1,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "1715c70c-77ac-4d5d-9a01-0b1e8d389fff",
-                      "condition": "4-6 PC, 5\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 4
-                      },
-                      "clubsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "d6ab89e5-4fd3-4138-b933-e20481c221db",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Clubs",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "550312ae-983e-41ae-97f8-d0735ba53a73",
-                      "condition": "4-6 PC, 5\u002B karo.",
-                      "pointsRange": {
-                        "lower": 4
-                      },
-                      "diamondsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "aaf2c95f-592e-4092-bd3d-06f693ed7884",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "6b410203-f63e-4a99-8ff6-b48a434b0225",
-                      "condition": "4-6 PC, 4\u002B kiery.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 6
-                      },
-                      "heartsCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "6cc8bd33-4b4c-47df-8135-08750e5ebd46",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "heartsCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Hearts",
-                      "value": 2,
-                      "isFromSystem": false
-                    }
-                  ],
-                  "realizedGoal": "None",
-                  "type": "Submit",
-                  "color": "Spades",
-                  "value": 1,
-                  "isFromSystem": false
-                },
-                {
                   "nodeId": "aa655a1a-e461-40fa-9207-dd7d0973f551",
-                  "condition": "18-21 PC, 5\u002B kier\u00F3w.",
+                  "condition": "18-21 PC, 4\u002B kier\u00F3w.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
                   },
                   "heartsCardRange": {
-                    "lower": 5
+                    "lower": 4
                   },
                   "openerBid": true,
                   "signOff": false,
@@ -16416,7 +15787,7 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
@@ -16981,13 +16352,17 @@
                   "isFromSystem": false
                 },
                 {
-                  "nodeId": "66750b52-bc60-4ea2-ad4f-31c0808908bd",
-                  "condition": "18-21 PC, 5\u002B pik\u00F3w.",
+                  "nodeId": "6dc83ff1-ec12-479c-a720-45303de13e83",
+                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
                   },
-                  "spadesCardRange": {
+                  "heartsCardRange": {
+                    "lower": 4,
+                    "upper": 4
+                  },
+                  "clubsCardRange": {
                     "lower": 5
                   },
                   "openerBid": true,
@@ -16996,7 +16371,665 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
+                  "isDisabled": false,
+                  "nextBids": [
+                    {
+                      "nodeId": "9c1fc1ff-12c9-4872-80fe-71b8be509b1f",
+                      "condition": "4-6 PC, 4\u002B piki.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 6
+                      },
+                      "spadesCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "c5c6c114-4c9e-415d-840c-bffdf00a38f9",
+                          "condition": "18-20 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 20
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 2,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "f9897205-99bc-4bd1-a719-51b3efa99769",
+                          "condition": "21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 21
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 3,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 1,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "bba659ee-7a44-4f9f-bdfb-4de1d250db11",
+                      "condition": "4-6 PC, brak 4 pik\u00F3w.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 6
+                      },
+                      "spadesCardRange": {
+                        "upper": 3
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "0c970db8-c048-4b49-a142-bf80c795d32f",
+                          "condition": "18-20 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 20
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 2,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "baf31c47-7b2f-4285-8d18-a25a5ad42229",
+                          "condition": "21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 21
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 3,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "NoTrump",
+                      "value": 1,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "6220976d-0a2a-42cf-bbdf-eac4c801f123",
+                      "condition": "4-6 PC, 5\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 4
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "6465ba32-59f9-455e-bace-5ffe1f74d0b4",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "f97c9f1e-3005-432d-8ded-e6c26122c8c7",
+                      "condition": "4-6 PC, 5\u002B karo.",
+                      "pointsRange": {
+                        "lower": 4
+                      },
+                      "diamondsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "019dc922-dbfe-4c2e-955e-87bdea3270bc",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Diamonds",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "67b03e16-fc24-4a02-bae7-47fa84a93be6",
+                      "condition": "4-6 PC, 4\u002B kiery.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 6
+                      },
+                      "heartsCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "68a27745-6118-4f5e-ac7f-df8fa9530113",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Hearts",
+                      "value": 2,
+                      "isFromSystem": false
+                    }
+                  ],
+                  "realizedGoal": "None",
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                },
+                {
+                  "nodeId": "1ac97f36-42df-4731-93f8-f39845a21129",
+                  "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 kiery.",
+                  "pointsRange": {
+                    "lower": 18,
+                    "upper": 21
+                  },
+                  "heartsCardRange": {
+                    "lower": 4,
+                    "upper": 4
+                  },
+                  "diamondsCardRange": {
+                    "lower": 5
+                  },
+                  "openerBid": true,
+                  "signOff": false,
+                  "oneRoundForcing": false,
+                  "gameForcing": false,
+                  "automaticResponse": false,
+                  "goToOpenings": false,
+                  "isPreferred": true,
+                  "isDisabled": false,
+                  "nextBids": [
+                    {
+                      "nodeId": "574919b7-81e9-42eb-9051-9203cf65997f",
+                      "condition": "4-6 PC, 4\u002B piki.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 6
+                      },
+                      "spadesCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "a2b1d8e9-95e9-4471-9fd3-1141f7369e57",
+                          "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 2,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 1,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "bab055a1-26cb-41c9-8db1-d15af6ce8e9a",
+                      "condition": "4-6 PC, brak 4 pik\u00F3w.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 6
+                      },
+                      "spadesCardRange": {
+                        "upper": 3
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "ec91158d-1cca-46d7-88b1-3edeb9bb5244",
+                          "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 2,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "NoTrump",
+                      "value": 1,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "07dd0c43-7bdb-41ff-884c-8124963552cc",
+                      "condition": "4-6 PC, 5\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 4
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "87aab9eb-6fcd-43e6-bfa2-006a62644a46",
+                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5,
+                            "upper": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 2,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "81965317-6e0e-4f9f-9e11-a47d9940f1b2",
+                      "condition": "4-6 PC, 5\u002B karo.",
+                      "pointsRange": {
+                        "lower": 4
+                      },
+                      "diamondsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "f86aeeb5-80ec-46b7-99a0-314e31aec0d1",
+                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5,
+                            "upper": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 2,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Diamonds",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "1c82331d-83cc-4872-95fc-96f43828aef5",
+                      "condition": "4-6 PC, 4\u002B kiery.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 6
+                      },
+                      "heartsCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "b23b6093-7179-48b9-8029-2d51f73e4e69",
+                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5,
+                            "upper": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 2,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Hearts",
+                      "value": 2,
+                      "isFromSystem": false
+                    }
+                  ],
+                  "realizedGoal": "None",
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                },
+                {
+                  "nodeId": "66750b52-bc60-4ea2-ad4f-31c0808908bd",
+                  "condition": "18-21 PC, 4\u002B pik\u00F3w.",
+                  "pointsRange": {
+                    "lower": 18,
+                    "upper": 21
+                  },
+                  "spadesCardRange": {
+                    "lower": 4
+                  },
+                  "openerBid": true,
+                  "signOff": false,
+                  "oneRoundForcing": false,
+                  "gameForcing": false,
+                  "automaticResponse": false,
+                  "goToOpenings": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
@@ -17504,19 +17537,18 @@
                   "isFromSystem": false
                 },
                 {
-                  "nodeId": "1ac97f36-42df-4731-93f8-f39845a21129",
-                  "condition": "18-21 PC, dok\u0142adnie 5 karo, dok\u0142adnie 4 kiery.",
+                  "nodeId": "954603db-4451-441b-a297-f52b053c7414",
+                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
                   },
-                  "heartsCardRange": {
+                  "spadesCardRange": {
                     "lower": 4,
                     "upper": 4
                   },
-                  "diamondsCardRange": {
-                    "lower": 5,
-                    "upper": 5
+                  "clubsCardRange": {
+                    "lower": 5
                   },
                   "openerBid": true,
                   "signOff": false,
@@ -17524,66 +17556,11 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "574919b7-81e9-42eb-9051-9203cf65997f",
-                      "condition": "4-6 PC, 4\u002B piki.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 6
-                      },
-                      "spadesCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "a2b1d8e9-95e9-4471-9fd3-1141f7369e57",
-                          "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18,
-                            "upper": 21
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "diamondsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": true,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 2,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 1,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "bab055a1-26cb-41c9-8db1-d15af6ce8e9a",
+                      "nodeId": "583f8453-3f7e-489e-b29c-078a69b5df08",
                       "condition": "4-6 PC, brak 4 pik\u00F3w.",
                       "pointsRange": {
                         "lower": 4,
@@ -17602,22 +17579,22 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "ec91158d-1cca-46d7-88b1-3edeb9bb5244",
-                          "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 piki.",
+                          "nodeId": "5d5da661-877b-46b7-9c31-dfcd9420e625",
+                          "condition": "18-20 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
                           "pointsRange": {
                             "lower": 18,
-                            "upper": 21
+                            "upper": 20
                           },
                           "spadesCardRange": {
                             "lower": 4,
                             "upper": 4
                           },
-                          "diamondsCardRange": {
+                          "clubsCardRange": {
                             "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
-                          "oneRoundForcing": true,
+                          "oneRoundForcing": false,
                           "gameForcing": false,
                           "automaticResponse": false,
                           "goToOpenings": false,
@@ -17626,8 +17603,36 @@
                           "nextBids": [],
                           "realizedGoal": "None",
                           "type": "Submit",
-                          "color": "Diamonds",
+                          "color": "NoTrump",
                           "value": 2,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "3949a01f-7f9c-47cf-82f5-80422d689e29",
+                          "condition": "21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 21
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 3,
                           "isFromSystem": false
                         }
                       ],
@@ -17638,7 +17643,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "07dd0c43-7bdb-41ff-884c-8124963552cc",
+                      "nodeId": "1715c70c-77ac-4d5d-9a01-0b1e8d389fff",
                       "condition": "4-6 PC, 5\u002B trefli.",
                       "pointsRange": {
                         "lower": 4
@@ -17656,24 +17661,22 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "87aab9eb-6fcd-43e6-bfa2-006a62644a46",
-                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "nodeId": "d6ab89e5-4fd3-4138-b933-e20481c221db",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
                           "pointsRange": {
-                            "lower": 18,
-                            "upper": 21
+                            "lower": 18
                           },
-                          "heartsCardRange": {
+                          "spadesCardRange": {
                             "lower": 4,
                             "upper": 4
                           },
-                          "diamondsCardRange": {
-                            "lower": 5,
-                            "upper": 5
+                          "clubsCardRange": {
+                            "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
-                          "oneRoundForcing": true,
-                          "gameForcing": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
                           "automaticResponse": false,
                           "goToOpenings": false,
                           "isPreferred": false,
@@ -17681,8 +17684,8 @@
                           "nextBids": [],
                           "realizedGoal": "None",
                           "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 2,
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -17693,7 +17696,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "81965317-6e0e-4f9f-9e11-a47d9940f1b2",
+                      "nodeId": "550312ae-983e-41ae-97f8-d0735ba53a73",
                       "condition": "4-6 PC, 5\u002B karo.",
                       "pointsRange": {
                         "lower": 4
@@ -17711,24 +17714,22 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "f86aeeb5-80ec-46b7-99a0-314e31aec0d1",
-                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "nodeId": "aaf2c95f-592e-4092-bd3d-06f693ed7884",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
                           "pointsRange": {
-                            "lower": 18,
-                            "upper": 21
+                            "lower": 18
                           },
-                          "heartsCardRange": {
+                          "spadesCardRange": {
                             "lower": 4,
                             "upper": 4
                           },
-                          "diamondsCardRange": {
-                            "lower": 5,
-                            "upper": 5
+                          "clubsCardRange": {
+                            "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
-                          "oneRoundForcing": true,
-                          "gameForcing": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
                           "automaticResponse": false,
                           "goToOpenings": false,
                           "isPreferred": false,
@@ -17736,8 +17737,8 @@
                           "nextBids": [],
                           "realizedGoal": "None",
                           "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 2,
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -17748,7 +17749,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "1c82331d-83cc-4872-95fc-96f43828aef5",
+                      "nodeId": "6b410203-f63e-4a99-8ff6-b48a434b0225",
                       "condition": "4-6 PC, 4\u002B kiery.",
                       "pointsRange": {
                         "lower": 4,
@@ -17767,24 +17768,22 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "b23b6093-7179-48b9-8029-2d51f73e4e69",
-                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "nodeId": "6cc8bd33-4b4c-47df-8135-08750e5ebd46",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
                           "pointsRange": {
-                            "lower": 18,
-                            "upper": 21
+                            "lower": 18
                           },
                           "heartsCardRange": {
                             "lower": 4,
                             "upper": 4
                           },
-                          "diamondsCardRange": {
-                            "lower": 5,
-                            "upper": 5
+                          "clubsCardRange": {
+                            "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
-                          "oneRoundForcing": true,
-                          "gameForcing": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
                           "automaticResponse": false,
                           "goToOpenings": false,
                           "isPreferred": false,
@@ -17792,8 +17791,8 @@
                           "nextBids": [],
                           "realizedGoal": "None",
                           "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 2,
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -17806,13 +17805,13 @@
                   ],
                   "realizedGoal": "None",
                   "type": "Submit",
-                  "color": "Hearts",
+                  "color": "Spades",
                   "value": 1,
                   "isFromSystem": false
                 },
                 {
                   "nodeId": "19bd6c5e-69aa-46e2-bcc6-93e7d3ae8a5f",
-                  "condition": "18-21 PC, dok\u0142adnie 5 karo, dok\u0142adnie 4 piki.",
+                  "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 piki.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
@@ -17822,8 +17821,7 @@
                     "upper": 4
                   },
                   "diamondsCardRange": {
-                    "lower": 5,
-                    "upper": 5
+                    "lower": 5
                   },
                   "openerBid": true,
                   "signOff": false,
@@ -17831,7 +17829,7 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
@@ -18501,7 +18499,7 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [],
                   "realizedGoal": "None",
@@ -18757,1086 +18755,14 @@
               "isDisabled": false,
               "nextBids": [
                 {
-                  "nodeId": "5a25f2e6-5ce3-47ef-b2fa-bc80c4bb2366",
-                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                  "pointsRange": {
-                    "lower": 18,
-                    "upper": 21
-                  },
-                  "heartsCardRange": {
-                    "lower": 4,
-                    "upper": 4
-                  },
-                  "clubsCardRange": {
-                    "lower": 5
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "isDisabled": false,
-                  "nextBids": [
-                    {
-                      "nodeId": "f6bb16ca-79ac-4198-bfe4-adad36204b74",
-                      "condition": "7-8 PC, 5\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 8
-                      },
-                      "clubsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "42177021-700a-4337-b7d6-881dc455dfa1",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "heartsCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Clubs",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "ec8c13e2-c2bd-47db-8d0a-65d874442f6d",
-                      "condition": "7-8 PC, 5\u002B karo.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 8
-                      },
-                      "diamondsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "925773b2-4442-4377-a7fc-1d0073911580",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "heartsCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "cb83ddc4-16fa-44a8-8cac-22fc554d6dbd",
-                      "condition": "9-11 PC, 5\u002B trefli, 4\u002B karo.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "diamondsCardRange": {
-                        "lower": 4
-                      },
-                      "clubsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "bb5270d3-ab90-49cd-83c4-96776162e4f4",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "040fde61-d717-45a9-875c-2fc8efc0f9c3",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "4525b920-60fd-4df4-a6d9-e36db43ef9bb",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "46b71aed-6c5f-43a8-9e86-3343e95b17d7",
-                      "condition": "9-11 PC, 5\u002B karo, 4\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "diamondsCardRange": {
-                        "lower": 5
-                      },
-                      "clubsCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "f91434e7-24bc-4072-a171-36bcbc48490c",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "6c42b194-6d72-469b-84e5-10ea685c05a0",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "bde9d249-e430-459d-a3ed-36d1472b19fb",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "a77a7625-e001-42fa-810c-8c9d42d2e5c0",
-                      "condition": "9-11 PC, 6\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "clubsCardRange": {
-                        "lower": 6
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "f20e00d3-84b4-4115-a413-d6e42c5b8c59",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "42e97a74-10f8-41d6-a100-61a1d85df986",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "38affe21-6fee-4d10-9c42-e9e93f447c37",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Clubs",
-                      "value": 3,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "ff8f7233-a79a-4c6c-9fa6-2aeabc47de47",
-                      "condition": "9-11 PC, 6\u002B karo.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "diamondsCardRange": {
-                        "lower": 6
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "88ab8e1f-0623-4a8a-9ff3-fe6b7c7b31e6",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "29facc74-890f-4a4f-9c0b-8de6d38d7073",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "d9df7227-c481-48b5-943a-4ff12c2ae9e7",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 3,
-                      "isFromSystem": false
-                    }
-                  ],
-                  "realizedGoal": "None",
-                  "type": "Submit",
-                  "color": "Hearts",
-                  "value": 1,
-                  "isFromSystem": false
-                },
-                {
-                  "nodeId": "6a57c621-da9c-4a19-ae09-f4eb88e23b4f",
-                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                  "pointsRange": {
-                    "lower": 18,
-                    "upper": 21
-                  },
-                  "spadesCardRange": {
-                    "lower": 4,
-                    "upper": 4
-                  },
-                  "clubsCardRange": {
-                    "lower": 5
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "isDisabled": false,
-                  "nextBids": [
-                    {
-                      "nodeId": "99460e4c-17ed-4121-9755-42000a98d06f",
-                      "condition": "7-8 PC, 5\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 8
-                      },
-                      "clubsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "ba1ab602-5d1b-43c8-9509-16539b27f441",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Clubs",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "8cc4c240-d83a-4b5c-a876-e7489084cc6f",
-                      "condition": "7-8 PC, 5\u002B karo.",
-                      "pointsRange": {
-                        "lower": 4,
-                        "upper": 8
-                      },
-                      "diamondsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "e5461a3c-597c-47d5-a881-24c2622de12d",
-                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "spadesCardRange": {
-                            "lower": 4,
-                            "upper": 4
-                          },
-                          "clubsCardRange": {
-                            "lower": 5
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": true,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "8490ae53-d4f5-4232-86f6-019b05a1a250",
-                      "condition": "9-11 PC, 5\u002B trefli, 4\u002B karo.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "diamondsCardRange": {
-                        "lower": 4
-                      },
-                      "clubsCardRange": {
-                        "lower": 5
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "71cba998-937e-4127-9992-41251a7a926b",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "2228ce85-324c-451d-a5a6-9e7a55a98fca",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "22f3fb26-f184-4c5c-9bc1-66dc6e9cc391",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "203cdad2-2415-4f40-8b35-fba60e057483",
-                      "condition": "9-11 PC, 5\u002B karo, 4\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "diamondsCardRange": {
-                        "lower": 5
-                      },
-                      "clubsCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "0ffc380a-9f03-4865-b144-0b3e6c436652",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "0046df66-3bf8-4d6e-8827-cad1c976f768",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "e4ccbd10-e746-4de5-84cf-dba333c8cb3a",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "ce183e66-61f8-4e86-9705-110ce5a58f6e",
-                      "condition": "9-11 PC, 6\u002B trefli.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "clubsCardRange": {
-                        "lower": 6
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "22dfbff4-df27-438e-b87b-82bb5d63551c",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "71c0ffab-d573-4d8d-a439-c577ada588eb",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "adf01aff-0eae-4571-9cb5-26e6d5210beb",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Clubs",
-                      "value": 3,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "3262a7a0-eb19-4262-a260-f40a465b5219",
-                      "condition": "9-11 PC, 6\u002B karo.",
-                      "pointsRange": {
-                        "lower": 9,
-                        "upper": 11
-                      },
-                      "diamondsCardRange": {
-                        "lower": 6
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "isDisabled": false,
-                      "nextBids": [
-                        {
-                          "nodeId": "e92dea06-aa81-4111-b470-2b3336168e61",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "clubsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Clubs",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "016d795a-d529-43c4-976d-d993fa1bfbb5",
-                          "condition": "18\u002B PC, 3\u002B karo.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 3
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 4,
-                          "isFromSystem": false
-                        },
-                        {
-                          "nodeId": "92e3ae16-b209-48f2-95a8-dee1c88d8e8e",
-                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
-                          "pointsRange": {
-                            "lower": 18
-                          },
-                          "diamondsCardRange": {
-                            "lower": 2
-                          },
-                          "openerBid": true,
-                          "signOff": false,
-                          "oneRoundForcing": false,
-                          "gameForcing": false,
-                          "automaticResponse": false,
-                          "goToOpenings": false,
-                          "isPreferred": false,
-                          "isDisabled": false,
-                          "nextBids": [],
-                          "realizedGoal": "None",
-                          "type": "Submit",
-                          "color": "NoTrump",
-                          "value": 4,
-                          "isFromSystem": false
-                        }
-                      ],
-                      "realizedGoal": "None",
-                      "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 3,
-                      "isFromSystem": false
-                    }
-                  ],
-                  "realizedGoal": "None",
-                  "type": "Submit",
-                  "color": "Spades",
-                  "value": 1,
-                  "isFromSystem": false
-                },
-                {
                   "nodeId": "b231e5a4-1cdd-4d79-a64c-5971d9ea24de",
-                  "condition": "18-21 PC, 5\u002B kier\u00F3w.",
+                  "condition": "18-21 PC, 4\u002B kier\u00F3w.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
                   },
                   "heartsCardRange": {
-                    "lower": 5
+                    "lower": 4
                   },
                   "openerBid": true,
                   "signOff": false,
@@ -19844,7 +18770,7 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
@@ -20827,13 +19753,17 @@
                   "isFromSystem": false
                 },
                 {
-                  "nodeId": "7c3eaf2c-130b-4d31-926e-1be543e5053f",
-                  "condition": "18-21 PC, 5\u002B pik\u00F3w.",
+                  "nodeId": "5a25f2e6-5ce3-47ef-b2fa-bc80c4bb2366",
+                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
                   },
-                  "spadesCardRange": {
+                  "heartsCardRange": {
+                    "lower": 4,
+                    "upper": 4
+                  },
+                  "clubsCardRange": {
                     "lower": 5
                   },
                   "openerBid": true,
@@ -20842,7 +19772,1048 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
+                  "isDisabled": false,
+                  "nextBids": [
+                    {
+                      "nodeId": "f6bb16ca-79ac-4198-bfe4-adad36204b74",
+                      "condition": "7-8 PC, 5\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 8
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "42177021-700a-4337-b7d6-881dc455dfa1",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "ec8c13e2-c2bd-47db-8d0a-65d874442f6d",
+                      "condition": "7-8 PC, 5\u002B karo.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 8
+                      },
+                      "diamondsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "925773b2-4442-4377-a7fc-1d0073911580",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Diamonds",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "cb83ddc4-16fa-44a8-8cac-22fc554d6dbd",
+                      "condition": "9-11 PC, 5\u002B trefli, 4\u002B karo.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "diamondsCardRange": {
+                        "lower": 4
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "bb5270d3-ab90-49cd-83c4-96776162e4f4",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "040fde61-d717-45a9-875c-2fc8efc0f9c3",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "4525b920-60fd-4df4-a6d9-e36db43ef9bb",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "46b71aed-6c5f-43a8-9e86-3343e95b17d7",
+                      "condition": "9-11 PC, 5\u002B karo, 4\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "diamondsCardRange": {
+                        "lower": 5
+                      },
+                      "clubsCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "f91434e7-24bc-4072-a171-36bcbc48490c",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "6c42b194-6d72-469b-84e5-10ea685c05a0",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "bde9d249-e430-459d-a3ed-36d1472b19fb",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "a77a7625-e001-42fa-810c-8c9d42d2e5c0",
+                      "condition": "9-11 PC, 6\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "clubsCardRange": {
+                        "lower": 6
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "f20e00d3-84b4-4115-a413-d6e42c5b8c59",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "42e97a74-10f8-41d6-a100-61a1d85df986",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "38affe21-6fee-4d10-9c42-e9e93f447c37",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "ff8f7233-a79a-4c6c-9fa6-2aeabc47de47",
+                      "condition": "9-11 PC, 6\u002B karo.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "diamondsCardRange": {
+                        "lower": 6
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "88ab8e1f-0623-4a8a-9ff3-fe6b7c7b31e6",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "29facc74-890f-4a4f-9c0b-8de6d38d7073",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "d9df7227-c481-48b5-943a-4ff12c2ae9e7",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Diamonds",
+                      "value": 3,
+                      "isFromSystem": false
+                    }
+                  ],
+                  "realizedGoal": "None",
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                },
+                {
+                  "nodeId": "c1b96388-5eb0-4e5a-aa2c-185a34dfb2b9",
+                  "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 kiery.",
+                  "pointsRange": {
+                    "lower": 18,
+                    "upper": 21
+                  },
+                  "heartsCardRange": {
+                    "lower": 4,
+                    "upper": 4
+                  },
+                  "diamondsCardRange": {
+                    "lower": 5
+                  },
+                  "openerBid": true,
+                  "signOff": false,
+                  "oneRoundForcing": false,
+                  "gameForcing": false,
+                  "automaticResponse": false,
+                  "goToOpenings": false,
+                  "isPreferred": true,
+                  "isDisabled": false,
+                  "nextBids": [
+                    {
+                      "nodeId": "7f454f71-c497-47fa-96b7-f056b33df9c5",
+                      "condition": "7-8 PC, 5\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 8
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "02a8e53c-5605-4d93-b067-ff4dac03dbd4",
+                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5,
+                            "upper": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 2,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "8c67d266-26c6-43a8-9c8a-4b264cd9aa3a",
+                      "condition": "7-8 PC, 5\u002B karo.",
+                      "pointsRange": {
+                        "lower": 4,
+                        "upper": 8
+                      },
+                      "diamondsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Diamonds",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "e84de3c7-e648-423c-a791-d17994842365",
+                      "condition": "9-11 PC, 5\u002B trefli, 4\u002B karo.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "diamondsCardRange": {
+                        "lower": 4
+                      },
+                      "clubsCardRange": {
+                        "lower": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "f6dc3079-77d8-4878-85ea-757489120ecc",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "21dbd4e6-1732-4e0c-b2c8-da33a47b0b7c",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "a43046d6-3dbc-41a5-969b-b3a8745400f9",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "75c1e96f-6710-4574-88bf-58dc3ff4c045",
+                      "condition": "9-11 PC, 5\u002B karo, 4\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "diamondsCardRange": {
+                        "lower": 5
+                      },
+                      "clubsCardRange": {
+                        "lower": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "868bf344-fc48-40b9-8851-f641b66b3c1a",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "87d506c8-eb8a-40be-9059-d4e4f9f8c44a",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "b4a95193-d77f-4b83-8b1c-89a93889d3ef",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 2,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "eba7b6e4-34e2-4d69-abf3-819a829c29e0",
+                      "condition": "9-11 PC, 6\u002B trefli.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "clubsCardRange": {
+                        "lower": 6
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "00d902eb-e4fe-4298-aaaa-84c82c39be5d",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "d0831a0a-e656-4a38-bd05-02681c7d9668",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "2b3556b1-0e92-4c93-82fc-aeb964ed40f8",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "7f0ccf90-9401-471c-9f69-347949984fe6",
+                      "condition": "9-11 PC, 6\u002B karo.",
+                      "pointsRange": {
+                        "lower": 9,
+                        "upper": 11
+                      },
+                      "diamondsCardRange": {
+                        "lower": 6
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "isDisabled": false,
+                      "nextBids": [
+                        {
+                          "nodeId": "fa9da29f-f71b-4fcc-9ddc-6f926bd25c62",
+                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "clubsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "db099818-3af5-4225-bc68-a70e75433ecb",
+                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 3
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 4,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "1f3951a4-811f-4dcb-adf3-b9d4ce0bba55",
+                          "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "diamondsCardRange": {
+                            "lower": 2
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "NoTrump",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
+                      "realizedGoal": "None",
+                      "type": "Submit",
+                      "color": "Diamonds",
+                      "value": 3,
+                      "isFromSystem": false
+                    }
+                  ],
+                  "realizedGoal": "None",
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                },
+                {
+                  "nodeId": "7c3eaf2c-130b-4d31-926e-1be543e5053f",
+                  "condition": "18-21 PC, 4\u002B pik\u00F3w.",
+                  "pointsRange": {
+                    "lower": 18,
+                    "upper": 21
+                  },
+                  "spadesCardRange": {
+                    "lower": 4
+                  },
+                  "openerBid": true,
+                  "signOff": false,
+                  "oneRoundForcing": false,
+                  "gameForcing": false,
+                  "automaticResponse": false,
+                  "goToOpenings": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
@@ -21825,19 +21796,18 @@
                   "isFromSystem": false
                 },
                 {
-                  "nodeId": "c1b96388-5eb0-4e5a-aa2c-185a34dfb2b9",
-                  "condition": "18-21 PC, dok\u0142adnie 5 karo, dok\u0142adnie 4 kiery.",
+                  "nodeId": "6a57c621-da9c-4a19-ae09-f4eb88e23b4f",
+                  "condition": "18-21 PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
                   },
-                  "heartsCardRange": {
+                  "spadesCardRange": {
                     "lower": 4,
                     "upper": 4
                   },
-                  "diamondsCardRange": {
-                    "lower": 5,
-                    "upper": 5
+                  "clubsCardRange": {
+                    "lower": 5
                   },
                   "openerBid": true,
                   "signOff": false,
@@ -21845,11 +21815,11 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "7f454f71-c497-47fa-96b7-f056b33df9c5",
+                      "nodeId": "99460e4c-17ed-4121-9755-42000a98d06f",
                       "condition": "7-8 PC, 5\u002B trefli.",
                       "pointsRange": {
                         "lower": 4,
@@ -21868,24 +21838,22 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "02a8e53c-5605-4d93-b067-ff4dac03dbd4",
-                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "nodeId": "ba1ab602-5d1b-43c8-9509-16539b27f441",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
                           "pointsRange": {
-                            "lower": 18,
-                            "upper": 21
+                            "lower": 18
                           },
-                          "heartsCardRange": {
+                          "spadesCardRange": {
                             "lower": 4,
                             "upper": 4
                           },
-                          "diamondsCardRange": {
-                            "lower": 5,
-                            "upper": 5
+                          "clubsCardRange": {
+                            "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
-                          "oneRoundForcing": true,
-                          "gameForcing": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
                           "automaticResponse": false,
                           "goToOpenings": false,
                           "isPreferred": false,
@@ -21893,8 +21861,8 @@
                           "nextBids": [],
                           "realizedGoal": "None",
                           "type": "Submit",
-                          "color": "Diamonds",
-                          "value": 2,
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -21905,7 +21873,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "8c67d266-26c6-43a8-9c8a-4b264cd9aa3a",
+                      "nodeId": "8cc4c240-d83a-4b5c-a876-e7489084cc6f",
                       "condition": "7-8 PC, 5\u002B karo.",
                       "pointsRange": {
                         "lower": 4,
@@ -21922,7 +21890,36 @@
                       "goToOpenings": false,
                       "isPreferred": false,
                       "isDisabled": false,
-                      "nextBids": [],
+                      "nextBids": [
+                        {
+                          "nodeId": "e5461a3c-597c-47d5-a881-24c2622de12d",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
+                          "isFromSystem": false
+                        }
+                      ],
                       "realizedGoal": "None",
                       "type": "Submit",
                       "color": "Diamonds",
@@ -21930,7 +21927,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "e84de3c7-e648-423c-a791-d17994842365",
+                      "nodeId": "8490ae53-d4f5-4232-86f6-019b05a1a250",
                       "condition": "9-11 PC, 5\u002B trefli, 4\u002B karo.",
                       "pointsRange": {
                         "lower": 9,
@@ -21952,7 +21949,7 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "f6dc3079-77d8-4878-85ea-757489120ecc",
+                          "nodeId": "71cba998-937e-4127-9992-41251a7a926b",
                           "condition": "18\u002B PC, 3\u002B trefli.",
                           "pointsRange": {
                             "lower": 18
@@ -21976,7 +21973,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "21dbd4e6-1732-4e0c-b2c8-da33a47b0b7c",
+                          "nodeId": "2228ce85-324c-451d-a5a6-9e7a55a98fca",
                           "condition": "18\u002B PC, 3\u002B karo.",
                           "pointsRange": {
                             "lower": 18
@@ -22000,7 +21997,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "a43046d6-3dbc-41a5-969b-b3a8745400f9",
+                          "nodeId": "22f3fb26-f184-4c5c-9bc1-66dc6e9cc391",
                           "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
                           "pointsRange": {
                             "lower": 18
@@ -22031,7 +22028,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "75c1e96f-6710-4574-88bf-58dc3ff4c045",
+                      "nodeId": "203cdad2-2415-4f40-8b35-fba60e057483",
                       "condition": "9-11 PC, 5\u002B karo, 4\u002B trefli.",
                       "pointsRange": {
                         "lower": 9,
@@ -22053,7 +22050,7 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "868bf344-fc48-40b9-8851-f641b66b3c1a",
+                          "nodeId": "0ffc380a-9f03-4865-b144-0b3e6c436652",
                           "condition": "18\u002B PC, 3\u002B trefli.",
                           "pointsRange": {
                             "lower": 18
@@ -22077,7 +22074,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "87d506c8-eb8a-40be-9059-d4e4f9f8c44a",
+                          "nodeId": "0046df66-3bf8-4d6e-8827-cad1c976f768",
                           "condition": "18\u002B PC, 3\u002B karo.",
                           "pointsRange": {
                             "lower": 18
@@ -22101,7 +22098,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "b4a95193-d77f-4b83-8b1c-89a93889d3ef",
+                          "nodeId": "e4ccbd10-e746-4de5-84cf-dba333c8cb3a",
                           "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
                           "pointsRange": {
                             "lower": 18
@@ -22132,7 +22129,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "eba7b6e4-34e2-4d69-abf3-819a829c29e0",
+                      "nodeId": "ce183e66-61f8-4e86-9705-110ce5a58f6e",
                       "condition": "9-11 PC, 6\u002B trefli.",
                       "pointsRange": {
                         "lower": 9,
@@ -22151,7 +22148,7 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "00d902eb-e4fe-4298-aaaa-84c82c39be5d",
+                          "nodeId": "22dfbff4-df27-438e-b87b-82bb5d63551c",
                           "condition": "18\u002B PC, 3\u002B trefli.",
                           "pointsRange": {
                             "lower": 18
@@ -22175,7 +22172,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "d0831a0a-e656-4a38-bd05-02681c7d9668",
+                          "nodeId": "71c0ffab-d573-4d8d-a439-c577ada588eb",
                           "condition": "18\u002B PC, 3\u002B karo.",
                           "pointsRange": {
                             "lower": 18
@@ -22199,7 +22196,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "2b3556b1-0e92-4c93-82fc-aeb964ed40f8",
+                          "nodeId": "adf01aff-0eae-4571-9cb5-26e6d5210beb",
                           "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
                           "pointsRange": {
                             "lower": 18
@@ -22230,7 +22227,7 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "7f0ccf90-9401-471c-9f69-347949984fe6",
+                      "nodeId": "3262a7a0-eb19-4262-a260-f40a465b5219",
                       "condition": "9-11 PC, 6\u002B karo.",
                       "pointsRange": {
                         "lower": 9,
@@ -22249,7 +22246,7 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
-                          "nodeId": "fa9da29f-f71b-4fcc-9ddc-6f926bd25c62",
+                          "nodeId": "e92dea06-aa81-4111-b470-2b3336168e61",
                           "condition": "18\u002B PC, 3\u002B trefli.",
                           "pointsRange": {
                             "lower": 18
@@ -22273,7 +22270,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "db099818-3af5-4225-bc68-a70e75433ecb",
+                          "nodeId": "016d795a-d529-43c4-976d-d993fa1bfbb5",
                           "condition": "18\u002B PC, 3\u002B karo.",
                           "pointsRange": {
                             "lower": 18
@@ -22297,7 +22294,7 @@
                           "isFromSystem": false
                         },
                         {
-                          "nodeId": "1f3951a4-811f-4dcb-adf3-b9d4ce0bba55",
+                          "nodeId": "92e3ae16-b209-48f2-95a8-dee1c88d8e8e",
                           "condition": "18\u002B PC, uk\u0142ad bezatutowy.",
                           "pointsRange": {
                             "lower": 18
@@ -22330,13 +22327,13 @@
                   ],
                   "realizedGoal": "None",
                   "type": "Submit",
-                  "color": "Hearts",
+                  "color": "Spades",
                   "value": 1,
                   "isFromSystem": false
                 },
                 {
                   "nodeId": "ed0704a2-fc49-4efa-84e6-7599def2d36d",
-                  "condition": "18-21 PC, dok\u0142adnie 5 karo, dok\u0142adnie 4 piki.",
+                  "condition": "18-21 PC, 5\u002B karo, dok\u0142adnie 4 piki.",
                   "pointsRange": {
                     "lower": 18,
                     "upper": 21
@@ -22355,7 +22352,7 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [
                     {
@@ -23211,7 +23208,7 @@
                   "gameForcing": false,
                   "automaticResponse": false,
                   "goToOpenings": false,
-                  "isPreferred": false,
+                  "isPreferred": true,
                   "isDisabled": false,
                   "nextBids": [],
                   "realizedGoal": "None",

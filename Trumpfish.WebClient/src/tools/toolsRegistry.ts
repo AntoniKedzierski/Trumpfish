@@ -23,6 +23,13 @@ export const tools: ToolDescriptor[] = [
     enabled: true,
   },
   {
+    id: 'bidding-practice',
+    title: 'Ćwiczenie licytacji',
+    description: 'Licytuj z trzema botami, jedno rozdanie na raz. Wybierz otwarcie do przećwiczenia, a karty rozdadzą się pod nie.',
+    route: '/tools/practice',
+    enabled: true,
+  },
+  {
     id: 'play-vs-ai',
     title: 'Gra z AI',
     description: 'Rozegraj licytację i rozgrywkę przeciwko silnikowi Trumpfish. W przygotowaniu.',

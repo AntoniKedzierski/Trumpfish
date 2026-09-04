@@ -116,8 +116,16 @@ export function Select<TValue extends string>({ value, options, onChange, placeh
     }
   };
 
+  /**
+   * A `Select` is usually written inside a `<label>`, and a label forwards a click landing on its non-interactive content to
+   * the first labelable control it holds - here the field button. Committing an option would therefore be followed by a
+   * second click on the field, reopening the list the moment it closed. Cancelling the click stops that forwarding; nothing
+   * inside the component relies on a click's default behaviour.
+   */
+  const keepLabelOut = (event: React.MouseEvent) => event.preventDefault();
+
   return (
-    <div ref={rootRef} className={`select ${className}`.trim()} onKeyDown={onKeyDown} title={title}>
+    <div ref={rootRef} className={`select ${className}`.trim()} onKeyDown={onKeyDown} onClick={keepLabelOut} title={title}>
       <button
         type="button"
         className={`select-field${open ? ' open' : ''}`}

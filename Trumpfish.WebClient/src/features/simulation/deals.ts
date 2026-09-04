@@ -76,3 +76,6 @@ function mulberry32(state: number): () => number {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+
+/** Single letter seat labels, as a bridge diagram writes them. */
+export const positionLabels: Record<PlayerPosition, string> = { North: 'N', East: 'E', South: 'S', West: 'W' };

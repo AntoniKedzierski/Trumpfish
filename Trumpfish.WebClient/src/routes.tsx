@@ -2,6 +2,7 @@ import type { RouteObject } from 'react-router-dom';
 import { RequireAuth } from '@/auth/RequireAuth';
 import { BiddingBrowserPage } from '@/features/biddingBrowser/pages/BiddingBrowserPage';
 import { ManageSystemsPage } from '@/features/biddingBrowser/pages/ManageSystemsPage';
+import { PracticePage } from '@/features/practice/pages/PracticePage';
 import { SimulationPage } from '@/features/simulation/pages/SimulationPage';
 import { AccountPage } from '@/pages/AccountPage';
 import { HomePage } from '@/pages/HomePage';
@@ -19,5 +20,6 @@ export const routes: RouteObject[] = [
   { path: '/tools/bidding-browser', element: <RequireAuth><BiddingBrowserPage /></RequireAuth> },
   { path: '/tools/bidding-browser/systems', element: <RequireAuth><ManageSystemsPage /></RequireAuth> },
   { path: '/tools/simulation', element: <RequireAuth><SimulationPage /></RequireAuth> },
+  { path: '/tools/practice', element: <RequireAuth><PracticePage /></RequireAuth> },
   { path: '*', element: <NotFoundPage /> },
 ];

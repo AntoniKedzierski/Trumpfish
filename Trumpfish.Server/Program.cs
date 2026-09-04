@@ -55,6 +55,7 @@ public partial class Program {
         builder.Services.AddScoped<ISeedExporter, DisabledSeedExporter>();
 #endif
         builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
+        builder.Services.AddSingleton<IPracticeService, PracticeService>();
         builder.Services.AddHostedService<DatabaseInitializer>();
 
         // A plain authentication cookie: the client is served from the same origin, so there is no token to hand around.

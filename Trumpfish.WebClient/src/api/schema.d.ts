@@ -747,6 +747,183 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/practice/deal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PracticeStartRequest"];
+                    "text/json": components["schemas"]["PracticeStartRequest"];
+                    "application/*+json": components["schemas"]["PracticeStartRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PracticeState"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/practice/bid": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PracticeBidRequest"];
+                    "text/json": components["schemas"]["PracticeBidRequest"];
+                    "application/*+json": components["schemas"]["PracticeBidRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PracticeState"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/practice/hint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PracticeHintRequest"];
+                    "text/json": components["schemas"]["PracticeHintRequest"];
+                    "application/*+json": components["schemas"]["PracticeHintRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PracticeHint"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/simulation/bidding": {
         parameters: {
             query?: never;
@@ -914,6 +1091,71 @@ export interface components {
         };
         /** @enum {unknown} */
         PlayerPosition: "North" | "East" | "South" | "West";
+        PracticeBidLabel: {
+            type: components["schemas"]["BidType"];
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            value: null | number | string;
+            label: string;
+        };
+        PracticeBidRequest: {
+            state: string;
+            type: components["schemas"]["BidType"];
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            value: null | number | string;
+        };
+        PracticeHint: {
+            bid: null | components["schemas"]["PracticeBidLabel"];
+            meaning: null | string;
+        };
+        PracticeHintRequest: {
+            state: string;
+        };
+        PracticeLegalBids: {
+            minimumLevel: {
+                [key: string]: number | string;
+            };
+            canDouble: boolean;
+            canRedouble: boolean;
+        };
+        /** @enum {unknown} */
+        PracticeRole: "Opener" | "Responder";
+        PracticeStartRequest: {
+            /** Format: uuid */
+            systemId: string;
+            /** Format: int32 */
+            dealIndex: number | string;
+            seed: null | string;
+            /** Format: uuid */
+            openingNodeId: null | string;
+            role: components["schemas"]["PracticeRole"];
+            checkBids: boolean;
+        };
+        PracticeState: {
+            state: string;
+            /** Format: int32 */
+            dealIndex: number | string;
+            dealer: components["schemas"]["PlayerPosition"];
+            player: components["schemas"]["PlayerPosition"];
+            playerHand: components["schemas"]["SimulationHand"];
+            bidding: components["schemas"]["SimulationBid"][];
+            warnings: components["schemas"]["PracticeWarning"][];
+            playerToBid: boolean;
+            legal: components["schemas"]["PracticeLegalBids"];
+            finished: boolean;
+            result: null | components["schemas"]["SimulationDealResult"];
+            error: null | string;
+        };
+        PracticeWarning: {
+            /** Format: int32 */
+            bidIndex: number | string;
+            bid: components["schemas"]["PracticeBidLabel"];
+            promised: null | string;
+            hand: string;
+            suggested: null | components["schemas"]["PracticeBidLabel"];
+            suggestedMeaning: null | string;
+        };
         ProblemDetails: {
             type?: null | string;
             title?: null | string;

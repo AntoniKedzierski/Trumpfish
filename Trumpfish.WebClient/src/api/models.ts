@@ -33,6 +33,13 @@ export type SimulationDealRequest = Schemas['SimulationDealRequest'];
 export type SimulationDealResult = Schemas['SimulationDealResult'];
 export type SimulationRequest = Schemas['SimulationRequest'];
 export type SimulationResponse = Schemas['SimulationResponse'];
+export type PracticeRole = Schemas['PracticeRole'];
+export type PracticeStartRequest = Schemas['PracticeStartRequest'];
+export type PracticeBidRequest = Schemas['PracticeBidRequest'];
+export type PracticeLegalBids = Schemas['PracticeLegalBids'];
+export type PracticeState = Schemas['PracticeState'];
+export type PracticeWarning = Schemas['PracticeWarning'];
+export type PracticeHint = Schemas['PracticeHint'];
 
 export const bidColors: readonly BidColor[] = ['NoColor', 'Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
 

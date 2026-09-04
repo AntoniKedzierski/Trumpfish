@@ -2,9 +2,7 @@ using Model;
 using Model.Bidding;
 using Model.Bidding.AI;
 using Model.Bidding.AI.Engine;
-using Model.Bidding.Bids;
 using Model.Enums;
-using Model.Helpers;
 using Trumpfish.Server.Contracts;
 
 namespace Trumpfish.Server.Services;
@@ -32,7 +30,7 @@ public class BiddingSimulator : IBiddingSimulator {
 
     private static SimulationDealResult SimulateDeal(BiddingSystem system, SimulationDealRequest deal, int index) {
         if (deal.Hands.Count != 4 || deal.Hands.Any(hand => hand.Cards.Count != 13) || deal.Hands.Select(e => e.Position).Distinct().Count() != 4) {
-            return new SimulationDealResult(index, deal.Dealer, [], [], PassedOut(), "Every deal must contain four distinct hands of thirteen cards.");
+            return new SimulationDealResult(index, deal.Dealer, [], [], AuctionMapping.PassedOut(), "Every deal must contain four distinct hands of thirteen cards.");
         }
 
         var hands = BuildHands(deal);
@@ -61,89 +59,23 @@ public class BiddingSimulator : IBiddingSimulator {
             error = exception.Message;
         }
 
-        var bidding = MapBidding(auction);
-        var contract = PassedOut();
+        var bidding = AuctionMapping.MapBidding(auction);
+        var contract = AuctionMapping.PassedOut();
 
         if (error == null) {
             try {
-                contract = MapContract(auction, players, hands);
+                contract = AuctionMapping.MapContract(auction, players, hands);
             }
             catch (Exception exception) {
                 error = exception.Message;
             }
         }
 
-        return new SimulationDealResult(index, deal.Dealer, MapHands(hands), bidding, contract, error);
-    }
-
-
-    private static SimulationContract PassedOut() {
-        return new SimulationContract(true, null, null, BidColor.NoColor, false, false, "Pass out", null, null);
+        return new SimulationDealResult(index, deal.Dealer, AuctionMapping.MapHands(hands), bidding, contract, error);
     }
 
 
     private static Dictionary<PlayerPosition, Hand> BuildHands(SimulationDealRequest deal) {
         return deal.Hands.ToDictionary(e => e.Position, e => new Hand(e.Cards.Select(card => new Card(card.Value, card.Color))));
-    }
-
-
-    private static IReadOnlyList<SimulationHand> MapHands(Dictionary<PlayerPosition, Hand> hands) {
-        return Enum.GetValues<PlayerPosition>()
-            .Select(position => new SimulationHand(
-                position,
-                hands[position].Cards.Select(card => new SimulationCard(card.Value, card.Color, card.ToString())).ToList(),
-                hands[position].Points,
-                hands[position].PointsNt,
-                hands[position].SpadesCount,
-                hands[position].HeartsCount,
-                hands[position].DiamondsCount,
-                hands[position].ClubsCount))
-            .ToList();
-    }
-
-
-    private static IReadOnlyList<SimulationBid> MapBidding(Auction auction) {
-        var bids = new List<SimulationBid>(auction.AuctionHistory.Count);
-
-        for (var i = 0; i < auction.AuctionHistory.Count; i++) {
-            var bid = auction.AuctionHistory[i];
-            bids.Add(new SimulationBid(i, auction.GetBidder(i), bid.Type, bid.Color, bid.Value, bid.IsFromSystem, Describe(bid), bid.Explanation));
-        }
-
-        return bids;
-    }
-
-
-    private static SimulationContract MapContract(Auction auction, Player[] players, Dictionary<PlayerPosition, Hand> hands) {
-        var contract = auction.GetContract(players);
-        if (contract.Passed) {
-            return PassedOut();
-        }
-
-        var declarer = hands[contract.Player];
-        var dummy = hands[contract.Player.GetPartner()];
-        var noTrump = contract.Color == BidColor.NoTrump;
-
-        // A no-trump contract is judged on no-trump points, a suit contract on honour points plus the length of the pair's trump fit.
-        var pairPoints = noTrump ? declarer.PointsNt + dummy.PointsNt : declarer.Points + dummy.Points;
-        var trumpCount = noTrump ? (int?)null : CountTrumps(declarer, dummy, contract.Color.ToCardColor());
-
-        var label = $"{contract.Value}{contract.Color.ColorMark()}" + (contract.IsDoubled ? " X" : "") + (contract.IsRedoubled ? " XX" : "");
-        return new SimulationContract(false, contract.Player, contract.Value, contract.Color, contract.IsDoubled, contract.IsRedoubled, label, pairPoints, trumpCount);
-    }
-
-
-    private static int CountTrumps(Hand declarer, Hand dummy, CardColor color) {
-        return declarer.OfColor(color).Count() + dummy.OfColor(color).Count();
-    }
-
-
-    private static string Describe(Bid bid) {
-        return bid.Type switch {
-            BidType.Pass => "Pass",
-            BidType.Double => "X",
-            BidType.Redouble => "XX",
-            _ => $"{bid.Value}{bid.Color.ColorMark()}"
-        };
     }
 }
