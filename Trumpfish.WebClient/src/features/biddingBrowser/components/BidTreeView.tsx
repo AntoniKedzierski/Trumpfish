@@ -54,6 +54,17 @@ function TreeBranch({ label, target, children_, selection, revealKey, onSelect, 
   // A branch on the way to the selection is open by definition, so picking a node from outside the tree reveals it without extra state.
   const open = expanded || holdsSelection;
 
+  // Being revealed counts as being opened, so a branch stays put when the selection leaves it upwards - which is what a command
+  // that moves the selection onto the branch itself does, sorting or deleting from inside it.
+  const [held, setHeld] = useState(holdsSelection);
+  if (held !== holdsSelection) {
+    setHeld(holdsSelection);
+    if (holdsSelection) {
+      setExpanded(true);
+      setMounted(true);
+    }
+  }
+
   // `revealKey` is in the deps so the "go to the selected bid" command re-runs this even when the selection itself is unchanged.
   useEffect(() => {
     if (selected) {

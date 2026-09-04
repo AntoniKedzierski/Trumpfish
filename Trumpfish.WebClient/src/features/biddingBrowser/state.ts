@@ -237,8 +237,16 @@ function deleteBid(state: BrowserState): BrowserState {
     return state;
   }
 
+  const container = parentPath(state.selection);
+  const index = state.selection.path[state.selection.path.length - 1];
   const system = updateNodeAt(state.system, state.selection, () => null);
-  return { ...state, system, selection: parentPath(state.selection), dirty: true };
+
+  // The selection stays on the level the bid was deleted from: on the bid that took its place, or on the last one when the list
+  // ends there. Only an emptied list sends it up to the parent - which by then is a leaf, so nothing folds away with it.
+  const remaining = childrenAt(system, container);
+  const selection = remaining.length === 0 ? container : childPath(container, Math.min(index, remaining.length - 1));
+
+  return { ...state, system, selection, dirty: true };
 }
 
 function moveBy(state: BrowserState, offset: number): BrowserState {

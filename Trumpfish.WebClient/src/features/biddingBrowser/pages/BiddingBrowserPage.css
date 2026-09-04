@@ -748,8 +748,14 @@
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
-.issue:hover {
+.issue:hover:not(:disabled) {
   background: var(--surface-hover);
+}
+
+/* The bid this issue was raised about is gone; the row stays for the record but has nowhere left to lead. */
+.issue:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 

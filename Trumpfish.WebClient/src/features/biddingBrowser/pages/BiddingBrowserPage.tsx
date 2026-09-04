@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Link, useBlocker, useSearchParams } from 'react-router-dom';
 import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import { toNumber, type BiddingSystem, type BiddingSystemSummary, type NumberRange, type ValidationIssue } from '@/api/models';
@@ -10,7 +10,7 @@ import { Toolbar } from '../components/Toolbar';
 import { UnsavedChangesPrompt } from '../components/UnsavedChangesPrompt';
 import { ValidationPanel } from '../components/ValidationPanel';
 import { inheritedRanges, type RangeField } from '../constraints';
-import { createEmptySystem, normalizeSystem, type EditableBidNode } from '../model';
+import { createEmptySystem, normalizeSystem, type EditableBidNode, type NodePath } from '../model';
 import { browserReducer, initialBrowserState, type BrowserAction } from '../state';
 import { findNodeById, getNode, resolveIssuePath, ancestorNodes } from '../tree';
 import { removeUnreachable, type CleanupResult } from '../unreachable';
@@ -92,6 +92,22 @@ export function BiddingBrowserPage() {
 
     return () => { cancelled = true; };
   }, [requestedId, setSearchParams]);
+
+  /**
+   * Where the bid behind each issue currently sits. The list is whatever the last run found, so editing the tree underneath it
+   * leaves entries pointing at bids that are gone; those simply do not make it into the map and the panel greys them out.
+   */
+  const issueTargets = useMemo(() => {
+    const targets = new Map<ValidationIssue, NodePath>();
+    for (const issue of state.issues ?? []) {
+      const target = findNodeById(state.system, issue.nodeId) ?? resolveIssuePath(state.system, issue.path);
+      if (target !== null) {
+        targets.set(issue, target);
+      }
+    }
+
+    return targets;
+  }, [state.issues, state.system]);
 
   // Holds back any navigation out of the browser - a link, a programmatic redirect or the back button - while edits are unsaved.
   const blocker = useBlocker(({ currentLocation, nextLocation }) => state.dirty && currentLocation.pathname !== nextLocation.pathname);
@@ -178,7 +194,7 @@ export function BiddingBrowserPage() {
    * happens in front of the author rather than somewhere off screen.
    */
   const repairIssue = (issue: ValidationIssue, patchFor: (node: EditableBidNode) => Partial<EditableBidNode> | null) => {
-    const target = findNodeById(state.system, issue.nodeId) ?? resolveIssuePath(state.system, issue.path);
+    const target = issueTargets.get(issue) ?? null;
     const node = target === null ? null : getNode(state.system, target);
     const patch = node === null ? null : patchFor(node);
     if (target === null || patch === null) {
@@ -366,10 +382,12 @@ export function BiddingBrowserPage() {
         issues={state.issues}
         onRepairRanges={handleRepairRanges}
         onRepairCondition={handleRepairCondition}
+        isStale={(issue) => !issueTargets.has(issue)}
         onSelectIssue={(issue) => {
-          const target = findNodeById(state.system, issue.nodeId) ?? resolveIssuePath(state.system, issue.path);
-          if (target !== null) {
+          const target = issueTargets.get(issue);
+          if (target !== undefined) {
             dispatch({ kind: 'select', target });
+            setRevealKey((key) => key + 1);
           }
         }}
         onClose={() => dispatch({ kind: 'setIssues', issues: null })}

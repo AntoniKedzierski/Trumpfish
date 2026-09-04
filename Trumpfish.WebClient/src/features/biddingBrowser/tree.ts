@@ -158,6 +158,9 @@ export function containsPath(container: NodePath, candidate: NodePath | null): b
 /**
  * Turns a `ValidationIssue.path` such as `Otwarcia > 1♣ > 1♥` back into a tree address, matching every segment against the
  * label produced by `formatBid` - the same format the server writes.
+ *
+ * Either the whole path is found or nothing is: settling for the deepest ancestor that still matched would answer a question
+ * nobody asked, and a bid deleted since the run would send the caller off to its parent as if that were the one meant.
  */
 export function resolveIssuePath(system: EditableSystem, issuePath: string | null | undefined): NodePath | null {
   const segments = (issuePath ?? '').split('>').map((segment) => segment.trim()).filter((segment) => segment.length > 0);
@@ -171,20 +174,33 @@ export function resolveIssuePath(system: EditableSystem, issuePath: string | nul
     return null;
   }
 
-  const path: number[] = [];
-  let nodes = system.roots[rootIndex].bids;
+  const path = matchLabels(system.roots[rootIndex].bids, bidLabels);
+  return path === null ? null : { rootIndex, path };
+}
 
-  for (const label of bidLabels) {
-    const index = nodes.findIndex((node) => formatBid(node) === label);
-    if (index < 0) {
-      return path.length === 0 ? null : { rootIndex, path };
-    }
-
-    path.push(index);
-    nodes = nodes[index].nextBids;
+/**
+ * Walks the labels down the tree. Siblings can carry the same label - an interjected 1♥ and a plain one, say - so a match that
+ * leads nowhere is abandoned rather than accepted: only a branch spelling out every remaining label is the one meant.
+ */
+function matchLabels(nodes: EditableBidNode[], labels: string[]): number[] | null {
+  if (labels.length === 0) {
+    return [];
   }
 
-  return { rootIndex, path };
+  const [label, ...rest] = labels;
+
+  for (let index = 0; index < nodes.length; index++) {
+    if (formatBid(nodes[index]) !== label) {
+      continue;
+    }
+
+    const found = matchLabels(nodes[index].nextBids, rest);
+    if (found !== null) {
+      return [index, ...found];
+    }
+  }
+
+  return null;
 }
 
 /**
