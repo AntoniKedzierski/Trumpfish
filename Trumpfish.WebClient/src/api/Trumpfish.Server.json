@@ -1795,6 +1795,50 @@
           }
         }
       },
+      "DoubleDummyCell": {
+        "required": [
+          "declarer",
+          "color",
+          "tricks",
+          "level",
+          "down"
+        ],
+        "type": "object",
+        "properties": {
+          "declarer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "tricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "down": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "DoubleDummyContract": {
         "required": [
           "pair",
@@ -2050,7 +2094,7 @@
           "table": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DoubleDummyTricks"
+              "$ref": "#/components/schemas/DoubleDummyCell"
             }
           },
           "parScore": {
@@ -2136,30 +2180,6 @@
                 "$ref": "#/components/schemas/DoubleDummyPlayed"
               }
             ]
-          }
-        }
-      },
-      "DoubleDummyTricks": {
-        "required": [
-          "declarer",
-          "color",
-          "tricks"
-        ],
-        "type": "object",
-        "properties": {
-          "declarer": {
-            "$ref": "#/components/schemas/PlayerPosition"
-          },
-          "color": {
-            "$ref": "#/components/schemas/BidColor"
-          },
-          "tricks": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
           }
         }
       },

@@ -49,7 +49,7 @@ internal static class DoubleDummyMapping {
         return new DoubleDummyResponse(
             analysis.Dealer,
             analysis.Vulnerability,
-            analysis.Table.Entries().Select(entry => new DoubleDummyTricks(entry.Declarer, entry.Denomination, entry.Tricks)).ToList(),
+            (bid is null ? analysis.Cells() : analysis.Cells(bid.Declarer, bid.Level, bid.Color)).Select(Map).ToList(),
             analysis.ParScore,
             analysis.ParPair,
             analysis.BestContract is null ? null : Map(analysis.BestContract),
@@ -86,6 +86,11 @@ internal static class DoubleDummyMapping {
         return bid.IsRedoubled ? Doubling.Redoubled
             : bid.IsDoubled ? Doubling.Doubled
             : Doubling.None;
+    }
+
+
+    private static DoubleDummyCell Map(TableCell cell) {
+        return new DoubleDummyCell(cell.Declarer, cell.Denomination, cell.Tricks, cell.Level, cell.Down);
     }
 
 

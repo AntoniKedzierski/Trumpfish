@@ -34,6 +34,48 @@ public record DoubleDummyAnalysis(
     public ParContract? BestContract => ParContracts.FirstOrDefault(contract => !contract.IsSacrifice) ?? ParContracts.FirstOrDefault();
 
 
+    /// <summary>The highest contract there is, and the book of six tricks every contract is counted above.</summary>
+    private const int MaxLevel = 7;
+    private const int Book = 6;
+
+
+    /// <summary>
+    /// The whole table, cell by cell, worked out into the three things the panel shows.
+    /// </summary>
+    /// <remarks>
+    /// Two of the three are simply the trick count said differently, but the third depends on what the auction bought, so
+    /// the table cannot be read without being told. Passing no contract - a board passed out, or one being solved on its
+    /// own - leaves that third answer empty and the other two unchanged.
+    /// </remarks>
+    /// <param name="declarer">The seat that declared, or null where there was no contract.</param>
+    public IReadOnlyList<TableCell> Cells(PlayerPosition? declarer = null, int level = 0, BidColor color = BidColor.NoColor) {
+        // Only the defenders can take a contract away, and only from somebody who bought one.
+        var defenders = declarer?.GetPair().Opponents();
+
+        return Table.Entries()
+            .Select(entry => new TableCell(
+                entry.Declarer,
+                entry.Denomination,
+                entry.Tricks,
+                entry.Tricks > Book ? entry.Tricks - Book : null,
+                entry.Declarer.GetPair() == defenders ? Down(entry, level, color) : null))
+            .ToList();
+    }
+
+
+    /// <summary>
+    /// How far this seat would be down, had it bid this denomination over the contract that won the auction.
+    /// </summary>
+    /// <remarks>
+    /// At the cheapest level that would have done it, because the question being asked is what taking the contract away
+    /// costs, and any higher level is a worse answer to it that the pair had no reason to choose.
+    /// </remarks>
+    private static int? Down(DoubleDummyEntry entry, int level, BidColor color) {
+        var cheapest = Outranks(level, entry.Denomination, level, color) ? level : level + 1;
+        return cheapest > MaxLevel ? null : Math.Max(0, cheapest + Book - entry.Tricks);
+    }
+
+
     /// <summary>Whether the given pair is playing this board vulnerable.</summary>
     public bool IsVulnerable(Pair pair) =>
         Vulnerability == Vulnerability.Both || (Vulnerability == Vulnerability.NorthSouth ? pair == Pair.NorthSouth : Vulnerability == Vulnerability.EastWest && pair == Pair.EastWest);
@@ -194,7 +236,7 @@ public record DoubleDummyAnalysis(
     private PairBest? CheapestSacrifice(Pair pair, PairBest opponents) {
         PairBest? best = null;
 
-        for (var level = opponents.Level; level <= 7; level++) {
+        for (var level = opponents.Level; level <= MaxLevel; level++) {
             foreach (var denomination in DoubleDummyTable.Denominations) {
                 if (!Outranks(level, denomination, opponents.Level, opponents.Color)) {
                     continue;

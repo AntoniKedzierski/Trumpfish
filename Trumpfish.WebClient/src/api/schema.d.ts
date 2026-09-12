@@ -1546,6 +1546,16 @@ export interface components {
             /** @default false */
             isRedoubled: boolean;
         };
+        DoubleDummyCell: {
+            declarer: components["schemas"]["PlayerPosition"];
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            tricks: number | string;
+            /** Format: int32 */
+            level: null | number | string;
+            /** Format: int32 */
+            down: null | number | string;
+        };
         DoubleDummyContract: {
             pair: components["schemas"]["Pair"];
             declarer: null | components["schemas"]["PlayerPosition"];
@@ -1597,7 +1607,7 @@ export interface components {
         DoubleDummyResponse: {
             dealer: components["schemas"]["PlayerPosition"];
             vulnerability: components["schemas"]["Vulnerability"];
-            table: components["schemas"]["DoubleDummyTricks"][];
+            table: components["schemas"]["DoubleDummyCell"][];
             /** Format: int32 */
             parScore: number | string;
             parPair: null | components["schemas"]["Pair"];
@@ -1608,12 +1618,6 @@ export interface components {
             diffNs: null | components["schemas"]["DoubleDummyDifference"];
             diffEw: null | components["schemas"]["DoubleDummyDifference"];
             played: null | components["schemas"]["DoubleDummyPlayed"];
-        };
-        DoubleDummyTricks: {
-            declarer: components["schemas"]["PlayerPosition"];
-            color: components["schemas"]["BidColor"];
-            /** Format: int32 */
-            tricks: number | string;
         };
         DuoInvitation: {
             /** Format: uuid */

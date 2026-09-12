@@ -17,8 +17,17 @@ public record DoubleDummyRequest(SimulationDealRequest Deal, Vulnerability? Vuln
 /// </summary>
 public record DoubleDummyBid(PlayerPosition Declarer, int Level, BidColor Color, bool IsDoubled = false, bool IsRedoubled = false);
 
-/// <summary>One cell of the table: what one seat takes declaring one denomination.</summary>
-public record DoubleDummyTricks(PlayerPosition Declarer, BidColor Color, int Tricks);
+/// <summary>
+/// One cell of the table: what one seat takes declaring one denomination, and the two readings of it worth showing beside
+/// the count. Both are worked out here rather than in the client, which only has to draw whichever of the three is asked
+/// for.
+/// </summary>
+/// <param name="Level">The contract those tricks are worth bidding, at any level. Null under seven tricks, where there is nothing to bid.</param>
+/// <param name="Down">
+/// How far this seat would go down taking the auction away in this denomination, at the cheapest level that would have
+/// outranked the contract that won it. Only the defending side has an answer; null for everyone else.
+/// </param>
+public record DoubleDummyCell(PlayerPosition Declarer, BidColor Color, int Tricks, int? Level, int? Down);
 
 /// <summary>
 /// A contract that reaches par. <paramref name="Declarer"/> is only set when just one of the pair's two hands can play it;
@@ -82,7 +91,7 @@ public record DoubleDummyPlayed(
 public record DoubleDummyResponse(
     PlayerPosition Dealer,
     Vulnerability Vulnerability,
-    IReadOnlyList<DoubleDummyTricks> Table,
+    IReadOnlyList<DoubleDummyCell> Table,
     int ParScore,
     Pair? ParPair,
     DoubleDummyContract? Best,

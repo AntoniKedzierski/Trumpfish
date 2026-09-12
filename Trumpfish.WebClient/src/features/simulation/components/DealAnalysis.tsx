@@ -4,6 +4,7 @@ import type {
   BidColor,
   DoubleDummyBestContract,
   DoubleDummyBid,
+  DoubleDummyCell,
   BiddingMiss,
   DoubleDummyDifference,
   DoubleDummyPlayed,
@@ -15,7 +16,6 @@ import type {
 import { playerPositions, toNumber } from '@/api/models';
 import { SuitMark } from '@/components/suits';
 import { useDisclosure } from '@/components/useDisclosure';
-import { gameLevels } from '../sorting';
 import { pairLabels } from '../vulnerability';
 import './DealAnalysis.css';
 
@@ -195,37 +195,47 @@ function Contract({ level, color }: { level: number | null; color: BidColor }) {
   );
 }
 
-/** The three ways of reading the same twenty numbers, in the order the button walks through them. */
-type TableView = 'contract' | 'taken' | 'lost';
+/** The three questions the same twenty cells answer, in the order the button walks through them. */
+type TableView = 'contract' | 'taken' | 'down';
 
-const views: readonly TableView[] = ['contract', 'taken', 'lost'];
+const views: readonly TableView[] = ['contract', 'taken', 'down'];
 
 const viewHeadings: Record<TableView, string> = {
   contract: 'Kontrakt',
-  taken: 'Lewy do wzięcia',
-  lost: 'Lewy do oddania',
+  taken: 'Ile lew biorą',
+  down: 'Bez ilu wpadliby',
 };
 
 /** The button is named for where it goes, not for where it is. */
 const viewButtons: Record<TableView, string> = {
   contract: 'Lewy',
-  taken: 'Oddają',
-  lost: 'Kontrakt',
+  taken: 'Wpadki',
+  down: 'Kontrakt',
 };
+
+/** Which of the three numbers on a cell each view is showing. The server worked all three out; this only picks one. */
+const readings: Record<TableView, (cell: DoubleDummyCell) => number | string | null | undefined> = {
+  contract: (cell) => cell.level,
+  taken: (cell) => cell.tricks,
+  down: (cell) => cell.down,
+};
+
+/** The cheapest contract there is. Below it a seat has nothing to bid, and nothing in this grid to say. */
+const smallestContract = 7;
 
 /**
  * The whole double dummy truth about the deal: what each seat takes in each denomination.
  */
 /*
- * Twenty numbers, and everything else in the panel is read off them - par, each pair's best, what the auction cost.
+ * Twenty cells, and everything else in the panel is read off them - par, each pair's best, what the auction cost.
  *
- * Which twenty depends on the question being asked, and the three questions are the same numbers counted differently:
- * tricks taken, tricks conceded, and the contract those tricks are worth bidding. The last is the one to open on, because
- * it is the one that answers "what should have been bid" without any arithmetic in the reader's head.
+ * Three questions are asked of them: the contract those tricks are worth bidding, the tricks themselves, and - for the
+ * side that did not buy the auction - how far down taking the contract away would have left it. The first is the one to
+ * open on, because it answers "what should have been bid" without any arithmetic in the reader's head.
  */
 function TrickTable({ analysis }: { analysis: DoubleDummyResponse }) {
   const [view, setView] = useState<TableView>('contract');
-  const tricks = new Map(analysis.table.map((entry) => [`${entry.declarer}:${entry.color}`, toNumber(entry.tricks)]));
+  const cells = new Map(analysis.table.map((cell) => [`${cell.declarer}:${cell.color}`, cell]));
 
   const advance = () => setView((current) => views[(views.indexOf(current) + 1) % views.length]);
 
@@ -256,10 +266,11 @@ function TrickTable({ analysis }: { analysis: DoubleDummyResponse }) {
             <tr key={position}>
               <th scope="row">{position}</th>
               {denominations.map((denomination) => {
-                const taken = tricks.get(`${position}:${denomination}`) ?? null;
+                const cell = cells.get(`${position}:${denomination}`);
+                const value = cell === undefined ? null : toNumber(readings[view](cell));
                 return (
-                  <td key={denomination} className={taken !== null && taken >= 7 ? 'makes' : undefined}>
-                    {cell(view, denomination, taken)}
+                  <td key={denomination} className={notable(view, cell, value) ? 'makes' : undefined}>
+                    {value ?? '—'}
                   </td>
                 );
               })}
@@ -272,27 +283,18 @@ function TrickTable({ analysis }: { analysis: DoubleDummyResponse }) {
 }
 
 /**
- * One cell, read the way the current view asks for it.
+ * Whether a cell is one to pick out of the grid, which is not the same question in each view.
  *
- * The contract view only names a contract worth bidding - a game or better. Everything under that is a part score, which
- * is not what this grid is being scanned for, and printing a one or a two on every cell would bury the handful that matter.
+ * Two of the views are being scanned for contracts that can be bought, so seven tricks is the line. The third is being
+ * scanned for the opposite: a contract the defenders could have taken away without going down at all, which is a good
+ * deal more striking than the number of tricks behind it.
  */
-function cell(view: TableView, denomination: BidColor, taken: number | null): string {
-  if (taken === null) {
-    return '—';
+function notable(view: TableView, cell: DoubleDummyCell | undefined, value: number | null): boolean {
+  if (cell === undefined || value === null) {
+    return false;
   }
 
-  if (view === 'taken') {
-    return `${taken}`;
-  }
-
-  if (view === 'lost') {
-    return `${13 - taken}`;
-  }
-
-  const level = taken - 6;
-  const game = gameLevels[denomination];
-  return game !== undefined && level >= game ? `${level}` : '—';
+  return view === 'down' ? value === 0 : (toNumber(cell.tricks) ?? 0) >= smallestContract;
 }
 
 /*
