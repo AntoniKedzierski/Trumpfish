@@ -1,6 +1,6 @@
 import type { BidColor } from '@/api/models';
 import { toNumber } from '@/api/models';
-import { colorMark, type EditableBidNode, type InterjectionBid } from './model';
+import type { EditableBidNode, InterjectionBid } from './model';
 
 export type InterjectionOptionKind = 'submit' | 'double' | 'clear' | 'empty';
 
@@ -83,6 +83,3 @@ export function interjectionOptions(ancestors: readonly EditableBidNode[]): Inte
   return options;
 }
 
-export function formatInterjection(bid: InterjectionBid): string {
-  return bid.type === 'Double' ? 'X' : `${bid.value ?? ''}${colorMark(bid.color)}`;
-}

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import '@/components/Select.css';
-import { formatInterjection, interjectionOptions, type InterjectionOption } from '../interjection';
-import { suitClassName, type EditableBidNode, type InterjectionBid } from '../model';
+import { interjectionOptions, type InterjectionOption } from '../interjection';
+import type { EditableBidNode, InterjectionBid } from '../model';
+import { CallMark } from './CallMark';
 
 interface InterjectionPickerProps {
   value: InterjectionBid | null | undefined;
@@ -46,7 +47,7 @@ export function InterjectionPicker({ value, ancestors, onChange }: InterjectionP
     <div ref={rootRef} className="select interjection-picker" onKeyDown={(event) => event.key === 'Escape' && setOpen(false)}>
       <button type="button" className={`select-field${open ? ' open' : ''}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}>
         <span className={`select-value${value ? '' : ' placeholder'}`}>
-          {value ? <span className={suitClassName(value)}>{formatInterjection(value)}</span> : 'brak wtrącenia'}
+          {value ? <CallMark bid={value} /> : 'brak wtrącenia'}
         </span>
       </button>
 
@@ -80,7 +81,7 @@ function InterjectionCell({ option, onClick }: { option: InterjectionOption; onC
 
   return (
     <button type="button" className={`interjection-cell${option.available ? '' : ' unavailable'}`} disabled={!option.available} onClick={onClick}>
-      <span className={suitClassName(option.bid)}>{formatInterjection(option.bid)}</span>
+      <CallMark bid={option.bid} />
     </button>
   );
 }

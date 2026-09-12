@@ -76,3 +76,40 @@
 .app-nav-panel {
   left: 0;
 }
+
+/*
+ * The tabs folded into one button, for a bar with no room to line them up.
+ *
+ * It carries the name of the tool currently open, which is the job the lit tab was doing: the panel behind it deliberately
+ * marks nothing as current, on the grounds that the bar already says so, and this is the bar saying so.
+ */
+.app-nav .app-nav-burger {
+  gap: var(--space-2);
+}
+
+.app-nav .app-nav-burger .icon {
+  flex: none;
+  font-size: var(--text-lg);
+}
+
+.app-nav-burger-label {
+  max-width: 10em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* A group keeps its name here - it is what tells the two practice screens apart - but not its second tap. */
+.app-nav-section h4 {
+  margin: var(--space-2) 0 2px;
+  padding: 0 10px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.app-nav-panel > .app-nav-section:first-child h4 {
+  margin-top: 0;
+}

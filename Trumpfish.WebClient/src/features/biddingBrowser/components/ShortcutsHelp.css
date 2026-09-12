@@ -1,0 +1,89 @@
+.shortcuts {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Round, and the width of its own height: a single character reads as a mark rather than as a labelled command. */
+.shortcuts-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--bar-control);
+  height: var(--bar-control);
+  padding: 0;
+  font-size: var(--text-base);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-muted);
+  border-radius: 999px;
+}
+
+.shortcuts-trigger:hover:not(:disabled),
+.shortcuts-trigger[aria-expanded='true'] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Hung from the right edge: the trigger sits at the end of the bar, so opening leftwards is the only way it stays on screen. */
+.shortcuts-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: max-content;
+  max-width: min(420px, calc(100vw - 2 * var(--space-3)));
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  padding: var(--space-3);
+  text-align: left;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: view-enter var(--duration-fast) var(--ease-out) both;
+}
+
+.shortcuts-panel h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.shortcuts-panel dl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+/* Chord on the left, what it does on the right, so a column of chords reads as a column. */
+.shortcuts-panel dl > div {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.shortcuts-panel dt {
+  flex: none;
+  min-width: 9.5em;
+}
+
+.shortcuts-panel dd {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.shortcuts-panel kbd {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--accent);
+}

@@ -1,7 +1,15 @@
+/*
+ * Fills what the application bar leaves and scrolls nothing itself.
+ *
+ * `min-height: 0` is what makes that true rather than merely intended: without it a flex item refuses to shrink below its
+ * content, the tree pushes the column taller than the window, and the panes inside never get a height to scroll within.
+ * The frame around this is asked for in `AppLayout.css`.
+ */
 .bidding-browser {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  height: 100%;
+  min-height: 0;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
@@ -83,29 +91,37 @@
 
 
 /*
- * A working bar rather than a page of commands: tight, quiet, and capped in height so that wrapping on a narrow window
- * costs a second row rather than half the screen.
+ * The same bar as the simulator's, because it is the same kind of thing: a row of controls that never leaves the top of
+ * the screen. It holds its size - `flex: none` - so the panes below give up the room, not it.
  */
 .toolbar {
   display: flex;
+  flex: none;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2);
-  max-height: 30vh;
-  overflow-y: auto;
-  padding: var(--space-2) var(--space-5);
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   background: var(--surface-base);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.toolbar button,
+/*
+ * The same height as the tabs in the header. A tool bar standing taller than the application bar above it reads as a
+ * mistake rather than as a decision, so both answer to one number.
+ */
+.toolbar > button,
+.toolbar .popover-trigger,
 .toolbar .menu-button-trigger {
-  padding: var(--space-2) var(--space-3);
+  height: var(--bar-control);
+  padding: 0 var(--space-3);
   font-size: var(--text-sm);
 }
 
 /* The one command that writes to the server is the one that looks like it does. */
 .toolbar .primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   color: var(--onyx);
   background: var(--accent);
   border-color: var(--accent);
@@ -117,55 +133,33 @@
   border-color: var(--pearl-aqua);
 }
 
-.toolbar .load-select {
-  width: 170px;
+/* Inherited, not muted: on the filled button the icon is read against the accent, where a grey would disappear. */
+.toolbar .primary .icon {
+  flex: none;
+  font-size: var(--text-base);
+  color: inherit;
 }
 
-.toolbar .separator {
+/* Draws the line between what is done to the system and what is done to a bid. */
+.toolbar-separator {
+  flex: none;
   width: 1px;
-  height: 22px;
-  margin: 0 6px;
+  height: var(--space-5);
   background: var(--border-subtle);
 }
 
-.toolbar .inline {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-muted);
+/*
+ * Which system is open. Stated, not offered: a loaded system keeps the name it was created under, and the field that used
+ * to sit here made renaming one a slip of the keyboard rather than a decision.
+ */
+.toolbar-current {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--text-sm);
-}
-
-.toolbar .inline input[type='text'],
-.toolbar .inline input:not([type]) {
-  width: 210px;
-}
-
-.toolbar .file {
-  padding: 7px 14px;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out),
-    color var(--duration-normal) var(--ease-out);
-}
-
-.toolbar .file:hover {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-  color: var(--pearl-aqua);
-}
-
-.toolbar .file input {
-  display: none;
-}
-
-.toolbar .load-select {
-  min-width: 210px;
+  color: var(--text-muted);
 }
 
 /* The middle column is the drag handle; its own margins supply the gap that used to come from `gap`. */
@@ -196,7 +190,14 @@
   box-shadow: none;
 }
 
+/*
+ * Scrolls on its own, against the editor beside it.
+ *
+ * `min-height: 0` is what lets it: a grid item will not shrink below its content without being told to, and a tree that
+ * refuses to shrink makes the whole page scroll instead - carrying the tool bar off the top with it.
+ */
 .tree {
+  min-height: 0;
   overflow: auto;
   margin: 0;
   padding: 14px;
@@ -222,9 +223,8 @@
 
 /*
  * Every level is exactly one row tall, and nothing inside may change that. The rows hold different things - an uppercase 12px
- * root label, a 13px bid code whose suit mark comes from a fallback font - so any height grown from content would come out
- * slightly different for each. The fixed height plus `align-items: center` gives identical boxes and identical centring;
- * `line-height: 1` keeps the text box tight so the font's own leading cannot lean on it either.
+ * root label, a 13px bid code carrying a drawn suit mark - so any height grown from content would come out slightly
+ * different for each. The fixed height plus `align-items: center` gives identical boxes and identical centring.
  * Longhand padding on purpose: the indent per level arrives as an inline padding-left, which a shorthand here would fight.
  */
 .tree-path-row {
@@ -269,7 +269,13 @@
   border-color: var(--border-strong);
 }
 
+/*
+ * `-webkit-touch-callout` is what stops iOS answering a long press with its own copy-and-share bubble. That bubble is not
+ * a context menu and cancelling `contextmenu` does not reach it; only this does. `user-select` is the same argument for
+ * the selection handles that come with it.
+ */
 .tree-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -278,10 +284,13 @@
   cursor: default;
   white-space: nowrap;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transition:
     background-color var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
 }
+
 
 .tree-row:hover {
   background: var(--surface-hover);
@@ -290,6 +299,35 @@
 .tree-row.selected {
   background: var(--accent-soft);
   box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/*
+ * The hold, while it is being counted: a wash sweeping across the row, finishing as the editor opens.
+ *
+ * A gesture with no feedback is a gesture nobody trusts - held with nothing happening, a row looks like a tap that has not
+ * worked, and the finger comes off before the press completes. The duration is handed down from the hook in
+ * `--hold-delay`, so the sweep finishes at the moment the press fires rather than at a guess of it.
+ *
+ * Drawn as an overlay rather than as this element's own background, because the row usually already has one - it is
+ * generally the selected row being held - and a second `background` here would be a cascade argument with the rule above
+ * rather than a wash on top of it.
+ */
+.tree-row.holding::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--accent-glow);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+  animation: hold-fill var(--hold-delay, 450ms) linear forwards;
+}
+
+@keyframes hold-fill {
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /*
@@ -752,4 +790,106 @@
   .workspace {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/*
+ * The narrow layout: the tree has the screen, and the editor is fetched rather than shown.
+ *
+ * Side by side the two panes want something like nine hundred pixels between them. Below that they would be two useless
+ * halves, so only the one the tool is actually for stays - and the editor arrives over it, full width, when a bid is held.
+ */
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-3);
+  }
+}
+
+/* A gesture with nothing on screen to suggest it is a gesture nobody finds, so the tree says so once, quietly. */
+.tree-hint {
+  flex: none;
+  margin: 0;
+  padding: var(--space-2) var(--space-5) 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* Over the tree rather than beside it, and anchored to the bottom of the screen where the thumb already is. */
+.editor-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: flex-end;
+  background: rgb(0 0 0 / 55%);
+  animation: chip-in var(--duration-fast) var(--ease-out) both;
+}
+
+.editor-sheet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 92dvh;
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow-lg);
+  animation: sheet-rise var(--duration-normal) var(--ease-out) both;
+}
+
+@keyframes sheet-rise {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* The grab bar, and the one way out that does not depend on knowing where the sheet ends. */
+.editor-sheet-bar {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.editor-sheet-bar::before {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  left: 50%;
+  width: 36px;
+  height: 4px;
+  margin-left: -18px;
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+
+.editor-sheet-bar button {
+  height: var(--bar-control);
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.editor-sheet-bar button:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+/* The sheet is the card here, so the pane inside it gives up its own frame rather than drawing a second one. */
+.editor-sheet .editor-pane {
+  flex: 1;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/useAuth';
 import { duoRoute } from '@/features/duoPractice/route';
@@ -6,6 +6,7 @@ import { useRealtime } from '@/realtime/useRealtime';
 import { AccountMenu } from './AccountMenu';
 import { FriendsMenu } from './FriendsMenu';
 import { ToolNav } from './ToolNav';
+import { useFitsOnOneRow } from './useFitsOnOneRow';
 import './AppLayout.css';
 
 /**
@@ -21,6 +22,10 @@ export function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
+  const bar = useRef<HTMLElement>(null);
+
+  // Whether the bar can still line its controls up. Measured, so adding a tool moves the answer on its own.
+  const fits = useFitsOnOneRow(bar);
 
   // Sitting down happens on the server, so the client follows the table rather than the other way round: whoever accepts is
   // taken to it, and so is the host the moment his invitation is answered.
@@ -37,13 +42,14 @@ export function AppLayout() {
 
   return (
     <div className="app-shell">
-      <header className="app-bar">
+      <header className="app-bar" ref={bar}>
         <Link to="/" className="app-brand">
           <img src="/images/card_icon.png" alt="" />
           <span>Trumpfish</span>
         </Link>
 
-        <ToolNav />
+        {/* The tabs give way first: the account and the invitations have to stay reachable, and they are the narrower two. */}
+        <ToolNav collapsed={!fits} />
 
         <div className="app-bar-right">
           <FriendsMenu />

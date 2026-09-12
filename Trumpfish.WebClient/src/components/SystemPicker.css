@@ -24,7 +24,7 @@
  * it should rarely come to this.
  */
 .picker-value,
-.picker-option span {
+.picker-option > span:first-child {
   display: block;
   flex: 1;
   min-width: 0;
@@ -116,4 +116,13 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+}
+
+/* Set after the name and pushed to the end of the row: a fact about the system, not part of what it is called. */
+.picker-note {
+  flex: none;
+  margin-left: var(--space-2);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
 }

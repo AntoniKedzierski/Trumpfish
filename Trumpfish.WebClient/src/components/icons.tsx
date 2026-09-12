@@ -106,6 +106,32 @@ export function CheckIcon({ className }: { className?: string }) {
   );
 }
 
+/**
+ * A floppy disk: writing the system back to the server.
+ */
+/*
+ * The shutter at the top and the label at the bottom, because the outline alone is a rounded square and reads as nothing.
+ * The clipped corner is on the right, where the notch on the real thing was.
+ */
+export function SaveIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4.5 6.5A2 2 0 0 1 6.5 4.5h9l4 4v9a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z" {...stroke} />
+      <path d="M8.5 4.5v5h6v-5" {...stroke} />
+      <path d="M8 19.5v-5h8v5" {...stroke} />
+    </Icon>
+  );
+}
+
+/** Three lines: the navigation, folded away because the bar ran out of room for it. */
+export function MenuIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4 7h16M4 12h16M4 17h16" {...stroke} />
+    </Icon>
+  );
+}
+
 /** A key: the password. */
 export function KeyIcon({ className }: { className?: string }) {
   return (

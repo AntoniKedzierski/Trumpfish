@@ -159,6 +159,11 @@ body,
     display: none;
   }
 
+  /* Down to marks: the panel behind the hamburger still names the tool, and there is no room out here to name it twice. */
+  .app-nav-burger-label {
+    display: none;
+  }
+
   .deal-actions {
     width: 100%;
     margin-left: 0;

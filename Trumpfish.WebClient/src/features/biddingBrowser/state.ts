@@ -18,7 +18,6 @@ export interface BrowserState {
 
 export type BrowserAction =
   | { kind: 'loadSystem'; system: EditableSystem; systemId: string | null }
-  | { kind: 'setSystemName'; name: string }
   | { kind: 'select'; target: NodePath | null }
   | { kind: 'addBid' }
   | { kind: 'addSibling' }
@@ -43,9 +42,6 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
   switch (action.kind) {
     case 'loadSystem':
       return { ...initialBrowserState, system: action.system, systemId: action.systemId, clipboard: state.clipboard };
-
-    case 'setSystemName':
-      return { ...state, system: { ...state.system, systemName: action.name }, dirty: true };
 
     case 'select':
       return { ...state, selection: action.target };

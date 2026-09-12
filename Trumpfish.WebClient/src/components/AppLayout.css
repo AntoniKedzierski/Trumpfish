@@ -4,6 +4,20 @@
   min-height: 100%;
 }
 
+/*
+ * A page that manages its own scrolling gets a frame exactly the height of the window, instead of the document growing
+ * under it.
+ *
+ * The browser is the one such page: a tool bar that has to stay put and two panes that scroll against each other cannot
+ * be built on a document that scrolls as a whole - the bar leaves with it and the panes never reach a height to scroll
+ * within. Asked for by the page rather than stated here, so every other view keeps the ordinary document scroll and no
+ * measurement of this bar has to be written down anywhere.
+ */
+.app-shell:has(> .bidding-browser) {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 .app-bar {
   position: sticky;
   top: 0;

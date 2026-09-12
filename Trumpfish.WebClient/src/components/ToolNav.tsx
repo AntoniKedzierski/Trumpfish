@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import type { ToolDescriptor, ToolGroup } from '@/tools/toolsRegistry';
 import { toolGroups, tools } from '@/tools/toolsRegistry';
+import { MenuIcon } from './icons';
 import { Chevron } from './Select';
 import { useDisclosure } from './useDisclosure';
 import './menu.css';
@@ -54,9 +55,22 @@ function buildEntries(): NavEntry[] {
   return entries;
 }
 
-/** The tool navigation in the top bar: every tool reachable from every other one, with the current one marked. */
-export function ToolNav() {
+/**
+ * The tool navigation in the top bar: every tool reachable from every other one, with the current one marked.
+ *
+ * Where the bar has no room for the tabs they fold into one button - `collapsed` is decided by measuring the bar, not by
+ * asking how wide the screen is.
+ */
+export function ToolNav({ collapsed = false }: { collapsed?: boolean }) {
   const entries = buildEntries();
+
+  if (collapsed) {
+    return (
+      <nav className="app-nav collapsed" aria-label="Narzędzia">
+        <ToolNavMenu entries={entries} />
+      </nav>
+    );
+  }
 
   return (
     <nav className="app-nav" aria-label="Narzędzia">
@@ -71,6 +85,69 @@ export function ToolNav() {
         ),
       )}
     </nav>
+  );
+}
+
+/**
+ * Every tool in one panel, for a bar too narrow to line them up.
+ */
+/*
+ * Flattened rather than nested: a group exists on the bar to keep four tabs from becoming seven, and here there are no
+ * tabs to save. Its name stays as a heading, because "Ćwiczenie" is what tells the two practice screens apart from each
+ * other, but its members are reached in one tap like everything else rather than in two.
+ */
+function ToolNavMenu({ entries }: { entries: NavEntry[] }) {
+  const { pathname } = useLocation();
+  const { open, setOpen, root, trigger } = useDisclosure<HTMLDivElement>();
+  const panelId = useId();
+
+  const currentLabel = entries
+    .flatMap((entry) => (entry.kind === 'tool' ? [entry.tool] : entry.tools))
+    .find((tool) => covers(tool.route, pathname))?.navLabel;
+
+  return (
+    <div className="app-nav-group" ref={root}>
+      <button
+        type="button"
+        ref={trigger}
+        className="app-nav-trigger app-nav-burger"
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-label="Narzędzia"
+        onClick={() => setOpen((was) => !was)}
+      >
+        <MenuIcon />
+        {/* Which tool is open, while there is room for the word. Below that the icon carries it alone. */}
+        {currentLabel === undefined ? null : <span className="app-nav-burger-label">{currentLabel}</span>}
+      </button>
+
+      {!open ? null : (
+        <div className="menu-panel app-nav-panel" id={panelId}>
+          {entries.map((entry) =>
+            entry.kind === 'tool' ? (
+              <NavLink key={entry.tool.id} to={entry.tool.route} onClick={() => setOpen(false)}>
+                {entry.tool.icon === undefined ? null : <entry.tool.icon />}
+                <span>{entry.tool.navLabel}</span>
+              </NavLink>
+            ) : (
+              <div key={entry.group.id} className="app-nav-section">
+                <h4>{entry.group.label}</h4>
+                {entry.tools.map((tool) => {
+                  const Glyph = tool.icon;
+
+                  return (
+                    <NavLink key={tool.id} to={tool.route} onClick={() => setOpen(false)}>
+                      {Glyph === undefined ? null : <Glyph />}
+                      <span>{tool.navLabel}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+            ),
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
