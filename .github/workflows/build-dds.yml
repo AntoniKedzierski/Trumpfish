@@ -42,8 +42,17 @@ jobs:
           ref: ${{ inputs.version }}
 
       # Bazelisk reads the Bazel version out of the checked out repository's .bazelversion, so nothing is pinned twice.
-      - name: Install Bazelisk
-        run: npm install --global @bazel/bazelisk
+      # The runner images ship it already - on Linux installed globally as root, where reinstalling it fails on permissions
+      # rather than doing nothing - so it is only fetched when it is genuinely missing.
+      - name: Ensure Bazelisk
+        shell: bash
+        run: |
+          if command -v bazelisk > /dev/null 2>&1; then
+              echo "Bazelisk już jest: $(command -v bazelisk)"
+              exit 0
+          fi
+
+          npm install --global @bazel/bazelisk
 
       # Bazel's default output root sits deep under the user profile, which on Windows runs into the path length limit
       # part way through a build this size. Putting the tree at the root of the drive is the documented way round it.
