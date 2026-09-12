@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { colorMark } from '@/features/biddingBrowser/model';
-import type { PlayerPosition, SimulationBid, SimulationHand } from '@/api/models';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { PlayerPosition, SimulationBid, SimulationContract, SimulationHand } from '@/api/models';
 import { cardColors, cardValues, playerPositions, toNumber } from '@/api/models';
-import { cardLabel, positionLabels, suitOfCard } from '../deals';
+import { DoubleMark, RedoubleMark, SuitMark } from '@/components/suits';
+import { cardLabel, positionLabels } from '../deals';
 import './deal.css';
 
 /** One hand as four suit rows, with its point count and shape. */
@@ -22,7 +22,10 @@ export function HandView({ hand }: { hand: SimulationHand }) {
       <ul className="hand-suits">
         {[...cardColors].reverse().map((color) => (
           <li key={color}>
-            <span className={suitOfCard(color)}>{suitMark(color)}</span>
+            {/* The mark is wrapped so that the row lines up two pieces of text rather than a piece of text and a picture. */}
+            <span className="hand-suit">
+              <SuitMark suit={color} />
+            </span>
             <span className="hand-cards">
               {hand.cards
                 .filter((card) => card.color === color)
@@ -120,6 +123,28 @@ interface BidCellProps {
 /** A bid reacts to the pointer and reveals the reasoning behind it on click; bids invented outside the system get a small dot. */
 function BidCell({ bid, explain, flagOffSystem, open, onToggle, onClose }: BidCellProps) {
   const container = useRef<HTMLSpanElement>(null);
+  const bubble = useRef<HTMLSpanElement>(null);
+  const [shift, setShift] = useState(0);
+
+  /*
+   * The popup is centred under its bid, which puts half of it past the edge of the screen for a bid in the first or last
+   * column. Measured once on opening - the shift is zero at that moment, so what is measured is the unnudged position -
+   * and moved back by however much is hanging out.
+   */
+  useLayoutEffect(() => {
+    if (!open || bubble.current === null) {
+      setShift(0);
+      return;
+    }
+
+    const margin = 8;
+    const box = bubble.current.getBoundingClientRect();
+    if (box.left < margin) {
+      setShift(Math.round(margin - box.left));
+    } else if (box.right > window.innerWidth - margin) {
+      setShift(Math.round(window.innerWidth - margin - box.right));
+    }
+  }, [open]);
 
   // A pass is never really "outside the system", so flagging it would only add noise to the table.
   const offSystem = flagOffSystem && !bid.isFromSystem && bid.type !== 'Pass';
@@ -150,12 +175,22 @@ function BidCell({ bid, explain, flagOffSystem, open, onToggle, onClose }: BidCe
 
   return (
     <span className="bid-cell" ref={container}>
-      <button type="button" className={`bid-chip${offSystem ? ' off-system' : ''}${open ? ' open' : ''}`} disabled={!explain} onClick={onToggle}>
+      <button
+        type="button"
+        className={`bid-chip${bid.type === 'Pass' ? ' pass' : ''}${offSystem ? ' off-system' : ''}${open ? ' open' : ''}`}
+        disabled={!explain}
+        onClick={onToggle}
+      >
         <BidLabel bid={bid} />
         {offSystem ? <span className="off-system-dot" title="Odzywka spoza systemu" /> : null}
       </button>
       {open ? (
-        <span className="bid-explanation" role="tooltip">
+        <span
+          className="bid-explanation"
+          role="tooltip"
+          ref={bubble}
+          style={{ '--bid-shift': `${shift}px` } as React.CSSProperties}
+        >
           <span className="bid-explanation-title">
             {bid.bidder}
             {flagOffSystem ? ` · ${bid.isFromSystem ? 'z systemu' : 'spoza systemu'}` : ''}
@@ -167,20 +202,39 @@ function BidCell({ bid, explain, flagOffSystem, open, onToggle, onClose }: BidCe
   );
 }
 
-/** Only the suit glyph is tinted - levels, Pass, X and XX stay in the default text colour. */
+/** Only the suit mark is tinted - the level, Pass, the double and the redouble stay in the default text colour. */
 export function BidLabel({ bid }: { bid: Pick<SimulationBid, 'type' | 'color' | 'value' | 'label'> }) {
+  if (bid.type === 'Double') {
+    return <DoubleMark />;
+  }
+
+  if (bid.type === 'Redouble') {
+    return <RedoubleMark />;
+  }
+
   if (bid.type !== 'Submit') {
     return <>{bid.label}</>;
   }
 
   return (
     <>
-      {toNumber(bid.value) ?? ''}
-      <span className={`suit ${bid.color.toLowerCase()}`}>{colorMark(bid.color)}</span>
+      <span className="bid-level">{toNumber(bid.value) ?? ''}</span>
+      <SuitMark suit={bid.color} />
     </>
   );
 }
 
-function suitMark(color: (typeof cardColors)[number]): string {
-  return cardLabel({ value: 'Two', color }).slice(-1);
+/** The contract a deal ended in, drawn the same way a bid is rather than taken as the server's text. */
+export function ContractLabel({ contract }: { contract: SimulationContract }) {
+  if (contract.passed) {
+    return <>{contract.label}</>;
+  }
+
+  return (
+    <>
+      <span className="bid-level">{toNumber(contract.value) ?? ''}</span>
+      <SuitMark suit={contract.color} />
+      {contract.isRedoubled ? <RedoubleMark /> : contract.isDoubled ? <DoubleMark /> : null}
+    </>
+  );
 }

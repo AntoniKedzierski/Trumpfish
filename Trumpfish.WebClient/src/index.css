@@ -1,3 +1,5 @@
+@import './styles/mobile.css';
+
 * {
   box-sizing: border-box;
 }
@@ -11,8 +13,8 @@ body,
 
 body {
   font-family: 'Lato', 'Segoe UI', sans-serif;
-  font-size: 14px;
-  font-weight: 300;
+  font-size: var(--text-base);
+  font-weight: 400;
   line-height: 1.5;
   background: var(--surface-base);
   color: var(--text-primary);
@@ -47,13 +49,12 @@ input,
 select,
 textarea {
   font-family: inherit;
-  font-size: inherit;
   font-weight: inherit;
   color: var(--text-primary);
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 7px 12px;
+  padding: var(--space-2) var(--space-3);
   transition:
     background-color var(--duration-normal) var(--ease-out),
     border-color var(--duration-normal) var(--ease-out),
@@ -110,10 +111,29 @@ select {
   cursor: pointer;
 }
 
+/*
+ * Fields keep body size. Below 16px iOS zooms the page when one takes focus, which is a worse problem than a field that
+ * looks a size large.
+ */
+/* What gets typed sits a step below its own label, which is set at body size. */
+input,
+select,
+textarea {
+  font-size: var(--text-sm);
+  /* Stated, not inherited: what the user types keeps its own weight, whatever the label above it is set in. */
+  font-weight: 400;
+}
+
+/*
+ * A button's label is not body text - it is a name for an action, and it reads better a size down with room around it than
+ * at body size pressed against its own border. The room is also what makes it a target worth aiming at.
+ */
 button {
-  cursor: pointer;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
   font-weight: 400;
   letter-spacing: 0.01em;
+  cursor: pointer;
 }
 
 /* Buttons animate on hover with a slight colour lift, and settle back down on press. */
@@ -164,7 +184,7 @@ textarea {
 .status {
   padding: 4px 12px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   background: rgb(255 181 21 / 12%);
   color: var(--amber-flame);
   animation: chip-in var(--duration-normal) var(--ease-out) both;

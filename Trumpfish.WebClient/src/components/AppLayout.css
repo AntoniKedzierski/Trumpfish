@@ -27,7 +27,7 @@
 /* Icons in the bar track the text beside them, and never stretch when their row is squeezed. */
 .app-bar .icon {
   flex: none;
-  font-size: 17px;
+  font-size: var(--text-lg);
 }
 
 .app-brand {
@@ -36,6 +36,8 @@
   align-items: center;
   gap: 10px;
   height: var(--bar-control);
+  /* Set with the navigation beside it: the product name reading smaller than the tabs would look like a mistake. */
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -107,7 +109,7 @@
 
 .app-notice {
   padding: 8px 28px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--amber-earth);
   background: var(--surface-raised);
   border-bottom: 1px solid var(--border-subtle);

@@ -23,10 +23,6 @@ export function cardLabel(card: Pick<SimulationCard, 'value' | 'color'>): string
   return `${cardLabels[card.value] ?? card.value}${suitMarks[card.color]}`;
 }
 
-export function suitOfCard(color: CardColor): string {
-  return `suit ${color.toLowerCase()}`;
-}
-
 /** Deals are generated in the browser (the server only simulates), so a run is fully reproducible from what the client sent. */
 export function generateDeals(count: number, seed?: string): SimulationDealRequest[] {
   // A seed makes the whole batch deterministic, so the very same deals can be replayed while debugging. Without it every deal is truly random.

@@ -12,7 +12,7 @@
   align-items: center;
   gap: 14px;
   padding: 10px 28px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--amber-flame);
   background: rgb(255 181 21 / 10%);
   border-bottom: 1px solid rgb(255 181 21 / 30%);
@@ -20,7 +20,7 @@
 
 .seed-update button {
   padding: 5px 12px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--amber-flame);
   border-color: rgb(255 181 21 / 40%);
   background: transparent;
@@ -57,7 +57,7 @@
 
 .unsaved-dialog h2 {
   margin: 0 0 10px;
-  font-size: 17px;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -82,18 +82,43 @@
 
 
 
+/*
+ * A working bar rather than a page of commands: tight, quiet, and capped in height so that wrapping on a narrow window
+ * costs a second row rather than half the screen.
+ */
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  padding: 12px 28px;
+  gap: var(--space-2);
+  max-height: 30vh;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-5);
   background: var(--surface-base);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.toolbar button {
-  padding: 7px 14px;
+.toolbar button,
+.toolbar .menu-button-trigger {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* The one command that writes to the server is the one that looks like it does. */
+.toolbar .primary {
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.toolbar .primary:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+.toolbar .load-select {
+  width: 170px;
 }
 
 .toolbar .separator {
@@ -108,7 +133,7 @@
   align-items: center;
   gap: 10px;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .toolbar .inline input[type='text'],
@@ -212,7 +237,7 @@
   max-height: 26px;
   padding-right: 14px;
   overflow: hidden;
-  font-size: 13px;
+  font-size: var(--text-sm);
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--text-muted);
@@ -294,7 +319,7 @@
 
 /* Heading over the interjected bids. Reads as a container rather than a bid, so it never competes with the calls around it. */
 .tree-row.interjection-folder .tree-folder-label {
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -306,7 +331,7 @@
   border-radius: 999px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 11px;
+  font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
 }
 
@@ -322,7 +347,7 @@
   background: none;
   color: var(--text-muted);
   border-radius: var(--radius-sm);
-  font-size: 16px;
+  font-size: var(--text-base);
 }
 
 .tree-toggle:hover:not(:disabled) {
@@ -375,7 +400,7 @@
 }
 
 .tree-root-label {
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -395,7 +420,7 @@
 }
 
 .bid-separator {
-  color: var(--border-strong);
+  color: var(--text-muted);
 }
 
 .bid-condition {
@@ -407,7 +432,7 @@
   border-radius: 999px;
   background: rgb(255 181 21 / 12%);
   color: var(--amber-flame);
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .bid-interjection {
@@ -443,7 +468,7 @@
 
 .badge-preferred {
   color: var(--hearts);
-  font-size: 15px;
+  font-size: var(--text-base);
   font-weight: 700;
   line-height: 1;
 }
@@ -482,7 +507,7 @@
 .editor label {
   margin-top: 14px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--text-xs);
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -504,7 +529,7 @@
   margin-top: 0;
   padding: 7px 10px;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--text-sm);
   letter-spacing: normal;
   text-transform: none;
   color: var(--text-primary);
@@ -545,7 +570,7 @@
 .editor .grid-4 span {
   display: block;
   margin-bottom: 5px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
@@ -660,7 +685,7 @@
 .issue-repair {
   flex: none;
   padding: 5px 12px;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .issue {
@@ -696,7 +721,7 @@
 .issue strong {
   padding: 2px 10px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -720,7 +745,7 @@
 .issue-path,
 .issue-convention {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 @media (max-width: 1100px) {

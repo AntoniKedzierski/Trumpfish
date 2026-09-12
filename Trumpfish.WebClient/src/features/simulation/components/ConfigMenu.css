@@ -1,0 +1,128 @@
+.picker {
+  position: relative;
+}
+
+/* The row reads as the value it holds, not as a button: a name with something to open beside it. */
+.picker-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  font-weight: 400;
+  text-align: left;
+}
+
+.picker-row[aria-expanded='true'],
+.picker:hover .picker-row:not(:disabled) {
+  border-color: var(--accent);
+}
+
+/*
+ * Cut with a short fade at the right rather than an ellipsis, the way the select fields are. The list is wide enough that
+ * it should rarely come to this.
+ */
+.picker-value,
+.picker-option span {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
+}
+
+.picker-value.empty {
+  color: var(--text-muted);
+}
+
+.picker-chevron {
+  flex: none;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  transform: rotate(90deg);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.picker-row[aria-expanded='true'] .picker-chevron {
+  transform: rotate(-90deg);
+}
+
+/*
+ * Closed by default. Where hover exists it flies out beside the row; where it does not it opens underneath. Both are set
+ * below - this is only the part they share.
+ */
+.picker-list {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.picker-row[aria-expanded='true'] + .picker-list {
+  display: flex;
+}
+
+.picker-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.picker-option:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: transparent;
+}
+
+.picker-option[aria-current] {
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+.picker-empty {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* Opened in place: no hover to open it with, and no room beside the panel to open into. */
+@media (hover: none), (pointer: coarse) {
+  .picker-list {
+    margin-top: var(--space-1);
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+}
+
+/* A submenu proper: it flies out beside the row, and hovering the row is enough to bring it. */
+@media (hover: hover) and (pointer: fine) {
+  .picker:hover .picker-list {
+    display: flex;
+  }
+
+  .picker-list {
+    position: absolute;
+    top: calc(-1 * var(--space-2));
+    left: calc(100% + var(--space-2));
+    z-index: 50;
+    width: 260px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: var(--space-2);
+    background: var(--surface-overlay);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+}

@@ -20,7 +20,7 @@
 
 .manage-systems h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: var(--text-xl);
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -37,7 +37,7 @@
 
 .manage-systems h2 {
   margin: 0 0 12px;
-  font-size: 15px;
+  font-size: var(--text-base);
   font-weight: 600;
   color: var(--accent);
 }
@@ -62,7 +62,7 @@ table.systems {
 
 table.systems th {
   padding: 10px 16px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 400;
   text-align: left;
   text-transform: uppercase;
@@ -101,7 +101,7 @@ table.systems .origin,
 table.systems .seed-badge {
   display: block;
   margin-top: 3px;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 table.systems .origin {
@@ -127,7 +127,7 @@ table.systems .actions > div {
 
 table.systems .actions button {
   padding: 6px 12px;
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 table.systems .actions .accent {

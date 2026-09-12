@@ -43,7 +43,7 @@
 
 .menu-panel .icon {
   flex: none;
-  font-size: 16px;
+  font-size: var(--text-base);
   color: var(--text-muted);
   transition: color var(--duration-fast) var(--ease-out);
 }

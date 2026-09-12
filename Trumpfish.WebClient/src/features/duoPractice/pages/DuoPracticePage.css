@@ -16,7 +16,7 @@
 
 .duo-waiting {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .duo-dropped {
@@ -48,7 +48,7 @@
 
 .leave-dialog h2 {
   margin: 0 0 10px;
-  font-size: 17px;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -85,7 +85,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 

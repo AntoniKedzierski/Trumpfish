@@ -1,7 +1,7 @@
-import type { SimulationContract, SimulationDealResult } from '@/api/models';
+import type { BidColor, SimulationContract, SimulationDealResult } from '@/api/models';
 import { playerPositions, toNumber } from '@/api/models';
 import { makesGame } from '../sorting';
-import { BiddingTable, HandView } from './DealViews';
+import { BiddingTable, ContractLabel, HandView } from './DealViews';
 
 interface DealResultCardProps {
   deal: SimulationDealResult;
@@ -17,7 +17,7 @@ export function DealResultCard({ deal }: DealResultCardProps) {
         <h3>Rozdanie {(toNumber(deal.index) ?? 0) + 1}</h3>
         <span className="deal-meta">Rozdaje {deal.dealer}</span>
         <span className={`deal-contract${deal.contract.passed ? ' passed' : ''}`}>
-          {deal.contract.label}
+          <ContractLabel contract={deal.contract} />
           {deal.contract.declarer === null || deal.contract.declarer === undefined ? '' : ` · ${deal.contract.declarer}`}
         </span>
         {deal.error === null || deal.error === undefined ? null : <span className="deal-error">{deal.error}</span>}
@@ -36,25 +36,32 @@ export function DealResultCard({ deal }: DealResultCardProps) {
   );
 }
 
+/**
+ * The trump suit in the instrumental case, which is what "z dziewięcioma ..." asks for. Plural covers every count a
+ * contract can really have; the singular is there so that a one card fit does not come out as broken Polish.
+ */
+const trumpWords: Partial<Record<BidColor, { one: string; many: string }>> = {
+  Clubs: { one: 'treflem', many: 'treflami' },
+  Diamonds: { one: 'karem', many: 'karami' },
+  Hearts: { one: 'kierem', many: 'kierami' },
+  Spades: { one: 'pikiem', many: 'pikami' },
+};
+
 export function ContractSummary({ contract }: { contract: SimulationContract }) {
   const pairPoints = toNumber(contract.pairPoints);
   if (contract.passed || pairPoints === null) {
     return null;
   }
 
-  // A no-trump contract is summarised with NT points only, a suit contract also shows how many trumps the pair holds.
-  const trumpCount = toNumber(contract.trumpCount);
+  // A no-trump contract is summarised with NT points only, a suit contract also names the suit its trumps are in.
   const noTrump = contract.color === 'NoTrump';
+  const trumpCount = noTrump ? null : toNumber(contract.trumpCount);
+  const trumps = trumpWords[contract.color];
 
   return (
     <span className="deal-summary">
       Para gra na {pairPoints} {noTrump ? 'PC bez atu.' : 'PC'}
-      {trumpCount === null ? '' : ' z '}
-      {trumpCount === null ? null : (
-        <>
-          {trumpCount} kartami.
-        </>
-      )}
+      {trumpCount === null ? '' : ` z ${trumpCount} ${trumps === undefined ? 'kartami' : trumpCount === 1 ? trumps.one : trumps.many}.`}
     </span>
   );
 }

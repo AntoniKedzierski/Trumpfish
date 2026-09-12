@@ -1,0 +1,170 @@
+/*
+ * The narrow-screen pass, kept in one file rather than scattered through the feature stylesheets, because it is one
+ * decision about one set of screens and is easier to read - and to argue with - in one place.
+ *
+ * The Bidding Browser is deliberately absent. Its tree and editor are a two-pane desktop tool and need their own answer.
+ */
+
+/* A phone browser's chrome comes and goes; `dvh` follows it, `vh` does not. */
+html,
+body,
+#root {
+  min-height: 100dvh;
+}
+
+/*
+ * Fields go back to 16px on a touch screen.
+ *
+ * Safari on iOS zooms the whole page whenever a field smaller than 16px takes focus, and leaves it zoomed afterwards - so
+ * the size that is right on a desktop is the one thing that cannot apply on a phone. Delete this block if the zoom is
+ * preferable to the inconsistency.
+ */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .results {
+    grid-template-columns: 1fr;
+    padding: var(--space-4) var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .hands {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  /* The bar gives back its generous desktop gutters. */
+  .app-bar {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .app-invitation,
+  .app-notice,
+  .page-strip {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  .app-invitation {
+    flex-wrap: wrap;
+  }
+
+  .app-invitation-actions {
+    margin-left: 0;
+  }
+
+  .home,
+  .manage-systems {
+    padding: var(--space-5) var(--space-3) var(--space-5);
+  }
+
+  .tool-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .controls {
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .controls .summary {
+    margin-left: 0;
+  }
+
+  /* The toolbar wraps rather than scrolls sideways, but never past a third of the screen. */
+  .toolbar {
+    max-height: 34vh;
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+/*
+ * The practice table on a phone.
+ *
+ * Stacked in source order the auction sat below a bidding box seven rows tall, so the cards and the auction could never be
+ * on screen together - which is the one thing a player needs to see at once. Here the hand and the auction go to the top
+ * and stay there, the auction scrolling inside a fixed height rather than growing, and the box - the part being tapped -
+ * takes the bottom of the screen, where a thumb already is.
+ */
+@media (max-width: 700px) {
+  .practice-main {
+    padding: var(--space-2) var(--space-2) var(--space-4);
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .hand-panel {
+    order: 1;
+  }
+
+  .auction-panel {
+    order: 2;
+    max-height: 32vh;
+    overflow: auto;
+  }
+
+  .box-panel {
+    order: 3;
+  }
+
+  .deal-bar {
+    order: 0;
+    gap: var(--space-2);
+  }
+
+  .bidding-box {
+    gap: var(--space-1);
+  }
+
+  /* Still a comfortable target, and five columns of them still fit across a small phone. */
+  .box-cell {
+    min-height: 42px;
+    font-size: var(--text-sm);
+  }
+
+  .setup-card {
+    margin-top: var(--space-4);
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .account {
+    padding: var(--space-3) var(--space-3) var(--space-5);
+  }
+
+  .account h1 {
+    margin-top: var(--space-3);
+  }
+}
+
+/* Below this the two-column hand grid and the desktop gutters stop being worth defending at all. */
+@media (max-width: 420px) {
+  .app-bar {
+    padding: var(--space-2);
+  }
+
+  .app-brand span {
+    display: none;
+  }
+
+  .deal-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .deal-actions button {
+    flex: 1;
+  }
+}

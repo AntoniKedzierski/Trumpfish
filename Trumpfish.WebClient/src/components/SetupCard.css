@@ -6,11 +6,12 @@
 .setup-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  /* Between sections. What sits inside one is spaced at --space-2, so the grouping is visible before it is read. */
+  gap: var(--space-5);
   width: 100%;
   max-width: 460px;
   margin: 24px auto 0;
-  padding: 26px 24px;
+  padding: var(--space-6) var(--space-5);
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
@@ -20,7 +21,7 @@
 
 .setup-card h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--text-lg);
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-primary);
@@ -32,18 +33,50 @@
   line-height: 1.5;
 }
 
+/* One group: the label, the control it names, and the line explaining it. Held together at --space-2. */
+/*
+ * A field's name is set at the same size as what gets typed into the field, and a step heavier. It was a size smaller,
+ * which read as a caption on the control rather than as its name.
+ *
+ * The step is 600. Lato ships here in Light, Regular and Bold only, so 600 resolves to the Bold face - the smallest
+ * increment the family actually offers above Regular.
+ */
 .setup-card label {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 13px;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: 600;
   color: var(--text-muted);
 }
 
-.setup-card label small {
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--border-strong);
+/* The label and its question mark share a line. */
+.setup-card .field-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/*
+ * A checkbox and its explanation. The trigger sits beside the label rather than inside it, or a click meant for the
+ * question mark would land on the box and toggle it.
+ */
+.setup-card .field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/*
+ * The line under a control explaining what it does. It was set in the border grey - a 1.5:1 against the card, which is to
+ * say invisible - and at two sizes depending on where it sat. Ordinary secondary text now, because that is what it is.
+ */
+.setup-card small {
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-muted);
 }
 
 .setup-card input {
@@ -51,7 +84,11 @@
 }
 
 .setup-card .primary {
-  padding: 10px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 10px var(--space-3);
   color: var(--onyx);
   background: var(--accent);
   border-color: var(--accent);

@@ -12,6 +12,9 @@ import { DealResultCard } from '@/features/simulation/components/DealResultCard'
 import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
 import { positionLabels } from '@/features/simulation/deals';
 import { useRealtime } from '@/realtime/useRealtime';
+import { HelpTip } from '@/components/HelpTip';
+import { BidMark } from '@/components/suits';
+import '@/components/SetupCard.css';
 import '@/features/practice/pages/PracticePage.css';
 import './DuoPracticePage.css';
 
@@ -213,21 +216,36 @@ export function DuoPracticePage() {
             </label>
 
             <label>
-              <span>Ćwiczone otwarcie</span>
+              <span className="field-name">
+                Ćwiczone otwarcie
+                <HelpTip>Karty pod to otwarcie dostaje jedno z was — za każdym rozdaniem losowo.</HelpTip>
+              </span>
               <Select
                 value={openingNodeId}
                 options={[
                   { value: '', label: 'Wszystkie - karty bez warunków' },
-                  ...openings.map((choice) => ({ value: choice.nodeId, label: `${choice.label} · ${choice.meaning}` })),
+                  ...openings.map((choice) => ({
+                    value: choice.nodeId,
+                    label: `${choice.label} · ${choice.meaning}`,
+                    // The string is what the option is announced and titled by; this is what it looks like.
+                    labelNode: (
+                      <>
+                        <BidMark type={choice.type} color={choice.color} level={choice.level} />
+                        {` · ${choice.meaning}`}
+                      </>
+                    ),
+                  })),
                 ]}
                 onChange={setOpeningNodeId}
                 disabled={openings.length === 0}
               />
-              <small>Karty pod to otwarcie dostaje jedno z was — za każdym rozdaniem losowo.</small>
             </label>
 
             <label>
-              <span>Partner</span>
+              <span className="field-name">
+                Partner
+                <HelpTip>Widać tu tylko znajomych, którzy są online i nie siedzą już przy innym stole.</HelpTip>
+              </span>
               <Select
                 value={partnerId}
                 options={available.map((friend) => ({ value: friend.userId, label: friend.displayName ?? friend.username }))}
@@ -235,7 +253,6 @@ export function DuoPracticePage() {
                 placeholder={friends === null ? 'Wczytuję znajomych…' : 'Nikt ze znajomych nie jest teraz dostępny'}
                 disabled={available.length === 0}
               />
-              <small>Widać tu tylko znajomych, którzy są online i nie siedzą już przy innym stole.</small>
             </label>
 
             <label>
@@ -248,9 +265,11 @@ export function DuoPracticePage() {
             </label>
 
             <label>
-              <span>Ziarno</span>
-              <input type="text" value={seed} placeholder="puste = losowe" onChange={(event) => setSeed(event.target.value)} />
-              <small>Nazwane ziarno powtarza te same rozdania — razem z tym, kto w którym otwiera.</small>
+              <span className="field-name">
+                Ziarno
+                <HelpTip>Nazwane ziarno powtarza te same rozdania — razem z tym, kto w którym otwiera.</HelpTip>
+              </span>
+              <input type="text" value={seed} placeholder="Losowe…" onChange={(event) => setSeed(event.target.value)} />
             </label>
 
             <div className="field">
@@ -265,7 +284,7 @@ export function DuoPracticePage() {
                 <input type="checkbox" checked={checkBids} onChange={(event) => setCheckBids(event.target.checked)} />
                 <span>Sprawdzaj odzywki</span>
               </label>
-              <small>Każdy dostaje informację tylko o swoich odzywkach, których jego ręka nie potwierdza.</small>
+              <HelpTip>Każdy dostaje informację tylko o swoich odzywkach, których jego ręka nie potwierdza.</HelpTip>
             </div>
 
             <button type="button" className="primary" onClick={invite} disabled={busy || connection !== 'connected' || systemId === '' || partnerId === ''}>
@@ -309,7 +328,7 @@ export function DuoPracticePage() {
               <DealResultCard key={table.dealNumber} deal={table.result} />
             ) : (
               <>
-                <section className="panel">
+                <section className="panel hand-panel">
                   <div className="panel-head">
                     <h2>Twoja ręka ({positionLabels[table.you.position]})</h2>
                     {!table.settings.allowHints ? null : (
@@ -342,13 +361,13 @@ export function DuoPracticePage() {
                   )}
                 </section>
 
-                <section className="panel">
+                <section className="panel box-panel">
                   <h2>Twoja odzywka</h2>
                   <BiddingBox legal={table.legal} disabled={!table.yourTurn || busy} onBid={(chosen: BoxBid) => run(() => bid(chosen.type, chosen.color, chosen.value))} />
                   {table.yourTurn ? null : <Waiting>Czekam na {table.partner.connected ? 'ruch przy stole' : 'powrót partnera'}</Waiting>}
                 </section>
 
-                <section className="panel">
+                <section className="panel auction-panel">
                   <h2>Licytacja</h2>
                   <BiddingTable
                     key={table.dealNumber}
