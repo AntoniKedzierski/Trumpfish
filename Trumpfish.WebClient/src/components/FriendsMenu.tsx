@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { acceptFriend, inviteFriend, removeFriend } from '@/api/friends';
 import type { FriendPresence, FriendSummary } from '@/api/models';
 import { useRealtime } from '@/realtime/useRealtime';
+import { UsersIcon } from './icons';
 import './FriendsMenu.css';
 
 const presenceLabels: Record<FriendPresence, string> = {
@@ -79,6 +80,7 @@ export function FriendsMenu() {
   return (
     <div className="friends-menu" ref={root}>
       <button type="button" className="friends-trigger" onClick={() => setOpen((current) => !current)} aria-expanded={open}>
+        <UsersIcon />
         <span>Znajomi</span>
         {online === 0 ? null : <span className="count online">{online}</span>}
         {incoming.length === 0 ? null : <span className="count pending">{incoming.length}</span>}

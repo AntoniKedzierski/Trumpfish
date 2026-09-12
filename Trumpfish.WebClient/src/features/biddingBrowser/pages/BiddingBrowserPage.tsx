@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { Link, useBlocker, useSearchParams } from 'react-router-dom';
+import { useBlocker, useSearchParams } from 'react-router-dom';
 import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import { toNumber, type BiddingSystem, type BiddingSystemSummary, type NumberRange, type ValidationIssue } from '@/api/models';
+import { PageStatus } from '@/components/PageStatus';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
 import { BidTreeView } from '../components/BidTreeView';
@@ -326,14 +327,14 @@ export function BiddingBrowserPage() {
     <div className="bidding-browser">
       <UnsavedChangesPrompt blocker={blocker} />
 
-      <header className="page-header">
-        <Link to="/" className="back-link">← Narzędzia</Link>
-        <h1>Bidding Browser</h1>
-        <Link to="/tools/bidding-browser/systems" className="manage-link">Zarządzaj systemami</Link>
+      {/* The tab in the top bar names the tool; saying it again here would be chrome the user has already read. */}
+      <h1 className="sr-only">Bidding Browser</h1>
+
+      <PageStatus>
         {busy && <span className="status">Pracuję…</span>}
         {notice && <span className="status notice">{notice}</span>}
         {error && <span className="status error">{error}</span>}
-      </header>
+      </PageStatus>
 
       {/* Only a fork can fall behind, and only its owner is offered the update - an administrator edits the seed itself. */}
       {current?.seedUpdateAvailable && (

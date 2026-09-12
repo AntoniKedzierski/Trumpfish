@@ -60,6 +60,15 @@
   --accent-soft: rgb(79 186 180 / 14%);
   --accent-glow: rgb(79 186 180 / 30%);
 
+  /*
+   * The measure of a centred page. Stated here because three pages were each inventing their own, and a start page one
+   * hundred pixels wider than the page beside it reads as a mistake rather than as a decision. 1100 is the width the
+   * Bidding Browser already breaks its panes at, so the application only has to know one number.
+   */
+  --page-width: 1100px;
+  --page-pad-x: 28px;
+  --page-pad-y: 48px;
+
   /* Shape, depth and motion tokens shared by every surface. */
   --radius-sm: 6px;
   --radius-md: 10px;

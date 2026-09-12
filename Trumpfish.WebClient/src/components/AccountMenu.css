@@ -1,0 +1,68 @@
+.account-menu {
+  position: relative;
+}
+
+.app-bar .account-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--bar-control);
+  padding: 0 12px;
+  background: var(--surface-raised);
+  /* Matches the friends button beside it - the two read as one group, so they cannot round differently. */
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-weight: inherit;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+}
+
+.app-bar .account-chip:hover:not(:disabled),
+.app-bar .account-chip[aria-expanded='true'] {
+  background: var(--surface-overlay);
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.app-bar .account-chip .icon {
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.app-bar .account-chip:hover:not(:disabled) .icon,
+.app-bar .account-chip[aria-expanded='true'] .icon {
+  color: var(--accent);
+}
+
+.app-bar .account-chip .name {
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.app-bar .account-chip .role {
+  padding: 1px 7px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--amber-flame);
+  background: rgb(255 181 21 / 12%);
+  border-radius: 999px;
+}
+
+.account-chevron {
+  flex: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  transform: rotate(90deg);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.account-chip[aria-expanded='true'] .account-chevron {
+  transform: rotate(-90deg);
+}
+
+/* Hangs from the right edge: it is the last thing in the bar, so opening leftwards is the only way it stays on screen. */
+.account-panel {
+  right: 0;
+}

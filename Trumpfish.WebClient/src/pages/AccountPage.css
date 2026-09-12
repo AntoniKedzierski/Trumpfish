@@ -1,51 +1,20 @@
+/*
+ * Laid out as the practice setup screen is: a plain page with one card centred on it. The card itself comes from
+ * `components/SetupCard.css`, so the two views cannot end up different widths.
+ */
 .account {
-  max-width: 620px;
-  margin: 0 auto;
-  padding: 48px 28px;
+  padding: 20px 16px 40px;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
-.account .page-header {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
+/* Aligned to the card rather than to the page, or the title would sit on its own out at the left edge. */
 .account h1 {
-  margin: 0;
+  width: 100%;
+  max-width: 460px;
+  margin: 24px auto 0;
   font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.02em;
-}
-
-.account-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  padding: 24px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.account-card h2 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.account-card label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  font-size: 13px;
-  color: var(--text-muted);
 }
 
 .account-card dl {
@@ -64,9 +33,25 @@
   margin: 0;
 }
 
+/* Each block of settings is its own form, and a hairline keeps the three from reading as one long one. */
+.account-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.account-card h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
 .account-notice,
 .account-error {
-  margin: 0 0 20px;
+  margin: 0;
   padding: 10px 12px;
   font-size: 13px;
   border-radius: var(--radius-sm);

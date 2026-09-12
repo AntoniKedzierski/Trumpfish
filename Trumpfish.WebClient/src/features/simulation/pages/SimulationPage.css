@@ -5,51 +5,6 @@
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
-.simulation .page-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 18px 28px;
-  background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.simulation .page-header h1 {
-  margin: 0;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-
-.simulation .back-link {
-  padding: 5px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  font-size: 13px;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out);
-}
-
-.simulation .back-link:hover {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-}
-
-.simulation .status {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  background: rgb(255 181 21 / 12%);
-  color: var(--amber-flame);
-}
-
-.simulation .status.error {
-  background: rgb(235 39 39 / 14%);
-  color: var(--hearts);
-}
-
 .controls {
   display: flex;
   flex-wrap: wrap;

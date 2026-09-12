@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { deleteBiddingSystem, forkSeedSystem, listBiddingSystems, listSeedSystems, renameBiddingSystem, reforkSystem } from '@/api/biddingSystems';
 import type { BiddingSystemSummary } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
@@ -86,7 +86,6 @@ export function ManageSystemsPage() {
   return (
     <div className="manage-systems">
       <header className="page-header">
-        <Link to="/tools/bidding-browser" className="back-link">← Bidding Browser</Link>
         <h1>{isAdmin ? 'Systemy wzorcowe' : 'Moje systemy'}</h1>
         {busy && <span className="status">Pracuję…</span>}
         {notice && <span className="status notice">{notice}</span>}

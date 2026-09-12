@@ -5,64 +5,7 @@
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
-.page-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 18px 28px;
-  background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-
-.back-link {
-  padding: 5px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  font-size: 13px;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out),
-    color var(--duration-normal) var(--ease-out);
-}
-
-.back-link:hover {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-}
-
-/* Status chips fade in so a transient "busy" message never causes a layout flash. */
-.status {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  background: rgb(255 181 21 / 12%);
-  color: var(--amber-flame);
-  animation: chip-in var(--duration-normal) var(--ease-out) both;
-}
-
-.status.error {
-  background: rgb(235 39 39 / 14%);
-  color: var(--hearts);
-}
-
-.status.notice {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.page-header .manage-link {
-  font-size: 13px;
-}
-
-/* Sits directly under the header so an out-of-date fork is impossible to miss on opening it. */
+/* Sits above the toolbar so an out-of-date fork is impossible to miss on opening it. */
 .seed-update {
   display: flex;
   flex-wrap: wrap;
@@ -137,16 +80,7 @@
   background: rgb(235 39 39 / 12%);
 }
 
-@keyframes chip-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
+
 
 .toolbar {
   display: flex;

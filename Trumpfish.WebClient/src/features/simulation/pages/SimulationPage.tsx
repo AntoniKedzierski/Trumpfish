@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { listBiddingSystems } from '@/api/biddingSystems';
 import { simulateBidding } from '@/api/simulation';
 import type { BiddingSystemSummary, SimulationResponse } from '@/api/models';
+import { PageStatus } from '@/components/PageStatus';
 import { Select } from '@/components/Select';
 import { DealResultCard } from '../components/DealResultCard';
 import { generateDeals } from '../deals';
@@ -69,14 +69,12 @@ export function SimulationPage() {
 
   return (
     <div className="simulation">
-      <header className="page-header">
-        <Link to="/" className="back-link">
-          ← Narzędzia
-        </Link>
-        <h1>Symulacja licytacji AI</h1>
+      <h1 className="sr-only">Symulacja licytacji AI</h1>
+
+      <PageStatus>
         {busy ? <span className="status">Symulacja…</span> : null}
         {error === null ? null : <span className="status error">{error}</span>}
-      </header>
+      </PageStatus>
 
       <section className="controls">
         <label className="inline">

@@ -1,12 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { changePassword, updateProfile } from '@/api/auth';
 import { useAuth } from '@/auth/useAuth';
+import '@/components/SetupCard.css';
 import './AccountPage.css';
 
 export function AccountPage() {
-  const { user, logout, applyUser } = useAuth();
-  const navigate = useNavigate();
+  const { user, applyUser } = useAuth();
 
   const [displayName, setDisplayName] = useState(user?.displayName ?? '');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -60,20 +59,12 @@ export function AccountPage() {
     });
   };
 
-  const signOut = () => run(async () => {
-    await logout();
-    navigate('/login', { replace: true });
-    return '';
-  });
-
   return (
     <div className="account">
-      <header className="page-header">
-        <Link to="/" className="back-link">← Narzędzia</Link>
-        <h1>Konto</h1>
-      </header>
+      <h1>Konto</h1>
 
-      <section className="account-card">
+      {/* One card for the whole of it, laid out and sized exactly as the practice setup card is. */}
+      <section className="setup-card account-card">
         <h2>{user.displayName ?? user.username}</h2>
         <dl>
           <dt>Nazwa użytkownika</dt>
@@ -81,37 +72,36 @@ export function AccountPage() {
           <dt>Rola</dt>
           <dd>{user.isAdmin ? 'Administrator' : 'Użytkownik'}</dd>
         </dl>
-        <button type="button" onClick={signOut} disabled={busy}>Wyloguj się</button>
+
+        {notice !== null && notice !== '' && <p className="account-notice">{notice}</p>}
+        {error !== null && <p className="account-error">{error}</p>}
+
+        <form onSubmit={saveProfile}>
+          <h3>Profil</h3>
+          <label>
+            Nazwa wyświetlana
+            <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} autoComplete="nickname" />
+          </label>
+          <button type="submit" className="primary" disabled={busy}>Zapisz</button>
+        </form>
+
+        <form onSubmit={savePassword}>
+          <h3>Zmiana hasła</h3>
+          <label>
+            Aktualne hasło
+            <input type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} autoComplete="current-password" required />
+          </label>
+          <label>
+            Nowe hasło
+            <input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} autoComplete="new-password" minLength={6} required />
+          </label>
+          <label>
+            Powtórz nowe hasło
+            <input type="password" value={repeatPassword} onChange={(event) => setRepeatPassword(event.target.value)} autoComplete="new-password" minLength={6} required />
+          </label>
+          <button type="submit" className="primary" disabled={busy}>Zmień hasło</button>
+        </form>
       </section>
-
-      {notice !== null && notice !== '' && <p className="account-notice">{notice}</p>}
-      {error !== null && <p className="account-error">{error}</p>}
-
-      <form className="account-card" onSubmit={saveProfile}>
-        <h2>Profil</h2>
-        <label>
-          Nazwa wyświetlana
-          <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} autoComplete="nickname" />
-        </label>
-        <button type="submit" disabled={busy}>Zapisz</button>
-      </form>
-
-      <form className="account-card" onSubmit={savePassword}>
-        <h2>Zmiana hasła</h2>
-        <label>
-          Aktualne hasło
-          <input type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} autoComplete="current-password" required />
-        </label>
-        <label>
-          Nowe hasło
-          <input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} autoComplete="new-password" minLength={6} required />
-        </label>
-        <label>
-          Powtórz nowe hasło
-          <input type="password" value={repeatPassword} onChange={(event) => setRepeatPassword(event.target.value)} autoComplete="new-password" minLength={6} required />
-        </label>
-        <button type="submit" disabled={busy}>Zmień hasło</button>
-      </form>
     </div>
   );
 }

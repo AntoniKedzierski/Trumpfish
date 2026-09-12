@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import { getPracticeHint, startPracticeDeal, submitPracticeBid } from '@/api/practice';
 import type { BiddingSystem, BiddingSystemSummary, PracticeHint, PracticeRole, PracticeState } from '@/api/models';
+import { PageStatus } from '@/components/PageStatus';
 import { Select } from '@/components/Select';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
 import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
@@ -11,6 +11,7 @@ import { BiddingBox, type BoxBid } from '../components/BiddingBox';
 import { BidWarning } from '../components/BidWarning';
 import { exportDeals, type SavedDeal } from '../analysis';
 import { openingChoices } from '../openings';
+import '@/components/SetupCard.css';
 import './PracticePage.css';
 
 /**
@@ -164,23 +165,23 @@ export function PracticePage() {
 
   return (
     <div className="practice">
-      <header className="page-header">
-        <Link to="/" className="back-link">
-          ← Narzędzia
-        </Link>
-        <h1>Ćwiczenie licytacji</h1>
+      <h1 className="sr-only">Ćwiczenie licytacji</h1>
 
+      <PageStatus
+        actions={
+          /* Session commands, not deal commands: they end or reconfigure the whole exercise. */
+          phase === 'playing' ? (
+            <>
+              <button type="button" onClick={() => setPhase('setup')}>Ustawienia</button>
+              <button type="button" onClick={() => setPhase('ended')}>Zakończ</button>
+            </>
+          ) : null
+        }
+      >
         {busy ? <span className="status">Licytują boty…</span> : null}
         {notice === null || busy ? null : <span className="status">{notice}</span>}
         {error === null ? null : <span className="status error">{error}</span>}
-
-        {phase === 'playing' ? (
-          <div className="header-actions">
-            <button type="button" onClick={() => setPhase('setup')}>Ustawienia</button>
-            <button type="button" onClick={() => setPhase('ended')}>Zakończ</button>
-          </div>
-        ) : null}
-      </header>
+      </PageStatus>
 
       <main className="practice-main">
         {phase === 'setup' ? (

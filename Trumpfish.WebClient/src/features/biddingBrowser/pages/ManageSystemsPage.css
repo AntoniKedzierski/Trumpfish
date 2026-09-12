@@ -1,7 +1,12 @@
 .manage-systems {
-  max-width: 1000px;
+  /*
+   * Load-bearing: this box is a flex item of the application shell, where an auto side margin would otherwise stop it
+   * stretching and leave it sized to its own content - `max-width` never getting a look in.
+   */
+  width: 100%;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 40px 28px 64px;
+  padding: var(--page-pad-y) var(--page-pad-x) 64px;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 

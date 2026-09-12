@@ -1,0 +1,78 @@
+/*
+ * The card a view puts its configuration on: one column, centred, lifted off the background. It began on the practice
+ * setup screen and the account page now shares it, so the two are the same card rather than two cards that resemble each
+ * other - a resemblance is a thing that drifts.
+ */
+.setup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 460px;
+  margin: 24px auto 0;
+  padding: 26px 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: view-enter var(--duration-normal) var(--ease-out) both;
+}
+
+.setup-card h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.setup-card p {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.setup-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.setup-card label small {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--border-strong);
+}
+
+.setup-card input {
+  width: 100%;
+}
+
+.setup-card .primary {
+  padding: 10px 12px;
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.setup-card .primary:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+/* A button that reads as a link, for the aside offering the export. */
+.setup-card .link {
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.setup-card .link:hover:not(:disabled) {
+  background: none;
+  border: none;
+}

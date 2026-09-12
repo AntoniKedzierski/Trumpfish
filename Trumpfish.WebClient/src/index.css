@@ -141,6 +141,57 @@ textarea {
   line-height: 1.5;
 }
 
+/*
+ * A heading that only a screen reader meets. The tool views say what they are in the top bar, so repeating it on the page
+ * would be chrome the user has already read - but a document that starts at `h2` is a document with a hole in it.
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+/*
+ * The status chip, shared by every view that has something to report. Deliberately global, like `.suit`: four views draw the
+ * same pill, and four private copies of it is how they drift apart.
+ */
+.status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: rgb(255 181 21 / 12%);
+  color: var(--amber-flame);
+  animation: chip-in var(--duration-normal) var(--ease-out) both;
+}
+
+.status.notice {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.status.error {
+  background: rgb(235 39 39 / 14%);
+  color: var(--hearts);
+}
+
+/* Status chips fade in so a transient "busy" message never causes a layout flash. */
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Shared page transition: every routed view fades and settles into place. */
 @keyframes view-enter {
   from {

@@ -5,22 +5,37 @@
 }
 
 .app-bar {
+  /*
+   * One height for everything that sits in the bar. The controls in here are a link, a button and a chip - three elements
+   * with three different notions of their own size - so the bar states the height once and they all answer to it.
+   */
+  --bar-control: 34px;
+
   position: sticky;
   top: 0;
   z-index: 30;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 8px 16px;
   padding: 10px 28px;
   background: rgb(19 19 19 / 88%);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/* Icons in the bar track the text beside them, and never stretch when their row is squeezed. */
+.app-bar .icon {
+  flex: none;
+  font-size: 17px;
+}
+
 .app-brand {
   display: flex;
+  flex: none;
   align-items: center;
   gap: 10px;
+  height: var(--bar-control);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -41,10 +56,20 @@
   margin-left: auto;
 }
 
-/* The bar is slim, so the account chip that the start page used to carry has to be slimmer here. */
-.app-bar .account-chip {
-  padding: 4px 12px;
-  margin-left: 0;
+.app-bar .friends-trigger {
+  gap: 8px;
+  height: var(--bar-control);
+  padding: 0 12px;
+}
+
+.app-bar .friends-trigger .icon {
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.app-bar .friends-trigger:hover:not(:disabled) .icon,
+.app-bar .friends-trigger[aria-expanded='true'] .icon {
+  color: var(--accent);
 }
 
 .app-invitation {

@@ -3,7 +3,9 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/useAuth';
 import { duoRoute } from '@/features/duoPractice/route';
 import { useRealtime } from '@/realtime/useRealtime';
+import { AccountMenu } from './AccountMenu';
 import { FriendsMenu } from './FriendsMenu';
+import { ToolNav } from './ToolNav';
 import './AppLayout.css';
 
 /**
@@ -41,14 +43,11 @@ export function AppLayout() {
           <span>Trumpfish</span>
         </Link>
 
+        <ToolNav />
+
         <div className="app-bar-right">
           <FriendsMenu />
-          {user === null ? null : (
-            <Link to="/account" className="account-chip">
-              <span className="name">{user.displayName ?? user.username}</span>
-              <span className="role">{user.isAdmin ? 'Administrator' : 'Konto'}</span>
-            </Link>
-          )}
+          {user === null ? null : <AccountMenu user={user} />}
         </div>
       </header>
 

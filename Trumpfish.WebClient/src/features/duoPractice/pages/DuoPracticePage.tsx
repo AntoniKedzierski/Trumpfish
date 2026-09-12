@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useBlocker } from 'react-router-dom';
+import { useBlocker } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import { toNumber } from '@/api/models';
 import type { BiddingSystem, BiddingSystemSummary, DuoSettings, PracticeHint } from '@/api/models';
@@ -396,13 +396,9 @@ function Waiting({ children }: { children: React.ReactNode }) {
   );
 }
 
+/* The top bar names the tool, so what is left of the header is the heading a screen reader still needs to find. */
 function Header() {
-  return (
-    <header className="page-header">
-      <Link to="/" className="back-link">← Narzędzia</Link>
-      <h1>Ćwiczenie we dwoje</h1>
-    </header>
-  );
+  return <h1 className="sr-only">Ćwiczenie we dwoje</h1>;
 }
 
 function dealWord(count: number): string {

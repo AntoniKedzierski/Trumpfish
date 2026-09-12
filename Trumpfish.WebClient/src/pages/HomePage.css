@@ -1,7 +1,12 @@
 .home {
-  max-width: 1100px;
+  /*
+   * Load-bearing: this box is a flex item of the application shell, where an auto side margin would otherwise stop it
+   * stretching and leave it sized to its own content - `max-width` never getting a look in.
+   */
+  width: 100%;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 64px 28px;
+  padding: var(--page-pad-y) var(--page-pad-x) 64px;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
@@ -15,38 +20,6 @@
 .home > header img {
   width: 52px;
   height: 52px;
-}
-
-/* Pushed to the far edge of the header, so the account is always reachable without competing with the title. */
-.account-chip {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-left: auto;
-  padding: 10px 16px;
-  text-align: right;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  color: inherit;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out);
-}
-
-.account-chip:hover {
-  background: var(--surface-overlay);
-  border-color: var(--accent);
-  color: inherit;
-}
-
-.account-chip .name {
-  font-weight: 400;
-}
-
-.account-chip .role {
-  font-size: 12px;
-  color: var(--text-muted);
 }
 
 .home h1 {

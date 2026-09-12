@@ -5,64 +5,6 @@
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
-.practice .page-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 20px;
-  padding: 14px 20px;
-  background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.practice .page-header h1 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-
-.practice .back-link {
-  padding: 5px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  font-size: 13px;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out);
-}
-
-.practice .back-link:hover {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-}
-
-.practice .status {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  background: rgb(255 181 21 / 12%);
-  color: var(--amber-flame);
-}
-
-.practice .status.error {
-  background: rgb(235 39 39 / 14%);
-  color: var(--hearts);
-}
-
-/* Session commands sit with the title rather than with the deal: they end or reconfigure the whole exercise. */
-.header-actions {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.header-actions button {
-  padding: 6px 12px;
-  font-size: 13px;
-}
-
 .practice-main {
   flex: 1;
   padding: 20px 16px 40px;
@@ -72,8 +14,7 @@
  * One column, always: hand, then the box to bid from, then the auction so far. The table reads top to bottom on a phone the
  * same way it does on a monitor, so nothing has to be rearranged for a narrow screen.
  */
-.stack,
-.setup-card {
+.stack {
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -82,85 +23,23 @@
   margin: 0 auto;
 }
 
-.setup-card {
-  gap: 16px;
-  padding: 26px 24px;
-  max-width: 460px;
-  margin-top: 24px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  animation: view-enter var(--duration-normal) var(--ease-out) both;
-}
-
-.setup-card h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-
-.setup-card p {
-  margin: 0;
-  color: var(--text-primary);
-  line-height: 1.5;
-}
-
-.setup-card label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.setup-card label small {
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--border-strong);
-}
-
-.setup-card input {
-  width: 100%;
-}
+/* The card itself is shared with the account page; it lives in `components/SetupCard.css`. */
 
 .setup-saved {
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.setup-card .primary,
 .deal-actions .primary {
   color: var(--onyx);
   background: var(--accent);
   border-color: var(--accent);
 }
 
-.setup-card .primary {
-  padding: 10px 12px;
-}
-
-.setup-card .primary:hover:not(:disabled),
 .deal-actions .primary:hover:not(:disabled) {
   color: var(--onyx);
   background: var(--pearl-aqua);
   border-color: var(--pearl-aqua);
-}
-
-/* A button that reads as a link, for the aside offering the export. */
-.setup-card .link {
-  padding: 0;
-  background: none;
-  border: none;
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-.setup-card .link:hover:not(:disabled) {
-  background: none;
-  border: none;
 }
 
 .deal-bar {
