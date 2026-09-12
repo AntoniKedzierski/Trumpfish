@@ -4,6 +4,41 @@
  */
 
 export interface paths {
+    "/api/auth/csrf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AntiforgeryToken"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/login": {
         parameters: {
             query?: never;
@@ -747,6 +782,315 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/duo/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DuoInvitation"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/duo/table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DuoTableState"];
+                    };
+                };
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/duo/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/friends": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FriendsView"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/friends/invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["InviteFriendRequest"];
+                    "text/json": components["schemas"]["InviteFriendRequest"];
+                    "application/*+json": components["schemas"]["InviteFriendRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FriendsView"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/friends/{friendshipId}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    friendshipId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FriendsView"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/friends/{friendshipId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    friendshipId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FriendsView"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/practice/deal": {
         parameters: {
             query?: never;
@@ -987,6 +1331,9 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AntiforgeryToken: {
+            token: string;
+        };
         Bid: {
             type?: components["schemas"]["BidType"];
             color?: components["schemas"]["BidColor"];
@@ -1078,6 +1425,79 @@ export interface components {
             displayName: null | string;
             isAdmin: boolean;
             isDebugBuild: boolean;
+        };
+        DuoInvitation: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            fromUserId: string;
+            fromName: string;
+            /** Format: uuid */
+            toUserId: string;
+            toName: string;
+            systemName: string;
+            openingLabel: null | string;
+            settings: components["schemas"]["DuoSettings"];
+        };
+        DuoSeat: {
+            /** Format: uuid */
+            userId: string;
+            name: string;
+            position: components["schemas"]["PlayerPosition"];
+            connected: boolean;
+            isHost: boolean;
+        };
+        DuoSettings: {
+            /** Format: uuid */
+            systemId: string;
+            /** Format: uuid */
+            openingNodeId: null | string;
+            seed: null | string;
+            allowHints: boolean;
+            immediateMeanings: boolean;
+            checkBids: boolean;
+        };
+        DuoTableState: {
+            /** Format: uuid */
+            sessionId: string;
+            /** Format: int32 */
+            dealNumber: number | string;
+            dealer: components["schemas"]["PlayerPosition"];
+            hand: components["schemas"]["SimulationHand"];
+            bidding: components["schemas"]["SimulationBid"][];
+            warnings: components["schemas"]["PracticeWarning"][];
+            yourTurn: boolean;
+            legal: components["schemas"]["PracticeLegalBids"];
+            finished: boolean;
+            result: null | components["schemas"]["SimulationDealResult"];
+            error: null | string;
+            settings: components["schemas"]["DuoSettings"];
+            you: components["schemas"]["DuoSeat"];
+            partner: components["schemas"]["DuoSeat"];
+            systemName: string;
+            openingLabel: null | string;
+        };
+        /** @enum {unknown} */
+        FriendPresence: "Offline" | "Online" | "Busy";
+        /** @enum {unknown} */
+        FriendshipState: "Friend" | "Incoming" | "Outgoing";
+        FriendSummary: {
+            /** Format: uuid */
+            friendshipId: string;
+            /** Format: uuid */
+            userId: string;
+            username: string;
+            displayName: null | string;
+            state: components["schemas"]["FriendshipState"];
+            presence: components["schemas"]["FriendPresence"];
+        };
+        FriendsView: {
+            friends: components["schemas"]["FriendSummary"][];
+            incoming: components["schemas"]["FriendSummary"][];
+            outgoing: components["schemas"]["FriendSummary"][];
+        };
+        InviteFriendRequest: {
+            username: string;
         };
         LoginRequest: {
             username: string;

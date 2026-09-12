@@ -10,7 +10,10 @@ export interface SavedDeal {
   seed: string | null;
   /** The opening being practised, as it was labelled in the picker; null when the session practised everything. */
   opening: string | null;
-  role: PracticeRole;
+  /** Which side of the sequence the player sat on. Absent in a two-player session, where the roles are drawn every deal. */
+  role?: PracticeRole;
+  /** The person on the other side of the table, when it was a person rather than a bot. */
+  partner?: string;
   deal: SimulationDealResult;
 }
 

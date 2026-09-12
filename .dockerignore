@@ -34,3 +34,6 @@ BiddingBrowser/
 Dockerfile
 .dockerignore
 compose.yaml
+
+# Deployment files. They belong on the server, not in the image.
+deploy/

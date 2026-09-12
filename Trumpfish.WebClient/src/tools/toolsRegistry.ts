@@ -30,6 +30,13 @@ export const tools: ToolDescriptor[] = [
     enabled: true,
   },
   {
+    id: 'duo-practice',
+    title: 'Ćwiczenie we dwoje',
+    description: 'Usiądź ze znajomym jako para przeciwko dwóm botom i przećwiczcie razem wybraną gałąź otwarć.',
+    route: '/tools/duo-practice',
+    enabled: true,
+  },
+  {
     id: 'play-vs-ai',
     title: 'Gra z AI',
     description: 'Rozegraj licytację i rozgrywkę przeciwko silnikowi Trumpfish. W przygotowaniu.',

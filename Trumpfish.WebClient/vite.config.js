@@ -46,6 +46,12 @@ function createDevServerConfig() {
             '/api': {
                 target,
                 secure: false
+            },
+            // The SignalR hub negotiates over HTTP and then upgrades, so the proxy entry has to allow the upgrade as well.
+            '/hubs': {
+                target,
+                secure: false,
+                ws: true
             }
         },
         https: {

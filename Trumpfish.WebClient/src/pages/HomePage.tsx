@@ -1,25 +1,17 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/auth/useAuth';
 import { tools } from '@/tools/toolsRegistry';
 import './HomePage.css';
 
 export function HomePage() {
-  const { user } = useAuth();
-
   return (
     <div className="home">
+      {/* The account now lives in the shared top bar, so the page header is back to being just a title. */}
       <header>
         <img src="/images/card_icon.png" alt="" />
         <div>
           <h1>Trumpfish</h1>
           <p>Narzędzia brydżowe: systemy licytacyjne, analiza i gra z silnikiem.</p>
         </div>
-        {user !== null && (
-          <Link to="/account" className="account-chip">
-            <span className="name">{user.displayName ?? user.username}</span>
-            <span className="role">{user.isAdmin ? 'Administrator' : 'Konto'}</span>
-          </Link>
-        )}
       </header>
 
       <section className="tool-grid">

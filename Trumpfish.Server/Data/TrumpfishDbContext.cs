@@ -16,6 +16,8 @@ public class TrumpfishDbContext : DbContext {
 
     public DbSet<BidNodeRecord> BidNodes => Set<BidNodeRecord>();
 
+    public DbSet<FriendshipRecord> Friendships => Set<FriendshipRecord>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<UserRecord>(entity => {
@@ -25,6 +27,23 @@ public class TrumpfishDbContext : DbContext {
             entity.Property(e => e.NormalizedUsername).IsRequired().HasMaxLength(64);
             entity.Property(e => e.PasswordHash).IsRequired().HasMaxLength(512);
             entity.Property(e => e.DisplayName).HasMaxLength(128);
+        });
+
+        modelBuilder.Entity<FriendshipRecord>(entity => {
+            entity.HasKey(e => e.Id);
+
+            // One row per ordered pair. The reverse pair is rejected by the service, which looks the pair up in both directions
+            // before writing - an index cannot express "unordered pair" on its own.
+            entity.HasIndex(e => new { e.RequesterId, e.AddresseeId }).IsUnique();
+            entity.HasIndex(e => e.AddresseeId);
+
+            entity.Property(e => e.Status).HasConversion<string>().HasMaxLength(16);
+
+            // Only one of the two sides may cascade - PostgreSQL refuses two delete paths into the same table - so deleting an
+            // account takes the invitations it sent and leaves the ones it received. Nothing deletes accounts today; whatever
+            // eventually does will have to clear the addressee side itself.
+            entity.HasOne(e => e.Requester).WithMany().HasForeignKey(e => e.RequesterId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Addressee).WithMany().HasForeignKey(e => e.AddresseeId).OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<BiddingSystemRecord>(entity => {

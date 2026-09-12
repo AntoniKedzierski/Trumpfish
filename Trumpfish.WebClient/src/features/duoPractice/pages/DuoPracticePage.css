@@ -1,0 +1,140 @@
+/* The two-player table reuses the solo practice layout wholesale; only what is peculiar to having a partner lives here. */
+
+.duo-lead {
+  margin: 0 0 8px;
+  color: var(--text-muted);
+}
+
+.duo-error {
+  margin: 16px 20px 0;
+  padding: 10px 14px;
+  color: var(--spicy-orange);
+  background: rgb(198 81 26 / 10%);
+  border: 1px solid var(--spicy-orange);
+  border-radius: var(--radius-sm);
+}
+
+.duo-waiting {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.duo-dropped {
+  color: var(--amber-flame);
+}
+
+/* Sits above everything on the page, so an attempt to leave a live session cannot simply be ignored. */
+.leave-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 55%);
+  animation: view-enter var(--duration-fast) var(--ease-out) both;
+}
+
+.leave-dialog {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.leave-dialog h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.leave-dialog p {
+  margin: 0 0 20px;
+  color: var(--text-muted);
+}
+
+.leave-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.leave-actions .danger:hover:not(:disabled) {
+  color: var(--hearts);
+  border-color: var(--hearts);
+  background: rgb(235 39 39 / 12%);
+}
+
+.duo-notice {
+  margin: 16px 20px 0;
+  padding: 10px 14px;
+  color: var(--amber-earth);
+  background: rgb(227 131 24 / 10%);
+  border: 1px solid var(--amber-earth);
+  border-radius: var(--radius-sm);
+}
+
+/* The table waiting on somebody else. Sits inline wherever it is put, and carries its own sign that time is passing. */
+.duo-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.duo-pending > span:last-child {
+  animation: duo-breathe 2s var(--ease-in-out) infinite;
+}
+
+/* Inside the deal bar it takes the free space, so it sits between the context and the buttons instead of crowding them. */
+.deal-bar .duo-pending {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+}
+
+/* Under the bidding box it is the only thing on its line, so it gets a little air above it. */
+.panel > .duo-pending {
+  margin-top: 12px;
+}
+
+.duo-spinner {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: duo-spin 800ms linear infinite;
+}
+
+@keyframes duo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes duo-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* With motion turned down the ring stops turning, so the colour alone has to say which part is the indicator. */
+@media (prefers-reduced-motion: reduce) {
+  .duo-spinner {
+    border-top-color: var(--accent);
+    border-right-color: var(--accent);
+  }
+}

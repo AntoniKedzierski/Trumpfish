@@ -1,0 +1,129 @@
+.friends-menu {
+  position: relative;
+}
+
+.friends-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.friends-trigger .count {
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 999px;
+}
+
+.friends-trigger .count.online {
+  color: var(--surface-base);
+  background: var(--accent);
+}
+
+/* Somebody waiting to be let in is the one thing in here worth interrupting for, so it gets the warm colour. */
+.friends-trigger .count.pending {
+  color: var(--onyx);
+  background: var(--amber-flame);
+}
+
+.friends-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  width: 320px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 14px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: view-enter var(--duration-fast) var(--ease-out) both;
+}
+
+.friends-panel h3 {
+  margin: 14px 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.friends-panel section:first-of-type h3 {
+  margin-top: 8px;
+}
+
+.friends-add {
+  display: flex;
+  gap: 6px;
+}
+
+.friends-add input {
+  flex: 1;
+  min-width: 0;
+}
+
+.friends-offline,
+.friends-error,
+.friends-empty {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.friends-error {
+  margin: 8px 0 0;
+  color: var(--spicy-orange);
+}
+
+.friends-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.friends-name {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.friends-name small {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.friends-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.friends-actions button {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.dot.online {
+  background: var(--clubs);
+}
+
+.dot.busy {
+  background: var(--amber-flame);
+}

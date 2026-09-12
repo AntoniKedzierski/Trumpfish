@@ -366,3 +366,12 @@ FodyWeavers.xsd
 *.db
 *.db-shm
 *.db-wal
+
+# Production secrets. These live on the server only; deploy/.env.example is the checked in template.
+.env
+.env.*
+!.env.example
+
+# Local Docker Compose overrides, which are a developer's own and never the deployment's.
+compose.override.yaml
+compose.override.yml

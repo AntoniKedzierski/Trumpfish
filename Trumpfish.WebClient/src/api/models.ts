@@ -40,6 +40,14 @@ export type PracticeLegalBids = Schemas['PracticeLegalBids'];
 export type PracticeState = Schemas['PracticeState'];
 export type PracticeWarning = Schemas['PracticeWarning'];
 export type PracticeHint = Schemas['PracticeHint'];
+export type FriendPresence = Schemas['FriendPresence'];
+export type FriendshipState = Schemas['FriendshipState'];
+export type FriendSummary = Schemas['FriendSummary'];
+export type FriendsView = Schemas['FriendsView'];
+export type DuoSettings = Schemas['DuoSettings'];
+export type DuoInvitation = Schemas['DuoInvitation'];
+export type DuoSeat = Schemas['DuoSeat'];
+export type DuoTableState = Schemas['DuoTableState'];
 
 export const bidColors: readonly BidColor[] = ['NoColor', 'Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
 

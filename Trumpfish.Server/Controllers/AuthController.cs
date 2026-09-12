@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +25,18 @@ public class AuthController : ControllerBase {
 
     public AuthController(IUserService users) {
         _users = users;
+    }
+
+
+    /// <summary>
+    /// Hands out an antiforgery token and sets its companion cookie. Anonymous because signing in is itself a mutating call
+    /// and so needs a token before there is anybody to sign in as.
+    /// </summary>
+    [HttpGet("csrf")]
+    [AllowAnonymous]
+    [ProducesResponseType<AntiforgeryToken>(StatusCodes.Status200OK)]
+    public ActionResult<AntiforgeryToken> Csrf([FromServices] IAntiforgery antiforgery) {
+        return Ok(new AntiforgeryToken(antiforgery.GetAndStoreTokens(HttpContext).RequestToken!));
     }
 
 

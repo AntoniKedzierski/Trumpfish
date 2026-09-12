@@ -11,6 +11,16 @@ public record ChangePasswordRequest([Required] string CurrentPassword, [Required
 public record UpdateProfileRequest([StringLength(128)] string? DisplayName);
 
 /// <summary>
+/// The half of the antiforgery pair that travels in a header. Its companion is set as a cookie by the same request, and a
+/// mutating call is accepted only when both arrive and match.
+/// </summary>
+/// <remarks>
+/// The token is bound to the signed in account, so one taken while anonymous stops being valid the moment somebody signs in.
+/// A client has to ask for a fresh one after every change of identity.
+/// </remarks>
+public record AntiforgeryToken(string Token);
+
+/// <summary>
 /// The signed in account as the client sees it. <paramref name="IsAdmin"/> is what tells the client it is editing seeds rather
 /// than systems of its own, and that forking is not on offer.
 /// </summary>

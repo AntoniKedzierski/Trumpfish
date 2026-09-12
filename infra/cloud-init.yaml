@@ -1,0 +1,56 @@
+#cloud-config
+# Runs once, the first time the machine boots. Everything the host needs and nothing the application needs: the application
+# itself arrives later as an image pulled from the registry.
+
+package_update: true
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - unattended-upgrades
+
+write_files:
+  # A reserve rather than working memory: with 4 GiB there is room to spare, and the low swappiness keeps the kernel from
+  # reaching for the swap file until something genuinely goes wrong.
+  - path: /etc/sysctl.d/99-trumpfish.conf
+    content: |
+      vm.swappiness=10
+
+  # Container logs are capped: a 32 GB disk fills up quietly otherwise, and a full disk stops Postgres dead.
+  - path: /etc/docker/daemon.json
+    content: |
+      {
+        "log-driver": "json-file",
+        "log-opts": { "max-size": "10m", "max-file": "3" }
+      }
+
+runcmd:
+  - fallocate -l 2G /swapfile
+  - chmod 600 /swapfile
+  - mkswap /swapfile
+  - swapon /swapfile
+  - echo '/swapfile none swap sw 0 0' >> /etc/fstab
+  - sysctl --system
+
+  # Docker from Docker's own repository rather than Ubuntu's, which ships an older engine without the compose plugin.
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - usermod -aG docker azureuser
+  - systemctl enable --now docker
+
+  # Used by the nightly backup to upload with the machine's own identity, so no storage key is ever written to disk.
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+  # Where the deployment files land. Owned by the login account so deploying never needs root.
+  - mkdir -p /opt/trumpfish
+  - chown azureuser:azureuser /opt/trumpfish
+
+  # Security updates apply themselves. A reboot is never automatic: the containers come back on their own, but a reboot in
+  # the middle of a game is worse than a patch applied a day late.
+  - dpkg-reconfigure -f noninteractive unattended-upgrades
+
+final_message: "Trumpfish host ready after $UPTIME seconds"

@@ -1,0 +1,76 @@
+# The production stack: a TLS terminating proxy, the application, and its database, on one host.
+#
+#   docker compose -f compose.prod.yaml --env-file .env pull
+#   docker compose -f compose.prod.yaml --env-file .env up -d
+#
+# Unlike the compose.yaml used for local work, neither the database nor the application publishes a port. Only Caddy is
+# reachable from outside the host, and only on 80 and 443.
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Substituted into the Caddyfile, so the same file serves whatever name the host ends up with.
+      TRUMPFISH_HOSTNAME: ${TRUMPFISH_HOSTNAME}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # The issued certificates live here. Without a volume every restart asks Let's Encrypt for a new one and runs into its
+      # rate limit within a week.
+      - caddy-data:/data
+      - caddy-config:/config
+    mem_limit: 64m
+    depends_on:
+      - app
+
+  app:
+    image: ${TRUMPFISH_IMAGE}
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      # Rejects a request whose Host header is anything else, which is what stops the server from answering to whoever points
+      # a name of their own at this address. localhost is listed alongside it because the container's own health probe
+      # addresses itself that way, and host filtering runs before anything this application maps.
+      AllowedHosts: ${TRUMPFISH_HOSTNAME};localhost
+      ConnectionStrings__Trumpfish: "Host=db;Port=5432;Database=trumpfish;Username=trumpfish;Password=${POSTGRES_PASSWORD}"
+      Seed__AdminUsername: ${ADMIN_USERNAME}
+      Seed__AdminPassword: ${ADMIN_PASSWORD}
+      # Keeps the cookie signing keys across deployments; without it every restart signs everybody out.
+      DataProtection__KeyRingPath: /app/keys
+    volumes:
+      - dataprotection:/app/keys
+    # The health probe comes from the image, so it is defined in one place rather than repeated per environment.
+    mem_limit: 1536m
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: trumpfish
+      POSTGRES_USER: trumpfish
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # Sized against the container limit below rather than the host, which Postgres cannot see.
+    command: postgres -c shared_buffers=256MB -c max_connections=50 -c effective_cache_size=768MB
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # The server applies EF Core migrations on startup, so it must not start before Postgres accepts connections.
+      test: ["CMD-SHELL", "pg_isready -U trumpfish -d trumpfish"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    mem_limit: 1024m
+    shm_size: 128mb
+
+volumes:
+  # The database itself. It outlives every container and every deployment; `docker compose down -v` is what destroys it.
+  pgdata:
+  dataprotection:
+  caddy-data:
+  caddy-config:

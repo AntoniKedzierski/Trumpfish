@@ -5,6 +5,25 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/auth/csrf": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AntiforgeryToken"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -716,6 +735,236 @@
         }
       }
     },
+    "/api/duo/invitations": {
+      "get": {
+        "tags": [
+          "Duo"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DuoInvitation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/duo/table": {
+      "get": {
+        "tags": [
+          "Duo"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DuoTableState"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/duo/leave": {
+      "post": {
+        "tags": [
+          "Duo"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/friends": {
+      "get": {
+        "tags": [
+          "Friends"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FriendsView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/friends/invite": {
+      "post": {
+        "tags": [
+          "Friends"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteFriendRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteFriendRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteFriendRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FriendsView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/friends/{friendshipId}/accept": {
+      "post": {
+        "tags": [
+          "Friends"
+        ],
+        "parameters": [
+          {
+            "name": "friendshipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FriendsView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/friends/{friendshipId}": {
+      "delete": {
+        "tags": [
+          "Friends"
+        ],
+        "parameters": [
+          {
+            "name": "friendshipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FriendsView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/practice/deal": {
       "post": {
         "tags": [
@@ -955,6 +1204,17 @@
   },
   "components": {
     "schemas": {
+      "AntiforgeryToken": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
       "Bid": {
         "type": "object",
         "properties": {
@@ -1359,6 +1619,303 @@
           },
           "isDebugBuild": {
             "type": "boolean"
+          }
+        }
+      },
+      "DuoInvitation": {
+        "required": [
+          "id",
+          "fromUserId",
+          "fromName",
+          "toUserId",
+          "toName",
+          "systemName",
+          "openingLabel",
+          "settings"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fromUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fromName": {
+            "type": "string"
+          },
+          "toUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "toName": {
+            "type": "string"
+          },
+          "systemName": {
+            "type": "string"
+          },
+          "openingLabel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "settings": {
+            "$ref": "#/components/schemas/DuoSettings"
+          }
+        }
+      },
+      "DuoSeat": {
+        "required": [
+          "userId",
+          "name",
+          "position",
+          "connected",
+          "isHost"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "connected": {
+            "type": "boolean"
+          },
+          "isHost": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DuoSettings": {
+        "required": [
+          "systemId",
+          "openingNodeId",
+          "seed",
+          "allowHints",
+          "immediateMeanings",
+          "checkBids"
+        ],
+        "type": "object",
+        "properties": {
+          "systemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "openingNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "seed": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "allowHints": {
+            "type": "boolean"
+          },
+          "immediateMeanings": {
+            "type": "boolean"
+          },
+          "checkBids": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DuoTableState": {
+        "required": [
+          "sessionId",
+          "dealNumber",
+          "dealer",
+          "hand",
+          "bidding",
+          "warnings",
+          "yourTurn",
+          "legal",
+          "finished",
+          "result",
+          "error",
+          "settings",
+          "you",
+          "partner",
+          "systemName",
+          "openingLabel"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dealNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "hand": {
+            "$ref": "#/components/schemas/SimulationHand"
+          },
+          "bidding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationBid"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PracticeWarning"
+            }
+          },
+          "yourTurn": {
+            "type": "boolean"
+          },
+          "legal": {
+            "$ref": "#/components/schemas/PracticeLegalBids"
+          },
+          "finished": {
+            "type": "boolean"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SimulationDealResult"
+              }
+            ]
+          },
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "settings": {
+            "$ref": "#/components/schemas/DuoSettings"
+          },
+          "you": {
+            "$ref": "#/components/schemas/DuoSeat"
+          },
+          "partner": {
+            "$ref": "#/components/schemas/DuoSeat"
+          },
+          "systemName": {
+            "type": "string"
+          },
+          "openingLabel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "FriendPresence": {
+        "enum": [
+          "Offline",
+          "Online",
+          "Busy"
+        ]
+      },
+      "FriendshipState": {
+        "enum": [
+          "Friend",
+          "Incoming",
+          "Outgoing"
+        ]
+      },
+      "FriendSummary": {
+        "required": [
+          "friendshipId",
+          "userId",
+          "username",
+          "displayName",
+          "state",
+          "presence"
+        ],
+        "type": "object",
+        "properties": {
+          "friendshipId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/FriendshipState"
+          },
+          "presence": {
+            "$ref": "#/components/schemas/FriendPresence"
+          }
+        }
+      },
+      "FriendsView": {
+        "required": [
+          "friends",
+          "incoming",
+          "outgoing"
+        ],
+        "type": "object",
+        "properties": {
+          "friends": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FriendSummary"
+            }
+          },
+          "incoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FriendSummary"
+            }
+          },
+          "outgoing": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FriendSummary"
+            }
+          }
+        }
+      },
+      "InviteFriendRequest": {
+        "required": [
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
           }
         }
       },
@@ -2257,6 +2814,12 @@
     },
     {
       "name": "BiddingSystems"
+    },
+    {
+      "name": "Duo"
+    },
+    {
+      "name": "Friends"
     },
     {
       "name": "Practice"
