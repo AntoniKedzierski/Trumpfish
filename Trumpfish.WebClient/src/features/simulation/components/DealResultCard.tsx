@@ -1,6 +1,8 @@
 import type { BidColor, SimulationContract, SimulationDealResult } from '@/api/models';
 import { playerPositions, toNumber } from '@/api/models';
 import { makesGame } from '../sorting';
+import { vulnerabilityLabels, vulnerabilityOf } from '../vulnerability';
+import { DealAnalysis } from './DealAnalysis';
 import { BiddingTable, ContractLabel, HandView } from './DealViews';
 
 interface DealResultCardProps {
@@ -11,17 +13,29 @@ interface DealResultCardProps {
 export function DealResultCard({ deal }: DealResultCardProps) {
   const hands = new Map(deal.hands.map((hand) => [hand.position, hand]));
 
+  // The board's own number decides who is vulnerable, the way it does at a tournament.
+  const board = toNumber(deal.index) ?? 0;
+  const vulnerability = vulnerabilityOf(board);
+
   return (
     <article className={`deal-card${makesGame(deal.contract) ? ' game' : ''}`}>
       <header>
-        <h3>Rozdanie {(toNumber(deal.index) ?? 0) + 1}</h3>
-        <span className="deal-meta">Rozdaje {deal.dealer}</span>
+        <h3>Rozdanie {board + 1}</h3>
+        <span className="deal-meta">
+          Rozdaje {deal.dealer} · po partii {vulnerabilityLabels[vulnerability]}
+        </span>
+
         <span className={`deal-contract${deal.contract.passed ? ' passed' : ''}`}>
           <ContractLabel contract={deal.contract} />
-          {deal.contract.declarer === null || deal.contract.declarer === undefined ? '' : ` · ${deal.contract.declarer}`}
+          {deal.contract.declarer === null || deal.contract.declarer === undefined ? '' : ` ${deal.contract.declarer}`}
         </span>
+
         {deal.error === null || deal.error === undefined ? null : <span className="deal-error">{deal.error}</span>}
-        <ContractSummary contract={deal.contract} />
+
+        <div className="deal-footnote">
+          <ContractSummary contract={deal.contract} />
+          <DealAnalysis deal={deal} vulnerability={vulnerability} />
+        </div>
       </header>
 
       <div className="hands">

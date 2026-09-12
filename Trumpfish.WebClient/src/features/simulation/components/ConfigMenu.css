@@ -96,33 +96,24 @@
   color: var(--text-muted);
 }
 
-/* Opened in place: no hover to open it with, and no room beside the panel to open into. */
-@media (hover: none), (pointer: coarse) {
-  .picker-list {
-    margin-top: var(--space-1);
-    max-height: 40vh;
-    overflow-y: auto;
-  }
-}
-
-/* A submenu proper: it flies out beside the row, and hovering the row is enough to bring it. */
-@media (hover: hover) and (pointer: fine) {
-  .picker:hover .picker-list {
-    display: flex;
-  }
-
-  .picker-list {
-    position: absolute;
-    top: calc(-1 * var(--space-2));
-    left: calc(100% + var(--space-2));
-    z-index: 50;
-    width: 260px;
-    max-height: 320px;
-    overflow-y: auto;
-    padding: var(--space-2);
-    background: var(--surface-overlay);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-  }
+/*
+ * A combobox, opening below the row it belongs to - the same on a desktop as on a phone.
+ *
+ * It used to fly out to the side on a pointer device, the way a submenu does. That put it outside the panel it belongs to
+ * and made it the one control in the application that behaved differently depending on what was pointing at it, which is
+ * a thing to explain rather than a thing to use.
+ */
+.picker-list {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  left: 0;
+  z-index: 50;
+  max-height: 40vh;
+  overflow-y: auto;
+  padding: var(--space-2);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
 }

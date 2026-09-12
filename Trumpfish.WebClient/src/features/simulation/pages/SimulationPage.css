@@ -15,6 +15,17 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/*
+ * The same height as the tabs in the header. A tool bar standing taller than the application bar above it reads as a
+ * mistake rather than as a decision, so both answer to one number.
+ */
+.controls > button,
+.controls .popover-trigger {
+  height: var(--bar-control);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* A shade larger than the label beside it: this is the one button on the bar that starts work. */
 .controls .primary .icon {
   font-size: var(--text-lg);

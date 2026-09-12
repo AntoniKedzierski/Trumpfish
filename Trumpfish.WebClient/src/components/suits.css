@@ -15,21 +15,22 @@
  * nothing here that varies from one mark to the next - no aspect ratio to resolve and no way for one pip to come out a
  * different size from another.
  */
+/*
+ * One em square, standing on the baseline, and not one number here that can land on a fraction of a pixel.
+ *
+ * The drawing already stands on the bottom edge of its own box (see `fit` in suits.tsx), and inline layout puts that edge
+ * on the baseline, so the pip lands where a letter lands with nothing to correct. Every font size in the application is a
+ * whole number of pixels, so the box is a whole number of pixels too, and it snaps to the same size in every row instead
+ * of rounding a pixel taller in one and shorter in the next.
+ *
+ * With no margin the margin box and the border box are the same box, which also settles the hands: grid baseline
+ * alignment synthesises a replaced element's baseline from one or the other, and the engines do not agree which.
+ */
 .mark-svg {
   display: inline-block;
   width: calc(var(--mark-box) * var(--mark-aspect, 1));
   height: var(--mark-box);
   vertical-align: baseline;
-
-  /*
-   * Dropped by the air under the drawing, so that the drawing stands on the baseline rather than the box around it.
-   *
-   * The normalised mark is centred in a 24 unit box with 20 units of ink, which leaves two units of air below it. Both
-   * inline layout and grid baseline alignment put a replaced element's bottom *margin* edge on the baseline, so pulling
-   * that margin up by those two units - a twelfth of the box - lets the pip sit where a letter would. One rule covers
-   * the auction table and the hands alike, because both align the same way.
-   */
-  margin-bottom: calc(var(--mark-box) / -12);
 }
 
 /*
@@ -37,10 +38,7 @@
  * their own - usually with no digit beside them to line up with - so there is nothing to share a baseline with.
  */
 .mark-call .mark-svg {
-  --mark-box: 1em;
-
-  /* Centred on the line rather than stood on it, so it wants no baseline correction. */
-  margin-bottom: 0;
+  /* Centred on the line rather than stood on it: these two draw inside their own box and never share a row with a digit. */
   vertical-align: middle;
 }
 
@@ -52,4 +50,16 @@
 /* The wrapper has no box to put a margin on, so the gap goes on the drawing. */
 .bid-level + .mark .mark-svg {
   margin-left: 0.14em;
+}
+
+/*
+ * A whole call as one inline box.
+ *
+ * Dropped straight into a flex container - the contract pill, a menu row - the level and the mark become two separate
+ * flex items, and a mark that is a flex item is one that no longer answers to `vertical-align`. Wrapped, the pair is a
+ * single item from the outside and ordinary inline text on the inside, which is the one arrangement that aligns.
+ */
+.bid-call {
+  display: inline-block;
+  white-space: nowrap;
 }

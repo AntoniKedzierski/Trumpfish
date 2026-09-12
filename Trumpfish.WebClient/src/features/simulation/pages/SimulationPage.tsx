@@ -18,7 +18,7 @@ import './SimulationPage.css';
 export function SimulationPage() {
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
   const [systemId, setSystemId] = useState('');
-  const [dealCount, setDealCount] = useState(10);
+  const [dealCount, setDealCount] = useState(500);
   const [seed, setSeed] = useState('');
   const [result, setResult] = useState<SimulationResponse | null>(null);
   const [busy, setBusy] = useState(false);

@@ -5,12 +5,6 @@
 }
 
 .app-bar {
-  /*
-   * One height for everything that sits in the bar. The controls in here are a link, a button and a chip - three elements
-   * with three different notions of their own size - so the bar states the height once and they all answer to it.
-   */
-  --bar-control: 34px;
-
   position: sticky;
   top: 0;
   z-index: 30;

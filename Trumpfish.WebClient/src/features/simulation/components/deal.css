@@ -15,7 +15,8 @@
 }
 
 /* Cards later in the grid are painted on top, so the one holding an open explanation has to be lifted above them. */
-.deal-card:has(.bid-explanation) {
+.deal-card:has(.bid-explanation),
+.deal-card:has(.deal-analysis-panel) {
   z-index: 30;
 }
 
@@ -56,19 +57,52 @@
   color: var(--text-muted);
 }
 
-/* The contract pill draws the same marks as the table does, so it gets the same room for them. */
-.deal-contract {
-  margin-left: auto;
+/*
+ * The contract pill, and the analysis chip that is drawn to match it. One rule for both, because "identical to the
+ * contract marker" is a requirement rather than a resemblance.
+ */
+/*
+ * Aligned on baselines, not on boxes. These are flex containers, so whatever they hold is a flex item - and a flex item
+ * ignores `vertical-align`, which is what stands a suit mark on the line in the first place. Baseline alignment puts the
+ * mark back on the same line as the level beside it and the seat after it.
+ */
+.deal-contract,
+.deal-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   padding: 5px 12px;
+  border: 1px solid transparent;
   border-radius: 999px;
   font-size: var(--text-sm);
   background: var(--accent-soft);
   color: var(--accent);
+  white-space: nowrap;
+}
+
+.deal-contract {
+  margin-left: auto;
 }
 
 .deal-contract.passed {
   background: var(--surface-hover);
   color: var(--text-muted);
+}
+
+/*
+ * The strength of the pair that bought the contract, and beside it the way into what the cards were actually worth. One
+ * row, because both are footnotes on the same auction.
+ */
+.deal-footnote {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.deal-footnote .deal-analysis {
+  margin-left: auto;
 }
 
 .deal-error {
@@ -77,9 +111,8 @@
   color: var(--hearts);
 }
 
-/* Pair strength for the final contract, on its own row under the header. */
+/* Pair strength for the final contract. Shares its row with the analysis chip. */
 .deal-summary {
-  flex-basis: 100%;
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
@@ -148,10 +181,9 @@
 /*
  * The mark sits inside a box of its own rather than being a grid item itself.
  *
- * A replaced element put straight into a grid track has no baseline of its own, so the engine synthesises one - and where
- * it synthesises it from, the margin box or the border box, is not settled between engines. The correction that stands
- * the pip on the baseline is a negative bottom margin, which the second reading ignores, so the row came out aligned in
- * some places and a pixel out in others.
+ * A replaced element put straight into a grid track has no baseline of its own, so the engine synthesises one from its
+ * own box rather than from a line of text, and the pip ends up aligned against the cards by a different rule than it is
+ * aligned by anywhere else.
  *
  * Wrapped, the grid is aligning two ordinary line boxes, and the pip is positioned inside its own line the same way it is
  * everywhere else in the application.

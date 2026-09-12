@@ -88,14 +88,26 @@
    * the pips are set a little above that: a round shape beside a digit reads smaller than it measures. One number to
    * nudge, and the only one worth nudging.
    */
-  --mark-height: 0.78em;
+  /*
+   * How tall a control in a bar stands. Stated once for the application: the buttons on a tool bar and the tabs in the
+   * header are the same kind of thing and reading as different heights makes the page look assembled rather than designed.
+   */
+  --bar-control: 34px;
 
   /*
-   * The square the mark is drawn in. The drawing is normalised to fill 20 of the 24 units of its box (see `suits.tsx`),
-   * so the element is a fifth larger than the ink inside it. Derived rather than stated, so that changing the height
-   * above is enough.
+   * The square a suit mark is drawn in: exactly as tall as the text it stands in, and never anything else.
+   *
+   * Every font size in the application is a whole number of pixels, so one em is a whole number of pixels too, and the
+   * element therefore occupies the same whole number of pixels in every row it appears in. Sized to anything else - it
+   * used to be 0.936em - the box came out on a fraction, and a fraction gets rounded up in one row and down in the next
+   * depending on where the row fell in the pixel grid. A mark rounded a pixel taller reads as a mark sitting a pixel
+   * high, which is how the same bid came out level on one line and crooked on the line under it.
+   *
+   * The drawing does not fill the box: it is 78 per cent of it, standing on the bottom edge, which is the proportion a
+   * capital letter has and the size the marks were tuned to. That share is applied in `suits.tsx`, where the drawing is
+   * fitted to the box.
    */
-  --mark-box: calc(var(--mark-height) * 1.2);
+  --mark-box: 1em;
 
   /*
    * Spacing on a 4px rhythm. The three that matter for a form: 2 inside a field group (label, control, the line

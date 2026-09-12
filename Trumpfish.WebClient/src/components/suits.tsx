@@ -42,12 +42,24 @@ const letter = {
  * on how the surrounding layout resolved an intrinsic aspect ratio. That is the wobble.
  *
  * So the box is fixed at 24 by 24 for all of them and the drawing is fitted into it here instead: scaled until its ink is
- * `suitInk` tall and centred on both axes. The ink is then exactly the same height in every mark, the element is exactly
- * the same width and height in every mark, and nothing is left for a layout to interpret. A drawing narrower than the box
- * simply has air either side of it, which is what the air is for.
+ * `suitInk` tall, centred across, and stood on the bottom edge. The ink is then exactly the same height in every mark, the
+ * element is exactly the same width and height in every mark, and nothing is left for a layout to interpret. A drawing
+ * narrower than the box simply has air either side of it, which is what the air is for.
+ *
+ * Standing the ink on the bottom edge rather than centring it is what lets the mark align. The element's bottom edge is
+ * what inline layout puts on the baseline, so ink flush with that edge stands on the baseline exactly, and the stylesheet
+ * needs no correction to stand it there - which matters, because a correction stated in `em` lands on a fraction of a
+ * pixel and the engine rounds it differently from one row to the next.
+ *
+ * The share of the box the ink takes is the other half of the same argument. The element is exactly one em square (see
+ * `--mark-box`), so that it measures a whole number of pixels wherever it appears; the drawing is then the fraction of
+ * that square a capital letter would be. Were it the drawing that were stated in em and the box derived from it, the box
+ * would be the thing landing on a fraction, and a box rounded a pixel taller reads as a mark sitting a pixel high.
  */
 const suitBox = 24;
-const suitInk = 20;
+
+/** 78 per cent of the box, which is where the marks were tuned to. The air it leaves all sits above the drawing. */
+const suitInk = suitBox * 0.78;
 
 /** The drawn extent of each mark, measured off its paths: x, y, width, height. */
 type Ink = readonly [number, number, number, number];
@@ -55,7 +67,7 @@ type Ink = readonly [number, number, number, number];
 function fit([x, y, width, height]: Ink): string {
   const scale = suitInk / height;
   const dx = suitBox / 2 - (x + width / 2) * scale;
-  const dy = suitBox / 2 - (y + height / 2) * scale;
+  const dy = suitBox - (y + height) * scale;
   return `translate(${round(dx)} ${round(dy)}) scale(${round(scale)})`;
 }
 
@@ -176,11 +188,19 @@ export function RedoubleMark({ className }: { className?: string }) {
 /** A whole call - level and mark, or the double, or a pass - drawn rather than printed. */
 export function BidMark({ type, color, level }: { type: BidType; color: BidColor; level: number | null }) {
   if (type === 'Double') {
-    return <DoubleMark />;
+    return (
+      <span className="bid-call">
+        <DoubleMark />
+      </span>
+    );
   }
 
   if (type === 'Redouble') {
-    return <RedoubleMark />;
+    return (
+      <span className="bid-call">
+        <RedoubleMark />
+      </span>
+    );
   }
 
   if (type !== 'Submit') {
@@ -188,9 +208,9 @@ export function BidMark({ type, color, level }: { type: BidType; color: BidColor
   }
 
   return (
-    <>
+    <span className="bid-call">
       <span className="bid-level">{level ?? ''}</span>
       <SuitMark suit={color} />
-    </>
+    </span>
   );
 }

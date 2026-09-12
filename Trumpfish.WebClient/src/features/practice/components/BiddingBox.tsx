@@ -41,8 +41,8 @@ export function BiddingBox({ legal, disabled, onBid }: BiddingBoxProps) {
       ))}
 
       <BoxCell label={<span className="box-pass">Pas</span>} available={!disabled} onClick={() => onBid({ type: 'Pass', color: 'NoColor', value: null })} />
-      <BoxCell label={<DoubleMark className="box-double" />} available={!disabled && legal.canDouble} onClick={() => onBid({ type: 'Double', color: 'NoColor', value: null })} />
-      <BoxCell label={<RedoubleMark className="box-double" />} available={!disabled && legal.canRedouble} onClick={() => onBid({ type: 'Redouble', color: 'NoColor', value: null })} />
+      <BoxCell label={<span className="box-bid"><DoubleMark className="box-double" /></span>} available={!disabled && legal.canDouble} onClick={() => onBid({ type: 'Double', color: 'NoColor', value: null })} />
+      <BoxCell label={<span className="box-bid"><RedoubleMark className="box-double" /></span>} available={!disabled && legal.canRedouble} onClick={() => onBid({ type: 'Redouble', color: 'NoColor', value: null })} />
       <span className="box-cell empty" />
       <span className="box-cell empty" />
     </div>

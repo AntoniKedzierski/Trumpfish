@@ -16,7 +16,7 @@ export const sortKeyLabels: Record<SortKey, string> = {
 export const sortDirectionLabels: Record<SortDirection, string> = { desc: 'Malejąco', asc: 'Rosnąco' };
 
 /** Level a contract has to reach in a given denomination to be a game: 3NT, 4 in a major, 5 in a minor. */
-const gameLevels: Record<string, number> = { NoTrump: 3, Spades: 4, Hearts: 4, Diamonds: 5, Clubs: 5 };
+export const gameLevels: Record<string, number> = { NoTrump: 3, Spades: 4, Hearts: 4, Diamonds: 5, Clubs: 5 };
 
 export function makesGame(contract: SimulationContract): boolean {
   const value = toNumber(contract.value);

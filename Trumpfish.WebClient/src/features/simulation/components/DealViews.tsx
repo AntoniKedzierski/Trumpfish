@@ -205,11 +205,19 @@ function BidCell({ bid, explain, flagOffSystem, open, onToggle, onClose }: BidCe
 /** Only the suit mark is tinted - the level, Pass, the double and the redouble stay in the default text colour. */
 export function BidLabel({ bid }: { bid: Pick<SimulationBid, 'type' | 'color' | 'value' | 'label'> }) {
   if (bid.type === 'Double') {
-    return <DoubleMark />;
+    return (
+      <span className="bid-call">
+        <DoubleMark />
+      </span>
+    );
   }
 
   if (bid.type === 'Redouble') {
-    return <RedoubleMark />;
+    return (
+      <span className="bid-call">
+        <RedoubleMark />
+      </span>
+    );
   }
 
   if (bid.type !== 'Submit') {
@@ -217,10 +225,10 @@ export function BidLabel({ bid }: { bid: Pick<SimulationBid, 'type' | 'color' | 
   }
 
   return (
-    <>
+    <span className="bid-call">
       <span className="bid-level">{toNumber(bid.value) ?? ''}</span>
       <SuitMark suit={bid.color} />
-    </>
+    </span>
   );
 }
 
@@ -231,10 +239,10 @@ export function ContractLabel({ contract }: { contract: SimulationContract }) {
   }
 
   return (
-    <>
+    <span className="bid-call">
       <span className="bid-level">{toNumber(contract.value) ?? ''}</span>
       <SuitMark suit={contract.color} />
       {contract.isRedoubled ? <RedoubleMark /> : contract.isDoubled ? <DoubleMark /> : null}
-    </>
+    </span>
   );
 }

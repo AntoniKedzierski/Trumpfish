@@ -1331,6 +1331,15 @@
       "BiddingGoal": {
         "type": "integer"
       },
+      "BiddingMiss": {
+        "enum": [
+          "None",
+          "CouldHaveBid",
+          "Overbid",
+          "CouldHaveDoubled",
+          "ShouldNotHaveDoubled"
+        ]
+      },
       "BiddingSystem": {
         "type": "object",
         "properties": {
@@ -1696,6 +1705,96 @@
           }
         }
       },
+      "DoubleDummyBestContract": {
+        "required": [
+          "pair",
+          "declarer",
+          "level",
+          "color",
+          "tricks",
+          "score",
+          "isSacrifice",
+          "isDefence",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "pair": {
+            "$ref": "#/components/schemas/Pair"
+          },
+          "declarer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "tricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isSacrifice": {
+            "type": "boolean"
+          },
+          "isDefence": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "DoubleDummyBid": {
+        "required": [
+          "declarer",
+          "level",
+          "color"
+        ],
+        "type": "object",
+        "properties": {
+          "declarer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "isDoubled": {
+            "type": "boolean",
+            "default": false
+          },
+          "isRedoubled": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
       "DoubleDummyContract": {
         "required": [
           "pair",
@@ -1766,6 +1865,30 @@
           }
         }
       },
+      "DoubleDummyDifference": {
+        "required": [
+          "pair",
+          "points",
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "pair": {
+            "$ref": "#/components/schemas/Pair"
+          },
+          "points": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/BiddingMiss"
+          }
+        }
+      },
       "DoubleDummyInfo": {
         "required": [
           "available",
@@ -1815,6 +1938,61 @@
           }
         }
       },
+      "DoubleDummyPlayed": {
+        "required": [
+          "pair",
+          "declarer",
+          "level",
+          "color",
+          "tricks",
+          "underTricks",
+          "score"
+        ],
+        "type": "object",
+        "properties": {
+          "pair": {
+            "$ref": "#/components/schemas/Pair"
+          },
+          "declarer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "tricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "underTricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "DoubleDummyRequest": {
         "required": [
           "deal"
@@ -1833,6 +2011,16 @@
                 "$ref": "#/components/schemas/Vulnerability"
               }
             ]
+          },
+          "contract": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyBid"
+              }
+            ]
           }
         }
       },
@@ -1844,7 +2032,12 @@
           "parScore",
           "parPair",
           "best",
-          "parContracts"
+          "parContracts",
+          "bestNs",
+          "bestEw",
+          "diffNs",
+          "diffEw",
+          "played"
         ],
         "type": "object",
         "properties": {
@@ -1893,6 +2086,56 @@
             "items": {
               "$ref": "#/components/schemas/DoubleDummyContract"
             }
+          },
+          "bestNs": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyBestContract"
+              }
+            ]
+          },
+          "bestEw": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyBestContract"
+              }
+            ]
+          },
+          "diffNs": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyDifference"
+              }
+            ]
+          },
+          "diffEw": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyDifference"
+              }
+            ]
+          },
+          "played": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyPlayed"
+              }
+            ]
           }
         }
       },

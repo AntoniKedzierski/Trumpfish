@@ -1,6 +1,8 @@
 using Model;
 using Model.DoubleDummy;
 using Model.Enums;
+using Model.Helpers;
+using Model.Scoring;
 using Trumpfish.Server.Contracts;
 
 namespace Trumpfish.Server.Services;
@@ -43,7 +45,7 @@ internal static class DoubleDummyMapping {
     }
 
 
-    public static DoubleDummyResponse Map(DoubleDummyAnalysis analysis) {
+    public static DoubleDummyResponse Map(DoubleDummyAnalysis analysis, DoubleDummyBid? bid) {
         return new DoubleDummyResponse(
             analysis.Dealer,
             analysis.Vulnerability,
@@ -51,7 +53,51 @@ internal static class DoubleDummyMapping {
             analysis.ParScore,
             analysis.ParPair,
             analysis.BestContract is null ? null : Map(analysis.BestContract),
-            analysis.ParContracts.Select(Map).ToList());
+            analysis.ParContracts.Select(Map).ToList(),
+            Map(analysis.Best(Pair.NorthSouth)),
+            Map(analysis.Best(Pair.EastWest)),
+            bid is null ? null : Map(analysis.Difference(Pair.NorthSouth, bid.Declarer, bid.Level, bid.Color, ToDoubling(bid))),
+            bid is null ? null : Map(analysis.Difference(Pair.EastWest, bid.Declarer, bid.Level, bid.Color, ToDoubling(bid))),
+            bid is null ? null : Played(analysis, bid));
+    }
+
+
+    /// <summary>
+    /// The auction's own contract, solved. Sent alongside the difference it feeds into, because "you are four hundred out"
+    /// is a much easier number to accept once the two hundred of it that came from going down is named separately.
+    /// </summary>
+    private static DoubleDummyPlayed Played(DoubleDummyAnalysis analysis, DoubleDummyBid bid) {
+        var pair = bid.Declarer.GetPair();
+        var tricks = analysis.Table.Tricks(bid.Declarer, bid.Color);
+
+        return new DoubleDummyPlayed(
+            pair,
+            bid.Declarer,
+            bid.Level,
+            bid.Color,
+            tricks,
+            Math.Max(0, bid.Level + 6 - tricks),
+            BridgeScoring.Score(bid.Level, bid.Color, tricks, analysis.IsVulnerable(pair), ToDoubling(bid)));
+    }
+
+
+    /// <summary>A doubled contract and a redoubled one score differently enough that the two flags cannot be collapsed.</summary>
+    private static Doubling ToDoubling(DoubleDummyBid bid) {
+        return bid.IsRedoubled ? Doubling.Redoubled
+            : bid.IsDoubled ? Doubling.Doubled
+            : Doubling.None;
+    }
+
+
+    private static DoubleDummyDifference? Map(BiddingDifference? difference) {
+        return difference is null ? null : new DoubleDummyDifference(difference.Pair, difference.Points, difference.Reason);
+    }
+
+
+    private static DoubleDummyBestContract? Map(PairBest? best) {
+        return best is null
+            ? null
+            : new DoubleDummyBestContract(best.Pair, best.Declarer, best.Level, best.Color, best.Tricks, best.Score, best.IsSacrifice, best.IsDefence, best.Label);
     }
 
 
