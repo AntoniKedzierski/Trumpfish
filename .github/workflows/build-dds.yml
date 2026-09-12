@@ -1,0 +1,79 @@
+name: Build DDS
+
+# The double dummy solver is a native dependency that changes once per DDS release, so it is built on demand rather than
+# on every push. Run the workflow, download the artifacts, and commit them under native/ - see native/README.md.
+#
+# Building here rather than on a developer machine is what keeps the C++ toolchain off it: the Windows runner ships with
+# MSVC, which Bazel needs even when it compiles with its own hermetic clang, and the Linux runner needs nothing at all.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "DDS tag to build - see https://github.com/dds-bridge/dds/tags"
+        required: true
+        default: v3.1.0
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.artifact }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      # The two platforms are independent, so a broken Windows toolchain should not cost the Linux library as well.
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: dds-win-x64
+            library: dds.dll
+          - os: ubuntu-latest
+            artifact: dds-linux-x64
+            library: libdds.so
+
+    steps:
+      - name: Check out DDS
+        uses: actions/checkout@v4
+        with:
+          repository: dds-bridge/dds
+          ref: ${{ inputs.version }}
+
+      # Bazelisk reads the Bazel version out of the checked out repository's .bazelversion, so nothing is pinned twice.
+      - name: Install Bazelisk
+        run: npm install --global @bazel/bazelisk
+
+      # Bazel's default output root sits deep under the user profile, which on Windows runs into the path length limit
+      # part way through a build this size. Putting the tree at the root of the drive is the documented way round it.
+      - name: Build the shared library (Windows)
+        if: runner.os == 'Windows'
+        run: bazelisk --output_user_root=C:/b build //jni:dds_shared
+
+      # Bazel's hermetic LLVM is a prebuilt binary: clang and ld.lld link against the system libxml2, zlib and terminfo.
+      # The runner image normally has all three, but the build fails deep in the link step when it does not.
+      - name: Install the toolchain's own dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libxml2 zlib1g libtinfo6
+
+      - name: Build the shared library (Linux)
+        if: runner.os == 'Linux'
+        run: bazelisk build //jni:dds_shared
+
+      - name: Collect the artifact
+        shell: bash
+        run: |
+          mkdir -p out
+          # bazel-bin is a symlink on Linux and a junction on Windows, so the copy has to follow it.
+          cp -L "bazel-bin/jni/${{ matrix.library }}" out/
+          cp LICENSE out/LICENSE-dds.txt
+          echo "${{ inputs.version }}" > out/VERSION
+          sha256sum "out/${{ matrix.library }}"
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: out/
+          if-no-files-found: error

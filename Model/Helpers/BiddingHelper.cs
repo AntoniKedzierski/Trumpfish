@@ -104,4 +104,21 @@ public static class BiddingHelper {
     public static bool IsColorGame(this BidColor color) => color != BidColor.NoTrump && color != BidColor.NoColor;
 
     public static bool IsNoTrumpGame(this BidColor color) => color == BidColor.NoTrump;
+
+
+    public static Pair GetPair(this PlayerPosition player) => (int)player % 2 == 0 ? Pair.NorthSouth : Pair.EastWest;
+
+
+    public static bool Contains(this Pair pair, PlayerPosition player) => player.GetPair() == pair;
+
+
+    public static Pair Opponents(this Pair pair) => pair == Pair.NorthSouth ? Pair.EastWest : Pair.NorthSouth;
+
+
+    /// <summary>The two seats of a pair. North and east come first, so the order is stable whichever side is asked for.</summary>
+    public static PlayerPosition[] Seats(this Pair pair) {
+        return pair == Pair.NorthSouth
+            ? [PlayerPosition.North, PlayerPosition.South]
+            : [PlayerPosition.East, PlayerPosition.West];
+    }
 }

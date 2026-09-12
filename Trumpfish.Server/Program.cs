@@ -10,6 +10,7 @@ using Trumpfish.Server.Data;
 using Trumpfish.Server.Filters;
 using Trumpfish.Server.Hubs;
 using Trumpfish.Server.Services;
+using Trumpfish.Server.Services.Dds;
 
 namespace Trumpfish.Server;
 
@@ -49,6 +50,7 @@ public partial class Program {
         }
 
         builder.Services.Configure<SeedOptions>(builder.Configuration.GetSection(SeedOptions.SectionName));
+        builder.Services.Configure<DoubleDummyOptions>(builder.Configuration.GetSection(DoubleDummyOptions.SectionName));
 
         builder.Services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
         builder.Services.AddScoped<IUserService, UserService>();
@@ -63,6 +65,11 @@ public partial class Program {
 #endif
         builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
         builder.Services.AddSingleton<IPracticeService, PracticeService>();
+
+        // Holds the pool of native solvers and the cache of tables it has already worked out, so it has to outlive a request.
+        // It loads nothing until the first deal is actually sent to it.
+        builder.Services.AddSingleton<IDoubleDummySolver, DoubleDummySolver>();
+
         builder.Services.AddScoped<IFriendService, FriendService>();
 
         // The live half of the application: who is connected, who has been invited, and the tables in progress. All three are
