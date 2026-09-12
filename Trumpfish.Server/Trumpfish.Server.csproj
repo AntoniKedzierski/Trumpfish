@@ -47,6 +47,16 @@
     <Content Update="Seed\**\*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- The double dummy solver is a native library built out of https://github.com/dds-bridge/dds - see native\README.md for how
+       to produce it. Both platforms are copied straight into the output folder rather than under runtimes\<rid>\native, because
+       nothing writes these into deps.json: the default probing only finds a native library next to the application itself.
+       Every file is optional. A working copy without them builds and runs exactly as before, with the analysis endpoint
+       reporting itself unavailable, which is also what a developer who never touches that feature should get. -->
+  <ItemGroup>
+    <None Include="..\native\win-x64\dds.dll" Link="dds.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('..\native\win-x64\dds.dll')" />
+    <None Include="..\native\linux-x64\libdds.so" Link="libdds.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('..\native\linux-x64\libdds.so')" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
 

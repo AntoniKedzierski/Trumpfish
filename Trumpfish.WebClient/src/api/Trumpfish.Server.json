@@ -5,6 +5,80 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/analysis/dds": {
+      "post": {
+        "tags": [
+          "Analysis"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoubleDummyRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoubleDummyRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoubleDummyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoubleDummyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/analysis/dds/info": {
+      "get": {
+        "tags": [
+          "Analysis"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoubleDummyInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/csrf": {
       "get": {
         "tags": [
@@ -1622,6 +1696,230 @@
           }
         }
       },
+      "DoubleDummyContract": {
+        "required": [
+          "pair",
+          "declarer",
+          "level",
+          "color",
+          "tricks",
+          "overTricks",
+          "underTricks",
+          "isSacrifice",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "pair": {
+            "$ref": "#/components/schemas/Pair"
+          },
+          "declarer": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PlayerPosition"
+              }
+            ]
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "tricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "overTricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "underTricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isSacrifice": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "DoubleDummyInfo": {
+        "required": [
+          "available",
+          "reason",
+          "version",
+          "platform",
+          "cores",
+          "details"
+        ],
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "version": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "platform": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "cores": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "details": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "DoubleDummyRequest": {
+        "required": [
+          "deal"
+        ],
+        "type": "object",
+        "properties": {
+          "deal": {
+            "$ref": "#/components/schemas/SimulationDealRequest"
+          },
+          "vulnerability": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Vulnerability"
+              }
+            ]
+          }
+        }
+      },
+      "DoubleDummyResponse": {
+        "required": [
+          "dealer",
+          "vulnerability",
+          "table",
+          "parScore",
+          "parPair",
+          "best",
+          "parContracts"
+        ],
+        "type": "object",
+        "properties": {
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
+          },
+          "table": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoubleDummyTricks"
+            }
+          },
+          "parScore": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "parPair": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Pair"
+              }
+            ]
+          },
+          "best": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DoubleDummyContract"
+              }
+            ]
+          },
+          "parContracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoubleDummyContract"
+            }
+          }
+        }
+      },
+      "DoubleDummyTricks": {
+        "required": [
+          "declarer",
+          "color",
+          "tricks"
+        ],
+        "type": "object",
+        "properties": {
+          "declarer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "tricks": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "DuoInvitation": {
         "required": [
           "id",
@@ -1956,6 +2254,13 @@
             "format": "int32"
           }
         }
+      },
+      "Pair": {
+        "enum": [
+          "NorthSouth",
+          "EastWest",
+          null
+        ]
       },
       "PlayerPosition": {
         "enum": [
@@ -2805,10 +3110,21 @@
           "Warning",
           "Error"
         ]
+      },
+      "Vulnerability": {
+        "enum": [
+          "None",
+          "NorthSouth",
+          "EastWest",
+          "Both"
+        ]
       }
     }
   },
   "tags": [
+    {
+      "name": "Analysis"
+    },
     {
       "name": "Auth"
     },

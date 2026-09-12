@@ -19,6 +19,9 @@ RUN --mount=type=cache,target=/root/.nuget/packages \
     dotnet restore Trumpfish.Server/Trumpfish.Server.csproj -p:SkipSpaBuild=true
 COPY Model/ Model/
 COPY Trumpfish.Server/ Trumpfish.Server/
+# The double dummy solver, if this working copy has it built. The project file picks it up when it is there and leaves the
+# analysis endpoint reporting itself unavailable when it is not, so the image builds either way. See native/README.md.
+COPY native/ native/
 COPY --from=spa /spa/dist/ Trumpfish.WebClient/dist/
 # The same cache has to be mounted here: --no-restore trusts the restore above, whose packages live in the cache rather than
 # in a layer of their own.
