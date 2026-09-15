@@ -76,6 +76,28 @@ add_credential "github-environment-$ENVIRONMENT" "repo:$REPO:environment:$ENVIRO
 # that is tedious to diagnose from the pipeline's side.
 add_credential "github-branch-$BRANCH" "repo:$REPO:ref:refs/heads/$BRANCH"
 
+# GitHub is in the middle of moving the subject claim to a form that carries the numeric identifiers of the account and
+# the repository next to their names - `repo:owner@1234/name@5678:...` rather than `repo:owner/name:...`. The numbers
+# never change, so a credential written this way cannot be inherited by whoever claims the name after a rename. Which of
+# the two forms a given repository presents is a setting on GitHub's side and it is being switched on by default, so
+# both are registered and whichever arrives matches one of them.
+OWNER=${REPO%%/*}
+NAME=${REPO##*/}
+
+OWNER_ID=$(curl -fsS "https://api.github.com/users/$OWNER" | grep -oE '"id": *[0-9]+' | head -1 | grep -oE '[0-9]+')
+REPO_ID=$(curl -fsS "https://api.github.com/repos/$REPO" | grep -oE '"id": *[0-9]+' | head -1 | grep -oE '[0-9]+')
+
+if [ -z "${OWNER_ID:-}" ] || [ -z "${REPO_ID:-}" ]; then
+    echo "Nie udało się odczytać identyfikatorów repozytorium z api.github.com." >&2
+    exit 1
+fi
+
+REPO_WITH_IDS="$OWNER@$OWNER_ID/$NAME@$REPO_ID"
+echo "    identyfikatory: $REPO_WITH_IDS"
+
+add_credential "github-environment-$ENVIRONMENT-ids" "repo:$REPO_WITH_IDS:environment:$ENVIRONMENT"
+add_credential "github-branch-$BRANCH-ids" "repo:$REPO_WITH_IDS:ref:refs/heads/$BRANCH"
+
 # The name of a role assignment is a GUID of the caller's choosing, not something Azure hands out. Neither of the two
 # usual ways of producing one exists in Git Bash on Windows, where this is as likely to be run as on a Linux shell, so
 # there is a fallback that shapes sixteen random bytes into a version 4 GUID by hand.
