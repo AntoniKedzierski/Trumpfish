@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { changePassword, updateProfile } from '@/api/auth';
 import { useAuth } from '@/auth/useAuth';
+import { CheckIcon, KeyIcon } from '@/components/icons';
 import '@/components/SetupCard.css';
 import './AccountPage.css';
 
@@ -82,7 +83,10 @@ export function AccountPage() {
             Nazwa wyświetlana
             <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} autoComplete="nickname" />
           </label>
-          <button type="submit" className="primary" disabled={busy}>Zapisz</button>
+          <button type="submit" className="primary" disabled={busy}>
+            <CheckIcon />
+            <span>Zapisz</span>
+          </button>
         </form>
 
         <form onSubmit={savePassword}>
@@ -99,7 +103,10 @@ export function AccountPage() {
             Powtórz nowe hasło
             <input type="password" value={repeatPassword} onChange={(event) => setRepeatPassword(event.target.value)} autoComplete="new-password" minLength={6} required />
           </label>
-          <button type="submit" className="primary" disabled={busy}>Zmień hasło</button>
+          <button type="submit" className="primary" disabled={busy}>
+            <KeyIcon />
+            <span>Zmień hasło</span>
+          </button>
         </form>
       </section>
     </div>

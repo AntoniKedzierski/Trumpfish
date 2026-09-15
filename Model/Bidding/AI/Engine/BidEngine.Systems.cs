@@ -46,7 +46,10 @@ public partial class BidEngine {
 
         var firstChosenBid = chosenBids[0];
         if (!chosenBids.All(e => e.EqualsByColorAndValue(firstChosenBid))) {
-            throw new Exception("Multiple tree branches possible: " + string.Join(", ", chosenBids.Distinct()));
+            throw new Exception(
+                "Multiple tree branches possible: " +
+                string.Join("\n\r", chosenBids.Select(e => e.ToString() + ": " + e.Condition + " (after: " + e.Parent?.ToString() + ": " + e.Parent?.Condition + ")"))
+            );
         }
 
         return firstChosenBid;

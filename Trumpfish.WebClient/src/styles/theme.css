@@ -32,17 +32,17 @@
   --carbon-black: #1c1c1c;
   --graphite: #333333;
   --saddle-brown: #7a4024;
-  --spicy-orange: #c6511a;
+  --spicy-orange: #e5733d;
   --amber-earth: #e38318;
   --amber-flame: #ffb515;
   --tropical-teal: #4fbab4;
   --pearl-aqua: #9bd2cf;
   --alabaster-grey: #a8a8a8;
-  --no-trump: #e46ee0;
-  --spades: #3b65c7;
-  --hearts: #eb2727;
+  --no-trump: #f07af0;
+  --spades: #6190ff;
+  --hearts: #ff5757;
   --diamonds: #ff9e28;
-  --clubs: #0ab357;
+  --clubs: #17c964;
   --white: #fdfdfd;
   --light-gray: #d0d0d0;
 
@@ -68,6 +68,57 @@
   --page-width: 1100px;
   --page-pad-x: 28px;
   --page-pad-y: 48px;
+
+  /*
+   * The type scale. One place decides what each step is worth, and the interface asks for steps rather than for pixels.
+   *
+   * `base` is body and the size a control's own label is set in; `sm` is what gets typed into a field, the small commands
+   * and the dealt cards; `lg` is the top level navigation. Tightened from 12/14/16/18 on the way through - the interface
+   * was reading a size large for a tool that is looked at for a long time.
+   */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+
+  /*
+   * How tall a suit mark is drawn - the ink, not the box around it. Lato's capitals and lining figures stand 0.72em, and
+   * the pips are set a little above that: a round shape beside a digit reads smaller than it measures. One number to
+   * nudge, and the only one worth nudging.
+   */
+  /*
+   * How tall a control in a bar stands. Stated once for the application: the buttons on a tool bar and the tabs in the
+   * header are the same kind of thing and reading as different heights makes the page look assembled rather than designed.
+   */
+  --bar-control: 34px;
+
+  /*
+   * The square a suit mark is drawn in: exactly as tall as the text it stands in, and never anything else.
+   *
+   * Every font size in the application is a whole number of pixels, so one em is a whole number of pixels too, and the
+   * element therefore occupies the same whole number of pixels in every row it appears in. Sized to anything else - it
+   * used to be 0.936em - the box came out on a fraction, and a fraction gets rounded up in one row and down in the next
+   * depending on where the row fell in the pixel grid. A mark rounded a pixel taller reads as a mark sitting a pixel
+   * high, which is how the same bid came out level on one line and crooked on the line under it.
+   *
+   * The drawing does not fill the box: it is 78 per cent of it, standing on the bottom edge, which is the proportion a
+   * capital letter has and the size the marks were tuned to. That share is applied in `suits.tsx`, where the drawing is
+   * fitted to the box.
+   */
+  --mark-box: 1em;
+
+  /*
+   * Spacing on a 4px rhythm. The three that matter for a form: 2 inside a field group (label, control, the line
+   * explaining it), 4 between items in a section, 5 between sections.
+   */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
 
   /* Shape, depth and motion tokens shared by every surface. */
   --radius-sm: 6px;

@@ -55,7 +55,7 @@ public class AnalysisController : ControllerBase {
                 request.Vulnerability ?? Vulnerability.None,
                 cancellationToken);
 
-            return Ok(DoubleDummyMapping.Map(analysis));
+            return Ok(DoubleDummyMapping.Map(analysis, request.Contract));
         }
         catch (DdsException exception) {
             // The solver rejected the deal itself - duplicated cards that survived the check above, or something equally

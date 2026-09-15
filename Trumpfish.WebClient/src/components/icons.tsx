@@ -87,3 +87,114 @@ export function LogOutIcon({ className }: { className?: string }) {
     </Icon>
   );
 }
+
+/** A triangle pointing forward: begin the exercise. */
+export function PlayIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M8 5.5 18.5 12 8 18.5V5.5Z" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A tick: the change is kept. */
+export function CheckIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="m4.5 12.5 5 5 10-11" {...stroke} />
+    </Icon>
+  );
+}
+
+/**
+ * A floppy disk: writing the system back to the server.
+ */
+/*
+ * The shutter at the top and the label at the bottom, because the outline alone is a rounded square and reads as nothing.
+ * The clipped corner is on the right, where the notch on the real thing was.
+ */
+export function SaveIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4.5 6.5A2 2 0 0 1 6.5 4.5h9l4 4v9a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z" {...stroke} />
+      <path d="M8.5 4.5v5h6v-5" {...stroke} />
+      <path d="M8 19.5v-5h8v5" {...stroke} />
+    </Icon>
+  );
+}
+
+/** Three lines: the navigation, folded away because the bar ran out of room for it. */
+export function MenuIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4 7h16M4 12h16M4 17h16" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A key: the password. */
+export function KeyIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <circle cx="8" cy="16" r="3.75" {...stroke} />
+      <path d="m10.75 13.25 8-8" {...stroke} />
+      <path d="m16.5 7.5 2.25 2.25" {...stroke} />
+      <path d="m19 5 2 2" {...stroke} />
+    </Icon>
+  );
+}
+
+/**
+ * Three cards spread in a fan: a hand being dealt, which is what the simulator does.
+ */
+/*
+ * The two behind are outlines and the one in front is solid. Drawn as three outlines the back cards' edges would carry on
+ * straight through the front one, and at this size that reads as a scribble rather than as cards.
+ */
+export function CardsIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <rect x="3.6" y="6.4" width="9.2" height="13.2" rx="2.2" transform="rotate(-20 8.2 13)" {...stroke} />
+      <rect x="11.2" y="6.4" width="9.2" height="13.2" rx="2.2" transform="rotate(20 15.8 13)" {...stroke} />
+      <rect x="7.4" y="4.6" width="9.2" height="15" rx="2.2" {...stroke} fill="currentColor" />
+    </Icon>
+  );
+}
+
+/** Sliders: the run is set up here. */
+export function SettingsIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M5 7.5h14M5 16.5h14" {...stroke} />
+      <circle cx="9.5" cy="7.5" r="2.4" {...stroke} fill="currentColor" />
+      <circle cx="15.5" cy="16.5" r="2.4" {...stroke} fill="currentColor" />
+    </Icon>
+  );
+}
+
+/** A funnel: the filters. */
+export function FilterIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M3.5 4.5h17l-6.6 7.8v6.2l-3.8 1.9v-8.1L3.5 4.5Z" {...stroke} />
+    </Icon>
+  );
+}
+
+/** Three bars of falling length: the sort order. */
+export function SortIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4 6.5h15M4 12h10M4 17.5h5" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A cross: clear what was typed, or clear the whole filter. */
+export function CloseIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="m6.5 6.5 11 11M17.5 6.5l-11 11" {...stroke} />
+    </Icon>
+  );
+}

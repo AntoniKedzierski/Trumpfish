@@ -4,6 +4,100 @@
  */
 
 export interface paths {
+    "/api/analysis/dds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["DoubleDummyRequest"];
+                    "text/json": components["schemas"]["DoubleDummyRequest"];
+                    "application/*+json": components["schemas"]["DoubleDummyRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DoubleDummyResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Service Unavailable */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/analysis/dds/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DoubleDummyInfo"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/csrf": {
         parameters: {
             query?: never;
@@ -1345,6 +1439,8 @@ export interface components {
         /** @enum {unknown} */
         BidColor: "NoColor" | "Clubs" | "Diamonds" | "Hearts" | "Spades" | "NoTrump";
         BiddingGoal: number;
+        /** @enum {unknown} */
+        BiddingMiss: "None" | "CouldHaveBid" | "Overbid" | "CouldHaveDoubled" | "ShouldNotHaveDoubled";
         BiddingSystem: {
             systemName?: string;
             roots?: components["schemas"]["Root"][];
@@ -1425,6 +1521,103 @@ export interface components {
             displayName: null | string;
             isAdmin: boolean;
             isDebugBuild: boolean;
+        };
+        DoubleDummyBestContract: {
+            pair: components["schemas"]["Pair"];
+            declarer: components["schemas"]["PlayerPosition"];
+            /** Format: int32 */
+            level: number | string;
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            tricks: number | string;
+            /** Format: int32 */
+            score: number | string;
+            isSacrifice: boolean;
+            isDefence: boolean;
+            label: string;
+        };
+        DoubleDummyBid: {
+            declarer: components["schemas"]["PlayerPosition"];
+            /** Format: int32 */
+            level: number | string;
+            color: components["schemas"]["BidColor"];
+            /** @default false */
+            isDoubled: boolean;
+            /** @default false */
+            isRedoubled: boolean;
+        };
+        DoubleDummyCell: {
+            declarer: components["schemas"]["PlayerPosition"];
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            tricks: number | string;
+            /** Format: int32 */
+            level: null | number | string;
+            /** Format: int32 */
+            down: null | number | string;
+        };
+        DoubleDummyContract: {
+            pair: components["schemas"]["Pair"];
+            declarer: null | components["schemas"]["PlayerPosition"];
+            /** Format: int32 */
+            level: number | string;
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            tricks: number | string;
+            /** Format: int32 */
+            overTricks: number | string;
+            /** Format: int32 */
+            underTricks: number | string;
+            isSacrifice: boolean;
+            label: string;
+        };
+        DoubleDummyDifference: {
+            pair: components["schemas"]["Pair"];
+            /** Format: int32 */
+            points: number | string;
+            reason: components["schemas"]["BiddingMiss"];
+        };
+        DoubleDummyInfo: {
+            available: boolean;
+            reason: null | string;
+            version: null | string;
+            platform: null | string;
+            /** Format: int32 */
+            cores: null | number | string;
+            details: null | string;
+        };
+        DoubleDummyPlayed: {
+            pair: components["schemas"]["Pair"];
+            declarer: components["schemas"]["PlayerPosition"];
+            /** Format: int32 */
+            level: number | string;
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            tricks: number | string;
+            /** Format: int32 */
+            underTricks: number | string;
+            /** Format: int32 */
+            score: number | string;
+        };
+        DoubleDummyRequest: {
+            deal: components["schemas"]["SimulationDealRequest"];
+            vulnerability?: null | components["schemas"]["Vulnerability"];
+            contract?: null | components["schemas"]["DoubleDummyBid"];
+        };
+        DoubleDummyResponse: {
+            dealer: components["schemas"]["PlayerPosition"];
+            vulnerability: components["schemas"]["Vulnerability"];
+            table: components["schemas"]["DoubleDummyCell"][];
+            /** Format: int32 */
+            parScore: number | string;
+            parPair: null | components["schemas"]["Pair"];
+            best: null | components["schemas"]["DoubleDummyContract"];
+            parContracts: components["schemas"]["DoubleDummyContract"][];
+            bestNs: null | components["schemas"]["DoubleDummyBestContract"];
+            bestEw: null | components["schemas"]["DoubleDummyBestContract"];
+            diffNs: null | components["schemas"]["DoubleDummyDifference"];
+            diffEw: null | components["schemas"]["DoubleDummyDifference"];
+            played: null | components["schemas"]["DoubleDummyPlayed"];
         };
         DuoInvitation: {
             /** Format: uuid */
@@ -1509,6 +1702,8 @@ export interface components {
             /** Format: int32 */
             upper?: null | number | string;
         };
+        /** @enum {unknown} */
+        Pair: "NorthSouth" | "EastWest" | null;
         /** @enum {unknown} */
         PlayerPosition: "North" | "East" | "South" | "West";
         PracticeBidLabel: {
@@ -1699,6 +1894,8 @@ export interface components {
         };
         /** @enum {unknown} */
         ValidationSeverity: "Info" | "Warning" | "Error";
+        /** @enum {unknown} */
+        Vulnerability: "None" | "NorthSouth" | "EastWest" | "Both";
     };
     responses: never;
     parameters: never;

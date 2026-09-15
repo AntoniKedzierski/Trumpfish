@@ -11,6 +11,9 @@ import { BiddingBox, type BoxBid } from '../components/BiddingBox';
 import { BidWarning } from '../components/BidWarning';
 import { exportDeals, type SavedDeal } from '../analysis';
 import { openingChoices } from '../openings';
+import { PlayIcon } from '@/components/icons';
+import { HelpTip } from '@/components/HelpTip';
+import { BidMark } from '@/components/suits';
 import '@/components/SetupCard.css';
 import './PracticePage.css';
 
@@ -201,28 +204,42 @@ export function PracticePage() {
             </label>
 
             <label>
-              <span>Ćwiczone otwarcie</span>
+              <span className="field-name">
+                Ćwiczone otwarcie
+                <HelpTip>Dostaniesz karty, którymi da się to otworzyć. Puste - rozdania bez żadnych warunków.</HelpTip>
+              </span>
               <Select
                 value={openingNodeId}
                 options={[
                   { value: '', label: 'Wszystkie - karty bez warunków' },
-                  ...openings.map((choice) => ({ value: choice.nodeId, label: `${choice.label} · ${choice.meaning}` })),
+                  ...openings.map((choice) => ({
+                    value: choice.nodeId,
+                    label: `${choice.label} · ${choice.meaning}`,
+                    // The string is what the option is announced and titled by; this is what it looks like.
+                    labelNode: (
+                      <>
+                        <BidMark type={choice.type} color={choice.color} level={choice.level} />
+                        {` · ${choice.meaning}`}
+                      </>
+                    ),
+                  })),
                 ]}
                 onChange={setOpeningNodeId}
                 disabled={openings.length === 0}
               />
-              <small>Dostaniesz karty, którymi da się to otworzyć. Puste - rozdania bez żadnych warunków.</small>
             </label>
 
             <label>
-              <span>Siadasz jako</span>
+              <span className="field-name">
+                Siadasz jako
+                <HelpTip>Przy odpowiadaniu warunki dostaje partner, a ty dowolne karty.</HelpTip>
+              </span>
               <Select
                 value={role}
                 options={(Object.keys(roleLabels) as PracticeRole[]).map((key) => ({ value: key, label: roleLabels[key] }))}
                 onChange={setRole}
                 disabled={openingNodeId === ''}
               />
-              <small>Przy odpowiadaniu warunki dostaje partner, a ty dowolne karty.</small>
             </label>
 
             <label>
@@ -235,9 +252,11 @@ export function PracticePage() {
             </label>
 
             <label>
-              <span>Ziarno</span>
-              <input type="text" value={seed} placeholder="puste = losowe" onChange={(event) => setSeed(event.target.value)} />
-              <small>Nazwane ziarno powtarza te same rozdania, rozdanie po rozdaniu.</small>
+              <span className="field-name">
+                Ziarno
+                <HelpTip>Nazwane ziarno powtarza te same rozdania, rozdanie po rozdaniu.</HelpTip>
+              </span>
+              <input type="text" value={seed} placeholder="Losowe…" onChange={(event) => setSeed(event.target.value)} />
             </label>
 
             <div className="field">
@@ -245,11 +264,12 @@ export function PracticePage() {
                 <input type="checkbox" checked={checkBids} onChange={(event) => setCheckBids(event.target.checked)} />
                 <span>Sprawdzaj moje odzywki</span>
               </label>
-              <small>Gdy zalicytujesz coś, czego twoja ręka nie potwierdza, dostaniesz informację co obiecałeś i co mówi system.</small>
+              <HelpTip>Gdy zalicytujesz coś, czego twoja ręka nie potwierdza, dostaniesz informację co obiecałeś i co mówi system.</HelpTip>
             </div>
 
             <button type="button" className="primary" onClick={start} disabled={busy || systemId === ''}>
-              {table === null ? 'Zaczynamy' : 'Zacznij od nowa'}
+              <PlayIcon />
+              <span>{table === null ? 'Zaczynamy' : 'Zacznij od nowa'}</span>
             </button>
 
             {table === null ? null : (
@@ -314,7 +334,7 @@ export function PracticePage() {
               <DealResultCard key={dealNumber} deal={table.result} />
             ) : (
               <>
-                <section className="panel">
+                <section className="panel hand-panel">
                   <div className="panel-head">
                     <h2>Twoja ręka</h2>
                     <button
@@ -345,12 +365,12 @@ export function PracticePage() {
                   )}
                 </section>
 
-                <section className="panel">
+                <section className="panel box-panel">
                   <h2>Twoja odzywka</h2>
                   <BiddingBox legal={table.legal} disabled={!table.playerToBid || busy} onBid={(chosen) => void bid(chosen)} />
                 </section>
 
-                <section className="panel">
+                <section className="panel auction-panel">
                   <h2>Licytacja</h2>
                   <BiddingTable
                     key={dealNumber}

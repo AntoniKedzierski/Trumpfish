@@ -29,6 +29,6 @@
 
 .page-strip-actions button {
   padding: 6px 12px;
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 

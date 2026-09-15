@@ -3,6 +3,7 @@ import { useBlocker, useSearchParams } from 'react-router-dom';
 import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import { toNumber, type BiddingSystem, type BiddingSystemSummary, type NumberRange, type ValidationIssue } from '@/api/models';
 import { PageStatus } from '@/components/PageStatus';
+import { useMediaQuery } from '@/components/useMediaQuery';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
 import { BidTreeView } from '../components/BidTreeView';
@@ -26,12 +27,23 @@ export function BiddingBrowserPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [editorWidth, setEditorWidth] = useState(360);
+  // Whether the editor is open over the tree. Only ever true on a layout that has nowhere to put it beside the tree.
+  const [editing, setEditing] = useState(false);
   // Both are bumped to fire a one-off effect: focus the meaning field, and bring the selected bid into view in the tree.
   const [conditionFocus, setConditionFocus] = useState(0);
   const [revealKey, setRevealKey] = useState(0);
 
   const isAdmin = user?.isAdmin ?? false;
   const current = savedSystems.find((system) => system.id === state.systemId) ?? null;
+
+  /*
+   * Below this the tree and the editor stop being two panes and become one screen.
+   *
+   * Side by side they need something like nine hundred pixels between them before either is usable; sharing a phone they
+   * would be two useless halves. So the tree takes the screen - it is what the browser is for - and the editor is asked
+   * for, by holding the bid to be edited, and given the screen in turn.
+   */
+  const narrow = useMediaQuery('(max-width: 900px)');
 
   const refreshSavedSystems = useCallback(async () => {
     const systems = await listBiddingSystems();
@@ -161,6 +173,18 @@ export function BiddingBrowserPage() {
   const handleValidate = () => run(async () => {
     dispatch({ kind: 'setIssues', issues: await validateBiddingSystem(state.system as BiddingSystem) });
   });
+
+  /**
+   * Starts a system under the name it was given.
+   *
+   * It arrives with no id, so the first save is what creates it. The name is fixed at this point and not offered for
+   * editing afterwards: renaming a loaded system is not a thing anybody means to do, and the field that allowed it sat on
+   * the toolbar one keystroke away from doing it by accident.
+   */
+  const handleCreate = (name: string) => {
+    dispatch({ kind: 'loadSystem', system: createEmptySystem(name), systemId: null });
+    setNotice(isAdmin ? `Nowy system „${name}”. Zapisz, aby dodać go jako system wzorcowy.` : `Nowy system „${name}”. Zapisz, aby dodać go do swoich systemów.`);
+  };
 
   // An imported tree is a brand new system until it is saved, so it deliberately arrives without an id.
   const handleImport = (file: File) => run(async () => {
@@ -321,7 +345,50 @@ export function BiddingBrowserPage() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
+  /** Selects the bid and opens the editor over the tree, which on a narrow layout is the only way to reach it. */
+  const openEditor = (target: NodePath) => {
+    dispatch({ kind: 'select', target });
+    setEditing(true);
+  };
+
+  /*
+   * Widening the window puts the sheet away: the editor is back in the workspace, where it can simply be seen.
+   *
+   * Adjusted as the layout changes rather than in an effect, so the sheet is gone on the render that widens the window
+   * instead of on the one after it - and so that narrowing the window again does not bring back a sheet nobody asked for.
+   */
+  const [wasNarrow, setWasNarrow] = useState(narrow);
+  if (wasNarrow !== narrow) {
+    setWasNarrow(narrow);
+    setEditing(false);
+  }
+
+  // Escape closes it, the way it closes every other panel in the application.
+  useEffect(() => {
+    if (!editing) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setEditing(false);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [editing]);
+
   const selectedNode = getNode(state.system, state.selection);
+
+  const editorProps = {
+    node: selectedNode,
+    rootName: state.system.roots[state.selection?.rootIndex ?? -1]?.name ?? null,
+    focusConditionKey: conditionFocus,
+    inherited: inheritedRanges(state.system, state.selection),
+    ancestors: ancestorNodes(state.system, state.selection),
+    onChange: (patch: Partial<EditableBidNode>) => dispatch({ kind: 'updateNode', patch }),
+  };
 
   return (
     <div className="bidding-browser">
@@ -346,11 +413,11 @@ export function BiddingBrowserPage() {
 
       <Toolbar
         systemName={state.system.systemName}
+        systemId={state.systemId}
         savedSystems={savedSystems}
         busy={busy}
         dirty={state.dirty}
         canEditNode={selectedNode !== null}
-        onSystemNameChange={(name) => dispatch({ kind: 'setSystemName', name })}
         onAdd={() => addAndDescribe({ kind: 'addBid' })}
         onDelete={() => dispatch({ kind: 'deleteBid' })}
         onMoveUp={() => dispatch({ kind: 'moveUp' })}
@@ -360,24 +427,50 @@ export function BiddingBrowserPage() {
         onValidate={handleValidate}
         onSave={handleSave}
         onLoad={handleLoad}
-        onNew={() => dispatch({ kind: 'loadSystem', system: createEmptySystem(), systemId: null })}
+        onCreate={handleCreate}
         onImport={handleImport}
         onExport={handleExport}
       />
 
-      {/* The editor column is what the splitter sizes; the tree takes whatever is left. */}
-      <div className="workspace" style={{ gridTemplateColumns: `minmax(0, 1fr) auto ${editorWidth}px` }}>
-        <BidTreeView system={state.system} selection={state.selection} revealKey={revealKey} onSelect={(target) => dispatch({ kind: 'select', target })} />
-        <PaneSplitter width={editorWidth} onWidthChange={setEditorWidth} />
-        <BidEditorPanel
-          node={selectedNode}
-          rootName={state.system.roots[state.selection?.rootIndex ?? -1]?.name ?? null}
-          focusConditionKey={conditionFocus}
-          inherited={inheritedRanges(state.system, state.selection)}
-          ancestors={ancestorNodes(state.system, state.selection)}
-          onChange={(patch) => dispatch({ kind: 'updateNode', patch })}
+      {narrow ? <p className="tree-hint">Przytrzymaj odzywkę, aby ją edytować.</p> : null}
+
+      {/* The editor column is what the splitter sizes; the tree takes whatever is left. On a narrow screen there is no
+          second column at all - the tree has the width, and the editor arrives over it when a bid is held. */}
+      <div className="workspace" style={narrow ? undefined : { gridTemplateColumns: `minmax(0, 1fr) auto ${editorWidth}px` }}>
+        <BidTreeView
+          system={state.system}
+          selection={state.selection}
+          revealKey={revealKey}
+          onSelect={(target) => dispatch({ kind: 'select', target })}
+          onEdit={narrow ? openEditor : undefined}
         />
+
+        {narrow ? null : (
+          <>
+            <PaneSplitter width={editorWidth} onWidthChange={setEditorWidth} />
+            <BidEditorPanel {...editorProps} />
+          </>
+        )}
       </div>
+
+      {!narrow || !editing ? null : (
+        <div className="editor-sheet-backdrop" onClick={() => setEditing(false)}>
+          {/* The sheet is not the backdrop: a tap inside it is editing, not dismissing. */}
+          <div
+            className="editor-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Edycja odzywki"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="editor-sheet-bar">
+              <button type="button" onClick={() => setEditing(false)}>Gotowe</button>
+            </div>
+
+            <BidEditorPanel {...editorProps} />
+          </div>
+        </div>
+      )}
 
       <ValidationPanel
         issues={state.issues}

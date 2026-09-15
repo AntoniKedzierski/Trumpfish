@@ -1,6 +1,6 @@
 import type { BidColor, BidType, PracticeLegalBids } from '@/api/models';
 import { toNumber } from '@/api/models';
-import { colorMark } from '@/features/biddingBrowser/model';
+import { DoubleMark, RedoubleMark, SuitMark } from '@/components/suits';
 
 /** Columns of the box, ordered the way the denominations rank: ♣ < ♦ < ♥ < ♠ < NT. */
 const denominations: readonly BidColor[] = ['Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
@@ -32,7 +32,7 @@ export function BiddingBox({ legal, disabled, onBid }: BiddingBoxProps) {
           return (
             <BoxCell
               key={`${value}${color}`}
-              label={<><span className="box-level">{value}</span><span className={`suit ${color.toLowerCase()}`}>{colorMark(color)}</span></>}
+              label={<span className="box-bid"><span className="box-level">{value}</span><SuitMark suit={color} /></span>}
               available={!disabled && value >= minimum}
               onClick={() => onBid({ type: 'Submit', color, value })}
             />
@@ -41,8 +41,8 @@ export function BiddingBox({ legal, disabled, onBid }: BiddingBoxProps) {
       ))}
 
       <BoxCell label={<span className="box-pass">Pas</span>} available={!disabled} onClick={() => onBid({ type: 'Pass', color: 'NoColor', value: null })} />
-      <BoxCell label={<span className="box-double">X</span>} available={!disabled && legal.canDouble} onClick={() => onBid({ type: 'Double', color: 'NoColor', value: null })} />
-      <BoxCell label={<span className="box-double">XX</span>} available={!disabled && legal.canRedouble} onClick={() => onBid({ type: 'Redouble', color: 'NoColor', value: null })} />
+      <BoxCell label={<span className="box-bid"><DoubleMark className="box-double" /></span>} available={!disabled && legal.canDouble} onClick={() => onBid({ type: 'Double', color: 'NoColor', value: null })} />
+      <BoxCell label={<span className="box-bid"><RedoubleMark className="box-double" /></span>} available={!disabled && legal.canRedouble} onClick={() => onBid({ type: 'Redouble', color: 'NoColor', value: null })} />
       <span className="box-cell empty" />
       <span className="box-cell empty" />
     </div>

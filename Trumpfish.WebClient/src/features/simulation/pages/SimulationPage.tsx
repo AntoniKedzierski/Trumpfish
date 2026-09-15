@@ -2,35 +2,35 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listBiddingSystems } from '@/api/biddingSystems';
 import { simulateBidding } from '@/api/simulation';
 import type { BiddingSystemSummary, SimulationResponse } from '@/api/models';
+import { CardsIcon } from '@/components/icons';
 import { PageStatus } from '@/components/PageStatus';
-import { Select } from '@/components/Select';
+import { ConfigMenu } from '../components/ConfigMenu';
 import { DealResultCard } from '../components/DealResultCard';
+import { FilterMenu } from '../components/FilterMenu';
+import { SortMenu } from '../components/SortMenu';
 import { generateDeals } from '../deals';
-import { filterDeals, gameFilterLabels, sideFilterLabels } from '../filters';
-import type { GameFilterKey, SideFilterKey } from '../filters';
-import { sortDeals, sortDirectionLabels, sortKeyLabels } from '../sorting';
+import type { DealFilters } from '../filters';
+import { emptyFilters, filterDeals } from '../filters';
+import { sortDeals } from '../sorting';
 import type { SortDirection, SortKey } from '../sorting';
 import './SimulationPage.css';
-
-const maxDeals = 500;
 
 export function SimulationPage() {
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
   const [systemId, setSystemId] = useState('');
-  const [dealCount, setDealCount] = useState(10);
+  const [dealCount, setDealCount] = useState(500);
   const [seed, setSeed] = useState('');
   const [result, setResult] = useState<SimulationResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>('index');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
-  const [sideFilter, setSideFilter] = useState<SideFilterKey>('any');
-  const [gameFilter, setGameFilter] = useState<GameFilterKey>('any');
-  const [bidSearch, setBidSearch] = useState('');
+  // One committed value for the whole sheet: the draft the user is editing lives inside `FilterMenu` until it is applied.
+  const [filters, setFilters] = useState<DealFilters>(emptyFilters);
 
   const sortedDeals = useMemo(
-    () => (result === null ? [] : sortDeals(filterDeals(result.deals, sideFilter, gameFilter, bidSearch), sortKey, sortDirection)),
-    [bidSearch, gameFilter, result, sideFilter, sortDirection, sortKey],
+    () => (result === null ? [] : sortDeals(filterDeals(result.deals, filters.side, filters.games, filters.bid), sortKey, sortDirection)),
+    [filters, result, sortDirection, sortKey],
   );
 
   useEffect(() => {
@@ -39,7 +39,6 @@ export function SimulationPage() {
       (loaded) => {
         if (!cancelled) {
           setSystems(loaded);
-          setSystemId((current) => (current === '' ? (loaded[0]?.id ?? '') : current));
         }
       },
       (reason) => { if (!cancelled) { setError(describe(reason)); } },
@@ -77,97 +76,28 @@ export function SimulationPage() {
       </PageStatus>
 
       <section className="controls">
-        <label className="inline">
-          <span>System</span>
-          <Select
-            value={systemId}
-            options={systems.map((system) => ({ value: system.id, label: system.name }))}
-            onChange={setSystemId}
-            placeholder="Brak zapisanych systemów"
-            disabled={busy || systems.length === 0}
-          />
-        </label>
-
-        <label className="inline">
-          <span>Liczba rozdań</span>
-          <input
-            type="number"
-            min={1}
-            max={maxDeals}
-            value={dealCount}
-            disabled={busy}
-            onChange={(event) => setDealCount(clamp(Number(event.target.value)))}
-          />
-        </label>
-
-        <label className="inline">
-          <span>Ziarno</span>
-          <input
-            type="text"
-            value={seed}
-            placeholder="puste = losowe"
-            disabled={busy}
-            onChange={(event) => setSeed(event.target.value)}
-          />
-        </label>
+        <ConfigMenu
+          systems={systems}
+          systemId={systemId}
+          onSystemId={setSystemId}
+          dealCount={dealCount}
+          onDealCount={setDealCount}
+          seed={seed}
+          onSeed={setSeed}
+          disabled={busy}
+        />
 
         <button type="button" className="primary" onClick={() => void run()} disabled={busy || systemId === ''}>
-          Symuluj
+          <CardsIcon />
+          <span>Symuluj</span>
         </button>
 
         {result === null ? null : (
           <>
-            <label className="inline">
-              <span>Sortuj</span>
-              <Select
-                value={sortKey}
-                options={(Object.keys(sortKeyLabels) as SortKey[]).map((key) => ({ value: key, label: sortKeyLabels[key] }))}
-                onChange={setSortKey}
-                disabled={busy}
-              />
-            </label>
+            {/* Everything that narrows or reorders the results lives behind these two, so the bar stays one row of controls. */}
+            <FilterMenu value={filters} onChange={setFilters} />
 
-            <label className="inline">
-              <span>Kierunek</span>
-              <Select
-                value={sortDirection}
-                options={(Object.keys(sortDirectionLabels) as SortDirection[]).map((key) => ({ value: key, label: sortDirectionLabels[key] }))}
-                onChange={setSortDirection}
-                disabled={busy}
-              />
-            </label>
-
-            <label className="inline">
-              <span>Licytacja</span>
-              <Select
-                value={sideFilter}
-                options={(Object.keys(sideFilterLabels) as SideFilterKey[]).map((key) => ({ value: key, label: sideFilterLabels[key] }))}
-                onChange={setSideFilter}
-                disabled={busy}
-              />
-            </label>
-
-            <label className="inline">
-              <span>Kontrakt</span>
-              <Select
-                value={gameFilter}
-                options={(Object.keys(gameFilterLabels) as GameFilterKey[]).map((key) => ({ value: key, label: gameFilterLabels[key] }))}
-                onChange={setGameFilter}
-                disabled={busy}
-              />
-            </label>
-
-            <label className="inline">
-              <span>Odzywka</span>
-              <input
-                type="search"
-                className="bid-search"
-                value={bidSearch}
-                placeholder="np. 1NT, 2h, x"
-                disabled={busy}
-                onChange={(event) => setBidSearch(event.target.value)}
-              />
-            </label>
+            <SortMenu sortKey={sortKey} direction={sortDirection} onSortKey={setSortKey} onDirection={setSortDirection} />
 
             <span className="summary">
               {sortedDeals.length} z {result.dealCount} rozdań, błędów: {result.failedCount}
@@ -185,14 +115,6 @@ export function SimulationPage() {
       </section>
     </div>
   );
-}
-
-function clamp(value: number): number {
-  if (Number.isNaN(value)) {
-    return 1;
-  }
-
-  return Math.min(maxDeals, Math.max(1, Math.trunc(value)));
 }
 
 function describe(reason: unknown): string {

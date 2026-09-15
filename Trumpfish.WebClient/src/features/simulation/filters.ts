@@ -5,8 +5,11 @@ import { makesGame } from './sorting';
 /** Whether one or both pairs actually entered the auction. */
 export type SideFilterKey = 'any' | 'oneSide' | 'twoSide';
 
-/** Contract level filters, independent of who bid. */
-export type GameFilterKey = 'any' | 'game' | 'gameWithPoints' | 'gameWithoutPoints' | 'pointsWithoutGame' | 'errors' | 'anyGame' | 'slam' | 'grandSlam';
+/**
+ * Contract level filters, independent of who bid. Several can be in force at once and they are combined with "and", so
+ * there is no "any" among them - asking for nothing in particular is an empty selection, not a choice.
+ */
+export type GameFilterKey = 'game' | 'gameWithPoints' | 'gameWithoutPoints' | 'pointsWithoutGame' | 'errors' | 'anyGame' | 'slam' | 'grandSlam';
 
 export const sideFilterLabels: Record<SideFilterKey, string> = {
   any: 'Dowolna licytacja',
@@ -15,7 +18,6 @@ export const sideFilterLabels: Record<SideFilterKey, string> = {
 };
 
 export const gameFilterLabels: Record<GameFilterKey, string> = {
-  any: 'Dowolny kontrakt',
   game: 'Partie',
   gameWithPoints: 'Partie z pokryciem',
   gameWithoutPoints: 'Partie bez pokrycia',
@@ -26,6 +28,20 @@ export const gameFilterLabels: Record<GameFilterKey, string> = {
   grandSlam: 'Szlemy (7)',
 };
 
+/** Everything that narrows the result set, as one value: what the sheet edits and the page holds. */
+export interface DealFilters {
+  bid: string;
+  side: SideFilterKey;
+  games: GameFilterKey[];
+}
+
+export const emptyFilters: DealFilters = { bid: '', side: 'any', games: [] };
+
+/** How many constraints are actually in force - for the badge on a trigger that has folded them out of sight. */
+export function activeFilterCount(filters: DealFilters): number {
+  return (filters.bid.trim() === '' ? 0 : 1) + (filters.side === 'any' ? 0 : 1) + filters.games.length;
+}
+
 /** Minimum combined strength (and trump fit for suits) that makes a game contract sound. */
 const gameRequirements: Record<string, { points: number; trumps?: number }> = {
   NoTrump: { points: 25 },
@@ -35,9 +51,17 @@ const gameRequirements: Record<string, { points: number; trumps?: number }> = {
   Clubs: { points: 27, trumps: 9 },
 };
 
-export function filterDeals(deals: readonly SimulationDealResult[], side: SideFilterKey, game: GameFilterKey, bidSearch: string): SimulationDealResult[] {
+/** Every contract filter has to hold, not just one of them: the selection is a conjunction. An empty one constrains nothing. */
+export function filterDeals(
+  deals: readonly SimulationDealResult[],
+  side: SideFilterKey,
+  games: readonly GameFilterKey[],
+  bidSearch: string,
+): SimulationDealResult[] {
   const wanted = parseBid(bidSearch);
-  return deals.filter((deal) => matchesSide(deal, side) && matchesGame(deal, game) && matchesBid(deal, wanted));
+  return deals.filter(
+    (deal) => matchesSide(deal, side) && games.every((game) => matchesGame(deal, game)) && matchesBid(deal, wanted),
+  );
 }
 
 function matchesSide(deal: SimulationDealResult, filter: SideFilterKey): boolean {

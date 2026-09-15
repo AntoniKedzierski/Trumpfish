@@ -6,6 +6,11 @@ export interface SelectOption<TValue extends string> {
   label: string;
   /** Optional class applied to the label, used by the bid editor to tint suits. */
   labelClassName?: string;
+  /**
+   * What to draw instead of `label`, when the option carries something a string cannot - a tinted suit mark, say. `label`
+   * is still required and still what the option is announced and titled by.
+   */
+  labelNode?: React.ReactNode;
 }
 
 interface SelectProps<TValue extends string> {
@@ -136,7 +141,7 @@ export function Select<TValue extends string>({ value, options, onChange, placeh
         onClick={() => (open ? close() : openList())}
       >
         <span className={`select-value${selected === null ? ' placeholder' : ''} ${selected?.labelClassName ?? ''}`.trimEnd()}>
-          {selected?.label ?? placeholder ?? ''}
+          {selected?.labelNode ?? selected?.label ?? placeholder ?? ''}
         </span>
         <Chevron className="select-chevron" />
       </button>
@@ -149,10 +154,11 @@ export function Select<TValue extends string>({ value, options, onChange, placeh
               role="option"
               aria-selected={option.value === value}
               className={`select-option${index === activeIndex ? ' active' : ''}${option.value === value ? ' selected' : ''}`}
+              title={option.label}
               onPointerEnter={() => setActiveIndex(index)}
               onClick={() => commit(index)}
             >
-              <span className={option.labelClassName}>{option.label}</span>
+              <span className={option.labelClassName}>{option.labelNode ?? option.label}</span>
             </li>
           ))}
         </ul>

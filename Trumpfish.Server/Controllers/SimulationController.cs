@@ -14,7 +14,7 @@ namespace Trumpfish.Server.Controllers;
 [Produces("application/json")]
 public class SimulationController : ControllerBase {
 
-    private const int MaxDeals = 500;
+    private const int MaxDeals = 5000;
 
     private readonly IBiddingSystemStore _store;
     private readonly IBiddingSimulator _simulator;

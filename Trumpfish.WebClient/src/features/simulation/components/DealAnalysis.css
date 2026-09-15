@@ -1,0 +1,222 @@
+.deal-analysis {
+  position: relative;
+  display: inline-flex;
+}
+
+/*
+ * The same pill as the contract marker, as a button. Outlined rather than filled while it is still asking to be pressed;
+ * once it has an answer behind it, it is the way back in.
+ */
+.deal-chip.deal-analyse {
+  background: transparent;
+  border-color: var(--accent-glow);
+  color: var(--accent);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.deal-chip.deal-analyse:hover:not(:disabled),
+.deal-chip.deal-analyse[aria-expanded='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.deal-chip.deal-analyse:disabled {
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+  cursor: progress;
+}
+
+.deal-chip.failed {
+  background: rgb(255 181 21 / 10%);
+  color: var(--amber-flame);
+  cursor: help;
+}
+
+/* Hung from the right edge: the trigger sits at the end of its row, so opening leftwards is the only way it stays on screen. */
+.deal-analysis-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: max-content;
+  min-width: 260px;
+  max-width: min(340px, calc(100vw - 2 * var(--space-3)));
+  padding: var(--space-3);
+  text-align: left;
+  white-space: normal;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: view-enter var(--duration-fast) var(--ease-out) both;
+}
+
+/* Name and value in two columns, so the three headline numbers line up under each other. */
+.deal-analysis-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-base);
+}
+
+.deal-analysis-facts dt {
+  color: var(--text-muted);
+}
+
+.deal-analysis-facts dd {
+  margin: 0;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.deal-analysis-section {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-strong);
+}
+
+/* Heading on the left, the control that changes what is under it on the right. */
+.deal-analysis-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.deal-analysis-toggle {
+  margin-left: auto;
+  padding: 2px var(--space-2);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent-glow);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.deal-analysis-toggle:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* A pair defending is not playing a contract, so the note takes the place the declaring seat would have had. */
+.deal-analysis-note {
+  font-size: var(--text-sm);
+  color: var(--amber-flame);
+}
+
+.deal-analysis-section h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Written after the section rule, or the section's bottom margin would win and push the heading off the row. */
+.deal-analysis-heading h4 {
+  margin: 0;
+}
+
+.deal-analysis-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deal-analysis-section li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+}
+
+.deal-analysis-pair {
+  min-width: 2.2em;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.deal-analysis-seat {
+  color: var(--text-muted);
+}
+
+/* Pushed to the end of its row so a column of scores reads as a column. */
+.deal-analysis-score {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--clubs);
+}
+
+.deal-analysis-score.negative {
+  color: var(--hearts);
+}
+
+/*
+ * Four seats against five denominations. Tight, because it is a reference grid rather than something to read through, and
+ * the numbers matter more than the room around them.
+ */
+.deal-analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.deal-analysis-table th {
+  padding: 2px var(--space-2);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.deal-analysis-table thead th {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.deal-analysis-table tbody th {
+  text-align: left;
+}
+
+.deal-analysis-table td {
+  padding: 2px var(--space-2);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Anything from seven up is a contract somebody can actually buy, which is the only reason to look at this grid. */
+.deal-analysis-table td.makes {
+  color: var(--text-primary);
+}
+
+/*
+ * The denomination marks head their columns as blocks, centred in the cell.
+ *
+ * Left inline they hang off the baseline of their own line box, and the five marks are five different shapes: what lines
+ * up against a digit reads as ragged against nothing but four other marks.
+ */
+.deal-analysis-table thead .mark-svg {
+  display: block;
+  margin: 0 auto;
+  vertical-align: unset;
+
+  /*
+   * The mark stands on the bottom of its box so that it can stand on a baseline, and here there is no baseline to stand
+   * on - so half the air it keeps overhead is given back as a shift, and the five marks are centred in their cells again.
+   * Safe to do with a fraction here, where they only have each other to line up with and all move together.
+   */
+  position: relative;
+  top: -0.11em;
+}
