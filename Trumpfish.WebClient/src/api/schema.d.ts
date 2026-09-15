@@ -1485,6 +1485,9 @@ export interface components {
             aces?: null | number | string;
             /** Format: int32 */
             kings?: null | number | string;
+            figures?: null | {
+                [key: string]: boolean;
+            };
             openerBid?: boolean;
             signOff?: boolean;
             oneRoundForcing?: boolean;

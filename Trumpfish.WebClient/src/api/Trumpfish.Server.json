@@ -1551,6 +1551,15 @@
             ],
             "format": "int32"
           },
+          "figures": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
           "openerBid": {
             "type": "boolean"
           },

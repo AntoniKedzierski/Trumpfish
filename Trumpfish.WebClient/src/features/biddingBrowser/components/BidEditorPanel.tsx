@@ -5,6 +5,7 @@ import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from
 import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
 import { readCondition } from '../conditionReader';
 import { BidPath } from './BidPath';
+import { FigureMatrix } from './FigureMatrix';
 import { InterjectionPicker } from './InterjectionPicker';
 
 type StopsField = 'clubsStops' | 'diamondsStops' | 'heartsStops' | 'spadesStops';
@@ -184,6 +185,8 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
             <input type="number" value={toNumber(node.kings) ?? ''} onChange={(event) => onChange({ kings: event.target.value === '' ? null : Number(event.target.value) })} />
           </div>
         </div>
+
+        <FigureMatrix value={node.figures} onChange={(figures) => onChange({ figures })} />
       </div>
     </aside>
   );

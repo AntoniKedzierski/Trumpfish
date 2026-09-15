@@ -40,6 +40,13 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
     public int? Kings { get; set; }
 
+    /// <summary>
+    /// Per-card requirements. A missing card is unconstrained, <see langword="true"/> requires it and
+    /// <see langword="false"/> excludes it.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(FigureRequirementsJsonConverter))]
+    public Dictionary<Card, bool>? Figures { get; set; }
+
     public bool OpenerBid { get; set; }
 
     public bool SignOff { get; set; }
@@ -114,7 +121,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
 
     public bool Matches(Hand hand) {
-        return hand.Matches(PointsRange, SpadesCardRange, HeartsCardRange, DiamondsCardRange, ClubsCardRange, Aces, Kings);
+        return hand.Matches(PointsRange, SpadesCardRange, HeartsCardRange, DiamondsCardRange, ClubsCardRange, Aces, Kings, Figures);
     }
 
 

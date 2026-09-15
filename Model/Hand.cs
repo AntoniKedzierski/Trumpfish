@@ -98,14 +98,23 @@ public class Hand : IPoints {
 
 
     // TODO: Zatrzymania, układ kart, itp.
-    public bool Matches(NumberRange? points, NumberRange? spades, NumberRange? hearts, NumberRange? diamonds, NumberRange? clubs, int? aces, int? kings) {
+    public bool Matches(NumberRange? points, NumberRange? spades, NumberRange? hearts, NumberRange? diamonds, NumberRange? clubs, int? aces, int? kings, Dictionary<Card, bool>? figures) {
         return InRange(Points, points)
             && InRange(OfColor(CardColor.Spades).Count(), spades)
             && InRange(OfColor(CardColor.Hearts).Count(), hearts)
             && InRange(OfColor(CardColor.Diamonds).Count(), diamonds)
             && InRange(OfColor(CardColor.Clubs).Count(), clubs)
             && (!aces.HasValue || OfValue(CardValue.Ace).Count() == aces.Value)
-            && (!kings.HasValue || OfValue(CardValue.King).Count() == kings.Value);
+            && (!kings.HasValue || OfValue(CardValue.King).Count() == kings.Value)
+            && HasFigures(figures);
+    }
+
+    public bool HasFigures(Dictionary<Card, bool>? figures) {
+        if (figures == null) {
+            return true;
+        }
+
+        return !figures.Any(requirement => Cards.Any(card => card.Value == requirement.Key.Value && card.Color == requirement.Key.Color) != requirement.Value);
     }
 
 
@@ -324,7 +333,6 @@ public class Hand : IPoints {
         return (!range.Lower.HasValue || value >= range.Lower.Value)
             && (!range.Upper.HasValue || value <= range.Upper.Value);
     }
-
 
     public override string ToString() {
         return string.Join(" ", Cards.Select(c => c.ToString())) + $"; Points: {CalculatePoints()}; NT Points: {CalculatePoints(true)}.";
