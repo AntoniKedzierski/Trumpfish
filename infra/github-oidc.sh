@@ -76,22 +76,74 @@ add_credential "github-environment-$ENVIRONMENT" "repo:$REPO:environment:$ENVIRO
 # that is tedious to diagnose from the pipeline's side.
 add_credential "github-branch-$BRANCH" "repo:$REPO:ref:refs/heads/$BRANCH"
 
+# The name of a role assignment is a GUID of the caller's choosing, not something Azure hands out. Neither of the two
+# usual ways of producing one exists in Git Bash on Windows, where this is as likely to be run as on a Linux shell, so
+# there is a fallback that shapes sixteen random bytes into a version 4 GUID by hand.
+new_uuid() {
+    local hex
+
+    if [ -r /proc/sys/kernel/random/uuid ]; then
+        cat /proc/sys/kernel/random/uuid
+    elif command -v uuidgen > /dev/null 2>&1; then
+        uuidgen
+    else
+        hex=$(od -An -tx1 -N16 /dev/urandom | tr -d ' \n')
+        printf '%s-%s-4%s-a%s-%s\n' "${hex:0:8}" "${hex:8:4}" "${hex:13:3}" "${hex:17:3}" "${hex:20:12}"
+    fi
+}
+
 echo "==> Uprawnienie do maszyny"
 SCOPE=$(az vm show -g "$RG" -n "$VM_NAME" --query id -o tsv)
-ROLE="Virtual Machine Contributor"
 
 # Scoped to the single machine rather than the resource group: this identity can restart and run commands on the host it
 # deploys to, and cannot touch the storage account holding the backups or the network rules protecting it.
-if [ -n "$(az role assignment list --assignee "$SP_ID" --scope "$SCOPE" --query "[?roleDefinitionName=='$ROLE'].id" -o tsv)" ]; then
+ROLE_VIRTUAL_MACHINE_CONTRIBUTOR=9980e02c-c2be-4d73-94e8-173b1dc7cf3c
+ROLE_ID="/subscriptions/$SUBSCRIPTION/providers/Microsoft.Authorization/roleDefinitions/$ROLE_VIRTUAL_MACHINE_CONTRIBUTOR"
+
+# Both calls go straight at the resource provider rather than through `az role assignment`, which fails here with a
+# misleading "MissingSubscription" - the whole command group does, listing included, so it is not the assignee lookup it
+# is usually blamed on. provision.sh works around the same thing the same way.
+ASSIGNMENTS_URL="https://management.azure.com$SCOPE/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01"
+
+EXISTING=$(az rest --method get --url "$ASSIGNMENTS_URL" \
+    --query "value[?properties.principalId=='$SP_ID' && properties.roleDefinitionId=='$ROLE_ID'].id" -o tsv)
+
+if [ -n "$EXISTING" ]; then
     echo "    już przypisane"
 else
-    # --assignee-object-id with the type stated skips the Microsoft Graph lookup that `--assignee` does first and that
-    # fails on some tenants with a misleading "MissingSubscription". The object id is already known, so there is nothing
-    # left to look up.
-    az role assignment create \
-        --assignee-object-id "$SP_ID" --assignee-principal-type ServicePrincipal \
-        --role "$ROLE" --scope "$SCOPE" -o none
-    echo "    przypisano"
+    TMPDIR_RA=$(mktemp -d)
+    trap 'rm -rf "$TMPDIR_RA"' EXIT
+
+    ASSIGNMENT_ID=$(new_uuid)
+
+    cat > "$TMPDIR_RA/role-assignment.json" <<JSON
+{
+  "properties": {
+    "roleDefinitionId": "$ROLE_ID",
+    "principalId": "$SP_ID",
+    "principalType": "ServicePrincipal"
+  }
+}
+JSON
+
+    # A service principal created moments ago takes a little while to become visible to the Authorization provider, so a
+    # refusal on the first attempt means nothing.
+    for attempt in 1 2 3 4 5 6; do
+        if az rest --method put -o none \
+            --url "https://management.azure.com$SCOPE/providers/Microsoft.Authorization/roleAssignments/$ASSIGNMENT_ID?api-version=2022-04-01" \
+            --body "@$TMPDIR_RA/role-assignment.json" 2>/dev/null; then
+            echo "    przypisano"
+            break
+        fi
+
+        if [ "$attempt" = 6 ]; then
+            echo "Nie udało się przypisać roli do $SCOPE." >&2
+            exit 1
+        fi
+
+        echo "    jednostka usługi jeszcze nie rozpropagowana, próba $attempt/6..."
+        sleep 10
+    done
 fi
 
 cat <<SUMMARY
