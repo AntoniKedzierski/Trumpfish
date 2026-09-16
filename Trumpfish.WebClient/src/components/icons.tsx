@@ -133,6 +133,17 @@ export function MenuIcon({ className }: { className?: string }) {
 }
 
 /** A key: the password. */
+/** Znak zapytania w kółku: „co to znaczy" i „jakie są skróty". */
+export function HelpIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <circle cx="12" cy="12" r="9" {...stroke} />
+      <path d="M9.4 9.3a2.7 2.7 0 1 1 3.4 2.6c-.6.2-1 .8-1 1.4v.5" {...stroke} />
+      <path d="M11.9 17.1h.01" {...stroke} />
+    </Icon>
+  );
+}
+
 /** Wejście: te same drzwi co przy wylogowaniu, tylko strzałka idzie do środka. */
 export function LogInIcon({ className }: { className?: string }) {
   return (

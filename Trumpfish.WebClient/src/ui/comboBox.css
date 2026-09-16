@@ -19,8 +19,12 @@
 }
 
 /*
- * Long options are cut rather than allowed to set the width. The cut is a short fade at the right edge instead of an
- * ellipsis: the text runs out of room, which is the truth, rather than stopping at a dotted full stop.
+ * Za długa wartość jest przycinana, zamiast rozpychać pole.
+ *
+ * Wielokropkiem, a nie cieniowaniem od prawej, mimo że cieniowanie ładniej mówi "jest tego więcej". Maska na iOS bywa
+ * liczona na osobnej warstwie kompozycji i wtedy potrafi wygasić cały napis - a pole wyboru systemu, w którym nie widać
+ * wybranego systemu, jest gorsze od wielokropka. Cieniowanie zostaje tam, gdzie wielokropek nie zadziała: w wierszu
+ * drzewka, który jest ciągiem osobnych kawałków, a `text-overflow` sięga tylko ostatniego z nich.
  */
 .ui-combo-value,
 .ui-combo-option > span {
@@ -29,8 +33,7 @@
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
-  mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
+  text-overflow: ellipsis;
 }
 
 .ui-combo-value.placeholder {

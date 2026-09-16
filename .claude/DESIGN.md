@@ -50,8 +50,9 @@ Jedna definicja: `components/ToolBar.tsx` + `styles/toolbar.css`. Żaden widok n
 - **Komendy od lewej**, **stan widoku (busy, błąd, licznik) do prawej**. Nigdy odwrotnie.
 - Pasek przyklejony do góry przez ramkę: widok dopisuje selektor do `.app-shell:has(> …)` w `AppLayout.css`
   (`height: 100dvh; overflow: hidden`), zawartość przewija się pod nim.
-- **Zawsze jedna linijka**, też na telefonie: `flex-wrap: nowrap`, a poniżej 560 px przyciski chowają słowa (etykieta
-  zostaje w drzewie dostępności).
+- **Zawsze jedna linijka**, też na telefonie: `flex-wrap: nowrap`. Kiedy komendy przestają się mieścić, `ToolBar`
+  **mierzy** je (`useFitsOnOneRow`) i dokłada `icons-only` — słowa znikają dopiero wtedy, nigdy z progu szerokości
+  ekranu. Etykieta zostaje w drzewie dostępności.
 - Filtry i ustawienia w popupach, nie jako pola na pasku. Najwyżej jeden `primary`.
 
 ## 5. Popupy, dropdowny, panele
@@ -64,6 +65,11 @@ Jedna definicja: `components/ToolBar.tsx` + `styles/toolbar.css`. Żaden widok n
   i to jest cel.
 - **Wszystkie kontrolki w popupie są `small`** — także pola i listy wyboru, bo pole 34 px obok przycisku 30 px w jednym
   wierszu to dokładnie ta niespójność, o którą chodzi.
+- **Wariant panelu zapisuje się przez `.ui-panel.nazwa`, nigdy samą `.nazwa`.** Wspólny arkusz panelu trafia do bundla
+  po arkuszach feature.owych, więc reguła o jednej klasie przegrywa z nim kolejnością i wariant cicho przestaje
+  działać — tak zniknęła szerokość panelu skrótów i panelu znajomych.
+- **Margines panelu daje `.ui-panel-body` i nic w środku nie dokłada własnego wcięcia po bokach** — pola, przyciski i
+  uwagi mają stać w jednej kolumnie lewych krawędzi.
 - Pozycje list: do lewej, z ikonką (dla menu komend).
 - Okno modalne: `ui/Dialog.tsx`, pytanie z dwiema odpowiedziami: `ui/Dialog.tsx → ConfirmDialog`.
 

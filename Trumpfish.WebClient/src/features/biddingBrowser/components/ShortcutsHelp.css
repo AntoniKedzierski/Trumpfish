@@ -10,10 +10,16 @@
   border-color: var(--accent);
 }
 
-/* Szerszy niż zwykły panel: to tabela dwóch kolumn, a akord nie może się łamać. */
-.shortcuts-panel {
-  min-width: min(420px, calc(100vw - 2 * var(--space-3)));
-  max-width: min(420px, calc(100vw - 2 * var(--space-3)));
+/*
+ * Szerszy niż zwykły panel: to tabela dwóch kolumn, a akord nie może się łamać.
+ *
+ * Zapisane przez `.ui-panel.shortcuts-panel`, a nie samą klasą wariantu: wspólny arkusz panelu trafia do bundla po
+ * arkuszach feature.owych, więc reguła o jednej klasie przegrywa z nim kolejnością i szerokość wracała do 340 px.
+ * Wariant panelu ma mieć moc dwóch klas - inaczej działa zależnie od tego, w jakiej kolejności ktoś zaimportuje pliki.
+ */
+.ui-panel.shortcuts-panel {
+  min-width: min(560px, calc(100vw - 2 * var(--space-3)));
+  max-width: min(560px, calc(100vw - 2 * var(--space-3)));
   text-align: left;
 }
 
@@ -46,4 +52,10 @@
   font-weight: 600;
   white-space: nowrap;
   color: var(--accent);
+}
+
+/* Grupy skrótów są sekcjami do przeczytania, a nie pozycjami listy, więc oddychają bardziej niż wiersze menu. */
+.ui-panel.shortcuts-panel .ui-panel-body {
+  gap: var(--space-3);
+  padding: var(--space-3);
 }
