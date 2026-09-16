@@ -1,12 +1,6 @@
-/* The one control the bar keeps on a narrow screen, set like the tabs it stands in for. */
+/* Jedyna kontrolka, jaką pasek zostawia na wąskim ekranie. Rozmiar bierze z `.icon-only.large` w `ui/controls.css`. */
 .app-drawer-burger {
-  display: inline-flex;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  width: var(--button-large);
-  height: var(--button-large);
-  padding: 0;
   color: var(--text-muted);
   background: transparent;
   border: none;
@@ -17,7 +11,6 @@
 }
 
 .app-bar .app-drawer-burger .icon {
-  font-size: var(--text-xl);
   color: inherit;
 }
 
@@ -103,13 +96,7 @@
 }
 
 .app-drawer-close {
-  display: inline-flex;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
   color: var(--text-muted);
   background: transparent;
   border: none;
@@ -127,21 +114,15 @@
 }
 
 /*
- * A row is a place to go, set large enough to be aimed at with a thumb rather than a cursor - the menu rows this panel
- * replaces are thirty-six pixels, which is a pointer's size, not a finger's.
+ * Wiersz szuflady to ta sama kontrolka co wiersz panelu: rozmiar `large`, wyrównanie do lewej, znak przy słowie.
+ * Wysokość, padding i stopień pisma stoją w `ui/controls.css`; tutaj są wyłącznie barwy.
+ *
+ * Wcześniej ta reguła pomijała `justify-content`, więc linki zaczynały się przy lewej krawędzi, a "Wyloguj", będąc
+ * przyciskiem, brał wyśrodkowanie z globalnej reguły przycisku. Jedna klasa dla linku i dla przycisku znaczy, że to
+ * się nie może powtórzyć.
  */
-.app-drawer a,
-.app-drawer-leave {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
-  height: 44px;
-  padding: 0 var(--space-3);
-  font-size: var(--text-lg);
-  font-weight: inherit;
+.app-drawer .ui-row {
   color: var(--text-muted);
-  text-align: left;
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
@@ -152,24 +133,22 @@
 
 .app-drawer .icon {
   flex: none;
-  font-size: var(--text-lg);
   color: var(--text-muted);
 }
 
-.app-drawer a:hover,
-.app-drawer-leave:hover:not(:disabled) {
+.app-drawer .ui-row:hover:not(:disabled) {
   color: var(--text-primary);
   background: var(--surface-hover);
   border-color: transparent;
 }
 
 /* Where the user is, marked the way the tabs mark it on a wide screen. */
-.app-drawer a[aria-current] {
+.app-drawer .ui-row[aria-current] {
   color: var(--text-primary);
   background: var(--accent-soft);
 }
 
-.app-drawer a[aria-current] .icon {
+.app-drawer .ui-row[aria-current] .icon {
   color: var(--accent);
 }
 
@@ -187,40 +166,15 @@
 }
 
 /*
- * The friends menu, indoors. Its panel hangs off the bar on a wide screen; there is no bar here to hang it off and no room
- * beside the drawer to hang it into, so it opens in place and the drawer scrolls to it.
+ * Znajomi w środku. Ich panel zwisa z paska na szerokim ekranie; tutaj nie ma z czego zwisać ani gdzie się wysunąć,
+ * więc otwiera się w miejscu, a szuflada przewija się do niego. Wyzwalacz jest zwykłym wierszem szuflady.
  */
-.app-drawer-friends .friends-trigger {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.app-drawer-friends,
+.app-drawer-friends .ui-popup,
+.app-drawer-friends .ui-row {
   width: 100%;
-  height: 44px;
-  padding: 0 var(--space-3);
-  font-size: var(--text-lg);
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
 }
 
-.app-drawer-friends .friends-trigger:hover:not(:disabled) {
-  color: var(--text-primary);
-  background: var(--surface-hover);
-}
-
-.app-drawer-friends .friends-trigger > span:first-of-type {
-  flex: 1;
-  text-align: left;
-}
-
-.app-drawer-friends .friends-panel {
-  position: static;
-  width: auto;
-  max-height: none;
+.app-drawer-friends .ui-panel {
   padding: var(--space-2) var(--space-3) 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
 }

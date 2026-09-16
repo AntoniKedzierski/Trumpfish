@@ -1,35 +1,23 @@
+/*
+ * Zakładki narzędzi. Wyłącznie barwy i położenie - wysokość, padding i stopień pisma bierze `.ui-tab` oraz reguła
+ * przycisku, obie w `ui/controls.css`.
+ */
+
 .app-nav {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-/*
- * Direct children only. The group's panel hangs inside this element, and its entries are menu rows that answer to
- * `menu.css` - swept up by a loose `.app-nav a` they would come out bar-height and bar-padded.
- */
 .app-nav > a,
-.app-nav-trigger {
-  display: inline-flex;
-  align-items: center;
-  height: var(--button-large);
-  padding: 0 var(--space-4);
-  font-size: var(--button-large-text);
+.app-nav .app-nav-trigger {
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-muted);
-  font-weight: inherit;
-  letter-spacing: inherit;
-  white-space: nowrap;
   transition:
     color var(--duration-fast) var(--ease-out),
     background-color var(--duration-fast) var(--ease-out);
-}
-
-/* Written against the bar, not bare, because the global button rules would otherwise paint a border and a plate on the trigger. */
-.app-nav .app-nav-trigger {
-  gap: 6px;
 }
 
 .app-nav > a:hover,
@@ -47,59 +35,10 @@
 }
 
 /*
- * Where the user is: a wash of the accent colour and a hair of weight. Quiet enough to read as a state rather than as a
- * button, and the weight keeps the answer available to someone who cannot see the tint.
+ * Gdzie użytkownik jest: pierzynka w kolorze akcentu. Na tyle cicha, żeby czytać się jak stan, a nie jak przycisk.
  */
 .app-nav > a[aria-current],
-.app-nav .app-nav-trigger[aria-current] {
+.app-nav .app-nav-trigger.current {
   color: var(--text-primary);
-  font-weight: 400;
   background: var(--accent-soft);
-}
-
-.app-nav-group {
-  position: relative;
-}
-
-.app-nav-chevron {
-  flex: none;
-  font-size: var(--text-sm);
-  transform: rotate(90deg);
-  transition: transform var(--duration-normal) var(--ease-out);
-}
-
-.app-nav-trigger[aria-expanded='true'] .app-nav-chevron {
-  transform: rotate(-90deg);
-}
-
-/* Hangs from the left edge, under the group it belongs to. */
-.app-nav-panel {
-  left: 0;
-}
-
-/*
- * The tabs folded into one button, for a bar with no room to line them up.
- *
- * It carries the name of the tool currently open, which is the job the lit tab was doing: the panel behind it deliberately
- * marks nothing as current, on the grounds that the bar already says so, and this is the bar saying so.
- */
-.app-nav .app-nav-burger {
-  gap: var(--space-2);
-}
-
-.app-nav .app-nav-burger .icon {
-  flex: none;
-  font-size: var(--text-lg);
-}
-
-.app-nav-burger-label {
-  max-width: 10em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* Nothing separates the first row from the top of the panel. */
-.app-nav-panel > .menu-separator:first-child {
-  display: none;
 }

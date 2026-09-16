@@ -29,48 +29,6 @@
   color: var(--text-muted);
 }
 
-/* Sits above everything on the page, so an attempt to leave a live session cannot simply be ignored. */
-.leave-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgb(0 0 0 / 55%);
-  animation: view-enter var(--duration-fast) var(--ease-out) both;
-}
-
-.leave-dialog {
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.leave-dialog h2 {
-  margin: 0 0 10px;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.leave-dialog p {
-  margin: 0 0 20px;
-  color: var(--text-muted);
-}
-
-.leave-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
 
 .duo-notice {
   margin: 16px 20px 0;

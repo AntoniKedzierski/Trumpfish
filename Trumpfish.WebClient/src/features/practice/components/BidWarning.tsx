@@ -1,5 +1,5 @@
 import type { PracticeWarning } from '@/api/models';
-import { BidLabel } from '@/features/simulation/components/DealViews';
+import { BidCard } from '@/ui';
 
 /**
  * What the player told his partner, set against the hand he is actually holding. Raised only for bids the system cannot square
@@ -18,7 +18,7 @@ export function BidWarning({ warnings }: { warnings: readonly PracticeWarning[] 
         <dl key={warning.bidIndex}>
           <dt>Twoja odzywka</dt>
           <dd>
-            <strong><BidLabel bid={warning.bid} /></strong>
+            <strong><BidCard bid={warning.bid} /></strong>
             {warning.promised === null || warning.promised === undefined
               ? ' — tej odzywki system nie przewiduje w tym miejscu licytacji.'
               : ` — ${warning.promised}`}
@@ -28,7 +28,7 @@ export function BidWarning({ warnings }: { warnings: readonly PracticeWarning[] 
             <>
               <dt>Silnik</dt>
               <dd>
-                <strong><BidLabel bid={warning.suggested} /></strong>
+                <strong><BidCard bid={warning.suggested} /></strong>
                 {warning.suggestedMeaning === null || warning.suggestedMeaning === undefined ? null : ` — ${warning.suggestedMeaning}`}
               </dd>
             </>

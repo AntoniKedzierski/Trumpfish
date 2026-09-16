@@ -62,22 +62,19 @@
  * contract marker" is a requirement rather than a resemblance.
  */
 /*
- * Aligned on baselines, not on boxes. These are flex containers, so whatever they hold is a flex item - and a flex item
- * ignores `vertical-align`, which is what stands a suit mark on the line in the first place. Baseline alignment puts the
- * mark back on the same line as the level beside it and the seat after it.
+ * Wyrównane do środka, bo chip niesie znak, a znak SVG nie ma linii pisma i przy align-items: baseline zwisa pod
+ * tekstem - tak wypadła lupka w "Analizuj". Linia pisma jest zarezerwowana dla wierszy z samym tekstem i znakiem koloru
+ * i nie wolno jej łączyć ze stałą wysokością, bo wtedy pojedynczy element siada na linii pisma wysokiego wiersza
+ * zamiast na jego środku - tak wypadł tekst w "Analiza".
+ *
+ * Wysokość, padding i stopień pisma daje `.ui-chip` w `ui/controls.css`; tutaj są tylko barwy i kształt.
  */
 .deal-contract,
 .deal-chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 5px 12px;
   border: 1px solid transparent;
   border-radius: 999px;
-  font-size: var(--text-sm);
   background: var(--accent-soft);
   color: var(--accent);
-  white-space: nowrap;
 }
 
 .deal-contract {
@@ -259,6 +256,10 @@
  * Roomier than it needs to be for a two character label, because it does not always hold two characters: the heart is the
  * widest and deepest of the pips, and at three pixels of padding it was reaching the edge of the box and coming back
  * clipped. `overflow: visible` because this is a `<button>`, and a button will clip at its content box.
+ */
+/*
+ * Wyjątek od rozdziału 6 DESIGN.md: komórka licytacji nie jest nazwaną komendą, tylko wartością - jej treścią jest
+ * odzywka, a nie słowo, i musi mieć wysokość wiersza tabeli, a nie wysokość przycisku.
  */
 .bid-chip {
   position: relative;

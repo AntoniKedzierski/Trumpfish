@@ -60,15 +60,6 @@
   border-color: var(--pearl-aqua);
 }
 
-/*
- * Nothing opened from a bar is set larger than the bar itself - a panel that shouts louder than the control that opened
- * it reads as a different application. The bar is a normal button, so its dropdowns are read at the normal button's size.
- */
-.toolbar .menu-panel,
-.toolbar .popover-panel {
-  font-size: var(--button-normal-text);
-}
-
 @media (max-width: 720px) {
   .toolbar {
     gap: var(--space-2);
@@ -84,8 +75,8 @@
  * reader and for the pointer that hovers one.
  */
 @media (max-width: 560px) {
-  .toolbar-commands button > span,
-  .toolbar-commands .popover-label {
+  .toolbar-commands button > span:not(.ui-badge),
+  .toolbar-commands .ui-popup-label {
     position: absolute;
     width: 1px;
     height: 1px;

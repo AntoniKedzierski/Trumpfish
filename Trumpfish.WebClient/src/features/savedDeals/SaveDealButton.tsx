@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { SimulationDealResult, Vulnerability } from '@/api/models';
 import { saveDeal } from '@/api/savedDeals';
 import { SaveIcon } from '@/components/icons';
+import { Button } from '@/ui';
 import { DealDetailsDialog } from './DealDetailsDialog';
 import './savedDeals.css';
 
@@ -19,15 +20,14 @@ export function SaveDealButton({ deal, vulnerability }: { deal: SimulationDealRe
 
   return (
     <>
-      <button
-        type="button"
+      <Button
+        iconOnly
+        icon={SaveIcon}
         className={saved ? 'deal-save saved' : 'deal-save'}
         title={saved ? 'Rozdanie zapisane. Kliknij, aby zapisać ponownie.' : 'Zapisz rozdanie na swoim koncie'}
         aria-label="Zapisz rozdanie"
         onClick={() => setOpen(true)}
-      >
-        <SaveIcon />
-      </button>
+      />
 
       {!open ? null : (
         <DealDetailsDialog

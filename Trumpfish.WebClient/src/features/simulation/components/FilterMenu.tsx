@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CheckIcon, CloseIcon, FilterIcon } from '@/components/icons';
-import { Popover } from '@/components/Popover';
+import { Popup } from '@/ui';
 import type { DealFilters, GameFilterKey, SideFilterKey } from '../filters';
 import { activeFilterCount, emptyFilters, gameFilterLabels, sideFilterLabels } from '../filters';
 
@@ -36,9 +36,9 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
     }));
 
   return (
-    <Popover
+    <Popup
       label="Filtry"
-      icon={<FilterIcon />}
+      icon={FilterIcon}
       count={activeFilterCount(value)}
       onClose={apply}
       footer={
@@ -54,8 +54,8 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
         </>
       }
     >
-      <div className="popover-section">
-        <div className="popover-search">
+      <div className="ui-panel-section">
+        <div className="ui-panel-search">
           <input
             type="search"
             value={draft.bid}
@@ -66,7 +66,7 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
           {draft.bid === '' ? null : (
             <button
               type="button"
-              className="popover-search-clear"
+              className="ui-panel-search-clear"
               aria-label="Wyczyść wyszukiwanie"
               onClick={() => setDraft((current) => ({ ...current, bid: '' }))}
             >
@@ -76,9 +76,9 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
         </div>
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {(Object.keys(sideFilterLabels) as SideFilterKey[]).map((key) => (
-          <label key={key} className="popover-option">
+          <label key={key} className="ui-check">
             <input
               type="radio"
               name="side-filter"
@@ -90,9 +90,9 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
         ))}
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {(Object.keys(gameFilterLabels) as GameFilterKey[]).map((key) => (
-          <label key={key} className="popover-option">
+          <label key={key} className="ui-check">
             <input
               type="checkbox"
               checked={draft.games.includes(key)}
@@ -102,6 +102,6 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
           </label>
         ))}
       </div>
-    </Popover>
+    </Popup>
   );
 }

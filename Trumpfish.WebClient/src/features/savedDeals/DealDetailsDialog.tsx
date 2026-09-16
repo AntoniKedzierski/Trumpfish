@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { listMyDealTags } from '@/api/savedDeals';
 import { CheckIcon, CloseIcon } from '@/components/icons';
+import { Button, Dialog, Field, TextBox } from '@/ui';
 import './savedDeals.css';
 
 export interface DealDetails {
@@ -12,20 +13,20 @@ export interface DealDetails {
 interface DealDetailsDialogProps {
   title: string;
   initial: DealDetails;
-  /** What the confirming button says while it waits, and what it says the rest of the time. */
+  /** Co mówi przycisk potwierdzenia, kiedy czeka, i co mówi przez resztę czasu. */
   submitLabel: string;
   busyLabel: string;
-  /** Rejects with the message to show; resolving is taken as done and the dialog closes itself. */
+  /** Odrzuca wiadomością do pokazania; spełnienie znaczy „gotowe" i okno zamyka się samo. */
   onSubmit: (details: DealDetails) => Promise<unknown>;
   onClose: () => void;
 }
 
 /**
- * The part of a saved deal only the user knows: what to call it, what to file it under, and anything worth saying.
+ * To, co w zapisanym rozdaniu wie tylko użytkownik: jak je nazwać, pod czym je odłożyć i co warto o nim powiedzieć.
  */
 /*
- * One dialog for keeping a deal and for editing one already kept. The two ask exactly the same three questions, and two
- * copies of them would be two places for the tag field to behave differently.
+ * Jedno okno na zapisanie rozdania i na edycję już zapisanego. Zadają dokładnie te same trzy pytania, a dwie kopie
+ * byłyby dwoma miejscami, w których pole tagów może zacząć zachowywać się inaczej.
  */
 export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSubmit, onClose }: DealDetailsDialogProps) {
   const [name, setName] = useState(initial.name);
@@ -37,7 +38,7 @@ export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSu
   const [error, setError] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
-  // The user's own keywords, fetched once as the dialog opens. There are never many, so the filtering is done here.
+  // Własne słowa kluczowe użytkownika, pobierane raz przy otwarciu. Nigdy nie ma ich wiele, więc filtruje się tutaj.
   useEffect(() => {
     let cancelled = false;
     listMyDealTags().then(
@@ -49,21 +50,9 @@ export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSu
     return () => { cancelled = true; };
   }, []);
 
-  // Escape is the way out of every other panel in the application, so it is the way out of this one.
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
-
   /*
-   * Suggested against the word being typed rather than the whole field: tags are a list, and the one the user is in the
-   * middle of is the only one he can still be helped with. Five of them, most used first - the list arrives in that order.
+   * Podpowiadane do pisanego słowa, a nie do całego pola: tagi są listą, a ten, w środku którego użytkownik właśnie
+   * jest, to jedyny, w którym da się jeszcze pomóc. Pięć, od najczęściej używanego - lista przychodzi w tej kolejności.
    */
   const typed = lastWord(tags).toLowerCase();
   const chosen = new Set(tags.toLowerCase().split(/[\s,;]+/).filter((tag) => tag !== ''));
@@ -89,69 +78,55 @@ export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSu
   };
 
   return (
-    <div className="save-deal-backdrop" role="presentation" onClick={onClose}>
-      <div
-        className="save-deal-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="save-deal-title"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <h2 id="save-deal-title">{title}</h2>
+    <Dialog
+      title={title}
+      onClose={onClose}
+      /* Para, która odpowiada na pytanie zadane przez okno, złożona mało: to nie są sprawy same w sobie. */
+      actions={
+        <>
+          <Button size="small" icon={CloseIcon} disabled={busy} onClick={onClose}>Odrzuć</Button>
+          <Button size="small" icon={CheckIcon} variant="primary" disabled={busy || name.trim() === ''} onClick={submit}>
+            {busy ? busyLabel : submitLabel}
+          </Button>
+        </>
+      }
+    >
+      <Field label="Nazwa">
+        <TextBox ref={nameRef} value={name} autoFocus disabled={busy} onChange={setName} />
+      </Field>
 
-        <label className="save-deal-field">
-          <span>Nazwa</span>
-          <input ref={nameRef} type="text" value={name} autoFocus disabled={busy} onChange={(event) => setName(event.target.value)} />
-        </label>
+      <Field label="Tagi">
+        <TextBox
+          value={tags}
+          placeholder="wtrącenie"
+          disabled={busy}
+          onChange={(next) => { setTags(next); setSuggesting(true); }}
+          onFocus={() => setSuggesting(true)}
+          /* Z opóźnieniem, bo kliknięcie w podpowiedź zabiera pole z fokusu, zanim wyląduje. */
+          onBlur={() => window.setTimeout(() => setSuggesting(false), 120)}
+        />
+        {!suggesting || suggestions.length === 0 ? null : (
+          <div className="save-deal-suggestions">
+            {suggestions.map((tag) => (
+              <button key={tag} type="button" className="small" onMouseDown={(event) => event.preventDefault()} onClick={() => complete(tag)}>
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+      </Field>
 
-        <label className="save-deal-field">
-          <span>Tagi</span>
-          <input
-            type="text"
-            value={tags}
-            placeholder="np. wtrącenie szlemik"
-            disabled={busy}
-            onChange={(event) => { setTags(event.target.value); setSuggesting(true); }}
-            onFocus={() => setSuggesting(true)}
-            /* Delayed, because a click on a suggestion takes the focus out of the field before it lands. */
-            onBlur={() => window.setTimeout(() => setSuggesting(false), 120)}
-          />
-          {!suggesting || suggestions.length === 0 ? null : (
-            <div className="save-deal-suggestions">
-              {suggestions.map((tag) => (
-                <button key={tag} type="button" className="small" onMouseDown={(event) => event.preventDefault()} onClick={() => complete(tag)}>
-                  {tag}
-                </button>
-              ))}
-            </div>
-          )}
-        </label>
+      <Field label="Komentarz">
+        <textarea rows={4} value={comment} disabled={busy} onChange={(event) => setComment(event.target.value)} />
+      </Field>
 
-        <label className="save-deal-field">
-          <span>Komentarz</span>
-          <textarea rows={4} value={comment} disabled={busy} onChange={(event) => setComment(event.target.value)} />
-        </label>
-
-        {error === null ? null : <p className="save-deal-error">{error}</p>}
-
-        {/* The pair that answers the question the dialog asked, set small: they are not errands of their own. */}
-        <div className="save-deal-actions">
-          <button type="button" className="small" disabled={busy} onClick={onClose}>
-            <CloseIcon />
-            <span>Odrzuć</span>
-          </button>
-          <button type="button" className="small primary" disabled={busy || name.trim() === ''} onClick={submit}>
-            <CheckIcon />
-            <span>{busy ? busyLabel : submitLabel}</span>
-          </button>
-        </div>
-      </div>
-    </div>
+      {error === null ? null : <p className="ui-dialog-error">{error}</p>}
+    </Dialog>
   );
 }
 
-/** The word still being typed: everything after the last separator, which is the only one suggesting can help with. */
+/** Słowo, w którym stoi kursor - czyli ostatnie, bo pisze się na końcu pola. */
 function lastWord(tags: string): string {
-  const separator = Math.max(tags.lastIndexOf(' '), tags.lastIndexOf(','), tags.lastIndexOf(';'));
-  return tags.slice(separator + 1);
+  const parts = tags.split(/[\s,;]/);
+  return parts[parts.length - 1] ?? '';
 }

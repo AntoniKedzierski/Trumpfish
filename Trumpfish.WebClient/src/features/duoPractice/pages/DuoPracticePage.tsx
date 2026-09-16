@@ -3,17 +3,15 @@ import { useBlocker, useNavigate } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import type { BiddingSystem, BiddingSystemSummary, DuoSettings, PracticeHint } from '@/api/models';
 import { ToolBar } from '@/components/ToolBar';
-import { Select } from '@/components/Select';
+import { Auction, BidCard, ComboBox, ConfirmDialog, Hand } from '@/ui';
 import { BidWarning } from '@/features/practice/components/BidWarning';
 import { BiddingBox, type BoxBid } from '@/features/practice/components/BiddingBox';
 import { openingChoices } from '@/features/practice/openings';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
-import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { useRealtime } from '@/realtime/useRealtime';
 import { BackIcon, CardsIcon, CloseIcon, UsersIcon } from '@/components/icons';
 import { HelpTip } from '@/components/HelpTip';
-import { BidMark } from '@/components/suits';
 import '@/components/SetupCard.css';
 import '@/features/practice/pages/PracticePage.css';
 import './DuoPracticePage.css';
@@ -217,7 +215,7 @@ export function DuoPracticePage() {
 
             <label>
               <span>System licytacyjny</span>
-              <Select
+              <ComboBox
                 value={systemId}
                 options={systems.map((system) => ({ value: system.id, label: system.name }))}
                 /* Another system means another tree, so the opening being practised cannot survive the switch. */
@@ -232,7 +230,7 @@ export function DuoPracticePage() {
                 Ćwiczone otwarcie
                 <HelpTip>Karty pod to otwarcie dostaje jedno z was — za każdym rozdaniem losowo.</HelpTip>
               </span>
-              <Select
+              <ComboBox
                 value={openingNodeId}
                 options={[
                   { value: '', label: 'Wszystkie - karty bez warunków' },
@@ -242,7 +240,7 @@ export function DuoPracticePage() {
                     // The string is what the option is announced and titled by; this is what it looks like.
                     labelNode: (
                       <>
-                        <BidMark type={choice.type} color={choice.color} level={choice.level} />
+                        <BidCard bid={{ type: choice.type, color: choice.color, value: choice.level }} />
                         {` · ${choice.meaning}`}
                       </>
                     ),
@@ -258,7 +256,7 @@ export function DuoPracticePage() {
                 Partner
                 <HelpTip>Widać tu tylko znajomych, którzy są online i nie siedzą już przy innym stole.</HelpTip>
               </span>
-              <Select
+              <ComboBox
                 value={partnerId}
                 options={available.map((friend) => ({ value: friend.userId, label: friend.displayName ?? friend.username }))}
                 onChange={setPartnerId}
@@ -269,7 +267,7 @@ export function DuoPracticePage() {
 
             <label>
               <span>Znaczenia odzywek</span>
-              <Select
+              <ComboBox
                 value={meanings}
                 options={(Object.keys(meaningLabels) as MeaningMode[]).map((key) => ({ value: key, label: meaningLabels[key] }))}
                 onChange={setMeanings}
@@ -338,7 +336,7 @@ export function DuoPracticePage() {
                     )}
                   </div>
 
-                  <HandView hand={table.hand} />
+                  <Hand hand={table.hand} />
 
                   {hint === null || hint.at !== table.bidding.length ? null : (
                     <p className="hint">
@@ -346,7 +344,7 @@ export function DuoPracticePage() {
                         'Silnik nie znajduje tu dla ciebie odzywki w systemie.'
                       ) : (
                         <>
-                          Silnik zalicytowałby <strong><BidLabel bid={hint.answer.bid} /></strong>
+                          Silnik zalicytowałby <strong><BidCard bid={hint.answer.bid} /></strong>
                           {hint.answer.meaning === null || hint.answer.meaning === undefined ? null : ` — ${hint.answer.meaning}`}
                         </>
                       )}
@@ -362,7 +360,7 @@ export function DuoPracticePage() {
 
                 <section className="panel auction-panel">
                   <h2>Licytacja</h2>
-                  <BiddingTable
+                  <Auction
                     key={table.dealNumber}
                     bidding={table.bidding}
                     dealer={table.dealer}
@@ -380,16 +378,16 @@ export function DuoPracticePage() {
       </main>
 
       {blocker.state !== 'blocked' ? null : (
-        <div className="leave-backdrop" role="presentation" onClick={() => blocker.reset?.()}>
-          <div className="leave-dialog" role="alertdialog" aria-modal="true" aria-labelledby="leave-title" onClick={(event) => event.stopPropagation()}>
-            <h2 id="leave-title">Opuścić stół?</h2>
-            <p>Wyjście z tego widoku kończy sesję — także dla partnera.</p>
-            <div className="leave-actions">
-              <button type="button" autoFocus onClick={() => blocker.reset?.()}>Zostań</button>
-              <button type="button" className="danger" onClick={() => leave(() => blocker.proceed?.())}>Zakończ i wyjdź</button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title="Opuścić stół?"
+          question="Wyjście z tego widoku kończy sesję — także dla partnera."
+          cancelLabel="Zostań"
+          confirmLabel="Zakończ i wyjdź"
+          confirmIcon={CloseIcon}
+          danger
+          onConfirm={() => leave(() => blocker.proceed?.())}
+          onClose={() => blocker.reset?.()}
+        />
       )}
     </div>
   );

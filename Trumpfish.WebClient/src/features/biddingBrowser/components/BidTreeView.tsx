@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Chevron } from '@/components/Select';
+import { BidCard, Chevron } from '@/ui';
 import { longPressDelay, useLongPress } from '@/components/useLongPress';
 import type { EditableBidNode, EditableSystem, NodePath } from '../model';
-import { CallMark } from './CallMark';
 import { childPath, containsPath, folderPathUnder, holdsInterjected, interjectedCount, samePath } from '../tree';
 
 interface BidTreeViewProps {
@@ -161,7 +160,7 @@ function TreeChildren({ container, children_, selection, revealKey, onSelect, on
       {children_.slice(count).map((node, offset) => (
         <TreeBranch
           key={node.nodeId ?? count + offset}
-          label={<BidLabel node={node} />}
+          label={<TreeBidLabel node={node} />}
           target={childPath(container, count + offset)}
           children_={node.nextBids}
           selection={selection}
@@ -215,7 +214,7 @@ function InterjectionFolder({ container, held, selection, revealKey, onSelect, o
           {held.map((node, index) => (
             <TreeBranch
               key={node.nodeId ?? index}
-              label={<BidLabel node={node} />}
+              label={<TreeBidLabel node={node} />}
               target={childPath(container, index)}
               children_={node.nextBids}
               selection={selection}
@@ -232,18 +231,18 @@ function InterjectionFolder({ container, held, selection, revealKey, onSelect, o
   );
 }
 
-function BidLabel({ node }: { node: EditableBidNode }) {
+function TreeBidLabel({ node }: { node: EditableBidNode }) {
   return (
     // A row too long for the panel is cut off at the right edge, so the whole sentence is kept here for the pointer to ask for.
     <span className="bid-label" title={wholeOf(node)}>
       <span className="bid-code">
-        <CallMark bid={node} />
+        <BidCard bid={node} />
         {/* Part of the call rather than of the sentence after it: it travels with the bid instead of standing in a column of its own. */}
         <span className="bid-separator">:</span>
       </span>
       {node.interjection && (
         <span className="bid-interjection">
-          (po. <CallMark bid={node.interjection} />)
+          (po. <BidCard bid={node.interjection} />)
         </span>
       )}
       <span className="bid-condition">{node.condition}</span>

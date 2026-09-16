@@ -87,3 +87,28 @@ export function toNumber(value: number | string | null | undefined): number | nu
   const parsed = typeof value === 'number' ? value : Number(value);
   return Number.isNaN(parsed) ? null : parsed;
 }
+
+const cardLabels: Record<string, string> = {
+  Two: '2',
+  Three: '3',
+  Four: '4',
+  Five: '5',
+  Six: '6',
+  Seven: '7',
+  Eight: '8',
+  Nine: '9',
+  Ten: '10',
+  Jack: 'J',
+  Queen: 'Q',
+  King: 'K',
+  Ace: 'A',
+};
+
+const suitMarks: Record<CardColor, string> = { Clubs: '♣', Diamonds: '♦', Hearts: '♥', Spades: '♠' };
+
+export function cardLabel(card: Pick<SimulationCard, 'value' | 'color'>): string {
+  return `${cardLabels[card.value] ?? card.value}${suitMarks[card.color]}`;
+}
+
+/** Single letter seat labels, as a bridge diagram writes them. */
+export const positionLabels: Record<PlayerPosition, string> = { North: 'N', East: 'E', South: 'S', West: 'W' };

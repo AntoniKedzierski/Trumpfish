@@ -1,5 +1,5 @@
 import type { EditableBidNode } from '../model';
-import { CallMark } from './CallMark';
+import { BidCard } from '@/ui';
 
 interface BidPathProps {
   /** Name of the root the edited bid lives under, shown as the outermost level. */
@@ -34,12 +34,12 @@ export function BidPath({ rootName, ancestors }: BidPathProps) {
           style={{ paddingLeft: indentFor(depth + 1) }}
         >
           <span className="bid-code">
-            <CallMark bid={node} />
+            <BidCard bid={node} />
           </span>
           {/* Kept in the same place as in the tree: an interjection changes what the bid under it means, so the path has to show it. */}
           {node.interjection && (
             <span className="bid-interjection">
-              (po. <CallMark bid={node.interjection} />)
+              (po. <BidCard bid={node.interjection} />)
             </span>
           )}
           {node.condition && <span className="bid-condition">{node.condition}</span>}

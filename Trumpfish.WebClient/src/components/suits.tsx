@@ -1,4 +1,4 @@
-import type { BidColor, BidType } from '@/api/models';
+import type { BidColor } from '@/api/models';
 import './suits.css';
 
 /**
@@ -199,35 +199,5 @@ export function RedoubleMark({ className }: { className?: string }) {
       <path d="M2.6 5.4 12.4 18.6M12.4 5.4 2.6 18.6" {...letter} />
       <path d="M17.6 5.4 27.4 18.6M27.4 5.4 17.6 18.6" {...letter} />
     </CallGlyph>
-  );
-}
-
-/** A whole call - level and mark, or the double, or a pass - drawn rather than printed. */
-export function BidMark({ type, color, level }: { type: BidType; color: BidColor; level: number | null }) {
-  if (type === 'Double') {
-    return (
-      <span className="bid-call">
-        <DoubleMark />
-      </span>
-    );
-  }
-
-  if (type === 'Redouble') {
-    return (
-      <span className="bid-call">
-        <RedoubleMark />
-      </span>
-    );
-  }
-
-  if (type !== 'Submit') {
-    return <>Pas</>;
-  }
-
-  return (
-    <span className="bid-call">
-      <span className="bid-level">{level ?? ''}</span>
-      <SuitMark suit={color} />
-    </span>
   );
 }

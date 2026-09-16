@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { CurrentUser } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
-import type { ToolDescriptor } from '@/tools/toolsRegistry';
 import { buildNavEntries } from '@/tools/toolsRegistry';
+import { Button, MenuRow, NavRow } from '@/ui';
 import { FriendsMenu } from './FriendsMenu';
 import { CloseIcon, LayersIcon, LogOutIcon, MenuIcon, SaveIcon, ShareIcon, UserIcon } from './icons';
 import './AppDrawer.css';
@@ -72,16 +72,16 @@ export function AppDrawer({ user }: { user: CurrentUser | null }) {
 
   return (
     <>
-      <button
-        type="button"
+      <Button
+        size="large"
+        iconOnly
+        icon={MenuIcon}
         className="app-drawer-burger"
         aria-expanded={open}
         aria-controls={panelId}
         aria-label="Menu"
         onClick={() => setOpen((was) => !was)}
-      >
-        <MenuIcon />
-      </button>
+      />
 
       {!open
         ? null
@@ -103,15 +103,13 @@ export function AppDrawer({ user }: { user: CurrentUser | null }) {
                     {user?.isAdmin ? <span className="role">Admin</span> : null}
                   </span>
 
-                  <button type="button" className="app-drawer-close" aria-label="Zamknij" onClick={close}>
-                    <CloseIcon />
-                  </button>
+                  <Button size="small" iconOnly icon={CloseIcon} className="app-drawer-close" aria-label="Zamknij" onClick={close} />
                 </div>
 
                 <nav className="app-drawer-nav" aria-label="Narzędzia">
                   {entries.map((entry) =>
                     entry.kind === 'tool' ? (
-                      <DrawerLink key={entry.tool.id} to={entry.tool.route} icon={entry.tool.icon} label={entry.tool.navLabel} onPick={close} />
+                      <NavRow key={entry.tool.id} to={entry.tool.route} icon={entry.tool.icon} size="large" onClick={close}>{entry.tool.navLabel}</NavRow>
                     ) : (
                       /*
                        * A group is one tab on the bar because the bar has no room for two. Here there is room, so its tools
@@ -121,7 +119,7 @@ export function AppDrawer({ user }: { user: CurrentUser | null }) {
                       <Fragment key={entry.group.id}>
                         <div className="app-drawer-rule" />
                         {entry.tools.map((tool) => (
-                          <DrawerLink key={tool.id} to={tool.route} icon={tool.icon} label={tool.navLabel} onPick={close} />
+                          <NavRow key={tool.id} to={tool.route} icon={tool.icon} size="large" onClick={close}>{tool.navLabel}</NavRow>
                         ))}
                       </Fragment>
                     ),
@@ -132,24 +130,21 @@ export function AppDrawer({ user }: { user: CurrentUser | null }) {
 
                 {/* The same menu as on a wide screen; here its panel opens in place rather than hanging off the bar. */}
                 <div className="app-drawer-friends">
-                  <FriendsMenu />
+                  <FriendsMenu variant="drawer" />
                 </div>
 
                 <div className="app-drawer-rule" />
 
                 <nav className="app-drawer-nav" aria-label="Konto">
-                  <DrawerLink to="/account" icon={UserIcon} label="Konto" onPick={close} />
-                  <DrawerLink to="/tools/bidding-browser/systems" icon={LayersIcon} label="Zarządzaj systemami" onPick={close} />
-                  <DrawerLink to="/account/deals" icon={SaveIcon} label="Zapisane rozdania" onPick={close} />
-                  <DrawerLink to="/account/deals/shared" icon={ShareIcon} label="Udostępnione rozdania" onPick={close} />
+                  <NavRow to="/account" icon={UserIcon} size="large" onClick={close}>Konto</NavRow>
+                  <NavRow to="/tools/bidding-browser/systems" icon={LayersIcon} size="large" onClick={close}>Zarządzaj systemami</NavRow>
+                  <NavRow to="/account/deals" icon={SaveIcon} size="large" onClick={close}>Zapisane rozdania</NavRow>
+                  <NavRow to="/account/deals/shared" icon={ShareIcon} size="large" onClick={close}>Udostępnione rozdania</NavRow>
                 </nav>
 
                 <div className="app-drawer-rule" />
 
-                <button type="button" className="app-drawer-leave" onClick={signOut}>
-                  <LogOutIcon />
-                  <span>Wyloguj</span>
-                </button>
+                <MenuRow icon={LogOutIcon} size="large" leave onClick={signOut}>Wyloguj</MenuRow>
               </aside>
             </div>,
             document.body,
@@ -158,12 +153,3 @@ export function AppDrawer({ user }: { user: CurrentUser | null }) {
   );
 }
 
-/** One row of the panel: a glyph, a name, and the same height wherever it stands. */
-function DrawerLink({ to, icon: Glyph, label, onPick }: { to: string; icon: ToolDescriptor['icon']; label: string; onPick: () => void }) {
-  return (
-    <NavLink to={to} end onClick={onPick}>
-      <Glyph />
-      <span>{label}</span>
-    </NavLink>
-  );
-}

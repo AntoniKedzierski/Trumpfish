@@ -38,48 +38,6 @@
   background: rgb(255 181 21 / 16%);
 }
 
-/* Sits above everything, including the interjection bidding box, so a held-back navigation cannot be ignored. */
-.unsaved-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgb(0 0 0 / 55%);
-  animation: chip-in var(--duration-fast) var(--ease-out) both;
-}
-
-.unsaved-dialog {
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.unsaved-dialog h2 {
-  margin: 0 0 10px;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.unsaved-dialog p {
-  margin: 0 0 20px;
-  color: var(--text-muted);
-}
-
-.unsaved-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
 
 
 
@@ -141,7 +99,13 @@
  * `min-height: 0` is what lets it: a grid item will not shrink below its content without being told to, and a tree that
  * refuses to shrink makes the whole page scroll instead - carrying the tool bar off the top with it.
  */
+/*
+ * Drzewko czyta się długo i w całości, więc jest złożone o stopień niżej niż reszta strony: cyfra odzywki, znaczenie i
+ * znak koloru schodzą z 14 px na 12 px. Znak schodzi sam z siebie, bo `--mark-box` to 1em - dlatego rozmiar jest tu
+ * ustawiony na pojemniku, a nie na każdym kawałku wiersza z osobna.
+ */
 .tree {
+  font-size: var(--text-xs);
   min-height: 0;
   overflow: auto;
   margin: 0;
@@ -182,7 +146,7 @@
   max-height: 26px;
   padding-right: 14px;
   overflow: hidden;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--text-muted);
@@ -454,9 +418,10 @@
   gap: 6px;
 }
 
+/* Zeszły o 2 px razem z pismem wiersza - znaczek większy od słowa obok podnosiłby cały wiersz. */
 .badge {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   opacity: 0.85;
   transition: opacity var(--duration-fast) var(--ease-out);
 }
@@ -466,8 +431,8 @@
 }
 
 .badge.small {
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
 }
 
 .badge.mirrored {
@@ -476,7 +441,7 @@
 
 .badge-preferred {
   color: var(--hearts);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 700;
   line-height: 1;
 }
@@ -794,7 +759,7 @@
 .editor input,
 .editor textarea,
 .editor select,
-.editor .select {
+.editor .ui-combo {
   width: 100%;
 }
 
@@ -903,28 +868,23 @@
   border-top: 1px solid var(--border-subtle);
 }
 
+/* Rozmiar bierze z `Button size="small"`; tutaj jest tylko to, że nie ustępuje miejsca wiadomości obok. */
 .issue-repair {
   flex: none;
-  padding: 5px 12px;
-  font-size: var(--text-xs);
 }
 
+/*
+ * Wiersz wyniku walidacji. Układ, wysokość i wyrównanie do lewej bierze z `.ui-row.wrap` w `ui/controls.css` - pisany
+ * tutaj od zera zostawał wyśrodkowany przez globalną regułę przycisku, i tak właśnie wyglądał.
+ */
 .issue {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
+  /* Długie wiadomości mają się łamać w wierszu, a nie wypychać z niego przycisku naprawy. */
   flex: 1;
-  /* Long messages must wrap inside the row instead of pushing the repair button out of it. */
   min-width: 0;
-  padding: 10px 12px;
   background: none;
   border: none;
   border-radius: var(--radius-sm);
   color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
@@ -1082,9 +1042,6 @@
 }
 
 .editor-sheet-bar button {
-  height: var(--bar-control);
-  padding: 0 var(--space-4);
-  font-size: var(--text-sm);
   color: var(--onyx);
   background: var(--accent);
   border-color: var(--accent);

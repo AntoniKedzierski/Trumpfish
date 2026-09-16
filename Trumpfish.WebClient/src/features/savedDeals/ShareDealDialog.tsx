@@ -3,6 +3,7 @@ import { listFriends } from '@/api/friends';
 import type { FriendSummary, SavedDealSummary } from '@/api/models';
 import { getDealShares, setDealShares } from '@/api/savedDeals';
 import { CheckIcon, CloseIcon } from '@/components/icons';
+import { Button, CheckBox, Dialog } from '@/ui';
 import './savedDeals.css';
 
 /**
@@ -42,18 +43,6 @@ export function ShareDealDialog({ deal, onClose }: { deal: SavedDealSummary; onC
     return () => { cancelled = true; };
   }, [deal.id]);
 
-  // Escape is the way out of every other panel in the application, so it is the way out of this one.
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
-
   const toggle = (userId: string) => {
     setChosen((current) => {
       const next = new Set(current);
@@ -75,41 +64,42 @@ export function ShareDealDialog({ deal, onClose }: { deal: SavedDealSummary; onC
   };
 
   return (
-    <div className="save-deal-backdrop" role="presentation" onClick={onClose}>
-      <div className="save-deal-dialog" role="dialog" aria-modal="true" aria-labelledby="share-deal-title" onClick={(event) => event.stopPropagation()}>
-        <h2 id="share-deal-title">Komu udostępnić?</h2>
-        <p className="saved-remove-text">„{deal.name}” zobaczą wybrani znajomi na swojej liście udostępnionych rozdań.</p>
+    <Dialog
+      title="Komu udostępnić?"
+      onClose={onClose}
+      actions={
+        <>
+          <Button size="small" icon={CloseIcon} disabled={busy} onClick={onClose}>Odrzuć</Button>
+          <Button size="small" icon={CheckIcon} variant="primary" disabled={busy || loading} onClick={share}>
+            {busy ? 'Zapisuję…' : 'Udostępnij'}
+          </Button>
+        </>
+      }
+    >
+      <p className="ui-dialog-text">„{deal.name}” zobaczą wybrani znajomi na swojej liście udostępnionych rozdań.</p>
 
-        {loading ? <p className="saved-remove-text">Wczytuję znajomych…</p> : null}
+      {loading ? <p className="ui-dialog-text">Wczytuję znajomych…</p> : null}
 
-        {loading || friends.length > 0 ? null : (
-          <p className="saved-remove-text">Nie masz jeszcze znajomych. Zaproś kogoś z paska u góry.</p>
-        )}
+      {loading || friends.length > 0 ? null : (
+        <p className="ui-dialog-text">Nie masz jeszcze znajomych. Zaproś kogoś z paska u góry.</p>
+      )}
 
-        {friends.length === 0 ? null : (
-          <div className="share-deal-list">
-            {friends.map((friend) => (
-              <label key={friend.userId} className="share-deal-friend">
-                <input type="checkbox" checked={chosen.has(friend.userId)} disabled={busy} onChange={() => toggle(friend.userId)} />
-                <span>{friend.displayName ?? friend.username}</span>
-              </label>
-            ))}
-          </div>
-        )}
-
-        {error === null ? null : <p className="save-deal-error">{error}</p>}
-
-        <div className="save-deal-actions">
-          <button type="button" className="small" disabled={busy} onClick={onClose}>
-            <CloseIcon />
-            <span>Odrzuć</span>
-          </button>
-          <button type="button" className="small primary" disabled={busy || loading} onClick={share}>
-            <CheckIcon />
-            <span>{busy ? 'Zapisuję…' : 'Udostępnij'}</span>
-          </button>
+      {friends.length === 0 ? null : (
+        <div className="share-deal-list">
+          {friends.map((friend) => (
+            <CheckBox
+              key={friend.userId}
+              checked={chosen.has(friend.userId)}
+              disabled={busy}
+              onChange={() => toggle(friend.userId)}
+            >
+              {friend.displayName ?? friend.username}
+            </CheckBox>
+          ))}
         </div>
-      </div>
-    </div>
+      )}
+
+      {error === null ? null : <p className="ui-dialog-error">{error}</p>}
+    </Dialog>
   );
 }

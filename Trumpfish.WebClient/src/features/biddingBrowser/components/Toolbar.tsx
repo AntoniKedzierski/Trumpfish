@@ -1,6 +1,6 @@
 import type { BiddingSystemSummary } from '@/api/models';
 import { ArrowDownIcon, ArrowUpIcon, BranchIcon, BroomIcon, PlusIcon, SaveIcon, SortIcon, TrashIcon } from '@/components/icons';
-import { MenuButton } from '@/components/MenuButton';
+import { MenuPopup } from '@/ui';
 import { ToolBar } from '@/components/ToolBar';
 import { ShortcutsHelp } from './ShortcutsHelp';
 import { SystemMenu } from './SystemMenu';
@@ -66,7 +66,7 @@ export function Toolbar(props: ToolbarProps) {
         <span>Usuń</span>
       </button>
 
-      <MenuButton
+      <MenuPopup
         label="Gałąź"
         icon={BranchIcon}
         actions={[

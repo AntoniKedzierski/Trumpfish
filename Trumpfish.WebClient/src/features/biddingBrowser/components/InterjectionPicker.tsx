@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { TrashIcon } from '@/components/icons';
-import '@/components/Select.css';
+import '@/ui/comboBox.css';
 import { interjectionOptions, type InterjectionOption } from '../interjection';
 import type { EditableBidNode, InterjectionBid } from '../model';
-import { CallMark } from './CallMark';
+import { BidCard } from '@/ui';
 
 interface InterjectionPickerProps {
   value: InterjectionBid | null | undefined;
@@ -45,10 +45,10 @@ export function InterjectionPicker({ value, ancestors, onChange }: InterjectionP
   };
 
   return (
-    <div ref={rootRef} className="select interjection-picker" onKeyDown={(event) => event.key === 'Escape' && setOpen(false)}>
-      <button type="button" className={`select-field${open ? ' open' : ''}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <span className={`select-value${value ? '' : ' placeholder'}`}>
-          {value ? <CallMark bid={value} /> : 'brak wtrącenia'}
+    <div ref={rootRef} className="ui-combo interjection-picker" onKeyDown={(event) => event.key === 'Escape' && setOpen(false)}>
+      <button type="button" className={`ui-combo-field${open ? ' open' : ''}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}>
+        <span className={`ui-combo-value${value ? '' : ' placeholder'}`}>
+          {value ? <BidCard bid={value} /> : 'brak wtrącenia'}
         </span>
       </button>
 
@@ -82,7 +82,7 @@ function InterjectionCell({ option, onClick }: { option: InterjectionOption; onC
 
   return (
     <button type="button" className={`interjection-cell${option.available ? '' : ' unavailable'}`} disabled={!option.available} onClick={onClick}>
-      <CallMark bid={option.bid} />
+      <BidCard bid={option.bid} />
     </button>
   );
 }

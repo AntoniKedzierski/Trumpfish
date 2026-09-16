@@ -1,6 +1,6 @@
 import type { BiddingSystemSummary } from '@/api/models';
 import { SettingsIcon } from '@/components/icons';
-import { Popover } from '@/components/Popover';
+import { Popup } from '@/ui';
 import { SystemPicker } from '@/components/SystemPicker';
 
 interface ConfigMenuProps {
@@ -26,13 +26,13 @@ export function ConfigMenu({ systems, systemId, onSystemId, dealCount, onDealCou
   const chosen = systems.find((system) => system.id === systemId);
 
   return (
-    <Popover label={chosen?.name ?? 'Konfiguracja'} icon={<SettingsIcon />} scrollBody={false}>
-      <div className="popover-section">
+    <Popup label={chosen?.name ?? 'Konfiguracja'} icon={SettingsIcon} scroll={false}>
+      <div className="ui-panel-section">
         <SystemPicker systems={systems} systemId={systemId} onSystemId={onSystemId} disabled={disabled} />
       </div>
 
-      <div className="popover-section">
-        <label className="popover-field">
+      <div className="ui-panel-section">
+        <label className="ui-field">
           <span>Liczba rozdań</span>
           <input
             type="number"
@@ -44,7 +44,7 @@ export function ConfigMenu({ systems, systemId, onSystemId, dealCount, onDealCou
           />
         </label>
 
-        <label className="popover-field">
+        <label className="ui-field">
           <span>Ziarno</span>
           <input
             type="text"
@@ -55,7 +55,7 @@ export function ConfigMenu({ systems, systemId, onSystemId, dealCount, onDealCou
           />
         </label>
       </div>
-    </Popover>
+    </Popup>
   );
 }
 

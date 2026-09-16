@@ -5,23 +5,14 @@
  * command somebody actually came for, and two equally loud controls beside each other is how neither of them gets read.
  */
 .deal-save {
-  display: inline-flex;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  /* The same height as the chip beside it: two controls in one row are two controls of one size. */
-  width: var(--button-normal);
-  height: var(--button-normal);
-  padding: 0;
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  cursor: pointer;
 }
 
 .deal-save .icon {
-  font-size: var(--text-base);
   color: inherit;
 }
 
@@ -36,56 +27,6 @@
 .deal-save.saved {
   color: var(--accent);
   border-color: var(--accent-glow);
-}
-
-.save-deal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-5);
-  background: rgb(0 0 0 / 55%);
-  animation: chip-in var(--duration-fast) var(--ease-out) both;
-}
-
-.save-deal-dialog {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  width: 100%;
-  max-width: 460px;
-  max-height: 88dvh;
-  overflow: auto;
-  padding: var(--space-5);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.save-deal-dialog h2 {
-  margin: 0;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.save-deal-field {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.save-deal-field input,
-.save-deal-field textarea {
-  width: 100%;
-  font-weight: 400;
 }
 
 /*
@@ -110,9 +51,6 @@
 }
 
 .save-deal-suggestions button {
-  padding: 3px var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: 400;
   color: var(--text-primary);
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -122,31 +60,6 @@
 .save-deal-suggestions button:hover:not(:disabled) {
   color: var(--accent);
   border-color: var(--accent);
-}
-
-.save-deal-error {
-  margin: 0;
-  font-size: var(--text-sm);
-  color: var(--hearts);
-}
-
-.save-deal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  margin-top: var(--space-1);
-}
-
-.save-deal-actions .primary {
-  color: var(--onyx);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.save-deal-actions .primary:hover:not(:disabled) {
-  color: var(--onyx);
-  background: var(--pearl-aqua);
-  border-color: var(--pearl-aqua);
 }
 
 /*
@@ -255,11 +168,6 @@
   gap: var(--space-2);
 }
 
-.saved-remove-text {
-  margin: 0;
-  color: var(--text-muted);
-}
-
 /* The pages, in a row under the list they page through. */
 .deal-pager {
   display: flex;
@@ -301,17 +209,3 @@
   overflow: auto;
 }
 
-.share-deal-friend {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-2);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-
-.share-deal-friend:hover {
-  background: var(--surface-hover);
-}

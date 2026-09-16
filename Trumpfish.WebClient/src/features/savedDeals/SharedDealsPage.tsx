@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toNumber } from '@/api/models';
 import type { SharedDealPage, SharedDealSummary } from '@/api/models';
 import { listSharedDeals, removeSharedDeal } from '@/api/savedDeals';
-import { CloseIcon, TrashIcon } from '@/components/icons';
+import { TrashIcon } from '@/components/icons';
 import { ToolBar } from '@/components/ToolBar';
+import { Button, ConfirmDialog } from '@/ui';
 import { DealFilterMenu, DealPager, DealRow, DealSortMenu } from './DealPieces';
 import type { DealFilters } from './DealPieces';
 import { dealWord } from './dealWord';
@@ -99,15 +100,15 @@ export function SharedDealsPage() {
               /* The list is ordered by when it was handed over, so that is the date the row says. */
               extra={<> · udostępnił(a) <strong>{shared.sharedBy}</strong>, {new Date(shared.sharedUtc).toLocaleDateString('pl-PL')}</>}
               actions={
-                <button
-                  type="button"
-                  className="deal-save danger"
+                <Button
+                  iconOnly
+                  icon={TrashIcon}
+                  variant="danger"
+                  className="deal-save"
                   title="Zrezygnuj z tego udostępnienia"
                   aria-label="Zrezygnuj"
                   onClick={() => setDropping(shared)}
-                >
-                  <TrashIcon />
-                </button>
+                />
               }
             />
           ))
@@ -117,31 +118,16 @@ export function SharedDealsPage() {
       </div>
 
       {dropping === null ? null : (
-        <div className="save-deal-backdrop" role="presentation" onClick={() => setDropping(null)}>
-          <div
-            className="save-deal-dialog"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="drop-share-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h2 id="drop-share-title">Zrezygnować z rozdania?</h2>
-            <p className="saved-remove-text">
-              „{dropping.deal.name}” zniknie z twojej listy. U {dropping.sharedBy} zostaje - to jego rozdanie.
-            </p>
-
-            <div className="save-deal-actions">
-              <button type="button" className="small" disabled={busy} onClick={() => setDropping(null)}>
-                <CloseIcon />
-                <span>Anuluj</span>
-              </button>
-              <button type="button" className="small danger primary" disabled={busy} onClick={() => drop(dropping)}>
-                <TrashIcon />
-                <span>Zrezygnuj</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title="Zrezygnować z rozdania?"
+          question={`„${dropping.deal.name}” zniknie z twojej listy. U ${dropping.sharedBy} zostaje - to jego rozdanie.`}
+          confirmLabel="Zrezygnuj"
+          confirmIcon={TrashIcon}
+          danger
+          busy={busy}
+          onConfirm={() => drop(dropping)}
+          onClose={() => setDropping(null)}
+        />
       )}
     </div>
   );

@@ -35,20 +35,13 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* Icons in the bar track the text beside them, and never stretch when their row is squeezed. */
+/* Znaki w pasku nigdy się nie rozciągają, kiedy wiersz jest ściskany. Ich wielkość idzie za pismem obok - `ui/controls.css`. */
 .app-bar .icon {
   flex: none;
-  font-size: var(--text-lg);
 }
 
 .app-brand {
-  display: flex;
   flex: none;
-  align-items: center;
-  gap: 10px;
-  height: var(--button-large);
-  /* Set with the navigation beside it: the product name reading smaller than the tabs would look like a mistake. */
-  font-size: var(--button-large-text);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -69,22 +62,22 @@
   margin-left: auto;
 }
 
-/* The header is where the large buttons live: it is the first thing aimed at, on a phone with a thumb. */
-.app-bar .friends-trigger {
-  gap: 8px;
-  height: var(--button-large);
-  padding: 0 var(--space-4);
-  font-size: var(--button-large-text);
+/*
+ * Płytka w nagłówku: znajomi i konto. Jedna klasa, bo dwie kontrolki stojące obok siebie muszą wyglądać tak samo -
+ * wcześniej każda malowała się sama i różniły się obramowaniem.
+ */
+.app-bar .app-bar-chip {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
 }
 
-.app-bar .friends-trigger .icon {
-  color: var(--text-muted);
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.app-bar .friends-trigger:hover:not(:disabled) .icon,
-.app-bar .friends-trigger[aria-expanded='true'] .icon {
-  color: var(--accent);
+.app-bar .app-bar-chip:hover:not(:disabled),
+.app-bar .app-bar-chip[aria-expanded='true'] {
+  background: var(--surface-overlay);
+  border-color: var(--accent);
+  color: var(--text-primary);
 }
 
 .app-invitation {

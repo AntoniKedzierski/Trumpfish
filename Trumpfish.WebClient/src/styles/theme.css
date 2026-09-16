@@ -96,11 +96,11 @@
    *   normal - tool bars, pages, cards; the size a button is unless something says otherwise;
    *   small  - the pair that answers a dialog or a popup, and the rows of a pager.
    */
-  --button-large: 44px;
+  --button-large: 40px;
   --button-normal: 34px;
   --button-small: 30px;
 
-  --button-large-text: var(--text-lg);
+  --button-large-text: var(--text-base);
   --button-normal-text: var(--text-sm);
   --button-small-text: var(--text-xs);
 

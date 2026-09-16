@@ -75,7 +75,7 @@ export function DealAnalysis({ deal, vulnerability }: { deal: SimulationDealResu
   return (
     <span className="deal-analysis" ref={root}>
       {error !== null ? (
-        <span className="deal-chip failed" title={error}>
+        <span className="ui-chip deal-chip failed" title={error}>
           Analiza niedostępna
         </span>
       ) : analysis === null ? (

@@ -3,12 +3,10 @@ import { toNumber } from '@/api/models';
 import type { SavedDealSummary } from '@/api/models';
 import { HelpTip } from '@/components/HelpTip';
 import { FilterIcon, SortIcon } from '@/components/icons';
-import { Popover } from '@/components/Popover';
-import { Chevron } from '@/components/Select';
-import { BidMark } from '@/components/suits';
+import { BidCard, Chevron, Popup } from '@/ui';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 /* The contract pill is the deal card's own; these lists show the same thing and must not draw a second version of it. */
-import '@/features/simulation/components/deal.css';
+import '@/ui/bridge/deal.css';
 import './savedDeals.css';
 
 const pageSizes = [25, 50, 100, 200];
@@ -42,9 +40,9 @@ export function DealFilterMenu({ value, known, onChange }: {
   const count = [value.contract, value.tags, value.sharedBy ?? ''].filter((field) => field.trim() !== '').length;
 
   return (
-    <Popover label="Filtry" icon={<FilterIcon />} count={count} scrollBody={false}>
-      <div className="popover-section">
-        <label className="popover-field">
+    <Popup label="Filtry" icon={FilterIcon} count={count} scroll={false}>
+      <div className="ui-panel-section">
+        <label className="ui-field">
           <span>
             Kontrakt
             <HelpTip>Poziom, kolor albo jedno i drugie: NT, 1S, 1d. Kilka warunków oddziel przecinkiem.</HelpTip>
@@ -53,8 +51,8 @@ export function DealFilterMenu({ value, known, onChange }: {
         </label>
       </div>
 
-      <div className="popover-section">
-        <label className="popover-field">
+      <div className="ui-panel-section">
+        <label className="ui-field">
           <span>Tagi</span>
           <input
             type="text"
@@ -85,14 +83,14 @@ export function DealFilterMenu({ value, known, onChange }: {
       </div>
 
       {value.sharedBy === undefined ? null : (
-        <div className="popover-section">
-          <label className="popover-field">
+        <div className="ui-panel-section">
+          <label className="ui-field">
             <span>Udostępnione przez</span>
             <input type="text" value={value.sharedBy} placeholder="nazwa" onChange={(event) => onChange({ ...value, sharedBy: event.target.value })} />
           </label>
         </div>
       )}
-    </Popover>
+    </Popup>
   );
 }
 
@@ -104,25 +102,25 @@ export function DealSortMenu({ oldestFirst, onOldestFirst, pageSize, onPageSize 
   onPageSize: (value: number) => void;
 }) {
   return (
-    <Popover label="Sortowanie" icon={<SortIcon />}>
-      <div className="popover-section">
+    <Popup label="Sortowanie" icon={SortIcon}>
+      <div className="ui-panel-section">
         {[{ oldest: false, label: 'Najnowsze pierwsze' }, { oldest: true, label: 'Najstarsze pierwsze' }].map((option) => (
-          <label key={option.label} className="popover-option">
+          <label key={option.label} className="ui-check">
             <input type="radio" name="deal-order" checked={oldestFirst === option.oldest} onChange={() => onOldestFirst(option.oldest)} />
             <span>{option.label}</span>
           </label>
         ))}
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {pageSizes.map((size) => (
-          <label key={size} className="popover-option">
+          <label key={size} className="ui-check">
             <input type="radio" name="deal-page-size" checked={pageSize === size} onChange={() => onPageSize(size)} />
             <span>{size} na stronie</span>
           </label>
         ))}
       </div>
-    </Popover>
+    </Popup>
   );
 }
 
@@ -137,7 +135,7 @@ export function DealRow({ deal, extra, actions }: { deal: SavedDealSummary; extr
       <span className="deal-contract">
         {!played ? deal.contract : (
           <>
-            <BidMark type="Submit" color={deal.color!} level={level} />
+            <BidCard bid={{ color: deal.color!, value: level }} />
             {deal.declarer === null || deal.declarer === undefined ? null : <span className="saved-deal-declarer">{deal.declarer}</span>}
           </>
         )}

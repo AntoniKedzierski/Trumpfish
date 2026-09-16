@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import type { BiddingSystemSummary } from '@/api/models';
 import { CheckIcon, DownloadIcon, LayersIcon, PlusIcon, UploadIcon } from '@/components/icons';
-import { Popover } from '@/components/Popover';
+import { Popup } from '@/ui';
 import { SystemPicker } from '@/components/SystemPicker';
 import './SystemMenu.css';
 
@@ -50,8 +50,8 @@ export function SystemMenu(props: SystemMenuProps) {
   const label = props.systemId === null ? 'System' : props.systemName;
 
   return (
-    <Popover label={label} icon={<LayersIcon />} scrollBody={false}>
-      <div className="popover-section">
+    <Popup label={label} icon={LayersIcon} scroll={false}>
+      <div className="ui-panel-section">
         <p className="system-current">
           <span>Edytujesz</span>
           <strong title={props.systemName}>{props.systemName}</strong>
@@ -67,9 +67,9 @@ export function SystemMenu(props: SystemMenuProps) {
         />
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {/* Enter submits, because the field and the button beside it are one gesture rather than two. */}
-        <label className="popover-field">
+        <label className="ui-field">
           <span>Nowy system</span>
           <input
             type="text"
@@ -94,7 +94,7 @@ export function SystemMenu(props: SystemMenuProps) {
         </div>
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {/* Three commands of one size, in one row. A label wearing a button's clothes was the odd one out of the three. */}
         <div className="system-commands">
           <button type="button" className="small" onClick={props.onValidate} disabled={props.busy}>
@@ -131,6 +131,6 @@ export function SystemMenu(props: SystemMenuProps) {
           />
         </div>
       </div>
-    </Popover>
+    </Popup>
   );
 }

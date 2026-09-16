@@ -4,16 +4,14 @@ import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import { getPracticeHint, startPracticeDeal, submitPracticeBid } from '@/api/practice';
 import type { BiddingSystem, BiddingSystemSummary, PracticeHint, PracticeRole, PracticeState } from '@/api/models';
 import { ToolBar } from '@/components/ToolBar';
-import { Select } from '@/components/Select';
+import { Auction, BidCard, ComboBox, Hand } from '@/ui';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
-import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { BiddingBox, type BoxBid } from '../components/BiddingBox';
 import { BidWarning } from '../components/BidWarning';
 import { openingChoices } from '../openings';
 import { CardsIcon, CloseIcon, PlayIcon, SettingsIcon } from '@/components/icons';
 import { HelpTip } from '@/components/HelpTip';
-import { BidMark } from '@/components/suits';
 import '@/components/SetupCard.css';
 import './PracticePage.css';
 
@@ -183,7 +181,7 @@ export function PracticePage() {
 
             <label>
               <span>System licytacyjny</span>
-              <Select
+              <ComboBox
                 value={systemId}
                 options={systems.map((system) => ({ value: system.id, label: system.name }))}
                 /* Another system means another tree, so the opening being practised cannot survive the switch. */
@@ -198,7 +196,7 @@ export function PracticePage() {
                 Ćwiczone otwarcie
                 <HelpTip>Dostaniesz karty, którymi da się to otworzyć. Puste - rozdania bez żadnych warunków.</HelpTip>
               </span>
-              <Select
+              <ComboBox
                 value={openingNodeId}
                 options={[
                   { value: '', label: 'Wszystkie - karty bez warunków' },
@@ -208,7 +206,7 @@ export function PracticePage() {
                     // The string is what the option is announced and titled by; this is what it looks like.
                     labelNode: (
                       <>
-                        <BidMark type={choice.type} color={choice.color} level={choice.level} />
+                        <BidCard bid={{ type: choice.type, color: choice.color, value: choice.level }} />
                         {` · ${choice.meaning}`}
                       </>
                     ),
@@ -224,7 +222,7 @@ export function PracticePage() {
                 Siadasz jako
                 <HelpTip>Przy odpowiadaniu warunki dostaje partner, a ty dowolne karty.</HelpTip>
               </span>
-              <Select
+              <ComboBox
                 value={role}
                 options={(Object.keys(roleLabels) as PracticeRole[]).map((key) => ({ value: key, label: roleLabels[key] }))}
                 onChange={setRole}
@@ -234,7 +232,7 @@ export function PracticePage() {
 
             <label>
               <span>Znaczenia odzywek</span>
-              <Select
+              <ComboBox
                 value={meanings}
                 options={(Object.keys(meaningLabels) as MeaningMode[]).map((key) => ({ value: key, label: meaningLabels[key] }))}
                 onChange={setMeanings}
@@ -296,7 +294,7 @@ export function PracticePage() {
                     </button>
                   </div>
 
-                  <HandView hand={table.playerHand} />
+                  <Hand hand={table.playerHand} />
 
                   {hint === null ? null : (
                     <p className="hint">
@@ -304,7 +302,7 @@ export function PracticePage() {
                         'Silnik nie znajduje tu dla ciebie odzywki w systemie.'
                       ) : (
                         <>
-                          Silnik zalicytowałby <strong><BidLabel bid={hint.bid} /></strong>
+                          Silnik zalicytowałby <strong><BidCard bid={hint.bid} /></strong>
                           {hint.meaning === null || hint.meaning === undefined ? null : ` — ${hint.meaning}`}
                         </>
                       )}
@@ -319,7 +317,7 @@ export function PracticePage() {
 
                 <section className="panel auction-panel">
                   <h2>Licytacja</h2>
-                  <BiddingTable
+                  <Auction
                     key={dealNumber}
                     bidding={table.bidding}
                     dealer={table.dealer}

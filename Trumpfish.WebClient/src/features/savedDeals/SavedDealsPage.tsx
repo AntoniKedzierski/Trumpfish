@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toNumber } from '@/api/models';
 import type { SavedDealPage, SavedDealSummary } from '@/api/models';
 import { deleteSavedDeal, listSavedDeals, updateSavedDeal } from '@/api/savedDeals';
-import { CloseIcon, PencilIcon, ShareIcon, TrashIcon } from '@/components/icons';
+import { PencilIcon, ShareIcon, TrashIcon } from '@/components/icons';
 import { ToolBar } from '@/components/ToolBar';
+import { Button, ConfirmDialog } from '@/ui';
 import { DealDetailsDialog } from './DealDetailsDialog';
 import { DealFilterMenu, DealPager, DealRow, DealSortMenu } from './DealPieces';
 import type { DealFilters } from './DealPieces';
@@ -106,15 +107,9 @@ export function SavedDealsPage() {
               deal={deal}
               actions={
                 <>
-                  <button type="button" className="deal-save" title="Edytuj nazwę, tagi i komentarz" aria-label="Edytuj" onClick={() => setEditing(deal)}>
-                    <PencilIcon />
-                  </button>
-                  <button type="button" className="deal-save" title="Udostępnij znajomym" aria-label="Udostępnij" onClick={() => setSharing(deal)}>
-                    <ShareIcon />
-                  </button>
-                  <button type="button" className="deal-save danger" title="Usuń zapisane rozdanie" aria-label="Usuń" onClick={() => setRemoving(deal)}>
-                    <TrashIcon />
-                  </button>
+                  <Button iconOnly icon={PencilIcon} className="deal-save" title="Edytuj nazwę, tagi i komentarz" aria-label="Edytuj" onClick={() => setEditing(deal)} />
+                  <Button iconOnly icon={ShareIcon} className="deal-save" title="Udostępnij znajomym" aria-label="Udostępnij" onClick={() => setSharing(deal)} />
+                  <Button iconOnly icon={TrashIcon} variant="danger" className="deal-save" title="Usuń zapisane rozdanie" aria-label="Usuń" onClick={() => setRemoving(deal)} />
                 </>
               }
             />
@@ -142,31 +137,16 @@ export function SavedDealsPage() {
       {sharing === null ? null : <ShareDealDialog deal={sharing} onClose={() => setSharing(null)} />}
 
       {removing === null ? null : (
-        <div className="save-deal-backdrop" role="presentation" onClick={() => setRemoving(null)}>
-          <div
-            className="save-deal-dialog"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="remove-deal-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h2 id="remove-deal-title">Usunąć rozdanie?</h2>
-            <p className="saved-remove-text">
-              „{removing.name}” zniknie razem z komentarzem, tagami i każdym udostępnieniem. Tego nie da się cofnąć.
-            </p>
-
-            <div className="save-deal-actions">
-              <button type="button" className="small" disabled={busy} onClick={() => setRemoving(null)}>
-                <CloseIcon />
-                <span>Anuluj</span>
-              </button>
-              <button type="button" className="small danger primary" disabled={busy} onClick={() => remove(removing)}>
-                <TrashIcon />
-                <span>Usuń</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title="Usunąć rozdanie?"
+          question={`„${removing.name}” zniknie razem z komentarzem, tagami i każdym udostępnieniem. Tego nie da się cofnąć.`}
+          confirmLabel="Usuń"
+          confirmIcon={TrashIcon}
+          danger
+          busy={busy}
+          onConfirm={() => remove(removing)}
+          onClose={() => setRemoving(null)}
+        />
       )}
     </div>
   );

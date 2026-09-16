@@ -133,6 +133,17 @@ export function MenuIcon({ className }: { className?: string }) {
 }
 
 /** A key: the password. */
+/** Wejście: te same drzwi co przy wylogowaniu, tylko strzałka idzie do środka. */
+export function LogInIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M14.5 3.5h4a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-4" {...stroke} />
+      <path d="m9.5 16.5 4.5-4.5-4.5-4.5" {...stroke} />
+      <path d="M14 12H3" {...stroke} />
+    </Icon>
+  );
+}
+
 export function KeyIcon({ className }: { className?: string }) {
   return (
     <Icon className={className}>

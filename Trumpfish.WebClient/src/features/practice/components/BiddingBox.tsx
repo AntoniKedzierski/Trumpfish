@@ -1,6 +1,7 @@
 import type { BidColor, BidType, PracticeLegalBids } from '@/api/models';
 import { toNumber } from '@/api/models';
-import { BidMark, DoubleMark, RedoubleMark } from '@/components/suits';
+import { DoubleMark, RedoubleMark } from '@/components/suits';
+import { BidCard } from '@/ui';
 
 /** Columns of the box, ordered the way the denominations rank: ♣ < ♦ < ♥ < ♠ < NT. */
 const denominations: readonly BidColor[] = ['Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
@@ -27,7 +28,7 @@ interface BiddingBoxProps {
  * The three calls that answer an auction rather than raise it used to sit under all thirty five bids, which put the most
  * pressed control on the whole screen at the end of a scroll. They are the first row now.
  *
- * Every cell draws its call through the shared `BidMark`, so a bid here is the same drawing, at the same size and with the
+ * Every cell draws its call through the shared `BidCard`, so a bid here is the same drawing, at the same size and with the
  * same gap after the digit, as the one in the auction table underneath and in the system tree.
  */
 export function BiddingBox({ legal, disabled, onBid }: BiddingBoxProps) {
@@ -45,7 +46,7 @@ export function BiddingBox({ legal, disabled, onBid }: BiddingBoxProps) {
           return (
             <BoxCell
               key={`${value}${color}`}
-              label={<BidMark type="Submit" color={color} level={value} />}
+              label={<BidCard bid={{ color, value }} />}
               available={!disabled && value >= minimum}
               onClick={() => onBid({ type: 'Submit', color, value })}
             />

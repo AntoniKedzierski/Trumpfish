@@ -1,7 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import './Select.css';
+import './comboBox.css';
 
-export interface SelectOption<TValue extends string> {
+export interface ComboBoxOption<TValue extends string> {
   value: TValue;
   label: string;
   /** Optional class applied to the label, used by the bid editor to tint suits. */
@@ -13,9 +13,9 @@ export interface SelectOption<TValue extends string> {
   labelNode?: React.ReactNode;
 }
 
-interface SelectProps<TValue extends string> {
+interface ComboBoxProps<TValue extends string> {
   value: TValue;
-  options: readonly SelectOption<TValue>[];
+  options: readonly ComboBoxOption<TValue>[];
   onChange: (value: TValue) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -27,7 +27,7 @@ interface SelectProps<TValue extends string> {
  * Listbox styled and animated by us, because a native `select` popup cannot be themed.
  * Keyboard handling mirrors the WAI-ARIA combobox pattern: arrows move the active option, Enter/Space commit, Escape closes.
  */
-export function Select<TValue extends string>({ value, options, onChange, placeholder, disabled = false, className = '', title }: SelectProps<TValue>) {
+export function ComboBox<TValue extends string>({ value, options, onChange, placeholder, disabled = false, className = '', title }: ComboBoxProps<TValue>) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [dropUp, setDropUp] = useState(false);
@@ -122,7 +122,7 @@ export function Select<TValue extends string>({ value, options, onChange, placeh
   };
 
   /**
-   * A `Select` is usually written inside a `<label>`, and a label forwards a click landing on its non-interactive content to
+   * A `ComboBox` is usually written inside a `<label>`, and a label forwards a click landing on its non-interactive content to
    * the first labelable control it holds - here the field button. Committing an option would therefore be followed by a
    * second click on the field, reopening the list the moment it closed. Cancelling the click stops that forwarding; nothing
    * inside the component relies on a click's default behaviour.
@@ -130,30 +130,30 @@ export function Select<TValue extends string>({ value, options, onChange, placeh
   const keepLabelOut = (event: React.MouseEvent) => event.preventDefault();
 
   return (
-    <div ref={rootRef} className={`select ${className}`.trim()} onKeyDown={onKeyDown} onClick={keepLabelOut} title={title}>
+    <div ref={rootRef} className={`ui-combo ${className}`.trim()} onKeyDown={onKeyDown} onClick={keepLabelOut} title={title}>
       <button
         type="button"
-        className={`select-field${open ? ' open' : ''}`}
+        className={`ui-combo-field${open ? ' open' : ''}`}
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => (open ? close() : openList())}
       >
-        <span className={`select-value${selected === null ? ' placeholder' : ''} ${selected?.labelClassName ?? ''}`.trimEnd()}>
+        <span className={`ui-combo-value${selected === null ? ' placeholder' : ''} ${selected?.labelClassName ?? ''}`.trimEnd()}>
           {selected?.labelNode ?? selected?.label ?? placeholder ?? ''}
         </span>
-        <Chevron className="select-chevron" />
+        <Chevron className="ui-combo-chevron" />
       </button>
 
       {open && (
-        <ul ref={listRef} id={listId} className={`select-list${dropUp ? ' drop-up' : ''}`} role="listbox" tabIndex={-1}>
+        <ul ref={listRef} id={listId} className={`ui-combo-list${dropUp ? ' drop-up' : ''}`} role="listbox" tabIndex={-1}>
           {options.map((option, index) => (
             <li
               key={option.value}
               role="option"
               aria-selected={option.value === value}
-              className={`select-option${index === activeIndex ? ' active' : ''}${option.value === value ? ' selected' : ''}`}
+              className={`ui-combo-option${index === activeIndex ? ' active' : ''}${option.value === value ? ' selected' : ''}`}
               title={option.label}
               onPointerEnter={() => setActiveIndex(index)}
               onClick={() => commit(index)}

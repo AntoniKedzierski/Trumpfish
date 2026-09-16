@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { Chevron, Select } from '@/components/Select';
+import { Chevron, ComboBox } from '@/ui';
 import { useMediaQuery } from '@/components/useMediaQuery';
 import { bidColors, bidTypes, toNumber, type BidType, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
@@ -134,7 +134,7 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
 
           <label className="field">
             <span>Kolor</span>
-            <Select
+            <ComboBox
               value={node.color ?? 'NoColor'}
               options={bidColors.map((color) => ({ value: color, label: bidColorLabels[color], labelClassName: suitClassName({ type: 'Submit', color }) }))}
               onChange={(color) => onChange({ color })}
@@ -148,7 +148,7 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
 
           <label className="field">
             <span>Typ</span>
-            <Select value={node.type ?? 'Submit'} options={bidTypes.map((type) => ({ value: type, label: bidTypeLabels[type] }))} onChange={changeType} />
+            <ComboBox value={node.type ?? 'Submit'} options={bidTypes.map((type) => ({ value: type, label: bidTypeLabels[type] }))} onChange={changeType} />
           </label>
         </div>
 
