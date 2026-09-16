@@ -4,8 +4,8 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: var(--bar-control);
-  height: var(--bar-control);
+  width: var(--button-large);
+  height: var(--button-large);
   padding: 0;
   color: var(--text-muted);
   background: transparent;

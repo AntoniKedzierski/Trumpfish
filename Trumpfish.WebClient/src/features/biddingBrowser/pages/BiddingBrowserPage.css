@@ -27,8 +27,6 @@
 }
 
 .seed-update button {
-  padding: 5px 12px;
-  font-size: var(--text-sm);
   color: var(--amber-flame);
   border-color: rgb(255 181 21 / 40%);
   background: transparent;
@@ -82,11 +80,6 @@
   justify-content: flex-end;
 }
 
-.unsaved-actions .danger:hover:not(:disabled) {
-  color: var(--hearts);
-  border-color: var(--hearts);
-  background: rgb(235 39 39 / 12%);
-}
 
 
 
@@ -94,59 +87,7 @@
  * The same bar as the simulator's, because it is the same kind of thing: a row of controls that never leaves the top of
  * the screen. It holds its size - `flex: none` - so the panes below give up the room, not it.
  */
-.toolbar {
-  display: flex;
-  flex: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3) var(--space-4);
-  padding: var(--space-3) var(--space-5);
-  background: var(--surface-base);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-/*
- * The same height as the tabs in the header. A tool bar standing taller than the application bar above it reads as a
- * mistake rather than as a decision, so both answer to one number.
- */
-.toolbar > button,
-.toolbar .popover-trigger,
-.toolbar .menu-button-trigger {
-  height: var(--bar-control);
-  padding: 0 var(--space-3);
-  font-size: var(--text-sm);
-}
-
-/* The one command that writes to the server is the one that looks like it does. */
-.toolbar .primary {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--onyx);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.toolbar .primary:hover:not(:disabled) {
-  color: var(--onyx);
-  background: var(--pearl-aqua);
-  border-color: var(--pearl-aqua);
-}
-
-/* Inherited, not muted: on the filled button the icon is read against the accent, where a grey would disappear. */
-.toolbar .primary .icon {
-  flex: none;
-  font-size: var(--text-base);
-  color: inherit;
-}
-
-/* Draws the line between what is done to the system and what is done to a bid. */
-.toolbar-separator {
-  flex: none;
-  width: 1px;
-  height: var(--space-5);
-  background: var(--border-subtle);
-}
+/* The bar itself is `styles/toolbar.css`; what is peculiar to this one is below. */
 
 /*
  * Which system is open, said on the door that opens it rather than a second time at the end of the bar. Bounded, because

@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import type { CurrentUser } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
-import { LayersIcon, LogOutIcon, UserIcon } from './icons';
+import { LayersIcon, LogOutIcon, SaveIcon, ShareIcon, UserIcon } from './icons';
 import { Chevron } from './Select';
 import { useDisclosure } from './useDisclosure';
 import './menu.css';
@@ -11,6 +11,8 @@ import './AccountMenu.css';
 const entries = [
   { to: '/account', label: 'Konto', Glyph: UserIcon },
   { to: '/tools/bidding-browser/systems', label: 'Zarządzaj systemami', Glyph: LayersIcon },
+  { to: '/account/deals', label: 'Zapisane rozdania', Glyph: SaveIcon },
+  { to: '/account/deals/shared', label: 'Udostępnione rozdania', Glyph: ShareIcon },
 ];
 
 /**

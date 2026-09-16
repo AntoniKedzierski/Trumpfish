@@ -71,11 +71,6 @@
   justify-content: flex-end;
 }
 
-.leave-actions .danger:hover:not(:disabled) {
-  color: var(--hearts);
-  border-color: var(--hearts);
-  background: rgb(235 39 39 / 12%);
-}
 
 .duo-notice {
   margin: 16px 20px 0;
@@ -100,7 +95,7 @@
 }
 
 /* Inside the deal bar it takes the free space, so it sits between the context and the buttons instead of crowding them. */
-.page-strip .duo-pending {
+.toolbar .duo-pending {
   flex: 1;
   min-width: 0;
   justify-content: flex-end;

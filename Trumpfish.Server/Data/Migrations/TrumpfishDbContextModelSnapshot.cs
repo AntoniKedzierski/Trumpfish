@@ -285,6 +285,96 @@ namespace Trumpfish.Server.Data.Migrations
                     b.ToTable("Friendships");
                 });
 
+            modelBuilder.Entity("Trumpfish.Server.Data.SavedDealRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Contract")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Deal")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Dealer")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("Declarer")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<int?>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("SavedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Tags")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Vulnerability")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId", "SavedUtc");
+
+                    b.HasIndex("OwnerId", "Level", "Color");
+
+                    b.ToTable("SavedDeals");
+                });
+
+            modelBuilder.Entity("Trumpfish.Server.Data.SavedDealShareRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DealId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("SharedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ToUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DealId", "ToUserId")
+                        .IsUnique();
+
+                    b.HasIndex("ToUserId", "SharedUtc");
+
+                    b.ToTable("SavedDealShares");
+                });
+
             modelBuilder.Entity("Trumpfish.Server.Data.UserRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -389,6 +479,36 @@ namespace Trumpfish.Server.Data.Migrations
                     b.Navigation("Requester");
                 });
 
+            modelBuilder.Entity("Trumpfish.Server.Data.SavedDealRecord", b =>
+                {
+                    b.HasOne("Trumpfish.Server.Data.UserRecord", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Trumpfish.Server.Data.SavedDealShareRecord", b =>
+                {
+                    b.HasOne("Trumpfish.Server.Data.SavedDealRecord", "Deal")
+                        .WithMany("Shares")
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trumpfish.Server.Data.UserRecord", "ToUser")
+                        .WithMany()
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Deal");
+
+                    b.Navigation("ToUser");
+                });
+
             modelBuilder.Entity("Trumpfish.Server.Data.BidNodeRecord", b =>
                 {
                     b.Navigation("Children");
@@ -404,6 +524,11 @@ namespace Trumpfish.Server.Data.Migrations
                     b.Navigation("Forks");
 
                     b.Navigation("Roots");
+                });
+
+            modelBuilder.Entity("Trumpfish.Server.Data.SavedDealRecord", b =>
+                {
+                    b.Navigation("Shares");
                 });
 
             modelBuilder.Entity("Trumpfish.Server.Data.UserRecord", b =>

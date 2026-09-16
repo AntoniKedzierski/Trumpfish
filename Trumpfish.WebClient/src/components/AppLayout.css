@@ -5,15 +5,18 @@
 }
 
 /*
- * A page that manages its own scrolling gets a frame exactly the height of the window, instead of the document growing
- * under it.
+ * A view with a tool bar gets a frame exactly the height of the window, instead of the document growing under it.
  *
- * The browser is the one such page: a tool bar that has to stay put and two panes that scroll against each other cannot
- * be built on a document that scrolls as a whole - the bar leaves with it and the panes never reach a height to scroll
- * within. Asked for by the page rather than stated here, so every other view keeps the ordinary document scroll and no
- * measurement of this bar has to be written down anywhere.
+ * A bar that has to stay put cannot be built on a document that scrolls as a whole: the bar leaves with it, and on a
+ * phone it leaves first. Sticky positioning would not do either - the application bar above is sticky too, and two
+ * things stuck to the same edge need a number for the height of the first one, which is a number that would be wrong the
+ * day the bar changes. Framed instead: the shell is the window, the bars sit in it, and the content underneath is what
+ * scrolls. Named per view, so every page without a bar keeps the ordinary document scroll.
  */
-.app-shell:has(> .bidding-browser) {
+.app-shell:has(> .bidding-browser),
+.app-shell:has(> .simulation),
+.app-shell:has(> .practice),
+.app-shell:has(> .saved-deals) {
   height: 100dvh;
   overflow: hidden;
 }
@@ -43,9 +46,9 @@
   flex: none;
   align-items: center;
   gap: 10px;
-  height: var(--bar-control);
+  height: var(--button-large);
   /* Set with the navigation beside it: the product name reading smaller than the tabs would look like a mistake. */
-  font-size: var(--text-lg);
+  font-size: var(--button-large-text);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -66,10 +69,12 @@
   margin-left: auto;
 }
 
+/* The header is where the large buttons live: it is the first thing aimed at, on a phone with a thumb. */
 .app-bar .friends-trigger {
   gap: 8px;
-  height: var(--bar-control);
-  padding: 0 12px;
+  height: var(--button-large);
+  padding: 0 var(--space-4);
+  font-size: var(--button-large-text);
 }
 
 .app-bar .friends-trigger .icon {

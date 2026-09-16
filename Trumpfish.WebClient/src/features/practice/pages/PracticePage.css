@@ -1,12 +1,16 @@
+/* The bar stays, the table scrolls under it - the same frame the browser and the simulator are built on. */
 .practice {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  min-height: 100%;
+  min-height: 0;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
 .practice-main {
   flex: 1;
+  min-height: 0;
+  overflow: auto;
   padding: 20px 16px 40px;
 }
 
@@ -24,22 +28,6 @@
 }
 
 /* The card itself is shared with the account page; it lives in `components/SetupCard.css`. */
-
-/*
- * The one command on the strip that deals: it is what is pressed between one deal and the next, and it is the reason the
- * deal's own bar is gone.
- */
-.page-strip-actions .primary {
-  color: var(--onyx);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.page-strip-actions .primary:hover:not(:disabled) {
-  color: var(--onyx);
-  background: var(--pearl-aqua);
-  border-color: var(--pearl-aqua);
-}
 
 .panel {
   padding: 16px;

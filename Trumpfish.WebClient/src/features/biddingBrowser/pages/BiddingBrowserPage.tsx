@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'r
 import { useBlocker, useSearchParams } from 'react-router-dom';
 import { createBiddingSystem, getBiddingSystem, listBiddingSystems, reforkSystem, saveBiddingSystem, validateBiddingSystem } from '@/api/biddingSystems';
 import { toNumber, type BiddingSystem, type BiddingSystemSummary, type NumberRange, type ValidationIssue } from '@/api/models';
-import { PageStatus } from '@/components/PageStatus';
+import { CheckIcon, DownloadIcon } from '@/components/icons';
 import { useMediaQuery } from '@/components/useMediaQuery';
 import { useAuth } from '@/auth/useAuth';
 import { BidEditorPanel } from '../components/BidEditorPanel';
@@ -440,21 +440,25 @@ export function BiddingBrowserPage() {
       {/* The tab in the top bar names the tool; saying it again here would be chrome the user has already read. */}
       <h1 className="sr-only">Bidding Browser</h1>
 
-      <PageStatus>
-        {busy && <span className="status">Pracuję…</span>}
-        {notice && <span className="status notice">{notice}</span>}
-        {error && <span className="status error">{error}</span>}
-      </PageStatus>
-
       {/* Only a fork can fall behind, and only its owner is offered the update - an administrator edits the seed itself. */}
       {current?.seedUpdateAvailable && (
         <div className="seed-update">
           <span>System wzorcowy „{current.forkedFromName}” został zmieniony po utworzeniu tej kopii.</span>
-          <button type="button" onClick={handleRefork} disabled={busy}>Pobierz zmiany</button>
+          <button type="button" className="small" onClick={handleRefork} disabled={busy}>
+            <DownloadIcon />
+            <span>Pobierz zmiany</span>
+          </button>
         </div>
       )}
 
       <Toolbar
+        status={
+          <>
+            {busy && <span className="status">Pracuję…</span>}
+            {notice && <span className="status notice">{notice}</span>}
+            {error && <span className="status error">{error}</span>}
+          </>
+        }
         systemName={state.system.systemName}
         systemId={state.systemId}
         savedSystems={savedSystems}
@@ -514,7 +518,10 @@ export function BiddingBrowserPage() {
               onPointerUp={endDrag}
               onPointerCancel={endDrag}
             >
-              <button type="button" onClick={() => setEditing(false)}>Gotowe</button>
+              <button type="button" className="small" onClick={() => setEditing(false)}>
+                <CheckIcon />
+                <span>Gotowe</span>
+              </button>
             </div>
 
             <BidEditorPanel {...editorProps} />

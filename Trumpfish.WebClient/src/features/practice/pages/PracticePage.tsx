@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import { getPracticeHint, startPracticeDeal, submitPracticeBid } from '@/api/practice';
 import type { BiddingSystem, BiddingSystemSummary, PracticeHint, PracticeRole, PracticeState } from '@/api/models';
-import { PageStatus } from '@/components/PageStatus';
+import { ToolBar } from '@/components/ToolBar';
 import { Select } from '@/components/Select';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
 import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
@@ -11,7 +11,7 @@ import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { BiddingBox, type BoxBid } from '../components/BiddingBox';
 import { BidWarning } from '../components/BidWarning';
 import { openingChoices } from '../openings';
-import { PlayIcon } from '@/components/icons';
+import { CardsIcon, CloseIcon, PlayIcon, SettingsIcon } from '@/components/icons';
 import { HelpTip } from '@/components/HelpTip';
 import { BidMark } from '@/components/suits';
 import '@/components/SetupCard.css';
@@ -145,26 +145,36 @@ export function PracticePage() {
     <div className="practice">
       <h1 className="sr-only">Ćwiczenie licytacji</h1>
 
-      <PageStatus
-        actions={
-          /*
-           * One bar for everything pressed between bids: what to do with this deal, then what to do with the session. They
-           * were two bars, and the deal's own pair sat on a strip above the cards that existed only to hold them.
-           */
-          phase === 'playing' && table !== null ? (
-            <>
-              <button type="button" disabled title="Zapisywanie rozdań wróci wkrótce.">Zapisz</button>
-              {/* A deal is dealt on demand, finished or not: a hand nobody wants to bid out is a reason to move on, not to sit. */}
-              <button type="button" className="primary" onClick={() => void deal(dealNumber)} disabled={busy}>Następne</button>
-              <button type="button" onClick={() => setPhase('setup')}>Ustawienia</button>
-              <button type="button" onClick={() => void navigate('/')}>Zakończ</button>
-            </>
-          ) : null
+      {/*
+        * One bar for everything pressed between bids: what to do with this deal, then what to do with the session. The
+        * commands start at the left edge, the way they do on every other bar in the application.
+        */}
+      <ToolBar
+        status={
+          <>
+            {busy ? <span className="status">Licytują boty…</span> : null}
+            {error === null ? null : <span className="status error">{error}</span>}
+          </>
         }
       >
-        {busy ? <span className="status">Licytują boty…</span> : null}
-        {error === null ? null : <span className="status error">{error}</span>}
-      </PageStatus>
+        {phase !== 'playing' || table === null ? null : (
+          <>
+            {/* A deal is dealt on demand, finished or not: a hand nobody wants to bid out is a reason to move on, not to sit. */}
+            <button type="button" className="primary" onClick={() => void deal(dealNumber)} disabled={busy}>
+              <CardsIcon />
+              <span>Następne</span>
+            </button>
+            <button type="button" onClick={() => setPhase('setup')}>
+              <SettingsIcon />
+              <span>Ustawienia</span>
+            </button>
+            <button type="button" onClick={() => void navigate('/')}>
+              <CloseIcon />
+              <span>Zakończ</span>
+            </button>
+          </>
+        )}
+      </ToolBar>
 
       <main className="practice-main">
         {phase === 'setup' ? (

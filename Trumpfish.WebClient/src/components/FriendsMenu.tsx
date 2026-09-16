@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { acceptFriend, inviteFriend, removeFriend } from '@/api/friends';
 import type { FriendPresence, FriendSummary } from '@/api/models';
 import { useRealtime } from '@/realtime/useRealtime';
-import { UsersIcon } from './icons';
+import { CheckIcon, CloseIcon, PlusIcon, TrashIcon, UsersIcon } from './icons';
 import './FriendsMenu.css';
 
 const presenceLabels: Record<FriendPresence, string> = {
@@ -98,7 +98,10 @@ export function FriendsMenu() {
               onChange={(event) => setName(event.target.value)}
               onKeyDown={(event) => { if (event.key === 'Enter') { invite(); } }}
             />
-            <button type="button" onClick={invite} disabled={busy || name.trim() === ''}>Zaproś</button>
+            <button type="button" className="small" onClick={invite} disabled={busy || name.trim() === ''}>
+              <PlusIcon />
+              <span>Zaproś</span>
+            </button>
           </div>
 
           {error === null ? null : <p className="friends-error">{error}</p>}
@@ -108,8 +111,14 @@ export function FriendsMenu() {
               <h3>Zaproszenia</h3>
               {incoming.map((friend) => (
                 <Row key={friend.friendshipId} friend={friend}>
-                  <button type="button" onClick={() => void run(async () => { await acceptFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>Przyjmij</button>
-                  <button type="button" onClick={() => void run(async () => { await removeFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>Odrzuć</button>
+                  <button type="button" className="small" onClick={() => void run(async () => { await acceptFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>
+                    <CheckIcon />
+                    <span>Przyjmij</span>
+                  </button>
+                  <button type="button" className="small" onClick={() => void run(async () => { await removeFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>
+                    <CloseIcon />
+                    <span>Odrzuć</span>
+                  </button>
                 </Row>
               ))}
             </section>
@@ -120,7 +129,10 @@ export function FriendsMenu() {
               <h3>Wysłane</h3>
               {(friends?.outgoing ?? []).map((friend) => (
                 <Row key={friend.friendshipId} friend={friend}>
-                  <button type="button" onClick={() => void run(async () => { await removeFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>Anuluj</button>
+                  <button type="button" className="small" onClick={() => void run(async () => { await removeFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>
+                    <CloseIcon />
+                    <span>Anuluj</span>
+                  </button>
                 </Row>
               ))}
             </section>
@@ -133,7 +145,10 @@ export function FriendsMenu() {
             ) : (
               (friends?.friends ?? []).map((friend) => (
                 <Row key={friend.friendshipId} friend={friend} showPresence>
-                  <button type="button" onClick={() => void run(async () => { await removeFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>Usuń</button>
+                  <button type="button" className="small" onClick={() => void run(async () => { await removeFriend(friend.friendshipId); await refreshFriends(); })} disabled={busy}>
+                    <TrashIcon />
+                    <span>Usuń</span>
+                  </button>
                 </Row>
               ))
             )}

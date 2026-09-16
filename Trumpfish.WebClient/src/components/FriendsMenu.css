@@ -107,10 +107,7 @@
   gap: 4px;
 }
 
-.friends-actions button {
-  padding: 3px 8px;
-  font-size: var(--text-xs);
-}
+/* The commands on a row are small buttons; their size comes from `index.css` like every other button's. */
 
 .dot {
   width: 8px;

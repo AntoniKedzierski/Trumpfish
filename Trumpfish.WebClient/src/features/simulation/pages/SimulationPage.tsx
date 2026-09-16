@@ -3,7 +3,7 @@ import { listBiddingSystems } from '@/api/biddingSystems';
 import { simulateBidding } from '@/api/simulation';
 import type { BiddingSystemSummary, SimulationResponse } from '@/api/models';
 import { CardsIcon } from '@/components/icons';
-import { PageStatus } from '@/components/PageStatus';
+import { ToolBar } from '@/components/ToolBar';
 import { ConfigMenu } from '../components/ConfigMenu';
 import { DealResultCard } from '../components/DealResultCard';
 import { FilterMenu } from '../components/FilterMenu';
@@ -80,12 +80,15 @@ export function SimulationPage() {
     <div className="simulation">
       <h1 className="sr-only">Symulacja licytacji AI</h1>
 
-      <PageStatus>
-        {busy ? <span className="status">Symulacja…</span> : null}
-        {error === null ? null : <span className="status error">{error}</span>}
-      </PageStatus>
-
-      <section className="controls">
+      <ToolBar
+        status={
+          <>
+            {busy ? <span className="status">Symulacja…</span> : null}
+            {error === null ? null : <span className="status error">{error}</span>}
+            {result === null ? null : <span>{sortedDeals.length} z {result.dealCount} rozdań, błędów: {result.failedCount}</span>}
+          </>
+        }
+      >
         <ConfigMenu
           systems={systems}
           systemId={systemId}
@@ -108,13 +111,9 @@ export function SimulationPage() {
             <FilterMenu value={filters} onChange={setFilters} />
 
             <SortMenu sortKey={sortKey} direction={sortDirection} onSortKey={setSortKey} onDirection={setSortDirection} />
-
-            <span className="summary">
-              {sortedDeals.length} z {result.dealCount} rozdań, błędów: {result.failedCount}
-            </span>
           </>
         )}
-      </section>
+      </ToolBar>
 
       <section className="results">
         {result === null ? (

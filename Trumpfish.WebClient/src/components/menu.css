@@ -4,10 +4,15 @@
  *
  * One definition for both, so a row in one menu cannot end up a different height or weight from a row in the other.
  */
+/*
+ * Nothing inside a dropdown is set larger than the control that opened it. A panel hung off the header is read at the
+ * header's own size; one hung off a tool bar is read at the bar's, which is a size smaller - `toolbar.css` says so.
+ */
 .menu-panel {
   position: absolute;
   top: calc(100% + 6px);
   z-index: 40;
+  font-size: var(--button-large-text);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -20,10 +25,15 @@
   animation: view-enter var(--duration-fast) var(--ease-out) both;
 }
 
+/*
+ * A row of a dropdown is a list entry, not a button in a row of buttons: it starts at the left edge with its mark, and
+ * the words line up down the panel. Stated here because the shared button rule centres everything it is given.
+ */
 .menu-panel a,
 .menu-panel button {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
   width: 100%;
   height: 36px;
@@ -32,6 +42,7 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-muted);
+  font-size: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
   text-align: left;

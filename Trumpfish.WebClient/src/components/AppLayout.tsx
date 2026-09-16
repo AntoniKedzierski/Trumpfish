@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/useAuth';
 import { duoRoute } from '@/features/duoPractice/route';
 import { useRealtime } from '@/realtime/useRealtime';
+import { CheckIcon, CloseIcon } from './icons';
 import { AccountMenu } from './AccountMenu';
 import { AppDrawer } from './AppDrawer';
 import { FriendsMenu } from './FriendsMenu';
@@ -84,8 +85,14 @@ export function AppLayout() {
             </small>
           </div>
           <div className="app-invitation-actions">
-            <button type="button" className="primary" onClick={() => answer(acceptTableInvitation(invitation.id))}>Dołącz</button>
-            <button type="button" onClick={() => answer(declineTableInvitation(invitation.id))}>Odrzuć</button>
+            <button type="button" className="primary" onClick={() => answer(acceptTableInvitation(invitation.id))}>
+              <CheckIcon />
+              <span>Dołącz</span>
+            </button>
+            <button type="button" onClick={() => answer(declineTableInvitation(invitation.id))}>
+              <CloseIcon />
+              <span>Odrzuć</span>
+            </button>
           </div>
         </div>
       ))}

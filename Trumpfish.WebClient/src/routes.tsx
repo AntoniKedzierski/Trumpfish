@@ -6,6 +6,8 @@ import { ManageSystemsPage } from '@/features/biddingBrowser/pages/ManageSystems
 import { DuoPracticePage } from '@/features/duoPractice/pages/DuoPracticePage';
 import { duoRoute } from '@/features/duoPractice/route';
 import { PracticePage } from '@/features/practice/pages/PracticePage';
+import { SavedDealsPage } from '@/features/savedDeals/SavedDealsPage';
+import { SharedDealsPage } from '@/features/savedDeals/SharedDealsPage';
 import { SimulationPage } from '@/features/simulation/pages/SimulationPage';
 import { AccountPage } from '@/pages/AccountPage';
 import { HomePage } from '@/pages/HomePage';
@@ -28,6 +30,8 @@ export const routes: RouteObject[] = [
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/account', element: <AccountPage /> },
+      { path: '/account/deals', element: <SavedDealsPage /> },
+      { path: '/account/deals/shared', element: <SharedDealsPage /> },
       { path: '/tools/bidding-browser', element: <BiddingBrowserPage /> },
       { path: '/tools/bidding-browser/systems', element: <ManageSystemsPage /> },
       { path: '/tools/simulation', element: <SimulationPage /> },

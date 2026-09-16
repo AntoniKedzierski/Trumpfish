@@ -6,8 +6,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: var(--bar-control);
-  padding: 0 12px;
+  height: var(--button-large);
+  padding: 0 var(--space-4);
+  font-size: var(--button-large-text);
   background: var(--surface-raised);
   /* Matches the friends button beside it - the two read as one group, so they cannot round differently. */
   border: 1px solid var(--border-subtle);

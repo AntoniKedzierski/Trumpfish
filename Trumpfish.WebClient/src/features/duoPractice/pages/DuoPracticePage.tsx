@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useBlocker, useNavigate } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import type { BiddingSystem, BiddingSystemSummary, DuoSettings, PracticeHint } from '@/api/models';
-import { PageStatus } from '@/components/PageStatus';
+import { ToolBar } from '@/components/ToolBar';
 import { Select } from '@/components/Select';
 import { BidWarning } from '@/features/practice/components/BidWarning';
 import { BiddingBox, type BoxBid } from '@/features/practice/components/BiddingBox';
@@ -11,6 +11,7 @@ import { DealResultCard } from '@/features/simulation/components/DealResultCard'
 import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { useRealtime } from '@/realtime/useRealtime';
+import { BackIcon, CardsIcon, CloseIcon, UsersIcon } from '@/components/icons';
 import { HelpTip } from '@/components/HelpTip';
 import { BidMark } from '@/components/suits';
 import '@/components/SetupCard.css';
@@ -154,7 +155,10 @@ export function DuoPracticePage() {
           <section className="setup-card">
             <h2>Koniec sesji</h2>
             <p>{ended.message}</p>
-            <button type="button" className="primary" onClick={clearEnded}>Wróć do ustawień</button>
+            <button type="button" className="primary" onClick={clearEnded}>
+              <BackIcon />
+              <span>Wróć do ustawień</span>
+            </button>
           </section>
         </main>
       </div>
@@ -169,28 +173,35 @@ export function DuoPracticePage() {
         * One bar for the whole table: who you are sitting with on the left, what you can do about this deal and this
         * session on the right. Only a live table has anything to put on it.
         */}
-      <PageStatus
-        actions={
+      <ToolBar
+        status={
           table === null ? null : (
             <>
-              <button type="button" disabled title="Zapisywanie rozdań wróci wkrótce.">Zapisz</button>
-              {/* Only the host deals: the table is one table, and two people dealing it would be two different deals. */}
-              {!table.you.isHost ? null : (
-                <button type="button" className="primary" onClick={() => run(nextDeal)} disabled={busy}>Następne</button>
-              )}
-              <button type="button" onClick={() => leave(() => void navigate('/'))} disabled={busy}>Zakończ</button>
+              <span className="duo-partner">
+                z {table.partner.name}
+                {table.partner.connected ? null : <span className="duo-dropped"> (rozłączony)</span>}
+              </span>
+              {table.you.isHost || !table.finished ? null : <Waiting>Czekam, aż partner rozda następne rozdanie</Waiting>}
             </>
           )
         }
       >
         {table === null ? null : (
-          <span className="duo-partner">
-            z {table.partner.name}
-            {table.partner.connected ? null : <span className="duo-dropped"> (rozłączony)</span>}
-          </span>
+          <>
+            {/* Only the host deals: the table is one table, and two people dealing it would be two different deals. */}
+            {!table.you.isHost ? null : (
+              <button type="button" className="primary" onClick={() => run(nextDeal)} disabled={busy}>
+                <CardsIcon />
+                <span>Następne</span>
+              </button>
+            )}
+            <button type="button" onClick={() => leave(() => void navigate('/'))} disabled={busy}>
+              <CloseIcon />
+              <span>Zakończ</span>
+            </button>
+          </>
         )}
-        {table === null || table.you.isHost || !table.finished ? null : <Waiting>Czekam, aż partner rozda następne rozdanie</Waiting>}
-      </PageStatus>
+      </ToolBar>
 
       <main className="practice-main">
         {error === null ? null : <p className="duo-error">{error}</p>}
@@ -289,7 +300,8 @@ export function DuoPracticePage() {
             </div>
 
             <button type="button" className="primary" onClick={invite} disabled={busy || connection !== 'connected' || systemId === '' || partnerId === ''}>
-              Zaproś do stołu
+              <UsersIcon />
+              <span>Zaproś do stołu</span>
             </button>
 
             {connection === 'connected' ? null : <small className="duo-waiting">Łączę z serwerem…</small>}

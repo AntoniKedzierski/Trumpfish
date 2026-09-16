@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { TrashIcon } from '@/components/icons';
 import '@/components/Select.css';
 import { interjectionOptions, type InterjectionOption } from '../interjection';
 import type { EditableBidNode, InterjectionBid } from '../model';
@@ -70,7 +71,7 @@ function InterjectionCell({ option, onClick }: { option: InterjectionOption; onC
   if (option.kind === 'clear') {
     return (
       <button type="button" className="interjection-cell clear" title="Wyczyść wtrącenie" onClick={onClick}>
-        🗑
+        <TrashIcon />
       </button>
     );
   }

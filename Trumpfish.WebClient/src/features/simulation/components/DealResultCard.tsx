@@ -1,5 +1,6 @@
 import type { BidColor, SimulationContract, SimulationDealResult } from '@/api/models';
 import { playerPositions, toNumber } from '@/api/models';
+import { SaveDealButton } from '@/features/savedDeals/SaveDealButton';
 import { makesGame } from '../sorting';
 import { vulnerabilityLabels, vulnerabilityOf } from '../vulnerability';
 import { DealAnalysis } from './DealAnalysis';
@@ -34,6 +35,8 @@ export function DealResultCard({ deal }: DealResultCardProps) {
 
         <div className="deal-footnote">
           <ContractSummary contract={deal.contract} />
+          {/* Both sit at the far end of the row, the quiet one first: keeping a deal is a note to self, analysing it is the errand. */}
+          <SaveDealButton deal={deal} vulnerability={vulnerability} />
           <DealAnalysis deal={deal} vulnerability={vulnerability} />
         </div>
       </header>

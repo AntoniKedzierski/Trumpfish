@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import { useId } from 'react';
 import { Chevron } from './Select';
 import { useDisclosure } from './useDisclosure';
@@ -6,6 +7,8 @@ import './MenuButton.css';
 
 export interface MenuAction {
   label: string;
+  /** Required: a row of a dropdown is a command, and every command in this application is a mark and a word. */
+  icon: ComponentType<{ className?: string }>;
   onClick: () => void;
   disabled?: boolean;
   title?: string;
@@ -21,7 +24,13 @@ export interface MenuAction {
  * A disclosure rather than a menu, like every other dropdown in this application: the entries are plain buttons, so Tab
  * walks them and no arrow-key contract is promised that they would not honour.
  */
-export function MenuButton({ label, actions, disabled = false }: { label: string; actions: MenuAction[]; disabled?: boolean }) {
+export function MenuButton({ label, icon: Glyph, actions, disabled = false }: {
+  label: string;
+  /** Drawn on the trigger, the way the other bar controls that open something are drawn. */
+  icon?: ComponentType<{ className?: string }>;
+  actions: MenuAction[];
+  disabled?: boolean;
+}) {
   const { open, setOpen, root, trigger } = useDisclosure<HTMLDivElement>();
   const panelId = useId();
 
@@ -36,6 +45,7 @@ export function MenuButton({ label, actions, disabled = false }: { label: string
         disabled={disabled}
         onClick={() => setOpen((was) => !was)}
       >
+        {Glyph === undefined ? null : <Glyph />}
         <span>{label}</span>
         <Chevron className="menu-button-chevron" />
       </button>
@@ -53,6 +63,7 @@ export function MenuButton({ label, actions, disabled = false }: { label: string
                 action.onClick();
               }}
             >
+              <action.icon />
               <span>{action.label}</span>
             </button>
           ))}

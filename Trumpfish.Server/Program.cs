@@ -60,9 +60,13 @@ public partial class Program {
         // Writing seed files back into the working copy is a developer command, so the real implementation only exists in a Debug build.
 #if DEBUG
         builder.Services.AddScoped<ISeedExporter, SeedExporter>();
+        builder.Services.AddScoped<ISavedDealArchive, SavedDealArchive>();
 #else
         builder.Services.AddScoped<ISeedExporter, DisabledSeedExporter>();
+        builder.Services.AddScoped<ISavedDealArchive, DisabledSavedDealArchive>();
 #endif
+
+        builder.Services.AddScoped<ISavedDealStore, SavedDealStore>();
         builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
         builder.Services.AddSingleton<IPracticeService, PracticeService>();
 

@@ -1,3 +1,4 @@
+@import './styles/toolbar.css';
 @import './styles/mobile.css';
 
 * {
@@ -125,15 +126,55 @@ textarea {
 }
 
 /*
- * A button's label is not body text - it is a name for an action, and it reads better a size down with room around it than
- * at body size pressed against its own border. The room is also what makes it a target worth aiming at.
+ * Three button sizes, two styles, and nothing else.
+ *
+ * Size is `large`, the default (normal), or `small`, and it decides the height and the text together - see the tokens in
+ * `theme.css` for which belongs where. Style is the standard dark plate or the accented one (`.primary`), of which a view
+ * may show exactly one.
+ *
+ * Every button is a mark and a word, and its content is centred. The exceptions are the rows of a dropdown, which read as
+ * a list and are set out in `menu.css`, and the few drawn controls that are not labelled at all - a cell of the bidding
+ * box, a square of the figure matrix - which set their own size on purpose.
  */
 button {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--button-normal);
+  padding: 0 var(--space-3);
+  font-size: var(--button-normal-text);
   font-weight: 400;
   letter-spacing: 0.01em;
   cursor: pointer;
+}
+
+/* The mark never stretches, and never outgrows the word it stands beside. */
+button .icon {
+  flex: none;
+  font-size: 1.15em;
+}
+
+button.large {
+  height: var(--button-large);
+  padding: 0 var(--space-4);
+  font-size: var(--button-large-text);
+}
+
+button.small {
+  height: var(--button-small);
+  padding: 0 var(--space-3);
+  font-size: var(--button-small-text);
+}
+
+/*
+ * The one that cannot be undone. A colour rather than a third kind of button: it is the same control, and what is
+ * different about it is what happens after it is pressed, which is what the red is for.
+ */
+button.danger:hover:not(:disabled) {
+  color: var(--hearts);
+  border-color: var(--hearts);
+  background: rgb(235 39 39 / 12%);
 }
 
 /* Buttons animate on hover with a slight colour lift, and settle back down on press. */

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { solveDoubleDummy } from '@/api/analysis';
+import { SearchIcon } from '@/components/icons';
 import type {
   BidColor,
   DoubleDummyBestContract,
@@ -79,7 +80,8 @@ export function DealAnalysis({ deal, vulnerability }: { deal: SimulationDealResu
         </span>
       ) : analysis === null ? (
         <button type="button" className="deal-chip deal-analyse" disabled={busy} onClick={analyse}>
-          {busy ? 'Analizuję…' : 'Analizuj…'}
+          <SearchIcon />
+          <span>{busy ? 'Analizuję…' : 'Analizuj…'}</span>
         </button>
       ) : (
         <>

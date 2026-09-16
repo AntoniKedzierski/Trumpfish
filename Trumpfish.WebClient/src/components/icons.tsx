@@ -208,3 +208,112 @@ export function SearchIcon({ className }: { className?: string }) {
     </Icon>
   );
 }
+
+/** A plus: one more of whatever the list holds. */
+export function PlusIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M12 5.5v13M5.5 12h13" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A bin: the row goes away for good. */
+export function TrashIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4.5 6.8h15M9.5 6.8V4.5h5v2.3M10 11v6M14 11v6" {...stroke} />
+      <path d="M6.6 6.8 7.6 19a1.6 1.6 0 0 0 1.6 1.5h5.6A1.6 1.6 0 0 0 16.4 19l1-12.2" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A pencil: the words beside it can be changed. */
+export function PencilIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4.5 19.5h3.2L18.6 8.6a2.2 2.2 0 0 0-3.2-3.2L4.5 16.3z" {...stroke} />
+      <path d="M14.2 6.6l3.2 3.2" {...stroke} />
+    </Icon>
+  );
+}
+
+/** Three points and the lines between them: handing something to somebody else. */
+export function ShareIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <circle cx="17.5" cy="5.8" r="2.8" {...stroke} />
+      <circle cx="6.5" cy="12" r="2.8" {...stroke} />
+      <circle cx="17.5" cy="18.2" r="2.8" {...stroke} />
+      <path d="m9 10.6 6-3.4M9 13.4l6 3.4" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A branch: a bid and what is said after it. */
+export function BranchIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M6.5 4.5v9a3 3 0 0 0 3 3h8" {...stroke} />
+      <path d="M14 13l3.5 3.5L14 20" {...stroke} />
+      <circle cx="6.5" cy="4.5" r="1.8" {...stroke} fill="currentColor" />
+    </Icon>
+  );
+}
+
+/** An arrow up: the row moves ahead of the one above it. */
+export function ArrowUpIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M12 19.5v-15M5.5 11 12 4.5 18.5 11" {...stroke} />
+    </Icon>
+  );
+}
+
+/** An arrow down: the row moves behind the one below it. */
+export function ArrowDownIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M12 4.5v15M5.5 13 12 19.5 18.5 13" {...stroke} />
+    </Icon>
+  );
+}
+
+/** An arrow back: the way to where you were. */
+export function BackIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M19.5 12h-15M11 5.5 4.5 12 11 18.5" {...stroke} />
+    </Icon>
+  );
+}
+
+/** Into a file: what the application has goes out to the disk. */
+export function DownloadIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M12 4v11M7.5 10.5 12 15l4.5-4.5" {...stroke} />
+      <path d="M4.5 17.5v1.2a1.8 1.8 0 0 0 1.8 1.8h11.4a1.8 1.8 0 0 0 1.8-1.8v-1.2" {...stroke} />
+    </Icon>
+  );
+}
+
+/** Out of a file: what is on the disk comes into the application. */
+export function UploadIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M12 15.5v-11M7.5 9 12 4.5 16.5 9" {...stroke} />
+      <path d="M4.5 17.5v1.2a1.8 1.8 0 0 0 1.8 1.8h11.4a1.8 1.8 0 0 0 1.8-1.8v-1.2" {...stroke} />
+    </Icon>
+  );
+}
+
+/** A broom of sorts: what is left over is swept out. */
+export function BroomIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M14.5 4.5 19 9M16.5 6.5 8 15l-3.5 4.5L9 16z" {...stroke} />
+      <path d="M9.5 13.5 11 15" {...stroke} />
+    </Icon>
+  );
+}

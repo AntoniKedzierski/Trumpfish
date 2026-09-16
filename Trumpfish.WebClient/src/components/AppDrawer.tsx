@@ -6,7 +6,7 @@ import { useAuth } from '@/auth/useAuth';
 import type { ToolDescriptor } from '@/tools/toolsRegistry';
 import { buildNavEntries } from '@/tools/toolsRegistry';
 import { FriendsMenu } from './FriendsMenu';
-import { CloseIcon, LayersIcon, LogOutIcon, MenuIcon, UserIcon } from './icons';
+import { CloseIcon, LayersIcon, LogOutIcon, MenuIcon, SaveIcon, ShareIcon, UserIcon } from './icons';
 import './AppDrawer.css';
 
 /**
@@ -140,6 +140,8 @@ export function AppDrawer({ user }: { user: CurrentUser | null }) {
                 <nav className="app-drawer-nav" aria-label="Konto">
                   <DrawerLink to="/account" icon={UserIcon} label="Konto" onPick={close} />
                   <DrawerLink to="/tools/bidding-browser/systems" icon={LayersIcon} label="Zarządzaj systemami" onPick={close} />
+                  <DrawerLink to="/account/deals" icon={SaveIcon} label="Zapisane rozdania" onPick={close} />
+                  <DrawerLink to="/account/deals/shared" icon={ShareIcon} label="Udostępnione rozdania" onPick={close} />
                 </nav>
 
                 <div className="app-drawer-rule" />

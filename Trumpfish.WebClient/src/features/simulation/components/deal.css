@@ -101,6 +101,15 @@
   gap: var(--space-2) var(--space-3);
 }
 
+/* The pair at the end of the row: the first of them takes the slack, so the two stay together against the right edge. */
+.deal-footnote .deal-save {
+  margin-left: auto;
+}
+
+.deal-footnote .deal-save + .deal-analysis {
+  margin-left: 0;
+}
+
 .deal-footnote .deal-analysis {
   margin-left: auto;
 }
@@ -121,6 +130,11 @@
   font-size: var(--text-sm);
 }
 
+/*
+ * Two by two, at every width. Stacked one under another the four hands are a column four screens long, and the thing a
+ * deal is looked at for - how the cards sit against each other - is exactly what that arrangement takes away. The cards
+ * inside a hand are short enough to survive half a phone.
+ */
 .hands {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -369,9 +383,3 @@
 }
 
 
-/* Four hands side by side stop being readable on a phone, so they go one under another. */
-@media (max-width: 560px) {
-  .hands {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}

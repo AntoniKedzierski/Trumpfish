@@ -91,6 +91,11 @@ export async function getJson<T>(path: string): Promise<T> {
   return (await send(path)).json() as Promise<T>;
 }
 
+/** For a PUT that answers 204: there is no body to parse, and asking for one would throw. */
+export async function putNoContent(path: string, body: unknown): Promise<void> {
+  await send(path, { method: 'PUT', body: JSON.stringify(body) });
+}
+
 export async function putJson<TResponse>(path: string, body: unknown): Promise<TResponse> {
   return (await send(path, { method: 'PUT', body: JSON.stringify(body) })).json() as Promise<TResponse>;
 }

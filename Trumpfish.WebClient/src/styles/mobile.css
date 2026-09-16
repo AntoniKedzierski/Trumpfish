@@ -45,21 +45,17 @@ body,
     gap: var(--space-3);
   }
 
-  .hands {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 720px) {
-  /* The bar gives back its generous desktop gutters. */
+  /* The bar gives back its generous desktop gutters. The tool bars answer to `styles/toolbar.css` for the same thing. */
   .app-bar {
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
   }
 
   .app-invitation,
-  .app-notice,
-  .page-strip {
+  .app-notice {
     padding-left: var(--space-3);
     padding-right: var(--space-3);
   }
@@ -82,62 +78,15 @@ body,
     gap: var(--space-3);
   }
 
-  .controls {
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-  }
-
-  /* Only the system name gives way here too; the commands beside it keep the width their labels need. */
-  .controls > button {
-    padding: 0 var(--space-2);
-  }
-
-  .controls > .popover:first-child {
+  /* The system's name is the one thing on the bar whose width nobody controls, so it is the one thing that gives way. */
+  .toolbar-commands > .popover:first-child {
     flex: 0 1 auto;
     min-width: 4.5rem;
   }
 
-  .controls .popover-trigger {
-    padding: 0 var(--space-2);
-  }
-
-  .controls > .popover:first-child .popover-trigger {
+  .toolbar-commands > .popover:first-child .popover-trigger {
     width: 100%;
     max-width: none;
-  }
-
-  .controls .summary {
-    margin-left: 0;
-  }
-
-  /*
-   * One row, always. A second row of commands costs the tree the height it is read in, so the system's name - the one
-   * thing here whose width nobody controls - is cut short instead.
-   */
-  .toolbar {
-    flex-wrap: nowrap;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-  }
-
-  .toolbar > * {
-    flex: none;
-  }
-
-  .toolbar .popover {
-    flex: 0 1 auto;
-    min-width: 4.5rem;
-  }
-
-  .toolbar .popover-trigger {
-    width: 100%;
-    max-width: none;
-    padding: 0 var(--space-2);
-  }
-
-  .toolbar > button,
-  .toolbar .menu-button-trigger {
-    padding: 0 var(--space-2);
   }
 
   /* The chords have no keyboard to be typed on here. */
@@ -208,13 +157,4 @@ body,
     padding: var(--space-2);
   }
 
-  /* The strip's commands take the width rather than crowding into a corner of it. */
-  .page-strip-actions {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .page-strip-actions button {
-    flex: 1;
-  }
 }

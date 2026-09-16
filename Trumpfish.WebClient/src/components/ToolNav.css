@@ -12,9 +12,9 @@
 .app-nav-trigger {
   display: inline-flex;
   align-items: center;
-  height: var(--bar-control);
-  padding: 0 12px;
-  font-size: var(--text-lg);
+  height: var(--button-large);
+  padding: 0 var(--space-4);
+  font-size: var(--button-large-text);
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;

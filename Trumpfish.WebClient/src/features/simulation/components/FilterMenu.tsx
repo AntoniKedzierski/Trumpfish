@@ -43,11 +43,11 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
       onClose={apply}
       footer={
         <>
-          <button type="button" onClick={clear}>
+          <button type="button" className="small" onClick={clear}>
             <CloseIcon />
             <span>Wyczyść</span>
           </button>
-          <button type="button" className="primary" onClick={apply}>
+          <button type="button" className="small primary" onClick={apply}>
             <CheckIcon />
             <span>Zastosuj</span>
           </button>
