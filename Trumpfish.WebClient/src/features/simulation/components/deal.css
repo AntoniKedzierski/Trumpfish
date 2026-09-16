@@ -201,13 +201,22 @@
   color: var(--text-primary);
 }
 
+/*
+ * Four seats, four columns of one quarter each.
+ *
+ * Left to size itself the table gave each column the width of whatever happened to be in it, so a row holding one long
+ * bid and three blanks put its heading somewhere other than over its bids - and the first row of an auction is exactly
+ * the row with the most blanks in it.
+ */
 .bidding-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: var(--text-sm);
 }
 
 .bidding-table th {
+  width: 25%;
   padding: 6px 8px;
   font-weight: 600;
   font-size: var(--text-xs);
@@ -215,8 +224,13 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/*
+ * Every row is one bid tall whether or not it holds a bid. A cell with nothing in it is as tall as its own empty line,
+ * which is how the row a live auction is waiting on came out as a thin strip rather than as a place a bid will go.
+ */
 .bidding-table td {
-  padding: 5px 8px;
+  height: 38px;
+  padding: 4px 8px;
   text-align: center;
   color: var(--text-primary);
 }

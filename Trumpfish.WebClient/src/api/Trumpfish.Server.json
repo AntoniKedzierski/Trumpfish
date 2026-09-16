@@ -2309,6 +2309,7 @@
           "sessionId",
           "dealNumber",
           "dealer",
+          "vulnerability",
           "hand",
           "bidding",
           "warnings",
@@ -2339,6 +2340,9 @@
           },
           "dealer": {
             "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
           },
           "hand": {
             "$ref": "#/components/schemas/SimulationHand"
@@ -2718,6 +2722,7 @@
           "state",
           "dealIndex",
           "dealer",
+          "vulnerability",
           "player",
           "playerHand",
           "bidding",
@@ -2743,6 +2748,9 @@
           },
           "dealer": {
             "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
           },
           "player": {
             "$ref": "#/components/schemas/PlayerPosition"

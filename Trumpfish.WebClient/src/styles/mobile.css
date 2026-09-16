@@ -25,6 +25,17 @@ body,
   textarea {
     font-size: 16px;
   }
+
+  /*
+   * No pull to refresh.
+   *
+   * Every downward drag in here belongs to something - a sheet being put away, a list being scrolled - and the one that
+   * reached the browser instead threw away whatever was being edited to reload a page that had not changed.
+   */
+  html,
+  body {
+    overscroll-behavior-y: contain;
+  }
 }
 
 @media (max-width: 900px) {
@@ -72,18 +83,66 @@ body,
   }
 
   .controls {
-    gap: var(--space-2) var(--space-3);
-    padding: var(--space-3);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* Only the system name gives way here too; the commands beside it keep the width their labels need. */
+  .controls > button {
+    padding: 0 var(--space-2);
+  }
+
+  .controls > .popover:first-child {
+    flex: 0 1 auto;
+    min-width: 4.5rem;
+  }
+
+  .controls .popover-trigger {
+    padding: 0 var(--space-2);
+  }
+
+  .controls > .popover:first-child .popover-trigger {
+    width: 100%;
+    max-width: none;
   }
 
   .controls .summary {
     margin-left: 0;
   }
 
-  /* The toolbar wraps rather than scrolls sideways, but never past a third of the screen. */
+  /*
+   * One row, always. A second row of commands costs the tree the height it is read in, so the system's name - the one
+   * thing here whose width nobody controls - is cut short instead.
+   */
   .toolbar {
-    max-height: 34vh;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
+  }
+
+  .toolbar > * {
+    flex: none;
+  }
+
+  .toolbar .popover {
+    flex: 0 1 auto;
+    min-width: 4.5rem;
+  }
+
+  .toolbar .popover-trigger {
+    width: 100%;
+    max-width: none;
+    padding: 0 var(--space-2);
+  }
+
+  .toolbar > button,
+  .toolbar .menu-button-trigger {
+    padding: 0 var(--space-2);
+  }
+
+  /* The chords have no keyboard to be typed on here. */
+  .toolbar .shortcuts {
+    display: none;
   }
 }
 
@@ -120,18 +179,12 @@ body,
     order: 3;
   }
 
-  .deal-bar {
-    order: 0;
-    gap: var(--space-2);
-  }
-
   .bidding-box {
     gap: var(--space-1);
   }
 
-  /* Still a comfortable target, and five columns of them still fit across a small phone. */
+  /* Five columns of them still fit across a small phone; the height is the same one they have everywhere. */
   .box-cell {
-    min-height: 42px;
     font-size: var(--text-sm);
   }
 
@@ -155,21 +208,13 @@ body,
     padding: var(--space-2);
   }
 
-  .app-brand span {
-    display: none;
-  }
-
-  /* Down to marks: the panel behind the hamburger still names the tool, and there is no room out here to name it twice. */
-  .app-nav-burger-label {
-    display: none;
-  }
-
-  .deal-actions {
+  /* The strip's commands take the width rather than crowding into a corner of it. */
+  .page-strip-actions {
     width: 100%;
     margin-left: 0;
   }
 
-  .deal-actions button {
+  .page-strip-actions button {
     flex: 1;
   }
 }

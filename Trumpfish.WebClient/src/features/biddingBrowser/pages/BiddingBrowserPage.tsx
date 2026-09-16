@@ -26,7 +26,7 @@ export function BiddingBrowserPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const [editorWidth, setEditorWidth] = useState(360);
+  const [editorWidth, setEditorWidth] = useState(460);
   // Whether the editor is open over the tree. Only ever true on a layout that has nowhere to put it beside the tree.
   const [editing, setEditing] = useState(false);
   // Both are bumped to fire a one-off effect: focus the meaning field, and bring the selected bid into view in the tree.
@@ -379,6 +379,49 @@ export function BiddingBrowserPage() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [editing]);
 
+  /*
+   * Dragging the sheet down puts it away.
+   *
+   * The bar carries a grab handle, which is a promise; nothing was answering it, and on a phone a downward drag that the
+   * page does not take is the gesture that reloads the browser. `touch-action: none` on the bar is what takes the gesture
+   * away from the browser, and the pointer capture is what keeps hold of it once the finger has left the bar.
+   */
+  const [drag, setDrag] = useState<number | null>(null);
+  const dragFrom = useRef(0);
+
+  const startDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    // The way out that is pressed rather than dragged keeps its click.
+    if ((event.target as HTMLElement).closest('button') !== null) {
+      return;
+    }
+
+    dragFrom.current = event.clientY;
+    setDrag(0);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const moveDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (drag === null) {
+      return;
+    }
+
+    // Upwards it does not follow: the sheet is already as far up as it goes.
+    setDrag(Math.max(0, event.clientY - dragFrom.current));
+  };
+
+  const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (drag === null) {
+      return;
+    }
+
+    setDrag(null);
+
+    // Far enough down to have been meant; short of that the sheet settles back where it was.
+    if (event.clientY - dragFrom.current > 96) {
+      setEditing(false);
+    }
+  };
+
   const selectedNode = getNode(state.system, state.selection);
 
   const editorProps = {
@@ -461,9 +504,16 @@ export function BiddingBrowserPage() {
             role="dialog"
             aria-modal="true"
             aria-label="Edycja odzywki"
+            style={drag === null ? undefined : { transform: `translateY(${drag}px)`, transition: 'none' }}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="editor-sheet-bar">
+            <div
+              className="editor-sheet-bar"
+              onPointerDown={startDrag}
+              onPointerMove={moveDrag}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+            >
               <button type="button" onClick={() => setEditing(false)}>Gotowe</button>
             </div>
 

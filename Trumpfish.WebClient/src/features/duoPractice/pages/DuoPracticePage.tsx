@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useBlocker } from 'react-router-dom';
+import { useBlocker, useNavigate } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
-import { toNumber } from '@/api/models';
 import type { BiddingSystem, BiddingSystemSummary, DuoSettings, PracticeHint } from '@/api/models';
+import { PageStatus } from '@/components/PageStatus';
 import { Select } from '@/components/Select';
-import { exportDeals, type SavedDeal } from '@/features/practice/analysis';
 import { BidWarning } from '@/features/practice/components/BidWarning';
 import { BiddingBox, type BoxBid } from '@/features/practice/components/BiddingBox';
 import { openingChoices } from '@/features/practice/openings';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
 import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
-import { positionLabels } from '@/features/simulation/deals';
+import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { useRealtime } from '@/realtime/useRealtime';
 import { HelpTip } from '@/components/HelpTip';
 import { BidMark } from '@/components/suits';
@@ -43,8 +42,6 @@ export function DuoPracticePage() {
   const [checkBids, setCheckBids] = useState(false);
   const [partnerId, setPartnerId] = useState('');
 
-  const [saved, setSaved] = useState<SavedDeal[]>([]);
-  const [savedDeal, setSavedDeal] = useState<number | null>(null);
   // Carried with the turn it answered, so a hint stops being shown the moment the auction moves on rather than being cleared
   // from an effect after the fact.
   const [hint, setHint] = useState<{ at: number; answer: PracticeHint } | null>(null);
@@ -60,6 +57,7 @@ export function DuoPracticePage() {
   // Leaving ends the session for both of them, so both ways out have to be held up: the router for a navigation inside the
   // application, and beforeunload for a reload or a closed tab, which the router never sees.
   const leaving = useRef(false);
+  const navigate = useNavigate();
   const blocker = useBlocker(() => table !== null && !leaving.current);
 
   useEffect(() => {
@@ -142,23 +140,6 @@ export function DuoPracticePage() {
     });
   };
 
-  const save = () => {
-    if (table?.result === null || table?.result === undefined) {
-      return;
-    }
-
-    setSaved((current) => [...current, {
-      savedAt: new Date().toISOString(),
-      systemName: table.systemName,
-      seed: table.settings.seed ?? null,
-      opening: table.openingLabel ?? null,
-      partner: table.partner.name,
-      deal: table.result!,
-    }]);
-
-    setSavedDeal(toNumber(table.dealNumber));
-  };
-
   /** Lets the router through once, so leaving after the session was ended on purpose does not ask again. */
   const leave = (proceed: () => void) => {
     leaving.current = true;
@@ -173,14 +154,7 @@ export function DuoPracticePage() {
           <section className="setup-card">
             <h2>Koniec sesji</h2>
             <p>{ended.message}</p>
-            <p>
-              {saved.length === 0
-                ? 'Nie zapisano żadnego rozdania do analizy.'
-                : `Do analizy odłożono ${saved.length} ${dealWord(saved.length)}. Plik zawiera pełną licytację i karty wszystkich graczy.`}
-            </p>
-
-            <button type="button" className="primary" onClick={() => exportDeals(saved)} disabled={saved.length === 0}>Eksportuj .json</button>
-            <button type="button" onClick={() => { setSaved([]); clearEnded(); }}>Wróć do ustawień</button>
+            <button type="button" className="primary" onClick={clearEnded}>Wróć do ustawień</button>
           </section>
         </main>
       </div>
@@ -190,6 +164,33 @@ export function DuoPracticePage() {
   return (
     <div className="practice duo">
       <Header />
+
+      {/*
+        * One bar for the whole table: who you are sitting with on the left, what you can do about this deal and this
+        * session on the right. Only a live table has anything to put on it.
+        */}
+      <PageStatus
+        actions={
+          table === null ? null : (
+            <>
+              <button type="button" disabled title="Zapisywanie rozdań wróci wkrótce.">Zapisz</button>
+              {/* Only the host deals: the table is one table, and two people dealing it would be two different deals. */}
+              {!table.you.isHost ? null : (
+                <button type="button" className="primary" onClick={() => run(nextDeal)} disabled={busy}>Następne</button>
+              )}
+              <button type="button" onClick={() => leave(() => void navigate('/'))} disabled={busy}>Zakończ</button>
+            </>
+          )
+        }
+      >
+        {table === null ? null : (
+          <span className="duo-partner">
+            z {table.partner.name}
+            {table.partner.connected ? null : <span className="duo-dropped"> (rozłączony)</span>}
+          </span>
+        )}
+        {table === null || table.you.isHost || !table.finished ? null : <Waiting>Czekam, aż partner rozda następne rozdanie</Waiting>}
+      </PageStatus>
 
       <main className="practice-main">
         {error === null ? null : <p className="duo-error">{error}</p>}
@@ -299,28 +300,6 @@ export function DuoPracticePage() {
           </section>
         ) : (
           <div className="stack">
-            <div className="deal-bar">
-              <span className="deal-number">Rozdanie {table.dealNumber}</span>
-              <span className="deal-context">
-                Rozdaje {positionLabels[table.dealer]} · z {table.partner.name}
-                {table.partner.connected ? null : <span className="duo-dropped"> (rozłączony)</span>}
-                {table.openingLabel === null || table.openingLabel === undefined ? null : <> · {table.openingLabel}</>}
-              </span>
-
-              {/* Sits on its own, before the buttons, rather than standing in for one of them: it is a status, not an action. */}
-              {table.you.isHost || !table.finished ? null : <Waiting>Czekam, aż partner rozda następne rozdanie</Waiting>}
-
-              <div className="deal-actions">
-                <button type="button" onClick={save} disabled={!table.finished || savedDeal === toNumber(table.dealNumber)}>
-                  {savedDeal === toNumber(table.dealNumber) ? 'Zapisane' : 'Zapisz do analizy'}
-                </button>
-                {!table.you.isHost ? null : (
-                  <button type="button" className="primary" onClick={() => run(nextDeal)} disabled={busy || !table.finished}>Następne rozdanie</button>
-                )}
-                <button type="button" onClick={() => run(endTable)} disabled={busy}>Zakończ</button>
-              </div>
-            </div>
-
             {/* While bidding only the mistake just made is worth reading; the review sums up every one of them. */}
             <BidWarning warnings={table.finished ? table.warnings : table.warnings.slice(-1)} />
 
@@ -330,7 +309,9 @@ export function DuoPracticePage() {
               <>
                 <section className="panel hand-panel">
                   <div className="panel-head">
-                    <h2>Twoja ręka ({positionLabels[table.you.position]})</h2>
+                    {/* Named the way the simulator names a deal, down to the wording: it is the same deal, seen earlier. */}
+                    <h2 className="deal-title">Rozdanie {table.dealNumber}</h2>
+                    <span className="deal-meta">Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}</span>
                     {!table.settings.allowHints ? null : (
                       <button
                         type="button"
@@ -390,7 +371,7 @@ export function DuoPracticePage() {
         <div className="leave-backdrop" role="presentation" onClick={() => blocker.reset?.()}>
           <div className="leave-dialog" role="alertdialog" aria-modal="true" aria-labelledby="leave-title" onClick={(event) => event.stopPropagation()}>
             <h2 id="leave-title">Opuścić stół?</h2>
-            <p>Wyjście z tego widoku kończy sesję — także dla partnera. Zapisane rozdania możesz wyeksportować dopiero po zakończeniu.</p>
+            <p>Wyjście z tego widoku kończy sesję — także dla partnera.</p>
             <div className="leave-actions">
               <button type="button" autoFocus onClick={() => blocker.reset?.()}>Zostań</button>
               <button type="button" className="danger" onClick={() => leave(() => blocker.proceed?.())}>Zakończ i wyjdź</button>
@@ -418,17 +399,6 @@ function Waiting({ children }: { children: React.ReactNode }) {
 /* The top bar names the tool, so what is left of the header is the heading a screen reader still needs to find. */
 function Header() {
   return <h1 className="sr-only">Ćwiczenie we dwoje</h1>;
-}
-
-function dealWord(count: number): string {
-  if (count === 1) {
-    return 'rozdanie';
-  }
-
-  // Polish counts in threes: 2-4 take one form, everything else another, and the teens go with the majority.
-  const tens = count % 100;
-  const units = count % 10;
-  return units >= 2 && units <= 4 && (tens < 12 || tens > 14) ? 'rozdania' : 'rozdań';
 }
 
 function describe(reason: unknown): string {

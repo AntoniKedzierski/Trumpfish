@@ -1,0 +1,226 @@
+/* The one control the bar keeps on a narrow screen, set like the tabs it stands in for. */
+.app-drawer-burger {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--bar-control);
+  height: var(--bar-control);
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.app-bar .app-drawer-burger .icon {
+  font-size: var(--text-xl);
+  color: inherit;
+}
+
+.app-drawer-burger:hover:not(:disabled),
+.app-drawer-burger[aria-expanded='true'] {
+  color: var(--accent);
+  background: var(--surface-raised);
+  border-color: transparent;
+}
+
+.app-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  background: rgb(0 0 0 / 55%);
+  animation: chip-in var(--duration-fast) var(--ease-out) both;
+}
+
+.app-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(300px, 84vw);
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-3);
+  background: var(--surface-overlay);
+  border-right: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  animation: drawer-slide var(--duration-normal) var(--ease-out) both;
+}
+
+@keyframes drawer-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Who is signed in, and the way out of the panel for a thumb that has nowhere to tap beside it. */
+.app-drawer-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.app-drawer-user {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.app-drawer-user .icon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.app-drawer-user .name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.app-drawer-user .role {
+  flex: none;
+  padding: 1px 7px;
+  font-size: var(--text-xs);
+  line-height: 16px;
+  color: var(--amber-flame);
+  background: rgb(255 181 21 / 12%);
+  border-radius: 999px;
+}
+
+.app-drawer-close {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+}
+
+.app-drawer-close:hover:not(:disabled) {
+  color: var(--accent);
+  background: var(--surface-hover);
+}
+
+.app-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/*
+ * A row is a place to go, set large enough to be aimed at with a thumb rather than a cursor - the menu rows this panel
+ * replaces are thirty-six pixels, which is a pointer's size, not a finger's.
+ */
+.app-drawer a,
+.app-drawer-leave {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: inherit;
+  color: var(--text-muted);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.app-drawer .icon {
+  flex: none;
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+}
+
+.app-drawer a:hover,
+.app-drawer-leave:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: transparent;
+}
+
+/* Where the user is, marked the way the tabs mark it on a wide screen. */
+.app-drawer a[aria-current] {
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+.app-drawer a[aria-current] .icon {
+  color: var(--accent);
+}
+
+/* What one kind of entry ends and the next begins. */
+.app-drawer-rule {
+  flex: none;
+  height: 1px;
+  margin: var(--space-1) var(--space-2);
+  background: var(--border-strong);
+}
+
+/* Nothing separates the first row from the top of its list. */
+.app-drawer-nav > .app-drawer-rule:first-child {
+  display: none;
+}
+
+/*
+ * The friends menu, indoors. Its panel hangs off the bar on a wide screen; there is no bar here to hang it off and no room
+ * beside the drawer to hang it into, so it opens in place and the drawer scrolls to it.
+ */
+.app-drawer-friends .friends-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.app-drawer-friends .friends-trigger:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.app-drawer-friends .friends-trigger > span:first-of-type {
+  flex: 1;
+  text-align: left;
+}
+
+.app-drawer-friends .friends-panel {
+  position: static;
+  width: auto;
+  max-height: none;
+  padding: var(--space-2) var(--space-3) 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}

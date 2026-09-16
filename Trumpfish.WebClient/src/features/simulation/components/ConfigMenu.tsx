@@ -22,8 +22,11 @@ interface ConfigMenuProps {
  * shows what is currently set. That is why it is given no `onClose`.
  */
 export function ConfigMenu({ systems, systemId, onSystemId, dealCount, onDealCount, seed, onSeed, disabled }: ConfigMenuProps) {
+  // The trigger names the system that will be bidding: it is the one setting in here that decides what a run means.
+  const chosen = systems.find((system) => system.id === systemId);
+
   return (
-    <Popover label="Konfiguracja" icon={<SettingsIcon />} scrollBody={false}>
+    <Popover label={chosen?.name ?? 'Konfiguracja'} icon={<SettingsIcon />} scrollBody={false}>
       <div className="popover-section">
         <SystemPicker systems={systems} systemId={systemId} onSystemId={onSystemId} disabled={disabled} />
       </div>

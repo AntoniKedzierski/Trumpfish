@@ -2,6 +2,7 @@ using Model;
 using Model.Bidding.AI;
 using Model.Bidding.Bids;
 using Model.Enums;
+using Model.Helpers;
 using Trumpfish.Server.Contracts;
 
 namespace Trumpfish.Server.Services;
@@ -235,6 +236,7 @@ public sealed class DuoSession {
                 Id,
                 _deal.Index + 1,
                 _deal.Dealer,
+                BoardHelper.VulnerabilityOf(_deal.Index),
                 AuctionMapping.MapHand(position, _deal.Hands[position]),
                 replay.Bidding,
                 replay.WarningsFor(position),

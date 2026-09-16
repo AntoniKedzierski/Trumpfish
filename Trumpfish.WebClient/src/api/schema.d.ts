@@ -1659,6 +1659,7 @@ export interface components {
             /** Format: int32 */
             dealNumber: number | string;
             dealer: components["schemas"]["PlayerPosition"];
+            vulnerability: components["schemas"]["Vulnerability"];
             hand: components["schemas"]["SimulationHand"];
             bidding: components["schemas"]["SimulationBid"][];
             warnings: components["schemas"]["PracticeWarning"][];
@@ -1755,6 +1756,7 @@ export interface components {
             /** Format: int32 */
             dealIndex: number | string;
             dealer: components["schemas"]["PlayerPosition"];
+            vulnerability: components["schemas"]["Vulnerability"];
             player: components["schemas"]["PlayerPosition"];
             playerHand: components["schemas"]["SimulationHand"];
             bidding: components["schemas"]["SimulationBid"][];

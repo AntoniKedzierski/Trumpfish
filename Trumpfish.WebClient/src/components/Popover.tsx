@@ -85,7 +85,7 @@ export function Popover({ label, icon, count, onClose, footer, scrollBody = true
         onClick={() => (open ? close(false) : setOpen(true))}
       >
         {icon}
-        <span>{label}</span>
+        <span className="popover-label">{label}</span>
         {count === undefined || count === 0 ? null : <span className="popover-count">{count}</span>}
         <Chevron className="popover-chevron" />
       </button>

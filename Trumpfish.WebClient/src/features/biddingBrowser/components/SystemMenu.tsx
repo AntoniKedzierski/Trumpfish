@@ -45,8 +45,11 @@ export function SystemMenu(props: SystemMenuProps) {
     setName('');
   };
 
+  // The trigger names what is open. Until something has been opened there is no name to give, and it says what it is instead.
+  const label = props.systemId === null ? 'System' : props.systemName;
+
   return (
-    <Popover label="System" icon={<LayersIcon />} scrollBody={false}>
+    <Popover label={label} icon={<LayersIcon />} scrollBody={false}>
       <div className="popover-section">
         <p className="system-current">
           <span>Edytujesz</span>

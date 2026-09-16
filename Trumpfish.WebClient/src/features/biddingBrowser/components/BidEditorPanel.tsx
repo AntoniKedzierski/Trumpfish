@@ -1,6 +1,7 @@
-import { useEffect, useRef, type KeyboardEvent } from 'react';
-import { Select } from '@/components/Select';
-import { bidColors, bidTypes, toNumber, type NumberRange } from '@/api/models';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { Chevron, Select } from '@/components/Select';
+import { useMediaQuery } from '@/components/useMediaQuery';
+import { bidColors, bidTypes, toNumber, type BidType, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
 import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
 import { readCondition } from '../conditionReader';
@@ -9,6 +10,7 @@ import { FigureMatrix } from './FigureMatrix';
 import { InterjectionPicker } from './InterjectionPicker';
 
 type StopsField = 'clubsStops' | 'diamondsStops' | 'heartsStops' | 'spadesStops';
+type Bound = 'lower' | 'upper';
 
 interface BidEditorPanelProps {
   node: EditableBidNode | null;
@@ -23,12 +25,22 @@ interface BidEditorPanelProps {
   onChange: (patch: Partial<EditableBidNode>) => void;
 }
 
+/** One range per row, each under its own name. What a wide pane has the room to say in full. */
 const rangeFields: { field: RangeField; label: string }[] = [
   { field: 'pointsRange', label: 'Zakres punktów' },
   { field: 'clubsCardRange', label: 'Układ trefli' },
   { field: 'diamondsCardRange', label: 'Układ kar' },
   { field: 'heartsCardRange', label: 'Układ kierów' },
   { field: 'spadesCardRange', label: 'Układ pików' },
+];
+
+/** The same five turned on their side, for a screen with height to spare and no width. */
+const rangeColumns: { field: RangeField; label: string }[] = [
+  { field: 'pointsRange', label: 'Punkty' },
+  { field: 'clubsCardRange', label: 'Trefle' },
+  { field: 'diamondsCardRange', label: 'Karo' },
+  { field: 'heartsCardRange', label: 'Kiery' },
+  { field: 'spadesCardRange', label: 'Piki' },
 ];
 
 const flagFields: { field: keyof EditableBidNode; label: string }[] = [
@@ -52,6 +64,15 @@ const stopsFields: { field: StopsField; label: string }[] = [
 export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, ancestors, onChange }: BidEditorPanelProps) {
   const conditionRef = useRef<HTMLInputElement>(null);
 
+  // The same question the page asks to decide whether the editor is a pane or a sheet, asked again for what goes inside it.
+  const narrow = useMediaQuery('(max-width: 900px)');
+
+  /*
+   * Eight switches are the longest run of rows in here and the least often touched. A pane with the room shows them; a
+   * sheet held over the tree starts with them folded away, and either way they are one tap from being read.
+   */
+  const [optionsOpen, setOptionsOpen] = useState(!narrow);
+
   // Runs on the render that follows the new bid, so the field it reaches for is the one belonging to that bid.
   useEffect(() => {
     if (focusConditionKey > 0) {
@@ -68,9 +89,17 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
     );
   }
 
-  const changeRange = (field: RangeField, bound: keyof NumberRange, raw: string) => {
+  const changeRange = (field: RangeField, bound: Bound, raw: string) => {
     const current = (node[field] ?? {}) as NumberRange;
     onChange({ [field]: { ...current, [bound]: raw === '' ? null : Number(raw) } } as Partial<EditableBidNode>);
+  };
+
+  /*
+   * A pass, a double and a redouble are the whole call: there is no level to say them at and no suit to say them in. Both
+   * fields used to keep whatever the bid was before, which is a contradiction the editor left for the user to notice.
+   */
+  const changeType = (type: BidType) => {
+    onChange(type === 'Submit' ? { type } : { type, value: null, color: 'NoColor' });
   };
 
   // Shift+Enter fills the point range and the suit lengths in from the description, so they never have to be typed twice.
@@ -93,21 +122,35 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
       <BidPath rootName={rootName} ancestors={ancestors} />
 
       <div className="editor">
-        <label>Wartość</label>
-        <input type="number" min={1} max={7} value={toNumber(node.value) ?? ''} onChange={(event) => onChange({ value: event.target.value === '' ? null : Number(event.target.value) })} />
+        {/*
+          * What the call is, in two rows of two. The narrow column takes the two controls that hold a call - a level and
+          * an interjection - and the wide one the two that hold a word, which is what the 1:2 split is for.
+          */}
+        <div className="field-grid">
+          <label className="field">
+            <span>Wartość</span>
+            <input type="number" min={1} max={7} value={toNumber(node.value) ?? ''} onChange={(event) => onChange({ value: event.target.value === '' ? null : Number(event.target.value) })} />
+          </label>
 
-        <label>Kolor</label>
-        <Select
-          value={node.color ?? 'NoColor'}
-          options={bidColors.map((color) => ({ value: color, label: bidColorLabels[color], labelClassName: suitClassName({ type: 'Submit', color }) }))}
-          onChange={(color) => onChange({ color })}
-        />
+          <label className="field">
+            <span>Kolor</span>
+            <Select
+              value={node.color ?? 'NoColor'}
+              options={bidColors.map((color) => ({ value: color, label: bidColorLabels[color], labelClassName: suitClassName({ type: 'Submit', color }) }))}
+              onChange={(color) => onChange({ color })}
+            />
+          </label>
 
-        <label>Typ</label>
-        <Select value={node.type ?? 'Submit'} options={bidTypes.map((type) => ({ value: type, label: bidTypeLabels[type] }))} onChange={(type) => onChange({ type })} />
+          <label className="field">
+            <span>Wtrącenie</span>
+            <InterjectionPicker value={node.interjection} ancestors={ancestors} onChange={(interjection) => onChange({ interjection })} />
+          </label>
 
-        <label>Wtrącenie</label>
-        <InterjectionPicker value={node.interjection} ancestors={ancestors} onChange={(interjection) => onChange({ interjection })} />
+          <label className="field">
+            <span>Typ</span>
+            <Select value={node.type ?? 'Submit'} options={bidTypes.map((type) => ({ value: type, label: bidTypeLabels[type] }))} onChange={changeType} />
+          </label>
+        </div>
 
         <label>Znaczenie</label>
         <input
@@ -128,39 +171,60 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
           onChange={(event) => onChange({ convention: event.target.value })}
         />
 
-        {flagFields.map(({ field, label }) => (
-          <label key={field} className="checkbox">
-            <input type="checkbox" checked={Boolean(node[field])} onChange={(event) => onChange({ [field]: event.target.checked } as Partial<EditableBidNode>)} />
-            {label}
-          </label>
-        ))}
+        <section className="editor-options">
+          <button
+            type="button"
+            className="editor-options-trigger"
+            aria-expanded={optionsOpen}
+            aria-controls="editor-options-body"
+            onClick={() => setOptionsOpen((was) => !was)}
+          >
+            <span>Opcje</span>
+            <Chevron className="editor-options-chevron" />
+          </button>
 
-        {rangeFields.map(({ field, label }) => {
-          const range = node[field] as NumberRange | null;
-          const hint = inherited[field];
-
-          return (
-            <div key={field}>
-              <label>{label}</label>
-              <div className="pair">
-                <input
-                  type="number"
-                  className={conflicts(hint, range, 'lower') ? 'conflict' : undefined}
-                  placeholder={placeholderFor(hint, 'lower')}
-                  value={toNumber(range?.lower) ?? ''}
-                  onChange={(event) => changeRange(field, 'lower', event.target.value)}
-                />
-                <input
-                  type="number"
-                  className={conflicts(hint, range, 'upper') ? 'conflict' : undefined}
-                  placeholder={placeholderFor(hint, 'upper')}
-                  value={toNumber(range?.upper) ?? ''}
-                  onChange={(event) => changeRange(field, 'upper', event.target.value)}
-                />
-              </div>
+          {!optionsOpen ? null : (
+            <div className="editor-options-body" id="editor-options-body">
+              {flagFields.map(({ field, label }) => (
+                <label key={field} className="checkbox">
+                  <input type="checkbox" checked={Boolean(node[field])} onChange={(event) => onChange({ [field]: event.target.checked } as Partial<EditableBidNode>)} />
+                  {label}
+                </label>
+              ))}
             </div>
-          );
-        })}
+          )}
+        </section>
+
+        {narrow ? (
+          <RangeMatrix node={node} inherited={inherited} onBound={changeRange} />
+        ) : (
+          rangeFields.map(({ field, label }) => {
+            const range = node[field] as NumberRange | null;
+            const hint = inherited[field];
+
+            return (
+              <div key={field}>
+                <label>{label}</label>
+                <div className="pair">
+                  <input
+                    type="number"
+                    className={conflicts(hint, range, 'lower') ? 'conflict' : undefined}
+                    placeholder={placeholderFor(hint, 'lower')}
+                    value={toNumber(range?.lower) ?? ''}
+                    onChange={(event) => changeRange(field, 'lower', event.target.value)}
+                  />
+                  <input
+                    type="number"
+                    className={conflicts(hint, range, 'upper') ? 'conflict' : undefined}
+                    placeholder={placeholderFor(hint, 'upper')}
+                    value={toNumber(range?.upper) ?? ''}
+                    onChange={(event) => changeRange(field, 'upper', event.target.value)}
+                  />
+                </div>
+              </div>
+            );
+          })
+        )}
 
         <label>Rozkład kolorów</label>
         <input value={node.colorDistribution ?? ''} onChange={(event) => onChange({ colorDistribution: event.target.value })} />
@@ -189,5 +253,61 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
         <FigureMatrix value={node.figures} onChange={(figures) => onChange({ figures })} />
       </div>
     </aside>
+  );
+}
+
+/**
+ * The five ranges as one table: a column per range, a row per bound.
+ */
+/*
+ * Five named rows of two fields each is five labels and ten boxes down a screen that has no width to lose them in. Turned
+ * ninety degrees the names become one header row and the ten boxes two, which is the same reading in a fraction of the
+ * height - and the bounds line up with each other, which they never did while each pair stood under its own name.
+ */
+function RangeMatrix({ node, inherited, onBound }: {
+  node: EditableBidNode;
+  inherited: InheritedRanges;
+  onBound: (field: RangeField, bound: Bound, raw: string) => void;
+}) {
+  const bounds: { bound: Bound; label: string }[] = [
+    { bound: 'lower', label: 'od' },
+    { bound: 'upper', label: 'do' },
+  ];
+
+  return (
+    <table className="range-matrix">
+      <caption className="sr-only">Zakres punktów i długości kolorów: dolna i górna granica</caption>
+      <thead>
+        <tr>
+          <th scope="col"><span className="sr-only">Granica</span></th>
+          {rangeColumns.map(({ field, label }) => (
+            <th key={field} scope="col">{label}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {bounds.map(({ bound, label }) => (
+          <tr key={bound}>
+            <th scope="row">{label}</th>
+            {rangeColumns.map(({ field }) => {
+              const range = node[field] as NumberRange | null;
+              const hint = inherited[field];
+
+              return (
+                <td key={field}>
+                  <input
+                    type="number"
+                    className={conflicts(hint, range, bound) ? 'conflict' : undefined}
+                    placeholder={placeholderFor(hint, bound)}
+                    value={toNumber(range?.[bound]) ?? ''}
+                    onChange={(event) => onBound(field, bound, event.target.value)}
+                  />
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }

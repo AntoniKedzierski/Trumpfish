@@ -234,11 +234,13 @@ function InterjectionFolder({ container, held, selection, revealKey, onSelect, o
 
 function BidLabel({ node }: { node: EditableBidNode }) {
   return (
-    <span className="bid-label">
+    // A row too long for the panel is cut off at the right edge, so the whole sentence is kept here for the pointer to ask for.
+    <span className="bid-label" title={wholeOf(node)}>
       <span className="bid-code">
         <CallMark bid={node} />
+        {/* Part of the call rather than of the sentence after it: it travels with the bid instead of standing in a column of its own. */}
+        <span className="bid-separator">:</span>
       </span>
-      <span className="bid-separator">:</span>
       {node.interjection && (
         <span className="bid-interjection">
           (po. <CallMark bid={node.interjection} />)
@@ -249,6 +251,15 @@ function BidLabel({ node }: { node: EditableBidNode }) {
       <BidBadges node={node} />
     </span>
   );
+}
+
+/** What the row says in full, for the tooltip behind a row the panel had to cut short. */
+function wholeOf(node: EditableBidNode): string | undefined {
+  const said = [node.condition, node.convention === null || node.convention === undefined ? '' : `⟨ ${node.convention} ⟩`]
+    .filter((part): part is string => typeof part === 'string' && part !== '')
+    .join(' ');
+
+  return said === '' ? undefined : said;
 }
 
 function BidBadges({ node }: { node: EditableBidNode }) {

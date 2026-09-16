@@ -18,6 +18,13 @@
   justify-content: space-between;
   gap: 10px;
   width: 100%;
+  /*
+   * The same box as an `input`, down to the size of what is written in it. A button carries the browser's button padding
+   * and body size, so beside a field it stood the best part of ten pixels taller - and a control that is not a field's
+   * height reads as a different kind of control.
+   */
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
   text-align: left;
 }
 

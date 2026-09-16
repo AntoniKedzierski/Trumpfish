@@ -4,9 +4,11 @@ import { useAuth } from '@/auth/useAuth';
 import { duoRoute } from '@/features/duoPractice/route';
 import { useRealtime } from '@/realtime/useRealtime';
 import { AccountMenu } from './AccountMenu';
+import { AppDrawer } from './AppDrawer';
 import { FriendsMenu } from './FriendsMenu';
 import { ToolNav } from './ToolNav';
 import { useFitsOnOneRow } from './useFitsOnOneRow';
+import { useMediaQuery } from './useMediaQuery';
 import './AppLayout.css';
 
 /**
@@ -27,6 +29,14 @@ export function AppLayout() {
   // Whether the bar can still line its controls up. Measured, so adding a tool moves the answer on its own.
   const fits = useFitsOnOneRow(bar);
 
+  /*
+   * Below this the bar stops being a bar with things folded into it and becomes a brand with a drawer behind it.
+   *
+   * A measurement answers how many tabs fit; it cannot answer that a phone wants the account and the friends somewhere
+   * other than the top right corner, which is a decision about the layout rather than about the width of a word.
+   */
+  const narrow = useMediaQuery('(max-width: 720px)');
+
   // Sitting down happens on the server, so the client follows the table rather than the other way round: whoever accepts is
   // taken to it, and so is the host the moment his invitation is answered.
   useEffect(() => {
@@ -43,18 +53,25 @@ export function AppLayout() {
   return (
     <div className="app-shell">
       <header className="app-bar" ref={bar}>
+        {/* Everything else in the bar is behind this one, and the brand beside it is what is left. */}
+        {narrow ? <AppDrawer user={user} /> : null}
+
         <Link to="/" className="app-brand">
           <img src="/images/card_icon.png" alt="" />
           <span>Trumpfish</span>
         </Link>
 
-        {/* The tabs give way first: the account and the invitations have to stay reachable, and they are the narrower two. */}
-        <ToolNav collapsed={!fits} />
+        {narrow ? null : (
+          <>
+            {/* The tabs give way first: the account and the invitations have to stay reachable, and they are the narrower two. */}
+            <ToolNav collapsed={!fits} />
 
-        <div className="app-bar-right">
-          <FriendsMenu />
-          {user === null ? null : <AccountMenu user={user} />}
-        </div>
+            <div className="app-bar-right">
+              <FriendsMenu />
+              {user === null ? null : <AccountMenu user={user} />}
+            </div>
+          </>
+        )}
       </header>
 
       {invitations.map((invitation) => (

@@ -23,6 +23,12 @@
   color: var(--amber-flame);
 }
 
+/* Who is on the other side of the table, said on the strip beside what the table is doing. */
+.duo-partner {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
 /* Sits above everything on the page, so an attempt to leave a live session cannot simply be ignored. */
 .leave-backdrop {
   position: fixed;
@@ -94,7 +100,7 @@
 }
 
 /* Inside the deal bar it takes the free space, so it sits between the context and the buttons instead of crowding them. */
-.deal-bar .duo-pending {
+.page-strip .duo-pending {
   flex: 1;
   min-width: 0;
   justify-content: flex-end;

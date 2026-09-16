@@ -27,6 +27,7 @@ public record DuoTableState(
     Guid SessionId,
     int DealNumber,
     PlayerPosition Dealer,
+    Vulnerability Vulnerability,
     SimulationHand Hand,
     IReadOnlyList<SimulationBid> Bidding,
     IReadOnlyList<PracticeWarning> Warnings,

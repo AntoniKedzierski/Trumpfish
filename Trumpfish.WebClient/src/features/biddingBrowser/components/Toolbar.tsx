@@ -77,9 +77,6 @@ export function Toolbar(props: ToolbarProps) {
         <span>Zapisz{dirty ? ' *' : ''}</span>
       </button>
 
-      {/* What is being edited, stated where the simulator states what it has run. Not a control: the name is not editable. */}
-      <span className="toolbar-current" title={systemName}>{systemName}</span>
-
       <ShortcutsHelp />
     </div>
   );

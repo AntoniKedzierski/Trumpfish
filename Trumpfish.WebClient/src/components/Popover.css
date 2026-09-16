@@ -10,6 +10,14 @@
   white-space: nowrap;
 }
 
+/* The label gives way before the trigger does: a long name is cut short rather than pushing the row it stands in apart. */
+.popover-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .popover-trigger .icon {
   flex: none;
   font-size: var(--text-base);

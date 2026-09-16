@@ -198,3 +198,13 @@ export function CloseIcon({ className }: { className?: string }) {
     </Icon>
   );
 }
+
+/** A magnifier: one deal put under it. */
+export function SearchIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <circle cx="11" cy="11" r="6.5" {...stroke} />
+      <path d="m15.8 15.8 4.7 4.7" {...stroke} />
+    </Icon>
+  );
+}

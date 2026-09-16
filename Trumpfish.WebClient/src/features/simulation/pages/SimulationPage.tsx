@@ -33,6 +33,16 @@ export function SimulationPage() {
     [filters, result, sortDirection, sortKey],
   );
 
+  /*
+   * The cards are built once per result and handed back unchanged until the result, the filters or the order change.
+   *
+   * Every keystroke in the configuration panel is a render of this page, and each of those was rebuilding five hundred
+   * finished deals - hands, auction and analysis - to arrive at exactly the same markup. That is why typing the seed
+   * crawled once there was a run behind it, and why it was perfectly quick before the first one. React skips a subtree
+   * whose element it has already seen, so keeping the elements is what keeps the field responsive.
+   */
+  const cards = useMemo(() => sortedDeals.map((deal) => <DealResultCard key={deal.index} deal={deal} />), [sortedDeals]);
+
   useEffect(() => {
     let cancelled = false;
     listBiddingSystems().then(
@@ -110,7 +120,7 @@ export function SimulationPage() {
         {result === null ? (
           <p className="placeholder">Wygeneruj rozdania i uruchom symulację, aby zobaczyć ręce, punkty i przebieg licytacji.</p>
         ) : (
-          sortedDeals.map((deal) => <DealResultCard key={deal.index} deal={deal} />)
+          cards
         )}
       </section>
     </div>

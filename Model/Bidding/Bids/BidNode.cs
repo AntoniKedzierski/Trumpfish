@@ -25,6 +25,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public NumberRange? HeartsCardRange { get; set; }
 
     public NumberRange? DiamondsCardRange { get; set; }
+
     public NumberRange? ClubsCardRange { get; set; }
     public decimal? SpadesStops { get; set; }
 
