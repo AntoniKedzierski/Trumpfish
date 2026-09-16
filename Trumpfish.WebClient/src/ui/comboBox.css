@@ -19,12 +19,11 @@
 }
 
 /*
- * Za długa wartość jest przycinana, zamiast rozpychać pole.
+ * Za długa wartość jest przycinana, zamiast rozpychać pole - cieniowaniem przy prawej krawędzi, a nie wielokropkiem:
+ * tekstu zabrakło miejsca, co jest prawdą, zamiast urywać go kropkami jak zdanie.
  *
- * Wielokropkiem, a nie cieniowaniem od prawej, mimo że cieniowanie ładniej mówi "jest tego więcej". Maska na iOS bywa
- * liczona na osobnej warstwie kompozycji i wtedy potrafi wygasić cały napis - a pole wyboru systemu, w którym nie widać
- * wybranego systemu, jest gorsze od wielokropka. Cieniowanie zostaje tam, gdzie wielokropek nie zadziała: w wierszu
- * drzewka, który jest ciągiem osobnych kawałków, a `text-overflow` sięga tylko ostatniego z nich.
+ * (Zdejmowałem to cieniowanie, podejrzewając maskę na iOS o wygaszanie napisu. Podejrzenie było fałszywe - wartość
+ * znikała, bo pasek chował etykiety także wewnątrz otwartego panelu. Patrz `toolbar.css`.)
  */
 .ui-combo-value,
 .ui-combo-option > span {
@@ -33,7 +32,8 @@
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
 }
 
 .ui-combo-value.placeholder {

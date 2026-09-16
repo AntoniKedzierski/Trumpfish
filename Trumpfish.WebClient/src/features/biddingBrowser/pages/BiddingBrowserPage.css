@@ -105,7 +105,7 @@
  * ustawiony na pojemniku, a nie na każdym kawałku wiersza z osobna.
  */
 .tree {
-  font-size: var(--text-xs);
+  font-size: var(--text-base);
   min-height: 0;
   overflow: auto;
   margin: 0;

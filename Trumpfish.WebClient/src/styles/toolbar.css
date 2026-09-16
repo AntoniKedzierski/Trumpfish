@@ -17,8 +17,17 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/*
+ * Bierze całe wolne miejsce, zamiast kurczyć się do swojej treści.
+ *
+ * Pudełko dopasowane do treści ma szerokość równą treści, więc pytanie "czy komendy się mieszczą" zawsze wychodziło na
+ * styk - a suma zaokrąglonych w górę szerokości dzieci potrafi przebić tę jedną zaokrągloną szerokość o kilka pikseli
+ * i pasek składał się do samych ikonek na pustym ekranie. Rozciągnięte, `clientWidth` mówi, ile jest miejsca, a nie ile
+ * zajmuje treść - i porównanie wreszcie ma sens.
+ */
 .toolbar-commands {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
@@ -27,6 +36,7 @@
 /* What the view is doing, at the far end from what it can be told to do. */
 .toolbar-status {
   display: flex;
+  flex: none;
   align-items: center;
   gap: var(--space-2);
   margin-left: auto;
@@ -76,8 +86,14 @@
  *
  * Słowa są wyjmowane z układu, a nie ukrywane, więc przyciski zachowują nazwy dla czytnika ekranu i dla wskaźnika.
  */
-.toolbar.icons-only .toolbar-commands button > span:not(.ui-badge),
-.toolbar.icons-only .toolbar-commands .ui-popup-label {
+/*
+ * Wyłącznie własny rząd paska - stąd same znaki dziecka bezpośredniego. Zapisane luźno, przez potomka, reguła sięgała
+ * też do wnętrza otwartego panelu, bo panel popupu jest rysowany wewnątrz `.toolbar-commands`: znikały etykiety jego
+ * przycisków i wartość ComboBoksa, który jest przecież zwykłym `<span>` w `<button>`. Pasek chowa słowa u siebie, a nie
+ * we wszystkim, co z niego wyrasta.
+ */
+.toolbar.icons-only > .toolbar-commands > button > span:not(.ui-badge),
+.toolbar.icons-only > .toolbar-commands > .ui-popup > .ui-popup-trigger > .ui-popup-label {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -89,7 +105,8 @@
   clip-path: inset(50%);
 }
 
-.toolbar.icons-only .toolbar-commands button {
+.toolbar.icons-only > .toolbar-commands > button,
+.toolbar.icons-only > .toolbar-commands > .ui-popup > .ui-popup-trigger {
   padding: 0 var(--space-2);
 }
 

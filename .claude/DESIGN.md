@@ -53,6 +53,9 @@ Jedna definicja: `components/ToolBar.tsx` + `styles/toolbar.css`. Żaden widok n
 - **Zawsze jedna linijka**, też na telefonie: `flex-wrap: nowrap`. Kiedy komendy przestają się mieścić, `ToolBar`
   **mierzy** je (`useFitsOnOneRow`) i dokłada `icons-only` — słowa znikają dopiero wtedy, nigdy z progu szerokości
   ekranu. Etykieta zostaje w drzewie dostępności.
+- **Chowanie słów dotyczy wyłącznie własnego rzędu paska** — selektory przez dziecko bezpośrednie
+  (`.toolbar > .toolbar-commands > …`). Panel popupu jest rysowany **wewnątrz** paska, więc reguła zapisana przez
+  potomka gasi też etykiety w panelu i wartość w ComboBoksie.
 - Filtry i ustawienia w popupach, nie jako pola na pasku. Najwyżej jeden `primary`.
 
 ## 5. Popupy, dropdowny, panele
