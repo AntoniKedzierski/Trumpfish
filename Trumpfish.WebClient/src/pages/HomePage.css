@@ -86,9 +86,19 @@
 }
 
 .tool-card h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin: 0 0 12px;
   font-size: var(--text-lg);
   font-weight: 600;
+  color: var(--accent);
+}
+
+/* The same glyph the drawer sets beside the same name, a size up because here it has a card to itself. */
+.tool-card .icon {
+  flex: none;
+  font-size: var(--text-xl);
   color: var(--accent);
 }
 

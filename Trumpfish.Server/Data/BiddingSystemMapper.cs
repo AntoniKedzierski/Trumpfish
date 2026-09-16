@@ -1,6 +1,8 @@
+using Model;
 using Model.Bidding;
 using Model.Bidding.AI;
 using Model.Bidding.Bids;
+using System.Text.Json;
 
 namespace Trumpfish.Server.Data;
 
@@ -9,6 +11,10 @@ namespace Trumpfish.Server.Data;
 /// Keeping the translation here is what lets the domain model stay persistence ignorant while the schema stays normalised.
 /// </summary>
 public static class BiddingSystemMapper {
+
+    private static readonly JsonSerializerOptions FiguresJsonOptions = new() {
+        Converters = { new FigureRequirementsJsonConverter() }
+    };
 
     /// <summary>
     /// Rebuilds the domain tree from a record whose <see cref="BiddingSystemRecord.Roots"/> and their bids are already loaded.
@@ -83,6 +89,7 @@ public static class BiddingSystemMapper {
                 ColorDistribution = record.ColorDistribution,
                 Aces = record.Aces,
                 Kings = record.Kings,
+                Figures = DeserializeFigures(record.FiguresJson),
                 OpenerBid = record.OpenerBid,
                 SignOff = record.SignOff,
                 OneRoundForcing = record.OneRoundForcing,
@@ -144,6 +151,7 @@ public static class BiddingSystemMapper {
                 ColorDistribution = node.ColorDistribution,
                 Aces = node.Aces,
                 Kings = node.Kings,
+                FiguresJson = SerializeFigures(node.Figures),
                 OpenerBid = node.OpenerBid,
                 SignOff = node.SignOff,
                 OneRoundForcing = node.OneRoundForcing,
@@ -174,6 +182,16 @@ public static class BiddingSystemMapper {
         } while (!usedNodeIds.Add(id));
 
         return id;
+    }
+
+
+    private static string? SerializeFigures(Dictionary<Card, bool>? figures) {
+        return figures == null ? null : JsonSerializer.Serialize(figures, FiguresJsonOptions);
+    }
+
+
+    private static Dictionary<Card, bool>? DeserializeFigures(string? json) {
+        return json == null ? null : JsonSerializer.Deserialize<Dictionary<Card, bool>>(json, FiguresJsonOptions);
     }
 
 

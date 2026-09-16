@@ -1,0 +1,211 @@
+/*
+ * Keeping a deal: the mark on the card, and the dialog it opens.
+ *
+ * The mark is set as a quiet round control, the size of the chip beside it - it shares a row with `Analizuj`, which is the
+ * command somebody actually came for, and two equally loud controls beside each other is how neither of them gets read.
+ */
+.deal-save {
+  flex: none;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+}
+
+.deal-save .icon {
+  color: inherit;
+}
+
+/* 4.6:1 against the card at rest and the accent under the pointer, so it is legible before it is aimed at. */
+.deal-save:hover:not(:disabled) {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* Kept: the mark stays lit, so a card that has been saved says so without a word. */
+.deal-save.saved {
+  color: var(--accent);
+  border-color: var(--accent-glow);
+}
+
+/*
+ * The five most used keywords that start the same way, hung under the field. A list rather than a menu: they are ordinary
+ * buttons, so Tab walks them, and picking one only completes the word being typed.
+ */
+.save-deal-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  padding: var(--space-2);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.save-deal-suggestions button {
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+}
+
+.save-deal-suggestions button:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/*
+ * The list of kept deals. The bar at the top is the application's ordinary tool bar (`styles/toolbar.css`) and the rows
+ * scroll under it, so this view is built exactly like the browser and the simulator.
+ */
+.saved-deals {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  animation: view-enter var(--duration-slow) var(--ease-out) both;
+}
+
+/* The keywords already on the list, offered under the field being typed into. */
+.deal-tag-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+}
+
+.saved-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 900px;
+  min-height: 0;
+  overflow: auto;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+}
+
+.saved-empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.saved-deal {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* The contract is drawn as the same pill the deal card draws it as; only its place in the row belongs to this list. */
+.saved-deal .deal-contract {
+  flex: none;
+  margin-top: 2px;
+}
+
+.saved-deal-declarer {
+  color: var(--text-muted);
+}
+
+.saved-deal-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-deal-body h2 {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.saved-deal-meta {
+  margin: 2px 0 0;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.saved-deal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+}
+
+.saved-deal-tags span {
+  padding: 1px 8px;
+  font-size: var(--text-xs);
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+}
+
+.saved-deal-comment {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.saved-deal-actions {
+  display: flex;
+  flex: none;
+  gap: var(--space-2);
+}
+
+/* The pages, in a row under the list they page through. */
+.deal-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding-top: var(--space-2);
+}
+
+.deal-pager button {
+  min-width: var(--button-small);
+}
+
+/* Where you are. A state, so it is marked rather than made to look like the one thing to press. */
+.deal-pager button[aria-current] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* The same chevron, pointed the other way: back is left, on is right. */
+.deal-pager-back {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 720px) {
+  .saved-list {
+    padding: var(--space-3) var(--space-3) var(--space-5);
+  }
+
+}
+
+/* Who a deal may be handed to: one friend per row, the box first, the way every other list of options in the application reads. */
+.share-deal-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-height: 40dvh;
+  overflow: auto;
+}
+

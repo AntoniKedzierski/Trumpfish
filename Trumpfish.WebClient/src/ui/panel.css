@@ -1,0 +1,346 @@
+/*
+ * Jedna powierzchnia dla wszystkich popupów: konto, znajomi, wybór systemu, skróty, filtry, sortowanie, menu komend.
+ *
+ * Wcześniej każdy z nich był osobną implementacją i każdy miał własną skalę pisma - dwa panele obok siebie w nagłówku
+ * były złożone dwoma różnymi stopniami. Tu jest jeden komponent i jeden arkusz, więc pytanie "jak wygląda popup" ma
+ * jedną odpowiedź.
+ */
+
+.ui-popup {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-width: 210px;
+  max-width: min(340px, calc(100vw - 2 * var(--space-3)));
+  /*
+   * JEDNA CZCIONKA W POPUPIE - 12 px, i nic w środku jej nie zmienia.
+   *
+   * Zapisane jako `.ui-panel *`, a nie tylko na samym panelu, bo zasada "nic tu nie jest większe od tego, co panel
+   * otworzyło" przez rok żyła w prozie i była egzekwowana w rozsypanych selektorach: `.menu-panel` ją znał,
+   * `.friends-panel` i `.picker-list` nigdy o niej nie słyszały. Reguła, której nie da się złamać z pliku widoku,
+   * to jedyna reguła, która obowiązuje.
+   */
+  font-size: var(--text-xs);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  animation: view-enter var(--duration-fast) var(--ease-out) both;
+}
+
+/*
+ * Dwa poziomy zapisu tej samej rzeczy, bo jeden by nie wystarczył: reguła o jednej klasie w pliku widoku ma dokładnie
+ * tę samą moc co `.ui-panel *` i wygrywa kolejnością. Zapisana przez `.ui-panel-body` ma moc dwóch klas i nie da się
+ * jej przebić z zewnątrz przypadkiem.
+ */
+.ui-panel *,
+.ui-panel .ui-panel-body *,
+.ui-panel .ui-panel-footer * {
+  font-size: var(--text-xs);
+}
+
+/* Nagłówek sekcji w panelu: ta sama wielkość, wersaliki i cicha barwa - inaczej byłby drugim stopniem pisma. */
+.ui-panel h3,
+.ui-panel h4 {
+  margin: var(--space-2) 0 var(--space-1);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Znaki skalują się do pisma wokół nich, więc mówią o sobie mnożnikiem, nie pikselami. */
+.ui-panel .icon,
+.ui-panel .chevron {
+  font-size: 1.15em;
+}
+
+/* Z której krawędzi wyzwalacza panel opada. Ostatnia kontrolka w pasku otwiera się w lewo, inaczej zjedzie z ekranu. */
+.ui-panel.align-start {
+  left: 0;
+}
+
+.ui-panel.align-end {
+  right: 0;
+}
+
+/* W szufladzie nie ma z czego zwisać: panel otwiera się w miejscu, a szuflada przewija się do niego. */
+.ui-panel.inline {
+  position: static;
+  width: auto;
+  max-width: none;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ui-panel-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2);
+}
+
+/*
+ * Panel przewijany albo nie. Kontener z `overflow` przycina wszystko, co jest w nim ustawione absolutnie, więc panel
+ * trzymający kontrolkę z własnym wysuwem musi powiedzieć, że nie przewija.
+ */
+.ui-panel.scroll .ui-panel-body {
+  overflow-y: auto;
+  max-height: min(70vh, 520px);
+}
+
+/* Komendy poza przewijaną częścią, żeby długa lista nigdy ich nie wyniosła poza dolną krawędź. */
+.ui-panel-footer {
+  display: flex;
+  flex: none;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-top: 1px solid var(--border-strong);
+}
+
+/* Sekcje rozdziela kreska; nagłówek nad każdą mówiłby to, co mówią same kontrolki. */
+.ui-panel-section + .ui-panel-section {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-strong);
+}
+
+.ui-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ui-panel-note {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  color: var(--text-muted);
+}
+
+.ui-panel-separator {
+  height: 1px;
+  margin: var(--space-1) var(--space-2);
+  background: var(--border-strong);
+}
+
+.ui-panel-body > .ui-panel-separator:first-child {
+  display: none;
+}
+
+/* Wiersz panelu: link albo przycisk, zawsze do lewej, zawsze ze znakiem. Rozmiary bierze z `controls.css`. */
+.ui-panel .ui-row {
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.ui-panel .ui-row:hover:not(:disabled),
+.ui-panel a.ui-row:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: transparent;
+}
+
+.ui-panel .ui-row:hover:not(:disabled) .icon {
+  color: var(--accent);
+}
+
+.ui-panel .ui-row .icon {
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.ui-panel .ui-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.ui-panel .ui-row:disabled {
+  color: var(--text-muted);
+  background: transparent;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Gdzie użytkownik jest - w listach wartości, nie w listach komend. */
+.ui-panel .ui-row[aria-current] {
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+.ui-panel .ui-row[aria-current] .icon {
+  color: var(--accent);
+}
+
+/*
+ * Wyjście nie jest jednym z miejsc, do których można pójść. Barwi się tło i znak; słowo zostaje w pełnym kontraście,
+ * bo czerwony tekst na czerwonej pierzynce ma jakieś 3.5:1, a nieczytelne ostrzeżenie nie jest ostrzeżeniem.
+ */
+.ui-panel .ui-row.leave:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: rgb(235 39 39 / 12%);
+}
+
+.ui-panel .ui-row.leave:hover:not(:disabled) .icon {
+  color: var(--hearts);
+}
+
+/* Przyciski w popupie są małe - wszystkie, bez wyjątku (DESIGN.md, rozdział 5). Kolor akcentu ma najwyżej jeden. */
+.ui-panel .primary {
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ui-panel .primary:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+/* ── Wyzwalacz ─────────────────────────────────────────────────────────────────────────────────────────────────── */
+
+/* Rozmiar i odstępy bierze z reguły przycisku w `controls.css`; tu jest tylko to, czym różni się od zwykłego przycisku. */
+.ui-popup-trigger {
+  white-space: nowrap;
+}
+
+/* Słowo ustępuje pierwsze: długa nazwa jest przycinana, zamiast rozpychać wiersz, w którym stoi. */
+.ui-popup-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ui-popup-trigger .icon {
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.ui-popup-trigger:hover:not(:disabled) .icon,
+.ui-popup-trigger[aria-expanded='true'] .icon {
+  color: var(--accent);
+}
+
+.ui-popup-chevron {
+  flex: none;
+  font-size: 0.85em;
+  color: var(--text-muted);
+  transform: rotate(90deg);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.ui-popup-trigger[aria-expanded='true'] .ui-popup-chevron {
+  transform: rotate(-90deg);
+}
+
+/* Licznik na wyzwalaczu: ile filtrów działa, ilu znajomych jest dostępnych. Zwinięty filtr łatwo przeoczyć. */
+.ui-badge {
+  flex: none;
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  text-align: center;
+  color: var(--onyx);
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+/* Ktoś czekający pod drzwiami to jedyna rzecz tutaj warta przerwania; dostaje ciepłą barwę. */
+.ui-badge.pending {
+  color: var(--onyx);
+  background: var(--amber-flame);
+}
+
+.ui-badge.quiet {
+  color: var(--amber-flame);
+  background: rgb(255 181 21 / 12%);
+}
+
+/* Pole wyszukiwania w panelu, z miejscem przy prawej krawędzi na kontrolkę, która je opróżnia. */
+.ui-panel-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ui-panel-search input {
+  width: 100%;
+  padding-right: 34px;
+}
+
+.ui-panel-search-clear {
+  position: absolute;
+  right: var(--space-1);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+}
+
+.ui-panel-search-clear:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+/* Etykieta pola w panelu: ta sama wielkość co wszystko inne, o stopień cięższa, żeby dało się ją odróżnić od wartości. */
+.ui-panel .ui-field-label,
+.ui-panel .ui-field > span:first-of-type {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.ui-panel .ui-field input,
+.ui-panel .ui-field textarea {
+  width: 100%;
+  font-weight: 400;
+}
+
+.ui-panel .ui-check:hover {
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+}
+
+.ui-panel .ui-check:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+/*
+ * Panel z polem albo z wyszukiwarką jest formularzem, a nie listą komend, i potrzebuje szerokości, w której pole coś
+ * znaczy. Pytane o treść, zamiast dokładania wariantu, który ktoś kiedyś zapomni podać.
+ */
+.ui-panel:has(.ui-field),
+.ui-panel:has(.ui-panel-search) {
+  min-width: 280px;
+}
+
+/* Panel otwarty w miejscu staje pod wyzwalaczem, a nie obok niego, i bierze szerokość z tego, w czym stoi. */
+.ui-popup:has(> .ui-panel.inline) {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.ui-panel.inline {
+  min-width: 0;
+}

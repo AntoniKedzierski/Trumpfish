@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Model;
 using Model.Bidding.AI;
 using Model.Enums;
+using Model.Helpers;
 using System.Text.Json;
 using Trumpfish.Server.Contracts;
 
@@ -116,6 +117,7 @@ public class PracticeService : IPracticeService {
             _protector.Protect(JsonSerializer.Serialize(data, StateJson)),
             data.DealIndex,
             data.Dealer,
+            BoardHelper.VulnerabilityOf(data.DealIndex),
             data.Player,
             AuctionMapping.MapHand(data.Player, replay.Hands[data.Player]),
             replay.Bidding,

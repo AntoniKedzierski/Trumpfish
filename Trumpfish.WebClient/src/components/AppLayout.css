@@ -5,15 +5,18 @@
 }
 
 /*
- * A page that manages its own scrolling gets a frame exactly the height of the window, instead of the document growing
- * under it.
+ * A view with a tool bar gets a frame exactly the height of the window, instead of the document growing under it.
  *
- * The browser is the one such page: a tool bar that has to stay put and two panes that scroll against each other cannot
- * be built on a document that scrolls as a whole - the bar leaves with it and the panes never reach a height to scroll
- * within. Asked for by the page rather than stated here, so every other view keeps the ordinary document scroll and no
- * measurement of this bar has to be written down anywhere.
+ * A bar that has to stay put cannot be built on a document that scrolls as a whole: the bar leaves with it, and on a
+ * phone it leaves first. Sticky positioning would not do either - the application bar above is sticky too, and two
+ * things stuck to the same edge need a number for the height of the first one, which is a number that would be wrong the
+ * day the bar changes. Framed instead: the shell is the window, the bars sit in it, and the content underneath is what
+ * scrolls. Named per view, so every page without a bar keeps the ordinary document scroll.
  */
-.app-shell:has(> .bidding-browser) {
+.app-shell:has(> .bidding-browser),
+.app-shell:has(> .simulation),
+.app-shell:has(> .practice),
+.app-shell:has(> .saved-deals) {
   height: 100dvh;
   overflow: hidden;
 }
@@ -32,20 +35,13 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* Icons in the bar track the text beside them, and never stretch when their row is squeezed. */
+/* Znaki w pasku nigdy się nie rozciągają, kiedy wiersz jest ściskany. Ich wielkość idzie za pismem obok - `ui/controls.css`. */
 .app-bar .icon {
   flex: none;
-  font-size: var(--text-lg);
 }
 
 .app-brand {
-  display: flex;
   flex: none;
-  align-items: center;
-  gap: 10px;
-  height: var(--bar-control);
-  /* Set with the navigation beside it: the product name reading smaller than the tabs would look like a mistake. */
-  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -66,20 +62,22 @@
   margin-left: auto;
 }
 
-.app-bar .friends-trigger {
-  gap: 8px;
-  height: var(--bar-control);
-  padding: 0 12px;
+/*
+ * Płytka w nagłówku: znajomi i konto. Jedna klasa, bo dwie kontrolki stojące obok siebie muszą wyglądać tak samo -
+ * wcześniej każda malowała się sama i różniły się obramowaniem.
+ */
+.app-bar .app-bar-chip {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
 }
 
-.app-bar .friends-trigger .icon {
-  color: var(--text-muted);
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.app-bar .friends-trigger:hover:not(:disabled) .icon,
-.app-bar .friends-trigger[aria-expanded='true'] .icon {
-  color: var(--accent);
+.app-bar .app-bar-chip:hover:not(:disabled),
+.app-bar .app-bar-chip[aria-expanded='true'] {
+  background: var(--surface-overlay);
+  border-color: var(--accent);
+  color: var(--text-primary);
 }
 
 .app-invitation {

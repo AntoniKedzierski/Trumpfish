@@ -81,6 +81,9 @@ public class BidNodeRecord {
 
     public int? Kings { get; set; }
 
+    /// <summary>Serialized <c>BidNode.Figures</c>; nullable keeps every pre-feature row equivalent to no requirements.</summary>
+    public string? FiguresJson { get; set; }
+
     public bool OpenerBid { get; set; }
 
     public bool SignOff { get; set; }

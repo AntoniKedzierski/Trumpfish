@@ -1,12 +1,16 @@
+/* The bar stays, the table scrolls under it - the same frame the browser and the simulator are built on. */
 .practice {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  min-height: 100%;
+  min-height: 0;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
 .practice-main {
   flex: 1;
+  min-height: 0;
+  overflow: auto;
   padding: 20px 16px 40px;
 }
 
@@ -24,55 +28,6 @@
 }
 
 /* The card itself is shared with the account page; it lives in `components/SetupCard.css`. */
-
-.setup-saved {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
-.deal-actions .primary {
-  color: var(--onyx);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.deal-actions .primary:hover:not(:disabled) {
-  color: var(--onyx);
-  background: var(--pearl-aqua);
-  border-color: var(--pearl-aqua);
-}
-
-.deal-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  padding: 12px 16px;
-  background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-}
-
-.deal-number {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.deal-context {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
-.deal-actions {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.deal-actions button {
-  padding: 7px 12px;
-  font-size: var(--text-sm);
-}
 
 .panel {
   padding: 16px;
@@ -97,7 +52,7 @@
   color: var(--hearts);
 }
 
-/* Seven levels against five denominations, then pass, double and redouble on the last row. */
+/* Pass, double and redouble on the first row, then seven levels against five denominations. */
 .bidding-box {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -109,7 +64,12 @@
   align-items: center;
   justify-content: center;
   gap: 1px;
-  min-height: 40px;
+  /*
+   * One height for every cell, stated rather than grown: a row of calls cannot be a different height from a row of bids.
+   * Kept low, because the box is eight rows tall whatever the auction is doing, and what it takes it takes from the
+   * auction underneath it - which is the part that grows.
+   */
+  height: 36px;
   padding: 0;
   background: var(--surface-overlay);
   border: 1px solid var(--border-subtle);
@@ -142,16 +102,8 @@
   cursor: default;
 }
 
-/*
- * The cell is a flex box, so its children are flex items and a mark dropped straight into it would ignore the baseline it
- * is supposed to stand on. One wrapper puts the digit and the pip back into ordinary inline layout.
- */
-.box-bid {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.box-level {
+/* The level is said quietly; it is the mark beside it that the eye picks a cell out by. */
+.box-cell .bid-level {
   color: var(--text-muted);
 }
 
@@ -242,17 +194,35 @@
   }
 }
 
-/* Panel heading with a control beside it, used by the hand for its hint button. */
+/* Panel heading with a control beside it, used by the hand for its hint button. Set out like the simulator's card header. */
 .panel-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
 }
 
 .panel-head h2 {
   margin: 0;
+}
+
+/*
+ * The deal names itself exactly as it does on the simulator's card - the number at body size, the dealer and the
+ * vulnerability quietly beside it - rather than in the small capitals the panels use for their own titles. It is the same
+ * deal shown in the same application, and the two should not be two different kinds of heading.
+ */
+.panel-head h2.deal-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-primary);
+}
+
+/* Whatever the heading is, the control belonging to it sits at the far end of the row. */
+.panel-head .hint-button {
+  margin-left: auto;
 }
 
 /* Round question mark: the answer is one click away but never in the way. */

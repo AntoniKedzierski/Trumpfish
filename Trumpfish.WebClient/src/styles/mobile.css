@@ -25,6 +25,17 @@ body,
   textarea {
     font-size: 16px;
   }
+
+  /*
+   * No pull to refresh.
+   *
+   * Every downward drag in here belongs to something - a sheet being put away, a list being scrolled - and the one that
+   * reached the browser instead threw away whatever was being edited to reload a page that had not changed.
+   */
+  html,
+  body {
+    overscroll-behavior-y: contain;
+  }
 }
 
 @media (max-width: 900px) {
@@ -34,21 +45,17 @@ body,
     gap: var(--space-3);
   }
 
-  .hands {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 720px) {
-  /* The bar gives back its generous desktop gutters. */
+  /* The bar gives back its generous desktop gutters. The tool bars answer to `styles/toolbar.css` for the same thing. */
   .app-bar {
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
   }
 
   .app-invitation,
-  .app-notice,
-  .page-strip {
+  .app-notice {
     padding-left: var(--space-3);
     padding-right: var(--space-3);
   }
@@ -71,19 +78,20 @@ body,
     gap: var(--space-3);
   }
 
-  .controls {
-    gap: var(--space-2) var(--space-3);
-    padding: var(--space-3);
+  /* The system's name is the one thing on the bar whose width nobody controls, so it is the one thing that gives way. */
+  .toolbar-commands > .popover:first-child {
+    flex: 0 1 auto;
+    min-width: 4.5rem;
   }
 
-  .controls .summary {
-    margin-left: 0;
+  .toolbar-commands > .popover:first-child .popover-trigger {
+    width: 100%;
+    max-width: none;
   }
 
-  /* The toolbar wraps rather than scrolls sideways, but never past a third of the screen. */
-  .toolbar {
-    max-height: 34vh;
-    padding: var(--space-2) var(--space-3);
+  /* The chords have no keyboard to be typed on here. */
+  .toolbar .shortcuts {
+    display: none;
   }
 }
 
@@ -120,18 +128,12 @@ body,
     order: 3;
   }
 
-  .deal-bar {
-    order: 0;
-    gap: var(--space-2);
-  }
-
   .bidding-box {
     gap: var(--space-1);
   }
 
-  /* Still a comfortable target, and five columns of them still fit across a small phone. */
+  /* Five columns of them still fit across a small phone; the height is the same one they have everywhere. */
   .box-cell {
-    min-height: 42px;
     font-size: var(--text-sm);
   }
 
@@ -155,21 +157,4 @@ body,
     padding: var(--space-2);
   }
 
-  .app-brand span {
-    display: none;
-  }
-
-  /* Down to marks: the panel behind the hamburger still names the tool, and there is no room out here to name it twice. */
-  .app-nav-burger-label {
-    display: none;
-  }
-
-  .deal-actions {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .deal-actions button {
-    flex: 1;
-  }
 }

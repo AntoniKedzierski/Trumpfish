@@ -89,10 +89,23 @@
    * nudge, and the only one worth nudging.
    */
   /*
-   * How tall a control in a bar stands. Stated once for the application: the buttons on a tool bar and the tabs in the
-   * header are the same kind of thing and reading as different heights makes the page look assembled rather than designed.
+   * Three button sizes and no fourth. The size decides the height and the text together - two buttons of the same size
+   * cannot be set in different type - and where each one belongs is written down in `.claude/DESIGN.md`:
+   *
+   *   large  - the application header and the drawer behind the hamburger;
+   *   normal - tool bars, pages, cards; the size a button is unless something says otherwise;
+   *   small  - the pair that answers a dialog or a popup, and the rows of a pager.
    */
-  --bar-control: 34px;
+  --button-large: 40px;
+  --button-normal: 34px;
+  --button-small: 30px;
+
+  --button-large-text: var(--text-base);
+  --button-normal-text: var(--text-sm);
+  --button-small-text: var(--text-xs);
+
+  /* The height of a control standing on a tool bar, which is the normal button. Kept as its own name because the bars read it. */
+  --bar-control: var(--button-normal);
 
   /*
    * The square a suit mark is drawn in: exactly as tall as the text it stands in, and never anything else.

@@ -5,7 +5,7 @@
   gap: var(--space-3);
   margin: 0 0 var(--space-2);
   padding: 0 var(--space-2);
-  font-size: var(--text-base);
+  font-size: inherit;
 }
 
 .system-current span {
@@ -31,48 +31,4 @@
   padding: var(--space-1) var(--space-2) 0;
 }
 
-.system-commands button,
-.system-import {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  height: 30px;
-  padding: 0 var(--space-3);
-  font-size: var(--text-sm);
-  line-height: 1;
-}
-
-.system-commands .icon {
-  flex: none;
-  font-size: var(--text-sm);
-  color: inherit;
-}
-
-/*
- * A label wearing a button's clothes. The file input inside it is what is actually clicked, so it covers the label rather
- * than being hidden - `display: none` would take it out of the accessibility tree with it.
- */
-.system-import {
-  position: relative;
-  overflow: hidden;
-  color: var(--text-primary);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition:
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out);
-}
-
-.system-import:hover {
-  border-color: var(--accent);
-}
-
-.system-import input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
+/* The commands are ordinary small buttons; their size and type come from `index.css` like every other button's. */

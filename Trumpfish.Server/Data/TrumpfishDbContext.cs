@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Trumpfish.Server.Data;
 
@@ -17,6 +18,10 @@ public class TrumpfishDbContext : DbContext {
     public DbSet<BidNodeRecord> BidNodes => Set<BidNodeRecord>();
 
     public DbSet<FriendshipRecord> Friendships => Set<FriendshipRecord>();
+
+    public DbSet<SavedDealRecord> SavedDeals => Set<SavedDealRecord>();
+
+    public DbSet<SavedDealShareRecord> SavedDealShares => Set<SavedDealShareRecord>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -44,6 +49,57 @@ public class TrumpfishDbContext : DbContext {
             // eventually does will have to clear the addressee side itself.
             entity.HasOne(e => e.Requester).WithMany().HasForeignKey(e => e.RequesterId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(e => e.Addressee).WithMany().HasForeignKey(e => e.AddresseeId).OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<SavedDealRecord>(entity => {
+            entity.HasKey(e => e.Id);
+
+            // Every read of this table is "my deals, newest first", which is exactly what this index answers.
+            entity.HasIndex(e => new { e.OwnerId, e.SavedUtc });
+
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Tags).IsRequired().HasMaxLength(500);
+            entity.Property(e => e.Comment).HasMaxLength(2000);
+            entity.Property(e => e.Contract).IsRequired().HasMaxLength(32);
+
+            // What the contract search asks about, so it is asked of an index rather than of every row.
+            entity.HasIndex(e => new { e.OwnerId, e.Level, e.Color });
+            entity.Property(e => e.Deal).IsRequired();
+
+            // Stored by name, so the tables stay readable and a reordered enum cannot silently reinterpret existing rows.
+            entity.Property(e => e.Dealer).HasConversion<string>().HasMaxLength(16);
+            entity.Property(e => e.Vulnerability).HasConversion<string>().HasMaxLength(16);
+            entity.Property(e => e.Color).HasConversion<string>().HasMaxLength(16);
+            entity.Property(e => e.Declarer).HasConversion<string>().HasMaxLength(16);
+
+            /*
+             * SQLite refuses to order by a `DateTimeOffset` at all - it has no such type, and the text it stores one as
+             * does not sort as a date. The development database therefore keeps the instant as the binary form, which is
+             * a long and sorts the same way the instant does; PostgreSQL keeps its own timestamp and is left alone.
+             */
+            if (Database.IsSqlite()) {
+                entity.Property(e => e.SavedUtc).HasConversion(new DateTimeOffsetToBinaryConverter());
+            }
+
+            entity.HasOne(e => e.Owner).WithMany().HasForeignKey(e => e.OwnerId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<SavedDealShareRecord>(entity => {
+            entity.HasKey(e => e.Id);
+
+            // A deal is shared with somebody once. Sharing it again is the same row, not a second one.
+            entity.HasIndex(e => new { e.DealId, e.ToUserId }).IsUnique();
+            entity.HasIndex(e => new { e.ToUserId, e.SharedUtc });
+
+            // The deal cascades, the recipient does not: PostgreSQL refuses two delete paths into the same table, and the
+            // rule that matters here is that deleting a deal takes every share of it.
+            entity.HasOne(e => e.Deal).WithMany(e => e.Shares).HasForeignKey(e => e.DealId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.ToUser).WithMany().HasForeignKey(e => e.ToUserId).OnDelete(DeleteBehavior.NoAction);
+
+            // The same reason as on the deal itself: SQLite cannot order by an offset date.
+            if (Database.IsSqlite()) {
+                entity.Property(e => e.SharedUtc).HasConversion(new DateTimeOffsetToBinaryConverter());
+            }
         });
 
         modelBuilder.Entity<BiddingSystemRecord>(entity => {

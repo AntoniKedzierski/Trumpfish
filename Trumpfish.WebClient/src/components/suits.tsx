@@ -1,4 +1,4 @@
-import type { BidColor, BidType } from '@/api/models';
+import type { BidColor } from '@/api/models';
 import './suits.css';
 
 /**
@@ -35,6 +35,14 @@ const letter = {
 } as const;
 
 /*
+ * No-trump is written a step lighter than the double and the redouble.
+ *
+ * Those two stand alone in a cell; `NT` stands against a digit, every time it is drawn, and at the double's weight it read
+ * as bold lettering beside a regular one. The stroke here is what a digit's stem measures at the same size.
+ */
+const noTrumpLetter = { ...letter, strokeWidth: 2.35 } as const;
+
+/*
  * Every suit mark renders in the same square box, at the same size, whatever it is drawing.
  *
  * The drawings themselves are not the same shape - a spade is tall and narrow, a heart short and wide - so trimming each
@@ -61,11 +69,20 @@ const suitBox = 24;
 /** 78 per cent of the box, which is where the marks were tuned to. The air it leaves all sits above the drawing. */
 const suitInk = suitBox * 0.78;
 
+/*
+ * The lettering stands at the text's own cap height instead, which is the smaller of the two.
+ *
+ * A pip is a round shape and is drawn a shade taller than a capital, the way a typeface overshoots an O. Two letters are
+ * not round, so given the pips' height they simply came out bigger than the digit beside them - and the digit is the one
+ * thing a bid's mark has to match.
+ */
+const letterInk = suitBox * 0.72;
+
 /** The drawn extent of each mark, measured off its paths: x, y, width, height. */
 type Ink = readonly [number, number, number, number];
 
-function fit([x, y, width, height]: Ink): string {
-  const scale = suitInk / height;
+function fit([x, y, width, height]: Ink, tall: number): string {
+  const scale = tall / height;
   const dx = suitBox / 2 - (x + width / 2) * scale;
   const dy = suitBox - (y + height) * scale;
   return `translate(${round(dx)} ${round(dy)}) scale(${round(scale)})`;
@@ -75,11 +92,11 @@ function round(value: number): number {
   return Math.round(value * 1000) / 1000;
 }
 
-function Glyph({ ink, label, className, children }: { ink: Ink; label: string; className?: string; children: React.ReactNode }) {
+function Glyph({ ink, tall = suitInk, label, className, children }: { ink: Ink; tall?: number; label: string; className?: string; children: React.ReactNode }) {
   return (
     <span className={className === undefined ? 'mark' : `mark ${className}`}>
       <svg className="mark-svg" viewBox={`0 0 ${suitBox} ${suitBox}`} aria-hidden="true" focusable="false">
-        <g transform={fit(ink)}>{children}</g>
+        <g transform={fit(ink, tall)}>{children}</g>
       </svg>
       <span className="sr-only">{label}</span>
     </span>
@@ -156,9 +173,9 @@ export function SuitMark({ suit, className }: { suit: BidColor; className?: stri
     case 'NoTrump':
       /* Condensed, and only a little wider than a pip: two letters, not a word. The box allows for the stroke's own width. */
       return (
-        <Glyph label={label} className={tint} ink={[1.75, 3.55, 19.3, 16.9]}>
-          <path d="M3.2 19V5l6.6 14V5" {...letter} />
-          <path d="M12.4 5.4h7.2M16 5.4V19" {...letter} />
+        <Glyph label={label} className={tint} ink={[2.025, 3.825, 18.75, 16.35]} tall={letterInk}>
+          <path d="M3.2 19V5l6.6 14V5" {...noTrumpLetter} />
+          <path d="M12.4 5.4h7.2M16 5.4V19" {...noTrumpLetter} />
         </Glyph>
       );
     default:
@@ -182,35 +199,5 @@ export function RedoubleMark({ className }: { className?: string }) {
       <path d="M2.6 5.4 12.4 18.6M12.4 5.4 2.6 18.6" {...letter} />
       <path d="M17.6 5.4 27.4 18.6M27.4 5.4 17.6 18.6" {...letter} />
     </CallGlyph>
-  );
-}
-
-/** A whole call - level and mark, or the double, or a pass - drawn rather than printed. */
-export function BidMark({ type, color, level }: { type: BidType; color: BidColor; level: number | null }) {
-  if (type === 'Double') {
-    return (
-      <span className="bid-call">
-        <DoubleMark />
-      </span>
-    );
-  }
-
-  if (type === 'Redouble') {
-    return (
-      <span className="bid-call">
-        <RedoubleMark />
-      </span>
-    );
-  }
-
-  if (type !== 'Submit') {
-    return <>Pas</>;
-  }
-
-  return (
-    <span className="bid-call">
-      <span className="bid-level">{level ?? ''}</span>
-      <SuitMark suit={color} />
-    </span>
   );
 }

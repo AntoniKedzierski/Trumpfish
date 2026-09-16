@@ -103,7 +103,7 @@ export function AccountPage() {
             Powtórz nowe hasło
             <input type="password" value={repeatPassword} onChange={(event) => setRepeatPassword(event.target.value)} autoComplete="new-password" minLength={6} required />
           </label>
-          <button type="submit" className="primary" disabled={busy}>
+          <button type="submit" disabled={busy}>
             <KeyIcon />
             <span>Zmień hasło</span>
           </button>

@@ -1216,6 +1216,448 @@
         }
       }
     },
+    "/api/deals": {
+      "post": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDealRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDealRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDealRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedDealSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "contract",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "oldestFirst",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedDealPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/deals/{id}": {
+      "put": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSavedDealRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSavedDealRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSavedDealRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedDealSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": { }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/deals/shared": {
+      "get": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "contract",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sharedBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "oldestFirst",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedDealPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/deals/shared/{shareId}": {
+      "delete": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "shareId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": { }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/deals/{id}/shares": {
+      "get": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareDealRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareDealRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareDealRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": { }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/deals/tags": {
+      "get": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SavedDealTag"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/simulation/bidding": {
       "post": {
         "tags": [
@@ -1550,6 +1992,15 @@
               "string"
             ],
             "format": "int32"
+          },
+          "figures": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "boolean"
+            }
           },
           "openerBid": {
             "type": "boolean"
@@ -2300,6 +2751,7 @@
           "sessionId",
           "dealNumber",
           "dealer",
+          "vulnerability",
           "hand",
           "bidding",
           "warnings",
@@ -2330,6 +2782,9 @@
           },
           "dealer": {
             "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
           },
           "hand": {
             "$ref": "#/components/schemas/SimulationHand"
@@ -2709,6 +3164,7 @@
           "state",
           "dealIndex",
           "dealer",
+          "vulnerability",
           "player",
           "playerHand",
           "bidding",
@@ -2734,6 +3190,9 @@
           },
           "dealer": {
             "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
           },
           "player": {
             "$ref": "#/components/schemas/PlayerPosition"
@@ -2937,6 +3396,179 @@
           }
         }
       },
+      "SavedDealPage": {
+        "required": [
+          "deals",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "type": "object",
+        "properties": {
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SavedDealSummary"
+            }
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "page": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SavedDealSummary": {
+        "required": [
+          "id",
+          "name",
+          "contract",
+          "level",
+          "color",
+          "declarer",
+          "tags",
+          "comment",
+          "dealer",
+          "vulnerability",
+          "savedUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "level": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "color": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BidColor"
+              }
+            ]
+          },
+          "declarer": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PlayerPosition"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "comment": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
+          },
+          "savedUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SavedDealTag": {
+        "required": [
+          "tag",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SaveDealRequest": {
+        "required": [
+          "name",
+          "tags",
+          "comment",
+          "vulnerability",
+          "deal"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tags": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "comment": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
+          },
+          "deal": {
+            "$ref": "#/components/schemas/SimulationDealResult"
+          }
+        }
+      },
       "SaveSystemRequest": {
         "required": [
           "name",
@@ -2949,6 +3581,87 @@
           },
           "system": {
             "$ref": "#/components/schemas/BiddingSystem"
+          }
+        }
+      },
+      "SharedDealPage": {
+        "required": [
+          "deals",
+          "total",
+          "page",
+          "pageSize"
+        ],
+        "type": "object",
+        "properties": {
+          "deals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SharedDealSummary"
+            }
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "page": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SharedDealSummary": {
+        "required": [
+          "shareId",
+          "deal",
+          "sharedBy",
+          "sharedUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "shareId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deal": {
+            "$ref": "#/components/schemas/SavedDealSummary"
+          },
+          "sharedBy": {
+            "type": "string"
+          },
+          "sharedUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ShareDealRequest": {
+        "required": [
+          "userIds"
+        ],
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         }
       },
@@ -3326,6 +4039,31 @@
           }
         }
       },
+      "UpdateSavedDealRequest": {
+        "required": [
+          "name",
+          "tags",
+          "comment"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tags": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "comment": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "ValidationIssue": {
         "required": [
           "severity",
@@ -3402,6 +4140,9 @@
     },
     {
       "name": "Practice"
+    },
+    {
+      "name": "SavedDeals"
     },
     {
       "name": "Simulation"

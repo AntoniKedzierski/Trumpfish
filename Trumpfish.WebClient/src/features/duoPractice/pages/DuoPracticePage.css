@@ -23,53 +23,12 @@
   color: var(--amber-flame);
 }
 
-/* Sits above everything on the page, so an attempt to leave a live session cannot simply be ignored. */
-.leave-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgb(0 0 0 / 55%);
-  animation: view-enter var(--duration-fast) var(--ease-out) both;
-}
-
-.leave-dialog {
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.leave-dialog h2 {
-  margin: 0 0 10px;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.leave-dialog p {
-  margin: 0 0 20px;
+/* Who is on the other side of the table, said on the strip beside what the table is doing. */
+.duo-partner {
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
-.leave-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.leave-actions .danger:hover:not(:disabled) {
-  color: var(--hearts);
-  border-color: var(--hearts);
-  background: rgb(235 39 39 / 12%);
-}
 
 .duo-notice {
   margin: 16px 20px 0;
@@ -94,7 +53,7 @@
 }
 
 /* Inside the deal bar it takes the free space, so it sits between the context and the buttons instead of crowding them. */
-.deal-bar .duo-pending {
+.toolbar .duo-pending {
   flex: 1;
   min-width: 0;
   justify-content: flex-end;

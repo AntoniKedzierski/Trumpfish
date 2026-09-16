@@ -3,7 +3,7 @@ import { listBiddingSystems } from '@/api/biddingSystems';
 import { simulateBidding } from '@/api/simulation';
 import type { BiddingSystemSummary, SimulationResponse } from '@/api/models';
 import { CardsIcon } from '@/components/icons';
-import { PageStatus } from '@/components/PageStatus';
+import { ToolBar } from '@/components/ToolBar';
 import { ConfigMenu } from '../components/ConfigMenu';
 import { DealResultCard } from '../components/DealResultCard';
 import { FilterMenu } from '../components/FilterMenu';
@@ -32,6 +32,16 @@ export function SimulationPage() {
     () => (result === null ? [] : sortDeals(filterDeals(result.deals, filters.side, filters.games, filters.bid), sortKey, sortDirection)),
     [filters, result, sortDirection, sortKey],
   );
+
+  /*
+   * The cards are built once per result and handed back unchanged until the result, the filters or the order change.
+   *
+   * Every keystroke in the configuration panel is a render of this page, and each of those was rebuilding five hundred
+   * finished deals - hands, auction and analysis - to arrive at exactly the same markup. That is why typing the seed
+   * crawled once there was a run behind it, and why it was perfectly quick before the first one. React skips a subtree
+   * whose element it has already seen, so keeping the elements is what keeps the field responsive.
+   */
+  const cards = useMemo(() => sortedDeals.map((deal) => <DealResultCard key={deal.index} deal={deal} />), [sortedDeals]);
 
   useEffect(() => {
     let cancelled = false;
@@ -70,12 +80,15 @@ export function SimulationPage() {
     <div className="simulation">
       <h1 className="sr-only">Symulacja licytacji AI</h1>
 
-      <PageStatus>
-        {busy ? <span className="status">Symulacja…</span> : null}
-        {error === null ? null : <span className="status error">{error}</span>}
-      </PageStatus>
-
-      <section className="controls">
+      <ToolBar
+        status={
+          <>
+            {busy ? <span className="status">Symulacja…</span> : null}
+            {error === null ? null : <span className="status error">{error}</span>}
+            {result === null ? null : <span>{sortedDeals.length} z {result.dealCount} rozdań, błędów: {result.failedCount}</span>}
+          </>
+        }
+      >
         <ConfigMenu
           systems={systems}
           systemId={systemId}
@@ -98,19 +111,15 @@ export function SimulationPage() {
             <FilterMenu value={filters} onChange={setFilters} />
 
             <SortMenu sortKey={sortKey} direction={sortDirection} onSortKey={setSortKey} onDirection={setSortDirection} />
-
-            <span className="summary">
-              {sortedDeals.length} z {result.dealCount} rozdań, błędów: {result.failedCount}
-            </span>
           </>
         )}
-      </section>
+      </ToolBar>
 
       <section className="results">
         {result === null ? (
           <p className="placeholder">Wygeneruj rozdania i uruchom symulację, aby zobaczyć ręce, punkty i przebieg licytacji.</p>
         ) : (
-          sortedDeals.map((deal) => <DealResultCard key={deal.index} deal={deal} />)
+          cards
         )}
       </section>
     </div>

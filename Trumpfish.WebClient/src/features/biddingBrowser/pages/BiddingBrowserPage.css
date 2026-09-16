@@ -27,8 +27,6 @@
 }
 
 .seed-update button {
-  padding: 5px 12px;
-  font-size: var(--text-sm);
   color: var(--amber-flame);
   border-color: rgb(255 181 21 / 40%);
   background: transparent;
@@ -40,53 +38,6 @@
   background: rgb(255 181 21 / 16%);
 }
 
-/* Sits above everything, including the interjection bidding box, so a held-back navigation cannot be ignored. */
-.unsaved-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgb(0 0 0 / 55%);
-  animation: chip-in var(--duration-fast) var(--ease-out) both;
-}
-
-.unsaved-dialog {
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-.unsaved-dialog h2 {
-  margin: 0 0 10px;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.unsaved-dialog p {
-  margin: 0 0 20px;
-  color: var(--text-muted);
-}
-
-.unsaved-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.unsaved-actions .danger:hover:not(:disabled) {
-  color: var(--hearts);
-  border-color: var(--hearts);
-  background: rgb(235 39 39 / 12%);
-}
 
 
 
@@ -94,78 +45,30 @@
  * The same bar as the simulator's, because it is the same kind of thing: a row of controls that never leaves the top of
  * the screen. It holds its size - `flex: none` - so the panes below give up the room, not it.
  */
-.toolbar {
-  display: flex;
-  flex: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3) var(--space-4);
-  padding: var(--space-3) var(--space-5);
-  background: var(--surface-base);
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* The bar itself is `styles/toolbar.css`; what is peculiar to this one is below. */
 
 /*
- * The same height as the tabs in the header. A tool bar standing taller than the application bar above it reads as a
- * mistake rather than as a decision, so both answer to one number.
+ * Which system is open, said on the door that opens it rather than a second time at the end of the bar. Bounded, because
+ * a name nobody limited is a name that pushes the commands beside it onto a second row.
  */
-.toolbar > button,
-.toolbar .popover-trigger,
-.toolbar .menu-button-trigger {
-  height: var(--bar-control);
-  padding: 0 var(--space-3);
-  font-size: var(--text-sm);
-}
-
-/* The one command that writes to the server is the one that looks like it does. */
-.toolbar .primary {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--onyx);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.toolbar .primary:hover:not(:disabled) {
-  color: var(--onyx);
-  background: var(--pearl-aqua);
-  border-color: var(--pearl-aqua);
-}
-
-/* Inherited, not muted: on the filled button the icon is read against the accent, where a grey would disappear. */
-.toolbar .primary .icon {
-  flex: none;
-  font-size: var(--text-base);
-  color: inherit;
-}
-
-/* Draws the line between what is done to the system and what is done to a bid. */
-.toolbar-separator {
-  flex: none;
-  width: 1px;
-  height: var(--space-5);
-  background: var(--border-subtle);
-}
-
-/*
- * Which system is open. Stated, not offered: a loaded system keeps the name it was created under, and the field that used
- * to sit here made renaming one a slip of the keyboard rather than a decision.
- */
-.toolbar-current {
+.toolbar .popover {
   min-width: 0;
+}
+
+.toolbar .popover-trigger {
+  min-width: 0;
+  max-width: 16rem;
+}
+
+/* The keyboard is read at the far end of the bar, away from what is pressed while editing. */
+.toolbar .shortcuts {
   margin-left: auto;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
 }
 
 /* The middle column is the drag handle; its own margins supply the gap that used to come from `gap`. */
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 360px;
+  grid-template-columns: minmax(0, 1fr) auto 460px;
   flex: 1;
   min-height: 0;
   padding: 20px 28px;
@@ -196,7 +99,13 @@
  * `min-height: 0` is what lets it: a grid item will not shrink below its content without being told to, and a tree that
  * refuses to shrink makes the whole page scroll instead - carrying the tool bar off the top with it.
  */
+/*
+ * Drzewko czyta się długo i w całości, więc jest złożone o stopień niżej niż reszta strony: cyfra odzywki, znaczenie i
+ * znak koloru schodzą z 14 px na 12 px. Znak schodzi sam z siebie, bo `--mark-box` to 1em - dlatego rozmiar jest tu
+ * ustawiony na pojemniku, a nie na każdym kawałku wiersza z osobna.
+ */
 .tree {
+  font-size: var(--text-xs);
   min-height: 0;
   overflow: auto;
   margin: 0;
@@ -237,7 +146,7 @@
   max-height: 26px;
   padding-right: 14px;
   overflow: hidden;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--text-muted);
@@ -445,12 +354,35 @@
   color: var(--text-muted);
 }
 
+/*
+ * The row as far as the panel goes, and no further.
+ *
+ * What a bid says is as long as it needs to be, and the tree is as wide as the window leaves it, so the two do not
+ * always meet. Cut with a straight edge the sentence would look finished, and an ellipsis cannot be had here - the row
+ * is a line of separate parts, and `text-overflow` only ever reaches the last of them. The fade says "there is more"
+ * about whatever happens to reach the edge, a word or a badge, and costs nothing on a row that fits: what it fades out
+ * there is empty space.
+ */
 .bid-label {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
 }
 
+/* Nothing in the row is squeezed to make room; what does not fit is cut off at the edge instead. */
+.bid-label > * {
+  flex: none;
+}
+
+/*
+ * Wide enough for the widest call plus its colon, which is what keeps the sentences beside them in one column. The colon
+ * is inside this box rather than beside it, so it sits against the bid it belongs to instead of in a column of its own.
+ */
 .bid-code {
   min-width: 34px;
   font-weight: 700;
@@ -458,6 +390,8 @@
 }
 
 .bid-separator {
+  margin-left: 3px;
+  font-weight: 400;
   color: var(--text-muted);
 }
 
@@ -484,9 +418,10 @@
   gap: 6px;
 }
 
+/* Zeszły o 2 px razem z pismem wiersza - znaczek większy od słowa obok podnosiłby cały wiersz. */
 .badge {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   opacity: 0.85;
   transition: opacity var(--duration-fast) var(--ease-out);
 }
@@ -496,8 +431,8 @@
 }
 
 .badge.small {
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
 }
 
 .badge.mirrored {
@@ -506,7 +441,7 @@
 
 .badge-preferred {
   color: var(--hearts);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 700;
   line-height: 1;
 }
@@ -558,6 +493,87 @@
   color: var(--text-primary);
 }
 
+/*
+ * The last editor section is a compact card matrix. Rows are figures, columns follow bridge suit rank from spades to clubs;
+ * each cell cycles through unconstrained, required and excluded without opening another control.
+ */
+.figure-requirements {
+  margin-top: 2px;
+}
+
+.figure-requirements .section {
+  margin: 22px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.figure-hint {
+  margin: 4px 0 6px;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.figure-matrix {
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 6px;
+  border-collapse: separate;
+}
+
+.figure-matrix th {
+  height: 24px;
+  padding: 0;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.figure-matrix th:first-child {
+  width: 24px;
+}
+
+.figure-matrix td {
+  padding: 0;
+}
+
+.figure-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  min-width: 0;
+  padding: 0;
+  color: var(--text-muted);
+  background: var(--surface-base);
+  border-color: var(--border-strong);
+}
+
+.figure-state .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.figure-state.required,
+.figure-state.required:hover:not(:disabled) {
+  color: var(--clubs);
+  background: rgb(23 201 100 / 12%);
+  border-color: var(--clubs);
+}
+
+.figure-state.excluded,
+.figure-state.excluded:hover:not(:disabled) {
+  color: var(--hearts);
+  background: rgb(255 87 87 / 12%);
+  border-color: var(--hearts);
+}
+
 /* Checkbox rows share one baseline: fixed control column, no top margin drift and a single consistent gap. */
 .editor label.checkbox {
   display: grid;
@@ -579,8 +595,136 @@
   background: var(--surface-hover);
 }
 
-.editor label.checkbox:first-of-type {
-  margin-top: 14px;
+/*
+ * What the call is, in two rows of two. The narrow column holds a level and an interjection - a digit and a mark - and
+ * the wide one a colour and a type, which are words; a 1:1 split would starve the words to feed the digit.
+ */
+.editor .field-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/*
+ * The label is the wrapper here, not a sibling, so the control inside it inherits whatever the label is set in. Its name
+ * carries the label styling instead, and the wrapper hands the control back ordinary text - uppercased option labels were
+ * exactly what a combobox reading "TREFLE" looked like.
+ */
+.editor .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 0;
+  font-size: var(--text-base);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-primary);
+}
+
+/* The name over the control, set exactly as the labels standing on their own lines below. */
+.editor .field > span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/*
+ * The switches, folded away behind their own name.
+ *
+ * Eight of them is the longest run of rows in the editor and the one least often touched; unfolded on every bid they push
+ * everything that is actually being edited off the bottom of a phone.
+ */
+.editor-options {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.editor-options-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 7px 10px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.editor-options-trigger:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: transparent;
+}
+
+.editor-options-chevron {
+  flex: none;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transform: rotate(90deg);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.editor-options-trigger[aria-expanded='true'] .editor-options-chevron {
+  transform: rotate(-90deg);
+}
+
+.editor-options-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-1);
+}
+
+/*
+ * The five ranges turned ninety degrees: a column per range, a row per bound.
+ *
+ * Down the page each pair needed a name of its own and a line of its own, which is five labels and ten boxes on the
+ * screen with the least room for them. Across, the names are one header row and the bounds read as two rows of five -
+ * and a point count can be compared with a suit length at a glance, which stacked they never could.
+ */
+.range-matrix {
+  width: 100%;
+  margin-top: var(--space-3);
+  table-layout: fixed;
+  border-spacing: 6px;
+  border-collapse: separate;
+}
+
+.range-matrix th {
+  padding: 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Two words naming two rows, not a column of data: it takes what "od" needs and leaves the rest to the fields. */
+.range-matrix th:first-child {
+  width: 22px;
+  text-align: left;
+}
+
+.range-matrix td {
+  padding: 0;
+}
+
+.range-matrix input {
+  width: 100%;
+  min-width: 0;
+  padding-right: var(--space-1);
+  padding-left: var(--space-1);
+  text-align: center;
 }
 
 .editor .pair {
@@ -615,7 +759,7 @@
 .editor input,
 .editor textarea,
 .editor select,
-.editor .select {
+.editor .ui-combo {
   width: 100%;
 }
 
@@ -633,7 +777,11 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 4px;
-  min-width: 100%;
+  /*
+   * A bidding box, not a list: thirty five cells need a width of their own. Tied to the trigger it followed the field
+   * into the narrow column of the grid above and came out a third of the size it has to be.
+   */
+  min-width: max(300px, 100%);
   padding: 6px;
   background: var(--surface-overlay);
   border: 1px solid var(--border-strong);
@@ -720,28 +868,23 @@
   border-top: 1px solid var(--border-subtle);
 }
 
+/* Rozmiar bierze z `Button size="small"`; tutaj jest tylko to, że nie ustępuje miejsca wiadomości obok. */
 .issue-repair {
   flex: none;
-  padding: 5px 12px;
-  font-size: var(--text-xs);
 }
 
+/*
+ * Wiersz wyniku walidacji. Układ, wysokość i wyrównanie do lewej bierze z `.ui-row.wrap` w `ui/controls.css` - pisany
+ * tutaj od zera zostawał wyśrodkowany przez globalną regułę przycisku, i tak właśnie wyglądał.
+ */
 .issue {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
+  /* Długie wiadomości mają się łamać w wierszu, a nie wypychać z niego przycisku naprawy. */
   flex: 1;
-  /* Long messages must wrap inside the row instead of pushing the repair button out of it. */
   min-width: 0;
-  padding: 10px 12px;
   background: none;
   border: none;
   border-radius: var(--radius-sm);
   color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
@@ -801,16 +944,35 @@
 @media (max-width: 900px) {
   .workspace {
     grid-template-columns: minmax(0, 1fr);
-    padding: var(--space-3);
+    /* The hint above already holds the tree off the tool bar; a second gap here would only be the same gap twice. */
+    padding: 0 var(--space-3) var(--space-3);
+  }
+
+  /*
+   * Half the step per level. The rail is there to be followed, not to be paid for: on a phone every pixel it takes is a
+   * pixel off the sentence beside it, and four levels down the sentence is what there is least of.
+   */
+  .tree {
+    padding: var(--space-2);
+  }
+
+  .tree ul {
+    padding-left: 12px;
   }
 }
 
-/* A gesture with nothing on screen to suggest it is a gesture nobody finds, so the tree says so once, quietly. */
+/*
+ * A gesture with nothing on screen to suggest it is a gesture nobody finds, so the tree says so once, quietly.
+ *
+ * Centred, and with the same space above it as below: it belongs to neither the bar nor the tree, and set against the
+ * left edge it read as a label for the first row of a tree it is not part of.
+ */
 .tree-hint {
   flex: none;
   margin: 0;
-  padding: var(--space-2) var(--space-5) 0;
+  padding: var(--space-2) var(--space-3);
   font-size: var(--text-sm);
+  text-align: center;
   color: var(--text-muted);
 }
 
@@ -834,7 +996,14 @@
   border-top: 1px solid var(--border-strong);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   box-shadow: var(--shadow-lg);
-  animation: sheet-rise var(--duration-normal) var(--ease-out) both;
+  /* A scroll that runs out of editor stays in the editor; on a phone it would otherwise be read as a pull to refresh. */
+  overscroll-behavior: contain;
+  transition: transform var(--duration-normal) var(--ease-out);
+  /*
+   * `backwards` rather than `both`: an animation filled forwards goes on owning `transform` after it has ended, and the
+   * drag that dismisses the sheet would have nothing left to write to.
+   */
+  animation: sheet-rise var(--duration-normal) var(--ease-out) backwards;
 }
 
 @keyframes sheet-rise {
@@ -849,6 +1018,9 @@
 /* The grab bar, and the one way out that does not depend on knowing where the sheet ends. */
 .editor-sheet-bar {
   position: relative;
+  /* The bar answers the drag itself, so the browser must not read the same gesture as a scroll - or as a pull to refresh. */
+  touch-action: none;
+  cursor: grab;
   display: flex;
   flex: none;
   align-items: center;
@@ -870,9 +1042,6 @@
 }
 
 .editor-sheet-bar button {
-  height: var(--bar-control);
-  padding: 0 var(--space-4);
-  font-size: var(--text-sm);
   color: var(--onyx);
   background: var(--accent);
   border-color: var(--accent);
@@ -884,10 +1053,15 @@
   border-color: var(--pearl-aqua);
 }
 
+.editor-sheet-bar:active {
+  cursor: grabbing;
+}
+
 /* The sheet is the card here, so the pane inside it gives up its own frame rather than drawing a second one. */
 .editor-sheet .editor-pane {
   flex: 1;
   min-height: 0;
+  overscroll-behavior: contain;
   background: transparent;
   border: none;
   border-radius: 0;

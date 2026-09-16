@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import { getPracticeHint, startPracticeDeal, submitPracticeBid } from '@/api/practice';
 import type { BiddingSystem, BiddingSystemSummary, PracticeHint, PracticeRole, PracticeState } from '@/api/models';
-import { PageStatus } from '@/components/PageStatus';
-import { Select } from '@/components/Select';
+import { ToolBar } from '@/components/ToolBar';
+import { Auction, BidCard, ComboBox, Hand } from '@/ui';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
-import { BidLabel, BiddingTable, HandView } from '@/features/simulation/components/DealViews';
-import { positionLabels } from '@/features/simulation/deals';
+import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { BiddingBox, type BoxBid } from '../components/BiddingBox';
 import { BidWarning } from '../components/BidWarning';
-import { exportDeals, type SavedDeal } from '../analysis';
 import { openingChoices } from '../openings';
-import { PlayIcon } from '@/components/icons';
+import { CardsIcon, CloseIcon, PlayIcon, SettingsIcon } from '@/components/icons';
 import { HelpTip } from '@/components/HelpTip';
-import { BidMark } from '@/components/suits';
 import '@/components/SetupCard.css';
 import './PracticePage.css';
 
@@ -21,7 +19,7 @@ import './PracticePage.css';
  * Configuring an exercise and playing it are two different jobs, so they are two different screens: the settings are answered
  * once and then get out of the way, leaving the table to the deal.
  */
-type Phase = 'setup' | 'playing' | 'ended';
+type Phase = 'setup' | 'playing';
 
 /** When the player gets to see what a bid promised: while the auction runs, or only once the deal is over. */
 type MeaningMode = 'immediate' | 'summary';
@@ -37,6 +35,7 @@ const roleLabels: Record<PracticeRole, string> = {
 };
 
 export function PracticePage() {
+  const navigate = useNavigate();
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
   const [systemId, setSystemId] = useState('');
   const [tree, setTree] = useState<BiddingSystem | null>(null);
@@ -49,17 +48,12 @@ export function PracticePage() {
   const [phase, setPhase] = useState<Phase>('setup');
   const [dealNumber, setDealNumber] = useState(0);
   const [table, setTable] = useState<PracticeState | null>(null);
-  const [saved, setSaved] = useState<SavedDeal[]>([]);
-  const [savedCurrent, setSavedCurrent] = useState(false);
   const [hint, setHint] = useState<PracticeHint | null>(null);
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
 
   const openings = useMemo(() => openingChoices(tree), [tree]);
-  const opening = openings.find((choice) => choice.nodeId === openingNodeId) ?? null;
-  const systemName = systems.find((system) => system.id === systemId)?.name ?? '';
 
   useEffect(() => {
     let cancelled = false;
@@ -105,8 +99,6 @@ export function PracticePage() {
 
   /** Deals number `index` of the session, which is also what decides who deals: N, E, S and W in turn. */
   const deal = (index: number) => run(async () => {
-    setNotice(null);
-    setSavedCurrent(false);
     setHint(null);
     setTable(await startPracticeDeal({
       systemId,
@@ -145,46 +137,42 @@ export function PracticePage() {
     }
   });
 
-  const save = () => {
-    const result = table?.result;
-    if (result === null || result === undefined) {
-      return;
-    }
-
-    setSaved((current) => [...current, {
-      savedAt: new Date().toISOString(),
-      systemName,
-      seed: seed.trim() === '' ? null : seed.trim(),
-      opening: opening === null ? null : `${opening.label} - ${opening.meaning}`,
-      role,
-      deal: result,
-    }]);
-
-    setSavedCurrent(true);
-    setNotice('Rozdanie zapisane do analizy.');
-  };
-
   const finished = table !== null && table.finished;
 
   return (
     <div className="practice">
       <h1 className="sr-only">Ćwiczenie licytacji</h1>
 
-      <PageStatus
-        actions={
-          /* Session commands, not deal commands: they end or reconfigure the whole exercise. */
-          phase === 'playing' ? (
-            <>
-              <button type="button" onClick={() => setPhase('setup')}>Ustawienia</button>
-              <button type="button" onClick={() => setPhase('ended')}>Zakończ</button>
-            </>
-          ) : null
+      {/*
+        * One bar for everything pressed between bids: what to do with this deal, then what to do with the session. The
+        * commands start at the left edge, the way they do on every other bar in the application.
+        */}
+      <ToolBar
+        status={
+          <>
+            {busy ? <span className="status">Licytują boty…</span> : null}
+            {error === null ? null : <span className="status error">{error}</span>}
+          </>
         }
       >
-        {busy ? <span className="status">Licytują boty…</span> : null}
-        {notice === null || busy ? null : <span className="status">{notice}</span>}
-        {error === null ? null : <span className="status error">{error}</span>}
-      </PageStatus>
+        {phase !== 'playing' || table === null ? null : (
+          <>
+            {/* A deal is dealt on demand, finished or not: a hand nobody wants to bid out is a reason to move on, not to sit. */}
+            <button type="button" className="primary" onClick={() => void deal(dealNumber)} disabled={busy}>
+              <CardsIcon />
+              <span>Następne</span>
+            </button>
+            <button type="button" onClick={() => setPhase('setup')}>
+              <SettingsIcon />
+              <span>Ustawienia</span>
+            </button>
+            <button type="button" onClick={() => void navigate('/')}>
+              <CloseIcon />
+              <span>Zakończ</span>
+            </button>
+          </>
+        )}
+      </ToolBar>
 
       <main className="practice-main">
         {phase === 'setup' ? (
@@ -193,7 +181,7 @@ export function PracticePage() {
 
             <label>
               <span>System licytacyjny</span>
-              <Select
+              <ComboBox
                 value={systemId}
                 options={systems.map((system) => ({ value: system.id, label: system.name }))}
                 /* Another system means another tree, so the opening being practised cannot survive the switch. */
@@ -208,7 +196,7 @@ export function PracticePage() {
                 Ćwiczone otwarcie
                 <HelpTip>Dostaniesz karty, którymi da się to otworzyć. Puste - rozdania bez żadnych warunków.</HelpTip>
               </span>
-              <Select
+              <ComboBox
                 value={openingNodeId}
                 options={[
                   { value: '', label: 'Wszystkie - karty bez warunków' },
@@ -218,7 +206,7 @@ export function PracticePage() {
                     // The string is what the option is announced and titled by; this is what it looks like.
                     labelNode: (
                       <>
-                        <BidMark type={choice.type} color={choice.color} level={choice.level} />
+                        <BidCard bid={{ type: choice.type, color: choice.color, value: choice.level }} />
                         {` · ${choice.meaning}`}
                       </>
                     ),
@@ -234,7 +222,7 @@ export function PracticePage() {
                 Siadasz jako
                 <HelpTip>Przy odpowiadaniu warunki dostaje partner, a ty dowolne karty.</HelpTip>
               </span>
-              <Select
+              <ComboBox
                 value={role}
                 options={(Object.keys(roleLabels) as PracticeRole[]).map((key) => ({ value: key, label: roleLabels[key] }))}
                 onChange={setRole}
@@ -244,7 +232,7 @@ export function PracticePage() {
 
             <label>
               <span>Znaczenia odzywek</span>
-              <Select
+              <ComboBox
                 value={meanings}
                 options={(Object.keys(meaningLabels) as MeaningMode[]).map((key) => ({ value: key, label: meaningLabels[key] }))}
                 onChange={setMeanings}
@@ -275,34 +263,6 @@ export function PracticePage() {
             {table === null ? null : (
               <button type="button" onClick={() => setPhase('playing')}>Wróć do rozdania</button>
             )}
-
-            {saved.length === 0 ? null : (
-              <p className="setup-saved">
-                Do analizy odłożono {saved.length} {dealWord(saved.length)}.{' '}
-                <button type="button" className="link" onClick={() => exportDeals(saved)}>Eksportuj .json</button>
-              </p>
-            )}
-          </section>
-        ) : null}
-
-        {phase === 'ended' ? (
-          <section className="setup-card">
-            <h2>Koniec ćwiczenia</h2>
-            <p>
-              {saved.length === 0
-                ? 'Nie zapisano żadnego rozdania do analizy.'
-                : `Do analizy odłożono ${saved.length} ${dealWord(saved.length)}. Plik zawiera pełną licytację i karty wszystkich graczy.`}
-            </p>
-
-            <button type="button" className="primary" onClick={() => exportDeals(saved)} disabled={saved.length === 0}>
-              Eksportuj .json
-            </button>
-            <button type="button" onClick={() => setSaved([])} disabled={saved.length === 0}>
-              Wyczyść zapisane
-            </button>
-            <button type="button" onClick={() => setPhase(table === null ? 'setup' : 'playing')}>
-              {table === null ? 'Wróć do ustawień' : 'Wróć do rozdania'}
-            </button>
           </section>
         ) : null}
 
@@ -310,23 +270,6 @@ export function PracticePage() {
 
         {phase === 'playing' && table !== null ? (
           <div className="stack">
-            <div className="deal-bar">
-              <span className="deal-number">Rozdanie {dealNumber}</span>
-              <span className="deal-context">
-                Rozdaje {positionLabels[table.dealer]}
-                {opening === null ? null : <> · {opening.label} jako {roleLabels[role].toLowerCase()}</>}
-              </span>
-
-              <div className="deal-actions">
-                <button type="button" onClick={save} disabled={!finished || savedCurrent}>
-                  {savedCurrent ? 'Zapisane' : 'Zapisz do analizy'}
-                </button>
-                <button type="button" className="primary" onClick={() => void deal(dealNumber)} disabled={busy || !finished}>
-                  Następne rozdanie
-                </button>
-              </div>
-            </div>
-
             {/* While bidding only the mistake just made is worth reading; the review sums up every one of them. */}
             <BidWarning warnings={finished ? table.warnings : table.warnings.slice(-1)} />
 
@@ -336,7 +279,9 @@ export function PracticePage() {
               <>
                 <section className="panel hand-panel">
                   <div className="panel-head">
-                    <h2>Twoja ręka</h2>
+                    {/* Named the way the simulator names a deal, down to the wording: it is the same deal, seen earlier. */}
+                    <h2 className="deal-title">Rozdanie {dealNumber}</h2>
+                    <span className="deal-meta">Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}</span>
                     <button
                       type="button"
                       className="hint-button"
@@ -349,7 +294,7 @@ export function PracticePage() {
                     </button>
                   </div>
 
-                  <HandView hand={table.playerHand} />
+                  <Hand hand={table.playerHand} />
 
                   {hint === null ? null : (
                     <p className="hint">
@@ -357,7 +302,7 @@ export function PracticePage() {
                         'Silnik nie znajduje tu dla ciebie odzywki w systemie.'
                       ) : (
                         <>
-                          Silnik zalicytowałby <strong><BidLabel bid={hint.bid} /></strong>
+                          Silnik zalicytowałby <strong><BidCard bid={hint.bid} /></strong>
                           {hint.meaning === null || hint.meaning === undefined ? null : ` — ${hint.meaning}`}
                         </>
                       )}
@@ -372,7 +317,7 @@ export function PracticePage() {
 
                 <section className="panel auction-panel">
                   <h2>Licytacja</h2>
-                  <BiddingTable
+                  <Auction
                     key={dealNumber}
                     bidding={table.bidding}
                     dealer={table.dealer}
@@ -390,17 +335,6 @@ export function PracticePage() {
       </main>
     </div>
   );
-}
-
-function dealWord(count: number): string {
-  if (count === 1) {
-    return 'rozdanie';
-  }
-
-  // Polish counts in threes: 2-4 take one form, everything else another, and the teens go with the majority.
-  const tens = count % 100;
-  const units = count % 10;
-  return units >= 2 && units <= 4 && (tens < 12 || tens > 14) ? 'rozdania' : 'rozdań';
 }
 
 function describe(reason: unknown): string {

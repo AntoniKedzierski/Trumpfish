@@ -1,4 +1,6 @@
 import type { ValidationIssue, ValidationSeverity } from '@/api/models';
+import { CheckIcon, CloseIcon, PencilIcon } from '@/components/icons';
+import { Button } from '@/ui';
 
 /** The severity travels as its enum name; the badge sits next to Polish messages, so it is labelled to match. */
 const severityLabels: Record<ValidationSeverity, string> = { Info: 'Info', Warning: 'Ostrzeżenie', Error: 'Błąd' };
@@ -24,7 +26,7 @@ export function ValidationPanel({ issues, isStale, onSelectIssue, onRepairRanges
     <section className="validation">
       <header>
         <span>Wynik walidacji {issues.length === 0 ? '- brak problemów.' : `- ${issues.length} problem(ów).`}</span>
-        <button type="button" onClick={onClose}>Zamknij</button>
+        <Button size="small" icon={CloseIcon} onClick={onClose}>Zamknij</Button>
       </header>
 
       <ul>
@@ -36,7 +38,7 @@ export function ValidationPanel({ issues, isStale, onSelectIssue, onRepairRanges
             <li key={index}>
               <button
                 type="button"
-                className={`issue ${issue.severity.toLowerCase()}`}
+                className={`ui-row wrap issue ${issue.severity.toLowerCase()}`}
                 disabled={stale}
                 onClick={() => onSelectIssue(issue)}
                 title={stale ? 'Ta odzywka została usunięta po walidacji. Sprawdź system ponownie.' : 'Pokaż odzywkę w drzewku'}
@@ -48,8 +50,9 @@ export function ValidationPanel({ issues, isStale, onSelectIssue, onRepairRanges
               </button>
 
               {/* The two repairs sit on opposite sides of the same disagreement, so at most one of them is ever available. */}
-              <button
-                type="button"
+              <Button
+                size="small"
+                icon={CheckIcon}
                 className="issue-repair"
                 disabled={stale || !issue.repair}
                 onClick={() => onRepairRanges(issue)}
@@ -58,10 +61,11 @@ export function ValidationPanel({ issues, isStale, onSelectIssue, onRepairRanges
                   : 'Opis nie mówi tu nic, czego nie ma już w polach odzywki.'}
               >
                 Napraw warunek
-              </button>
+              </Button>
 
-              <button
-                type="button"
+              <Button
+                size="small"
+                icon={PencilIcon}
                 className="issue-repair"
                 disabled={stale || !issue.conditionRepair}
                 onClick={() => onRepairCondition(issue)}
@@ -70,7 +74,7 @@ export function ValidationPanel({ issues, isStale, onSelectIssue, onRepairRanges
                   : 'Opisu nie da się tu poprawić automatycznie.'}
               >
                 Napraw opis
-              </button>
+              </Button>
             </li>
           );
         })}

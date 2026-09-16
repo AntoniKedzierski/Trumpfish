@@ -1,0 +1,180 @@
+/* Jedyna kontrolka, jaką pasek zostawia na wąskim ekranie. Rozmiar bierze z `.icon-only.large` w `ui/controls.css`. */
+.app-drawer-burger {
+  flex: none;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.app-bar .app-drawer-burger .icon {
+  color: inherit;
+}
+
+.app-drawer-burger:hover:not(:disabled),
+.app-drawer-burger[aria-expanded='true'] {
+  color: var(--accent);
+  background: var(--surface-raised);
+  border-color: transparent;
+}
+
+.app-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  background: rgb(0 0 0 / 55%);
+  animation: chip-in var(--duration-fast) var(--ease-out) both;
+}
+
+.app-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(300px, 84vw);
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-3);
+  background: var(--surface-overlay);
+  border-right: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  animation: drawer-slide var(--duration-normal) var(--ease-out) both;
+}
+
+@keyframes drawer-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Who is signed in, and the way out of the panel for a thumb that has nowhere to tap beside it. */
+.app-drawer-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.app-drawer-user {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.app-drawer-user .icon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.app-drawer-user .name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.app-drawer-user .role {
+  flex: none;
+  padding: 1px 7px;
+  font-size: var(--text-xs);
+  line-height: 16px;
+  color: var(--amber-flame);
+  background: rgb(255 181 21 / 12%);
+  border-radius: 999px;
+}
+
+.app-drawer-close {
+  flex: none;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+}
+
+.app-drawer-close:hover:not(:disabled) {
+  color: var(--accent);
+  background: var(--surface-hover);
+}
+
+.app-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/*
+ * Wiersz szuflady to ta sama kontrolka co wiersz panelu: rozmiar `large`, wyrównanie do lewej, znak przy słowie.
+ * Wysokość, padding i stopień pisma stoją w `ui/controls.css`; tutaj są wyłącznie barwy.
+ *
+ * Wcześniej ta reguła pomijała `justify-content`, więc linki zaczynały się przy lewej krawędzi, a "Wyloguj", będąc
+ * przyciskiem, brał wyśrodkowanie z globalnej reguły przycisku. Jedna klasa dla linku i dla przycisku znaczy, że to
+ * się nie może powtórzyć.
+ */
+.app-drawer .ui-row {
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.app-drawer .icon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.app-drawer .ui-row:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: transparent;
+}
+
+/* Where the user is, marked the way the tabs mark it on a wide screen. */
+.app-drawer .ui-row[aria-current] {
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+.app-drawer .ui-row[aria-current] .icon {
+  color: var(--accent);
+}
+
+/* What one kind of entry ends and the next begins. */
+.app-drawer-rule {
+  flex: none;
+  height: 1px;
+  margin: var(--space-1) var(--space-2);
+  background: var(--border-strong);
+}
+
+/* Nothing separates the first row from the top of its list. */
+.app-drawer-nav > .app-drawer-rule:first-child {
+  display: none;
+}
+
+/*
+ * Znajomi w środku. Ich panel zwisa z paska na szerokim ekranie; tutaj nie ma z czego zwisać ani gdzie się wysunąć,
+ * więc otwiera się w miejscu, a szuflada przewija się do niego. Wyzwalacz jest zwykłym wierszem szuflady.
+ */
+.app-drawer-friends,
+.app-drawer-friends .ui-popup,
+.app-drawer-friends .ui-row {
+  width: 100%;
+}
+
+.app-drawer-friends .ui-panel {
+  padding: var(--space-2) var(--space-3) 0;
+}

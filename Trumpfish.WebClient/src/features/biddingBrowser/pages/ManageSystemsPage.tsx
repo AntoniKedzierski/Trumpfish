@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteBiddingSystem, forkSeedSystem, listBiddingSystems, listSeedSystems, renameBiddingSystem, reforkSystem } from '@/api/biddingSystems';
 import type { BiddingSystemSummary } from '@/api/models';
 import { useAuth } from '@/auth/useAuth';
+import { DownloadIcon, LayersIcon, PencilIcon, PlusIcon, TrashIcon } from '@/components/icons';
 import './ManageSystemsPage.css';
 
 export function ManageSystemsPage() {
@@ -141,8 +142,14 @@ export function ManageSystemsPage() {
                   <td className="numeric">{system.bidCount}</td>
                   <td className="numeric">{formatDate(system.modifiedUtc)}</td>
                   <td className="actions"><div>
-                    <button type="button" onClick={() => navigate(`/tools/bidding-browser?system=${system.id}`)} disabled={busy}>Otwórz</button>
-                    <button type="button" onClick={() => setRenaming({ id: system.id, name: system.name })} disabled={busy}>Zmień nazwę</button>
+                    <button type="button" className="small" onClick={() => navigate(`/tools/bidding-browser?system=${system.id}`)} disabled={busy}>
+                      <LayersIcon />
+                      <span>Otwórz</span>
+                    </button>
+                    <button type="button" className="small" onClick={() => setRenaming({ id: system.id, name: system.name })} disabled={busy}>
+                      <PencilIcon />
+                      <span>Zmień nazwę</span>
+                    </button>
                     {system.seedUpdateAvailable && (
                       <button
                         type="button"
@@ -159,10 +166,14 @@ export function ManageSystemsPage() {
                           });
                         }}
                       >
-                        Pobierz zmiany
+                        <DownloadIcon />
+                        <span>Pobierz zmiany</span>
                       </button>
                     )}
-                    <button type="button" className="danger" onClick={() => void confirmDelete(system)} disabled={busy}>Usuń</button>
+                    <button type="button" className="small danger" onClick={() => void confirmDelete(system)} disabled={busy}>
+                      <TrashIcon />
+                      <span>Usuń</span>
+                    </button>
                   </div></td>
                 </tr>
               ))}
@@ -202,7 +213,8 @@ export function ManageSystemsPage() {
                           return `Utworzono kopię „${fork.name}”.`;
                         })}
                       >
-                        Kopiuj do siebie
+                        <PlusIcon />
+                        <span>Kopiuj do siebie</span>
                       </button>
                     </div></td>
                   </tr>

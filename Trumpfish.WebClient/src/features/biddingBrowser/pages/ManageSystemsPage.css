@@ -142,11 +142,6 @@ table.systems .actions .accent:hover:not(:disabled) {
   background: rgb(255 181 21 / 16%);
 }
 
-table.systems .actions .danger:hover:not(:disabled) {
-  color: var(--hearts);
-  border-color: var(--hearts);
-  background: rgb(235 39 39 / 12%);
-}
 
 table.systems input.rename {
   width: 100%;

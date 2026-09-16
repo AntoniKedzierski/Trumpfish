@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import type { ToolDescriptor } from '@/tools/toolsRegistry';
 import { tools } from '@/tools/toolsRegistry';
 import './HomePage.css';
 
@@ -14,21 +15,38 @@ export function HomePage() {
         </div>
       </header>
 
+      {/*
+        * A card is named and drawn exactly as the drawer names and draws the same tool. The cards used to carry longer
+        * titles of their own, which left the user matching "Ćwiczenie licytacji" on this page against "Z botami" in the
+        * navigation and working out that they are one tool.
+        */}
       <section className="tool-grid">
         {tools.map((tool) =>
           tool.enabled ? (
             <Link key={tool.id} to={tool.route} className="tool-card">
-              <h2>{tool.title}</h2>
-              <p>{tool.description}</p>
+              <ToolFace tool={tool} />
             </Link>
           ) : (
             <div key={tool.id} className="tool-card disabled">
-              <h2>{tool.title}</h2>
-              <p>{tool.description}</p>
+              <ToolFace tool={tool} />
             </div>
           ),
         )}
       </section>
     </div>
+  );
+}
+
+function ToolFace({ tool }: { tool: ToolDescriptor }) {
+  const Glyph = tool.icon;
+
+  return (
+    <>
+      <h2>
+        <Glyph />
+        <span>{tool.navLabel}</span>
+      </h2>
+      <p>{tool.description}</p>
+    </>
   );
 }

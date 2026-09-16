@@ -375,3 +375,6 @@ FodyWeavers.xsd
 # Local Docker Compose overrides, which are a developer's own and never the deployment's.
 compose.override.yaml
 compose.override.yml
+
+# Rozdania zapisane lokalnie w trybie DEBUG. Prywatne dane dewelopera, nie seedy.
+Trumpfish.Server/LocalDeals/

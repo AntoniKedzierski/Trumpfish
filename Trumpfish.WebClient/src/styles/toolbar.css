@@ -1,0 +1,94 @@
+/*
+ * The tool bar, defined once for the whole application. `components/ToolBar.tsx` is the only thing that draws one.
+ *
+ * What a bar is: one row across the top of a view, pinned there while the view scrolls underneath, holding the commands
+ * that belong to the view on the left and its state on the right. Every control on it is a normal button (see the sizes
+ * in `theme.css`), and it may carry at most one accented one.
+ */
+.toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-3);
+  /* One line, always. What does not fit sheds its words, not its row - see the narrow rule at the foot of this file. */
+  flex-wrap: nowrap;
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-base);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.toolbar-commands {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* What the view is doing, at the far end from what it can be told to do. */
+.toolbar-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Draws the line between one kind of command and the next. */
+.toolbar-separator {
+  flex: none;
+  width: 1px;
+  height: var(--space-5);
+  background: var(--border-subtle);
+}
+
+/*
+ * The one command that does the work. Never more than one to a view: two accents are no accent, and the eye has to be
+ * told where to go rather than given a choice of places.
+ */
+.toolbar .primary {
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.toolbar .primary:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+@media (max-width: 720px) {
+  .toolbar {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+/*
+ * Down to marks.
+ *
+ * A phone has room for five or six labelled commands and no more, and a bar that wraps costs the view a line of height
+ * on every screen. The words are taken out of the flow rather than hidden, so the buttons keep their names for a screen
+ * reader and for the pointer that hovers one.
+ */
+@media (max-width: 560px) {
+  .toolbar-commands button > span:not(.ui-badge),
+  .toolbar-commands .ui-popup-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+    clip-path: inset(50%);
+  }
+
+  .toolbar-commands button {
+    padding: 0 var(--space-2);
+  }
+}

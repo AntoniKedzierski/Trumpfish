@@ -1,0 +1,327 @@
+/*
+ * WYSOKOŚĆ, PADDING, FONT-SIZE, GAP I ALIGN-ITEMS KAŻDEJ KLIKALNEJ RZECZY W APLIKACJI SĄ W TYM PLIKU. Nigdzie indziej.
+ *
+ * Powód jest w `.claude/DESIGN.md`, rozdział 6: dopóki te pięć własności było rozsypane po plikach widoków, każda
+ * zasada ("panel nie jest większy niż wyzwalacz", "wiersz listy wyrównuje się do lewej") obowiązywała tylko tam, gdzie
+ * ktoś o niej pamiętał. Tu jest jedno miejsce, więc reguła albo obowiązuje wszędzie, albo nie ma jej wcale.
+ *
+ * Pliki widoków i feature'ów ustawiają wyłącznie kolor, tło, obramowanie, promień i położenie.
+ */
+
+/* ── 1. Przyciski: trzy rozmiary, dwa style ─────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Rozmiar decyduje o wysokości i o czcionce razem - dwa przyciski tego samego rozmiaru nie mogą być złożone różnym
+ * stopniem pisma. Który rozmiar gdzie stoi, mówi tabela w rozdziale 2 DESIGN.md.
+ */
+button,
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--button-normal);
+  padding: 0 var(--space-3);
+  font-family: inherit;
+  font-size: var(--button-normal-text);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+button.large,
+.ui-button.large {
+  height: var(--button-large);
+  padding: 0 var(--space-4);
+  font-size: var(--button-large-text);
+}
+
+button.small,
+.ui-button.small {
+  height: var(--button-small);
+  padding: 0 var(--space-3);
+  font-size: var(--button-small-text);
+}
+
+/* Sam znak, bez słowa: kwadrat, żeby okrągłe kontrolki wychodziły okrągłe, a nie owalne. */
+button.icon-only,
+.ui-button.icon-only {
+  width: var(--button-normal);
+  padding: 0;
+}
+
+button.icon-only.large,
+.ui-button.icon-only.large {
+  width: var(--button-large);
+}
+
+button.icon-only.small,
+.ui-button.icon-only.small {
+  width: var(--button-small);
+}
+
+/* Znak nigdy się nie rozciąga i nigdy nie przerasta słowa, przy którym stoi. */
+button .icon,
+.ui-button .icon {
+  flex: none;
+  font-size: 1.15em;
+}
+
+/* ── 2. Wiersz listy: szuflada, menu komend, lista systemów ─────────────────────────────────────────────────────── */
+
+/*
+ * Wiersz listy to pozycja spisu, a nie przycisk w rzędzie przycisków: zaczyna się przy lewej krawędzi swoim znakiem, a
+ * słowa układają się w kolumnę w dół panelu.
+ *
+ * `justify-content` jest tu napisane wprost, bo reguła przycisku wyżej centruje wszystko, co dostanie - i to ona
+ * wyśrodkowała "Wyloguj" w szufladzie, kiedy sąsiednie wiersze były linkami i tej reguły nie widziały. Jedna klasa dla
+ * linku i dla przycisku znaczy, że to się nie może powtórzyć.
+ */
+.ui-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  height: var(--button-normal);
+  padding: 0 var(--space-3);
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ui-row.large {
+  height: var(--button-large);
+  font-size: var(--button-large-text);
+}
+
+.ui-row.small {
+  height: var(--button-small);
+  gap: var(--space-2);
+  font-size: inherit;
+}
+
+.ui-row .icon {
+  flex: none;
+  font-size: 1.15em;
+}
+
+/* Co wiersz ma najważniejszego, bierze wolne miejsce; reszta stoi przy prawej krawędzi. */
+.ui-row-grow {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+/* ── 3. Pola ───────────────────────────────────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Pole ma wysokość zwykłego przycisku. Pole niższe albo wyższe od przycisku obok czyta się jak inny rodzaj kontrolki,
+ * a w jednym wierszu formularza stoją zwykle oba.
+ */
+input,
+select,
+textarea,
+.ui-field-box {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 400;
+}
+
+/*
+ * JEDNA REGUŁA NA WYSOKOŚĆ WSZYSTKIEGO, W CO SIĘ WPISUJE ALBO Z CZEGO SIĘ WYBIERA.
+ *
+ * Pole tekstowe, pole liczbowe, lista wyboru i wybór wtrącenia stoją obok siebie w edytorze odzywki, więc muszą mieć
+ * jedną wysokość - a dopóki każde z nich brało ją z osobnej reguły, "jedną wysokość" znaczyło "dwie reguły, które ktoś
+ * musi pamiętać, żeby zmieniać razem". Tu jest jedna.
+ *
+ * `min-height` jest po to, żeby pole włożone w kolumnę flex nie dało się ścisnąć poniżej tej wysokości.
+ */
+input:not([type='checkbox']):not([type='radio']),
+select,
+.ui-combo-field,
+.ui-field-box {
+  height: var(--bar-control);
+  min-height: var(--bar-control);
+  padding: 0 var(--space-3);
+}
+
+textarea {
+  padding: var(--space-2) var(--space-3);
+  line-height: 1.5;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Etykieta stoi nad kontrolką - nigdy obok niej (DESIGN.md, rozdział 7). */
+.ui-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.ui-field-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: inherit;
+  color: var(--text-muted);
+}
+
+.ui-field-hint {
+  font-size: inherit;
+  color: var(--text-muted);
+}
+
+/* Cały wiersz jest celem, nie sam kwadracik. */
+.ui-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--button-small);
+  padding: 0 var(--space-1);
+  font-size: inherit;
+  cursor: pointer;
+}
+
+/* ── 4. Chipy ──────────────────────────────────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Pigułka z wartością: kontrakt, wynik, komenda "Analizuj". Wyrównanie do środka, bo chip niesie znak - a znak SVG nie
+ * ma linii pisma i przy `align-items: baseline` zwisa pod tekstem. Linia pisma jest zarezerwowana dla wierszy, w
+ * których stoi sam tekst ze znakiem koloru, i nie wolno jej łączyć ze stałą wysokością (DESIGN.md, rozdział 3).
+ */
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--button-normal);
+  padding: 0 var(--space-3);
+  font-size: var(--button-normal-text);
+  white-space: nowrap;
+}
+
+.ui-chip.small {
+  height: var(--button-small);
+  font-size: var(--button-small-text);
+}
+
+/* Znak koloru w chipie wraca na linię pisma sam z siebie, bo stoi w swoim pudełku - patrz `suits.css`. */
+.ui-chip .icon {
+  flex: none;
+  font-size: 1.15em;
+}
+
+/* ── 5. ComboBox ───────────────────────────────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Pole listy wyboru jest takim samym pudełkiem jak `input`, łącznie z wielkością pisma w środku. Przycisk niesie własny
+ * padding przeglądarki i rozmiar pisma z body, więc obok pola stał kilka pikseli wyżej - a kontrolka, która nie ma
+ * wysokości pola, czyta się jak inny rodzaj kontrolki.
+ */
+.ui-combo-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+.ui-combo-chevron {
+  font-size: 1.15em;
+}
+
+/* Pozycja listy wartości: bez znaku (to nie komenda), za to z miejscem na ptaszek przy wybranej. */
+.ui-combo-option {
+  padding: var(--space-2) var(--space-3) var(--space-2) 26px;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+/* ── 6. Zakładka nagłówka ──────────────────────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Zakładka narzędzia i nazwa produktu obok niej. To samo, co przycisk `large` - nagłówek i szuflada mają jeden rozmiar
+ * i jeden stopień pisma, bez wyjątków. Barwy są w `ToolNav.css` i `AppLayout.css`.
+ */
+.ui-tab,
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--button-large);
+  font-size: var(--button-large-text);
+  white-space: nowrap;
+}
+
+.ui-tab {
+  padding: 0 var(--space-4);
+}
+
+/* Sam znak niesie kontrolkę, więc jest rysowany większy niż znak stojący przy słowie. */
+button.icon-only .icon,
+.ui-button.icon-only .icon {
+  font-size: 1.4em;
+}
+
+/*
+ * Wiersz, który może się złamać na dwie linie: długa wiadomość walidatora. Stała wysokość ustępuje minimalnej, reszta
+ * zostaje - a przede wszystkim zostaje wyrównanie do lewej, bo to ono ratuje taki wiersz przed wyśrodkowaniem przez
+ * globalną regułę przycisku.
+ */
+.ui-row.wrap {
+  flex-wrap: wrap;
+  height: auto;
+  min-height: var(--button-normal);
+  padding: var(--space-2) var(--space-3);
+  white-space: normal;
+}
+
+/* ── 7. Wszystko w popupie jest małe ───────────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Rozdział 5 DESIGN.md mówi: w popupie wszystkie przyciski są `small`. To dotyczy również pól i list wyboru - pole
+ * wysokości 34 px obok przycisku wysokości 30 px w tym samym wierszu to dokładnie ta niespójność, o którą chodzi.
+ *
+ * Zapisane raz, tutaj, zamiast przy każdym popupie z osobna.
+ */
+.ui-panel .ui-row {
+  height: var(--button-small);
+  min-height: var(--button-small);
+  gap: var(--space-2);
+}
+
+.ui-panel input:not([type='checkbox']):not([type='radio']),
+.ui-panel select,
+.ui-panel .ui-combo-field {
+  height: var(--button-small);
+  min-height: var(--button-small);
+  font-size: var(--text-xs);
+}
+
+.ui-panel .ui-combo-option {
+  padding: var(--space-1) var(--space-2) var(--space-1) 22px;
+  font-size: var(--text-xs);
+}
+
+/* Wyzwalacz popupu ubrany w wiersz listy (znajomi w szufladzie): słowo bierze wolne miejsce, strzałka stoi przy krawędzi. */
+.ui-row .ui-popup-label {
+  flex: 1;
+  text-align: left;
+}

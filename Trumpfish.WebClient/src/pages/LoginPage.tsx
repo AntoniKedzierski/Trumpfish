@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/useAuth';
+import { LogInIcon } from '@/components/icons';
 import './LoginPage.css';
 
 type Mode = 'login' | 'register';
@@ -80,7 +81,8 @@ export function LoginPage() {
         {error !== null && <p className="login-error">{error}</p>}
 
         <button type="submit" className="primary" disabled={busy}>
-          {busy ? 'Chwileczkę…' : mode === 'login' ? 'Zaloguj się' : 'Załóż konto'}
+          <LogInIcon />
+          <span>{busy ? 'Chwileczkę…' : mode === 'login' ? 'Zaloguj się' : 'Załóż konto'}</span>
         </button>
 
         <p className="login-switch">

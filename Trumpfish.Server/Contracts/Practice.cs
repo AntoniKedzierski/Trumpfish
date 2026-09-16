@@ -53,6 +53,7 @@ public record PracticeState(
     string State,
     int DealIndex,
     PlayerPosition Dealer,
+    Vulnerability Vulnerability,
     PlayerPosition Player,
     SimulationHand PlayerHand,
     IReadOnlyList<SimulationBid> Bidding,

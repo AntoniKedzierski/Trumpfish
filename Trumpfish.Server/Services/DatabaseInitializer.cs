@@ -42,6 +42,7 @@ public sealed class DatabaseInitializer : IHostedService {
         var admin = await EnsureAdminAsync(provider, logger, cancellationToken);
         await RestoreCarriedOverAsync(provider, db, admin, carriedOver, logger, cancellationToken);
         await ApplySeedFilesAsync(provider, logger, cancellationToken);
+        await RestoreSavedDealsAsync(provider, db, logger, cancellationToken);
     }
 
 
@@ -60,6 +61,34 @@ public sealed class DatabaseInitializer : IHostedService {
         var carriedOver = await provider.GetRequiredService<LegacyDatabaseUpgrader>().CaptureAndDropLegacyDataAsync(cancellationToken);
         await db.Database.MigrateAsync(cancellationToken);
         return carriedOver;
+    }
+
+
+    /// <summary>
+    /// Puts back the deals kept on disk while working against the throwaway database. Does nothing at all on a deployed
+    /// server: there the archive reports itself unavailable and hands back an empty list.
+    /// </summary>
+    private static async Task RestoreSavedDealsAsync(IServiceProvider provider, TrumpfishDbContext db, ILogger logger, CancellationToken cancellationToken) {
+        var archive = provider.GetRequiredService<ISavedDealArchive>();
+        if (!archive.IsAvailable) {
+            return;
+        }
+
+        var users = await db.Users.ToDictionaryAsync(user => user.Username, user => user.Id, StringComparer.OrdinalIgnoreCase, cancellationToken);
+        var kept = await archive.RestoreAsync(users, cancellationToken);
+        if (kept.Count == 0) {
+            return;
+        }
+
+        var known = await db.SavedDeals.Select(deal => deal.Id).ToListAsync(cancellationToken);
+        var missing = kept.Where(deal => !known.Contains(deal.Id)).ToList();
+        if (missing.Count == 0) {
+            return;
+        }
+
+        db.SavedDeals.AddRange(missing);
+        await db.SaveChangesAsync(cancellationToken);
+        logger.LogInformation("Restored {Count} saved deal(s) from the local archive.", missing.Count);
     }
 
 

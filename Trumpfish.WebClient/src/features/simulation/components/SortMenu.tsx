@@ -1,5 +1,5 @@
 import { SortIcon } from '@/components/icons';
-import { Popover } from '@/components/Popover';
+import { Popup } from '@/ui';
 import type { SortDirection, SortKey } from '../sorting';
 import { sortDirectionLabels, sortKeyLabels } from '../sorting';
 
@@ -22,24 +22,24 @@ export function SortMenu({
   onDirection: (direction: SortDirection) => void;
 }) {
   return (
-    <Popover label="Sortowanie" icon={<SortIcon />}>
-      <div className="popover-section">
+    <Popup label="Sortowanie" icon={SortIcon}>
+      <div className="ui-panel-section">
         {(Object.keys(sortKeyLabels) as SortKey[]).map((key) => (
-          <label key={key} className="popover-option">
+          <label key={key} className="ui-check">
             <input type="radio" name="sort-key" checked={sortKey === key} onChange={() => onSortKey(key)} />
             <span>{sortKeyLabels[key]}</span>
           </label>
         ))}
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {(Object.keys(sortDirectionLabels) as SortDirection[]).map((key) => (
-          <label key={key} className="popover-option">
+          <label key={key} className="ui-check">
             <input type="radio" name="sort-direction" checked={direction === key} onChange={() => onDirection(key)} />
             <span>{sortDirectionLabels[key]}</span>
           </label>
         ))}
       </div>
-    </Popover>
+    </Popup>
   );
 }

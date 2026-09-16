@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { BiddingSystemSummary } from '@/api/models';
-import { CheckIcon, LayersIcon } from '@/components/icons';
-import { Popover } from '@/components/Popover';
+import { CheckIcon, DownloadIcon, LayersIcon, PlusIcon, UploadIcon } from '@/components/icons';
+import { Popup } from '@/ui';
 import { SystemPicker } from '@/components/SystemPicker';
 import './SystemMenu.css';
 
@@ -34,6 +34,7 @@ interface SystemMenuProps {
  */
 export function SystemMenu(props: SystemMenuProps) {
   const [name, setName] = useState('');
+  const file = useRef<HTMLInputElement>(null);
 
   const create = () => {
     const trimmed = name.trim();
@@ -45,9 +46,12 @@ export function SystemMenu(props: SystemMenuProps) {
     setName('');
   };
 
+  // The trigger names what is open. Until something has been opened there is no name to give, and it says what it is instead.
+  const label = props.systemId === null ? 'System' : props.systemName;
+
   return (
-    <Popover label="System" icon={<LayersIcon />} scrollBody={false}>
-      <div className="popover-section">
+    <Popup label={label} icon={LayersIcon} scroll={false}>
+      <div className="ui-panel-section">
         <p className="system-current">
           <span>Edytujesz</span>
           <strong title={props.systemName}>{props.systemName}</strong>
@@ -63,9 +67,9 @@ export function SystemMenu(props: SystemMenuProps) {
         />
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
         {/* Enter submits, because the field and the button beside it are one gesture rather than two. */}
-        <label className="popover-field">
+        <label className="ui-field">
           <span>Nowy system</span>
           <input
             type="text"
@@ -83,40 +87,50 @@ export function SystemMenu(props: SystemMenuProps) {
         </label>
 
         <div className="system-commands">
-          <button type="button" onClick={create} disabled={props.busy || name.trim() === ''}>
-            Utwórz
+          <button type="button" className="small" onClick={create} disabled={props.busy || name.trim() === ''}>
+            <PlusIcon />
+            <span>Utwórz</span>
           </button>
         </div>
       </div>
 
-      <div className="popover-section">
+      <div className="ui-panel-section">
+        {/* Three commands of one size, in one row. A label wearing a button's clothes was the odd one out of the three. */}
         <div className="system-commands">
-          <button type="button" onClick={props.onValidate} disabled={props.busy}>
+          <button type="button" className="small" onClick={props.onValidate} disabled={props.busy}>
             <CheckIcon />
             <span>Sprawdź</span>
           </button>
 
-          <button type="button" onClick={props.onExport}>Eksportuj JSON</button>
+          <button type="button" className="small" onClick={props.onExport}>
+            <DownloadIcon />
+            <span>Eksportuj JSON</span>
+          </button>
 
-          {/* A file input cannot be driven from a button without a hidden control and a ref, so it stays a label. */}
-          <label className="system-import">
-            Importuj JSON
-            <input
-              type="file"
-              accept="application/json,.json"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  props.onImport(file);
-                }
+          <button type="button" className="small" onClick={() => file.current?.click()}>
+            <UploadIcon />
+            <span>Importuj JSON</span>
+          </button>
 
-                // Cleared so that importing the same file twice in a row still fires a change.
-                event.target.value = '';
-              }}
-            />
-          </label>
+          {/* The control that actually opens the file dialog. Out of the way but in the accessibility tree, so it keeps its name. */}
+          <input
+            ref={file}
+            type="file"
+            className="sr-only"
+            accept="application/json,.json"
+            aria-label="Wybierz plik JSON do importu"
+            onChange={(event) => {
+              const chosen = event.target.files?.[0];
+              if (chosen) {
+                props.onImport(chosen);
+              }
+
+              // Cleared so that importing the same file twice in a row still fires a change.
+              event.target.value = '';
+            }}
+          />
         </div>
       </div>
-    </Popover>
+    </Popup>
   );
 }

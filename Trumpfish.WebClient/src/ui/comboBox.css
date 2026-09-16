@@ -5,23 +5,14 @@
  * then ran to the very edge of the box, the fade meant to mark an overflow was showing on every value, so every value
  * looked cut off. Sized by its container instead, the fade appears only when there is really something past the edge.
  */
-.select {
+.ui-combo {
   position: relative;
   display: block;
   width: 100%;
   min-width: 0;
 }
 
-.select-field {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  text-align: left;
-}
-
-.select-field.open {
+.ui-combo-field.open {
   border-color: var(--accent);
   background: var(--surface-hover);
   box-shadow: 0 0 0 3px var(--accent-soft);
@@ -31,8 +22,8 @@
  * Long options are cut rather than allowed to set the width. The cut is a short fade at the right edge instead of an
  * ellipsis: the text runs out of room, which is the truth, rather than stopping at a dotted full stop.
  */
-.select-value,
-.select-option > span {
+.ui-combo-value,
+.ui-combo-option > span {
   display: block;
   flex: 1;
   min-width: 0;
@@ -42,13 +33,12 @@
   mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
 }
 
-.select-value.placeholder {
+.ui-combo-value.placeholder {
   color: var(--text-muted);
 }
 
-.select-chevron {
+.ui-combo-chevron {
   flex: none;
-  font-size: var(--text-base);
   color: var(--text-muted);
   transform: rotate(90deg);
   transition:
@@ -56,16 +46,16 @@
     color var(--duration-normal) var(--ease-out);
 }
 
-.select-field:hover:not(:disabled) .select-chevron,
-.select-field.open .select-chevron {
+.ui-combo-field:hover:not(:disabled) .ui-combo-chevron,
+.ui-combo-field.open .ui-combo-chevron {
   color: var(--accent);
 }
 
-.select-field.open .select-chevron {
+.ui-combo-field.open .ui-combo-chevron {
   transform: rotate(-90deg);
 }
 
-.select-list {
+.ui-combo-list {
   position: absolute;
   z-index: 20;
   top: calc(100% + 6px);
@@ -82,17 +72,17 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   transform-origin: top center;
-  animation: select-open var(--duration-normal) var(--ease-out) both;
+  animation: ui-combo-open var(--duration-normal) var(--ease-out) both;
 }
 
-.select-list.drop-up {
+.ui-combo-list.drop-up {
   top: auto;
   bottom: calc(100% + 6px);
   transform-origin: bottom center;
-  animation-name: select-open-up;
+  animation-name: ui-combo-open-up;
 }
 
-@keyframes select-open {
+@keyframes ui-combo-open {
   from {
     opacity: 0;
     transform: translateY(-6px) scaleY(0.94);
@@ -103,7 +93,7 @@
   }
 }
 
-@keyframes select-open-up {
+@keyframes ui-combo-open-up {
   from {
     opacity: 0;
     transform: translateY(6px) scaleY(0.94);
@@ -114,28 +104,26 @@
   }
 }
 
-.select-option {
+.ui-combo-option {
   position: relative;
-  padding: 8px 12px 8px 26px;
   border-radius: var(--radius-sm);
-  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out);
 }
 
-.select-option.active {
+.ui-combo-option.active {
   background: var(--surface-hover);
   color: var(--pearl-aqua);
 }
 
-.select-option.selected {
+.ui-combo-option.selected {
   color: var(--accent);
 }
 
 /* Checkmark for the committed value, drawn in CSS so options stay a single element. */
-.select-option.selected::before {
+.ui-combo-option.selected::before {
   content: '';
   position: absolute;
   left: 10px;

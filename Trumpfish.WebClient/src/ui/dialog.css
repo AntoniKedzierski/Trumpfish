@@ -1,0 +1,82 @@
+/*
+ * Okno modalne, jedno dla całej aplikacji. Było sześć własnych: zapis rozdania, udostępnienie, dwa potwierdzenia
+ * usunięcia, niezapisane zmiany i wyjście od stołu - każde z własnym tłem, własnym promieniem i własnym rzędem
+ * przycisków. Rozmiary kontrolek w środku pochodzą z `controls.css` jak wszędzie.
+ */
+
+.ui-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: rgb(0 0 0 / 55%);
+  animation: chip-in var(--duration-fast) var(--ease-out) both;
+}
+
+.ui-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 460px;
+  max-height: 88dvh;
+  overflow: auto;
+  padding: var(--space-5);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: view-enter var(--duration-normal) var(--ease-out) both;
+}
+
+.ui-dialog.wide {
+  max-width: 620px;
+}
+
+.ui-dialog-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ui-dialog-text {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.ui-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+}
+
+/* Komendy przy prawej krawędzi, potwierdzenie jako ostatnie - tam, gdzie wzrok kończy czytać pytanie. */
+.ui-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.ui-dialog-actions .primary {
+  color: var(--onyx);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ui-dialog-actions .primary:hover:not(:disabled) {
+  color: var(--onyx);
+  background: var(--pearl-aqua);
+  border-color: var(--pearl-aqua);
+}
+
+.ui-dialog-error {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--hearts);
+}

@@ -25,6 +25,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public NumberRange? HeartsCardRange { get; set; }
 
     public NumberRange? DiamondsCardRange { get; set; }
+
     public NumberRange? ClubsCardRange { get; set; }
     public decimal? SpadesStops { get; set; }
 
@@ -39,6 +40,13 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public int? Aces { get; set; }
 
     public int? Kings { get; set; }
+
+    /// <summary>
+    /// Per-card requirements. A missing card is unconstrained, <see langword="true"/> requires it and
+    /// <see langword="false"/> excludes it.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonConverter(typeof(FigureRequirementsJsonConverter))]
+    public Dictionary<Card, bool>? Figures { get; set; }
 
     public bool OpenerBid { get; set; }
 
@@ -114,7 +122,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
 
     public bool Matches(Hand hand) {
-        return hand.Matches(PointsRange, SpadesCardRange, HeartsCardRange, DiamondsCardRange, ClubsCardRange, Aces, Kings);
+        return hand.Matches(PointsRange, SpadesCardRange, HeartsCardRange, DiamondsCardRange, ClubsCardRange, Aces, Kings, Figures);
     }
 
 
