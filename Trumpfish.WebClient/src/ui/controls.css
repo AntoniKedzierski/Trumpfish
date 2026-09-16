@@ -193,7 +193,7 @@ input[type='radio'] {
   align-items: center;
   gap: var(--space-2);
   min-height: var(--button-small);
-  padding: 0 var(--space-1);
+  padding: 0;
   font-size: inherit;
   cursor: pointer;
 }
@@ -324,4 +324,12 @@ button.icon-only .icon,
 .ui-row .ui-popup-label {
   flex: 1;
   text-align: left;
+}
+
+/*
+ * Słowo na wyzwalaczu popupu ma górną granicę. Nic w pasku się nie ściska (patrz `toolbar.css`), więc nazwa systemu
+ * dłuższa niż zdanie rozepchałaby pasek zamiast się przyciąć.
+ */
+.ui-popup-label {
+  max-width: 16em;
 }

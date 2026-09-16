@@ -60,7 +60,10 @@
   background: var(--amber-flame);
 }
 
-/* Szerszy niż panel komend: w każdym wierszu stoi nazwa i przy niej jedna albo dwie komendy. */
-.friends-panel {
+/*
+ * Szerszy niż panel komend: w każdym wierszu stoi nazwa i przy niej jedna albo dwie komendy. Przez `.ui-panel`, bo
+ * wariant panelu musi mieć moc dwóch klas - patrz komentarz w `ShortcutsHelp.css`. W szufladzie szerokość daje szuflada.
+ */
+.ui-panel.friends-panel:not(.inline) {
   min-width: 320px;
 }

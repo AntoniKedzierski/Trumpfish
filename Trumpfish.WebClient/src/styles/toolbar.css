@@ -68,27 +68,35 @@
 }
 
 /*
- * Down to marks.
+ * Do samych znaków.
  *
- * A phone has room for five or six labelled commands and no more, and a bar that wraps costs the view a line of height
- * on every screen. The words are taken out of the flow rather than hidden, so the buttons keep their names for a screen
- * reader and for the pointer that hovers one.
+ * Nie progiem szerokości ekranu, tylko wtedy, kiedy komendy naprawdę przestają się mieścić: `ToolBar` mierzy je i
+ * dokłada `icons-only`. Próg mówił "poniżej 560 px chowaj słowa" także na telefonie, na którym wszystko się mieściło,
+ * i zabierał nazwę systemu z jedynej kontrolki, która ją pokazuje.
+ *
+ * Słowa są wyjmowane z układu, a nie ukrywane, więc przyciski zachowują nazwy dla czytnika ekranu i dla wskaźnika.
  */
-@media (max-width: 560px) {
-  .toolbar-commands button > span:not(.ui-badge),
-  .toolbar-commands .ui-popup-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    border: 0;
-    clip-path: inset(50%);
-  }
+.toolbar.icons-only .toolbar-commands button > span:not(.ui-badge),
+.toolbar.icons-only .toolbar-commands .ui-popup-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
 
-  .toolbar-commands button {
-    padding: 0 var(--space-2);
-  }
+.toolbar.icons-only .toolbar-commands button {
+  padding: 0 var(--space-2);
+}
+
+/*
+ * Nic w pasku się nie ściska. Ściśnięty przycisk jest nie do zmierzenia - jego szerokość jest już odpowiedzią na brak
+ * miejsca - a wtedy pomiar wyżej nigdy by nie stwierdził, że zabrakło miejsca.
+ */
+.toolbar-commands > * {
+  flex: none;
 }

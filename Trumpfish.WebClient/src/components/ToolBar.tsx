@@ -1,23 +1,30 @@
+import { useRef } from 'react';
+import { useFitsOnOneRow } from './useFitsOnOneRow';
 import '@/styles/toolbar.css';
 
 /**
- * The one bar every tool view is driven from: what can be done on the left, what is going on on the right.
+ * Jedyny pasek, z którego steruje się widokiem narzędzia: co można zrobić po lewej, co się dzieje po prawej.
  */
 /*
- * There were three of these - the browser's commands, the simulator's settings, a strip of status above both - and they
- * drifted apart in height, in type size and in which end the buttons sat at. One component now, so a bar cannot be built
- * any other way: the commands start at the left edge like a sentence, and the state of the view - busy, an error, how
- * many rows came back - is read at the other end.
+ * Były trzy takie paski - komendy przeglądarki, ustawienia symulatora i pasek stanu nad obydwoma - i rozjechały się w
+ * wysokości, w stopniu pisma i w tym, przy której krawędzi stoją przyciski. Teraz jest jeden komponent, więc paska nie
+ * da się zbudować inaczej.
  *
- * The bar does not scroll: the view it belongs to is framed to the window (see `AppLayout.css`) and its content scrolls
- * underneath. On a narrow screen the commands keep their marks and drop their words rather than wrapping onto a second
- * row, which is what keeps this to one line on a phone.
+ * Pasek się nie przewija: widok, do którego należy, jest ramką na wysokość okna (patrz `AppLayout.css`), a przewija się
+ * jego zawartość pod nim.
+ *
+ * Kiedy komendy przestają się mieścić w jednej linijce, tracą słowa i zostają same znaki. **Mierzone, a nie zgadywane
+ * progiem szerokości ekranu**: próg to liczba udająca odpowiedź, i myli się w dniu, w którym ktoś doda przycisk albo
+ * nazwie system dłuższym słowem. Na telefonie, na którym wszystko się mieści, słowa zostają.
  */
 export function ToolBar({ children, status }: { children: React.ReactNode; status?: React.ReactNode }) {
+  const commands = useRef<HTMLDivElement>(null);
+  const fits = useFitsOnOneRow(commands);
+
   return (
-    <div className="toolbar">
-      <div className="toolbar-commands">{children}</div>
-      {/* Mounted whether or not it has anything to say: a live region announced into existence is one screen readers stay quiet about. */}
+    <div className={fits ? 'toolbar' : 'toolbar icons-only'}>
+      <div className="toolbar-commands" ref={commands}>{children}</div>
+      {/* Montowany niezależnie od tego, czy ma coś do powiedzenia: region ogłoszony dopiero przy pojawieniu się bywa przemilczany. */}
       <div className="toolbar-status" role="status">{status}</div>
     </div>
   );

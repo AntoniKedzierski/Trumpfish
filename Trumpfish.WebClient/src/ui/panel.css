@@ -123,9 +123,10 @@
   gap: var(--space-1);
 }
 
+/* Bez wcięcia po bokach - lewa krawędź ta sama co u pól i przycisków obok. */
 .ui-panel-note {
   margin: 0;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1) 0;
   color: var(--text-muted);
 }
 

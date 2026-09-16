@@ -4,7 +4,6 @@
   align-items: baseline;
   gap: var(--space-3);
   margin: 0 0 var(--space-2);
-  padding: 0 var(--space-2);
   font-size: inherit;
 }
 
@@ -24,11 +23,17 @@
 }
 
 /* Commands wrap rather than squeeze: a panel this narrow cannot hold three of them on one line. */
+/*
+ * Komendy zawijają się, zamiast ściskać: tak wąski panel nie zmieści trzech w jednej linijce.
+ *
+ * Bez własnego wcięcia po bokach. Margines panelu daje `.ui-panel-body`, a każdy element, który dokładał swój własny,
+ * ustawiał się o te kilka pikseli dalej niż pole nad nim - i kolumna lewych krawędzi wychodziła poszarpana.
+ */
 .system-commands {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  padding: var(--space-1) var(--space-2) 0;
+  padding-top: var(--space-1);
 }
 
 /* The commands are ordinary small buttons; their size and type come from `index.css` like every other button's. */
