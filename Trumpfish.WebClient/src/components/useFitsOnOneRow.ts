@@ -50,7 +50,11 @@ export function useFitsOnOneRow<T extends HTMLElement>(ref: RefObject<T | null>)
       needed.current =
         padding + Math.max(0, children.length - 1) * gap + children.reduce((total, child) => total + child.offsetWidth, 0);
 
-      if (needed.current > room) {
+      /*
+       * Luz jednego piksela. `offsetWidth` jest liczbą całkowitą zaokrąglaną w górę, a szerokości bywają ułamkowe -
+       * bez tego rząd kontrolek, który mieści się co do piksela, składa się sam z siebie.
+       */
+      if (needed.current > room + 1) {
         current.current = false;
         setFits(false);
       }
