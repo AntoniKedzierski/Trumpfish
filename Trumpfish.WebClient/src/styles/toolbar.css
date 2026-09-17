@@ -129,9 +129,12 @@
 
 /*
  * Jeden wyjątek, na samym dnie. Kiedy pasek oddał już wszystkie słowa, jakie mógł, a miejsca i tak brakuje, komenda,
- * która swojego słowa nie oddaje, skraca je zamiast rozpychać rząd - dalej i tak nie ma czego mierzyć, bo głębszego
- * stopnia nie ma. Cieniowaniem przy prawej krawędzi, tak samo jak wartość ComboBoksa (`ui/comboBox.css`): tekstowi
- * zabrakło miejsca, co jest prawdą, zamiast urywać go kropkami jak zdanie.
+ * która swojego słowa nie oddaje, pozwala je skrócić zamiast rozpychać rząd - dalej i tak nie ma czego mierzyć, bo
+ * głębszego stopnia nie ma.
+ *
+ * Tylko pozwolenie na ściśnięcie i nic więcej: samo skracanie robi `.ui-popup-label` w `ui/panel.css`, i robi je dopiero
+ * wtedy, gdy słowo naprawdę nie mieści się w kontrolce. Dołożone tu cieniowanie prawej krawędzi gasiło ostatnie litery
+ * także wtedy, gdy miejsca było pod dostatkiem - bo maska nie wie, czy coś wystaje poza krawędź, a wielokropek wie.
  */
 .toolbar.icons-only.shed-all > .toolbar-commands > .toolbar-keep {
   flex: 0 1 auto;
@@ -140,11 +143,4 @@
 
 .toolbar.icons-only.shed-all > .toolbar-commands > .toolbar-keep > .ui-popup-trigger {
   min-width: 0;
-}
-
-.toolbar.icons-only.shed-all > .toolbar-commands > .toolbar-keep .ui-popup-label {
-  min-width: 0;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
-  mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
 }

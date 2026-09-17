@@ -9,13 +9,15 @@ interface PaneSplitterProps {
   minOppositeWidth?: number;
   /** How far one arrow key press moves the divider. */
   step?: number;
+  /** Jak nazywa się to, czego szerokość ustawia uchwyt - dla czytnika ekranu. */
+  label?: string;
 }
 
 /**
  * Drag handle between the tree and the editor. It reports a width for the pane on the right, so dragging left widens the
  * editor at the tree's expense; the upper bound comes from the row it sits in, which keeps the tree usable at any window size.
  */
-export function PaneSplitter({ width, onWidthChange, minWidth = 300, minOppositeWidth = 320, step = 24 }: PaneSplitterProps) {
+export function PaneSplitter({ width, onWidthChange, minWidth = 300, minOppositeWidth = 320, step = 24, label = 'Szerokość edytora' }: PaneSplitterProps) {
   const [dragging, setDragging] = useState(false);
 
   const limitsFor = (handle: HTMLElement) => {
@@ -69,7 +71,7 @@ export function PaneSplitter({ width, onWidthChange, minWidth = 300, minOpposite
       className={`workspace-splitter${dragging ? ' dragging' : ''}`}
       role="separator"
       aria-orientation="vertical"
-      aria-label="Szerokość edytora"
+      aria-label={label}
       tabIndex={0}
       onPointerDown={beginDrag}
       onKeyDown={nudge}

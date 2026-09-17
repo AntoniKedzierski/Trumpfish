@@ -133,6 +133,13 @@
   --space-5: 24px;
   --space-6: 32px;
 
+  /*
+   * Podział widoku: sam uchwyt i cała kolumna, którą zajmuje - czyli odstęp między panelami po obu jego stronach.
+   * Jedna liczba, bo znają ją dwa widoki: przeglądarka systemów (drzewo i edytor) oraz analiza (system i rozdanie).
+   */
+  --splitter-handle: 6px;
+  --splitter-column: 20px;
+
   /* Shape, depth and motion tokens shared by every surface. */
   --radius-sm: 6px;
   --radius-md: 10px;

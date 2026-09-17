@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toNumber } from '@/api/models';
 import type { SavedDealSummary } from '@/api/models';
 import { listSavedDeals, listSharedDeals } from '@/api/savedDeals';
@@ -28,6 +28,9 @@ interface PickerRow {
  */
 export function DealPicker() {
   const navigate = useNavigate();
+  // Wybrane rozdanie wraca do tego samego układu, w jakim widok był przed wczytywaniem - podział jedzie razem z adresem.
+  const [search] = useSearchParams();
+  const split = search.get('split') === '1';
 
   const [source, setSource] = useState<DealSource>('mine');
   const [filters, setFilters] = useState<DealFilters>({ contract: '', tags: '' });
@@ -133,7 +136,7 @@ export function DealPicker() {
               key={row.key}
               deal={row.deal}
               extra={row.extra}
-              to={analyzerLink(row.deal.id)}
+              to={analyzerLink(row.deal.id, 'analysis', split)}
               actions={
                 <Button
                   iconOnly
@@ -141,7 +144,7 @@ export function DealPicker() {
                   className="deal-save"
                   title="Rozegraj licytację od nowa - widzisz tylko swoje karty"
                   aria-label="Rozegraj licytację od nowa"
-                  onClick={() => void navigate(analyzerLink(row.deal.id, 'replay'))}
+                  onClick={() => void navigate(analyzerLink(row.deal.id, 'replay', split))}
                 />
               }
             />

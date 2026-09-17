@@ -11,6 +11,8 @@ interface ToolbarProps {
   savedSystems: BiddingSystemSummary[];
   busy: boolean;
   dirty: boolean;
+  /** System przychodzi z widoku, w którym edytor stoi: menu systemu nie pozwala wtedy wybrać innego. */
+  lockedSystem?: boolean;
   canEditNode: boolean;
   onAdd: () => void;
   onDelete: () => void;
@@ -48,6 +50,7 @@ export function Toolbar(props: ToolbarProps) {
         systemId={systemId}
         savedSystems={savedSystems}
         busy={busy}
+        lockedSystem={props.lockedSystem}
         onLoad={props.onLoad}
         onCreate={props.onCreate}
         onValidate={props.onValidate}

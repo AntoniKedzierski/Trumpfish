@@ -351,3 +351,13 @@ export function RepeatIcon({ className }: { className?: string }) {
     </Icon>
   );
 }
+
+/** Prostokąt przecięty w pionie: widok podzielony na dwie kolumny. */
+export function SplitIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <rect x="3" y="4.5" width="18" height="15" rx="2.5" {...stroke} />
+      <path d="M13.5 4.5v15" {...stroke} />
+    </Icon>
+  );
+}

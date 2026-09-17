@@ -6,11 +6,85 @@
  * (`features/practice/pages/PracticePage.css`), więc tutaj stoi tylko to, czego nie ma nigdzie indziej.
  */
 .deal-analyzer {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: 0;
   animation: view-enter var(--duration-slow) var(--ease-out) both;
+}
+
+/*
+ * Lista rozdań przykrywa widok, zamiast go zastępować.
+ *
+ * Pod spodem zostaje układ, do którego się wraca - razem z edytorem systemu i z tym, co jest w nim napisane. Odmontowany
+ * edytor wróciłby po wybraniu rozdania z serwera, czyli bez niezapisanych zmian.
+ */
+.analyzer-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--surface-base);
+}
+
+/*
+ * Podzielony widok: edytor systemu po lewej, analiza po prawej, splitter między nimi.
+ *
+ * Splitter jest jednym uchwytem na całą wysokość, a każda kolumna nosi swój pasek u góry - paski są tej samej wysokości,
+ * więc czyta się to jako jeden pasek przecięty w tym samym miejscu, co widok. Szerokość prawej kolumny podaje widok
+ * stylem, tak samo jak edytor odzywek w przeglądarce systemów.
+ */
+.analyzer-split {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+
+/*
+ * Odstęp przez splitter jest dokładnie tym, czym jest między drzewem a edytorem: samym splitterem. Panele nie dokładają
+ * do niego własnych wcięć od strony podziału, bo dwa wcięcia plus splitter to trzy odstępy zamiast jednego.
+ */
+.analyzer-split > .bidding-browser .workspace {
+  padding-right: 0;
+}
+
+.analyzer-split > .bidding-browser .validation {
+  margin-right: 0;
+}
+
+.analyzer-split .analyzer-main > .stack {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/*
+ * Pasek jest jeden, więc jego dolna kreska nie może mieć dziury w miejscu, którym biegnie splitter: lewa połowa paska
+ * podchodzi pod kolumnę splittera i domyka kreskę. Uchwyt jest nad nią i przezroczysty, dopóki nikt go nie dotyka.
+ */
+.analyzer-split > .bidding-browser > .toolbar {
+  margin-right: calc(var(--splitter-column) * -1);
+  padding-right: calc(var(--space-5) + var(--splitter-column));
+}
+
+/* Za wąskie okno: zostaje sama analiza. Edytor jest schowany, a nie usunięty - wraca z tym, co było w nim napisane. */
+.analyzer-split.only-analysis {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.analyzer-split.only-analysis > .bidding-browser,
+.analyzer-split.only-analysis > .workspace-splitter {
+  display: none;
+}
+
+.analysis-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
 /*
