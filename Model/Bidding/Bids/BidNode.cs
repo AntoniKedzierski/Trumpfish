@@ -124,6 +124,15 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public BidNode? GetGrandparent() => Parent?.Parent;
 
 
+    public List<BidNode> GetNextBids() => (
+        Continuation == null
+            ? NextBids
+            : NextBids.Concat(Continuation.NextBids)
+        )
+        .Where(e => !e.IsDisabled)
+        .ToList();
+
+
     public BidNode GetRoot() {
         if (Parent == null) {
             return this;

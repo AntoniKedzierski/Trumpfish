@@ -210,13 +210,7 @@ internal static class TableEngine {
         }
 
         var sequence = auction.GetPlayersSequence(player, out _).Where(entry => entry.Type != BidType.Pass).ToList();
-        var openings = OpeningsRoot(system);
-        var matches = openings == null ? [] : Match(system, openings, sequence);
-
-        if (matches.Count == 0) {
-            var defences = system.Defences();
-            matches = defences == null ? [] : Match(system, defences, sequence);
-        }
+        var matches = system.GetDescendants(sequence);
 
         bid.IsFromSystem = matches.Count > 0;
         bid.Explanation = matches.Count == 0
@@ -224,28 +218,6 @@ internal static class TableEngine {
             : string.Join("  ·  ", matches.Select(DescribeNode).Distinct());
 
         return matches;
-    }
-
-
-    /// <summary>Walks a root by the pair sequence and returns the nodes the last bid of it lands on - usually one, sometimes several.</summary>
-    private static List<BidNode> Match(BiddingSystem system, Root root, List<InterruptedBid> sequence) {
-        if (sequence.Count == 0) {
-            return [];
-        }
-
-        var children = root.Bids.Where(node => !node.IsDisabled).ToList();
-        for (var i = 0; i < sequence.Count - 1; i++) {
-            children = system.GetMatchingChildren(children, sequence[i]);
-        }
-
-        var last = sequence[^1];
-
-        return children
-            .Where(node => !node.IsDisabled && node.Equals((Bid)last))
-            .Where(node => last.Interruption == null
-                ? node.Interjection == null
-                : node.Interjection != null && node.Interjection.Equals(last.Interruption))
-            .ToList();
     }
 
 

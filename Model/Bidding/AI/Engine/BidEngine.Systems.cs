@@ -56,11 +56,11 @@ public partial class BidEngine {
     }
 
 
-    public List<BidNode> FindMatchingBids(Hand hand, BidNode head) => [.. head
-        .NextBids
-        .Where(e => !e.IsDisabled)
+    public List<BidNode> FindMatchingBids(Hand hand, BidNode head) => head
+        .GetNextBids()
         .Where(e => e.IsBidLegal(Auction))
-        .Where(e => e.Matches(hand))];
+        .Where(e => e.Matches(hand))
+        .ToList();
 
 
     public List<BidNode> FindNodesByHand(Hand hand, Root root) => [.. root

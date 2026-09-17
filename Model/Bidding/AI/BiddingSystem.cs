@@ -80,34 +80,16 @@ public class BiddingSystem {
         var children = Openings()!.Bids.Concat(Defences()!.Bids).ToList();
 
         for (int i = 0; i < bidSequence.Count - 1; ++i) {
-            children = [.. GetMatchingChildren(children, bidSequence[i])];
+            // Odzwyki pasujące na tym poziomie.
+            var matchingBids = GetMatchingBids(children, bidSequence[i]);
+
+            // Bierzemy ich dzieci.
+            children = GetChildren(matchingBids);
         }
 
         // Logika analogiczna do GetMatchingChildren.
         var lastBid = bidSequence.Last();
-        var candidates = children.Where(e => e.Equals(lastBid) && !e.IsDisabled).ToList();
-
-        // Brak wcięcia, zwracamy tylko odzywki bez przypisanego wcięcia.
-        if (lastBid.Interruption == null) {
-            return candidates.Where(e => e.Interjection == null).ToList();
-        }
-
-        // Odzywki dokładnie po tym wcięciu.
-        var interjectedBids = candidates
-            .Where(e => e.Interjection?.Equals(lastBid.Interruption) ?? false)
-            .ToList();
-
-        // Odzywki po innych wcięciach (debug).
-        var otherInterjectedBids = candidates
-            .Where(e => e.Interjection != null && !e.Interjection.Equals(lastBid.Interruption))
-            .ToList();
-
-        // Jeżeli nie ma odzywek po tym wcięciu, to zwracamy tak, jakby wcięcia nie było.
-        if (interjectedBids.Count == 0) {
-            return candidates.Where(e => e.Interjection == null).ToList();
-        }
-
-        return interjectedBids;
+        return GetMatchingBids(children, lastBid);
     }
 
 
@@ -137,33 +119,33 @@ public class BiddingSystem {
     }
 
 
-    public List<BidNode> GetMatchingChildren(List<BidNode> parentNodes, InterruptedBid nextBid) {
-        var candidates = parentNodes
-            .Where(e => e.Equals(nextBid))
+    public List<BidNode> GetMatchingBids(List<BidNode> bidCollection, InterruptedBid lookup) {
+        var matchingBids = bidCollection
+            .Where(e => e.Equals(lookup))
             .Where(e => !e.IsDisabled);
 
-        // Brak wcięcia, zwracamy tylko odzywki bez przypisanego wcięcia.
-        if (nextBid.Interruption == null) {
-            return candidates
-                .Where(e => e.Interjection == null)
-                .SelectMany(e => e.NextBids)
+        // Wyjęcie pasujących odzywek względem wcięcia.
+        if (lookup.Interruption == null) {
+            matchingBids = matchingBids.Where(e => e.Interjection == null);
+        }
+        else {
+            var interjectedBids = matchingBids
+                .Where(e => e.Interjection?.Equals(lookup.Interruption) ?? false)
                 .ToList();
+
+            matchingBids = interjectedBids.Count > 0
+                ? interjectedBids
+                : matchingBids.Where(e => e.Interjection == null);
         }
 
-        // Nastąpiło wcięcie.
-        // Jeżeli wśród kandydatów są jakiekowliek wcięcia, to zwracamy tylko je.
-        if (candidates.Any(e => e.Interjection != null)) {
-            return candidates
-                .Where(e => e.Interjection != null && e.Interjection.Equals(nextBid.Interruption))
-                .SelectMany(e => e.NextBids)
-                .ToList();
-        }
-
-        // Jeżeli nie, to wszystko.
-        return candidates
-            .SelectMany(e => e.NextBids)
-            .ToList();
+        // Zmaterializowanie listy pasujących odzywek.
+        return matchingBids.ToList();
     }
+
+
+    public List<BidNode> GetChildren(List<BidNode> parentNodes) => parentNodes
+        .SelectMany(e => e.GetNextBids())
+        .ToList();
 
 
     public IEnumerable<BidNode> GetOpenings(Bid bid) {

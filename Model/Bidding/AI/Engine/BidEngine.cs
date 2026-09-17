@@ -316,12 +316,6 @@ public partial class BidEngine : IBidInput {
             isForced = true;
         }
 
-        // Security check, sprawdzamy gałęzie do samej góry, czy nie ma tam GF.
-        if (!isForced) {
-            Goal = BiddingGoal.Gf;
-            isForced = AnyGfInAllBranches(branches.Keys);
-        }
-
         // Pobranie odpowiedzi z dostępnych gałęzi.
         var result = GetBidFromSystemBranches(hand, [.. branches.Keys]);
 
@@ -341,24 +335,6 @@ public partial class BidEngine : IBidInput {
 
     private BidNode? TrySlamConventions(Hand hand, Dictionary<BidNode, TableEvaluation> branches) {
         return null;
-    }
-
-
-    private bool AnyGfInAllBranches(IEnumerable<BidNode> branches) {
-        var allBranchesGf = true;
-        foreach (var branch in branches) {
-            var anyGf = false;
-            var bid = branch;
-
-            while (bid != null) {
-                anyGf |= bid.GameForcing;
-                bid = bid.Parent;
-            }
-
-            allBranchesGf &= anyGf;
-        }
-
-        return allBranchesGf;
     }
 
 }

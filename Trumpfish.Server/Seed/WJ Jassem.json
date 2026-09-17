@@ -7312,6 +7312,40 @@
               "isFromSystem": false
             },
             {
+              "nodeId": "2e95e704-bb63-4bfb-b772-bbc0473cfcd9",
+              "condition": "7\u002B PC, 4\u002B kiery, maksymalnie 4 piki.",
+              "pointsRange": {
+                "lower": 7
+              },
+              "spadesCardRange": {
+                "upper": 4
+              },
+              "heartsCardRange": {
+                "lower": 4
+              },
+              "openerBid": false,
+              "signOff": false,
+              "oneRoundForcing": false,
+              "gameForcing": false,
+              "automaticResponse": false,
+              "goToOpenings": false,
+              "isPreferred": false,
+              "alert": false,
+              "isDisabled": false,
+              "interjection": {
+                "type": "Submit",
+                "color": "Hearts",
+                "value": 1,
+                "isFromSystem": false
+              },
+              "nextBids": [],
+              "realizedGoal": "None",
+              "continuationNodeId": "bf4caf40-c255-4a6e-ae34-4275d8513872",
+              "type": "Double",
+              "color": "NoColor",
+              "isFromSystem": false
+            },
+            {
               "nodeId": "b0cb1dad-8f30-402c-88c6-4d9170388aa8",
               "condition": "0-6 PC, uk\u0142ad dowolny.",
               "pointsRange": {
@@ -17539,6 +17573,40 @@
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
+              "isFromSystem": false
+            },
+            {
+              "nodeId": "09931c39-0186-4f3b-860b-8633151dc3ea",
+              "condition": "7\u002B PC, 4\u002B kiery, maksymalnie 4 piki.",
+              "pointsRange": {
+                "lower": 7
+              },
+              "spadesCardRange": {
+                "upper": 4
+              },
+              "heartsCardRange": {
+                "lower": 4
+              },
+              "openerBid": false,
+              "signOff": false,
+              "oneRoundForcing": false,
+              "gameForcing": false,
+              "automaticResponse": false,
+              "goToOpenings": false,
+              "isPreferred": false,
+              "alert": false,
+              "isDisabled": false,
+              "interjection": {
+                "type": "Submit",
+                "color": "Hearts",
+                "value": 1,
+                "isFromSystem": false
+              },
+              "nextBids": [],
+              "realizedGoal": "None",
+              "continuationNodeId": "cdff6a6c-b411-4215-a969-6208b627eeb1",
+              "type": "Double",
+              "color": "NoColor",
               "isFromSystem": false
             },
             {

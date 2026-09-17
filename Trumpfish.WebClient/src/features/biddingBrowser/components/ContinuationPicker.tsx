@@ -41,7 +41,7 @@ export function ContinuationPicker({ system, node, pickable, onChange, onGoTo }:
         className="ui-combo-field continuation-field"
         aria-haspopup="dialog"
         disabled={!pickable}
-        title={pickable ? 'Wybierz odzywkę, do której przechodzi licytacja' : 'Przejście wybiera się na szerszym ekranie'}
+        title={pickable ? 'Wybierz odzywkę, do której przechodzi licytacja' : 'Brak możliwości edycji przejści na urządzeniu moblinym'}
         onClick={() => setOpen(true)}
       >
         <span className={`ui-combo-value${found === null ? ' placeholder' : ''}`}>
@@ -145,7 +145,7 @@ function ContinuationLabel({ system, target, node }: { system: EditableSystem; t
 
   return (
     <span className="continuation-label">
-      <span className="continuation-root">{system.roots[target.rootIndex]?.name}</span>
+      <span className="continuation-root">{system.roots[target.rootIndex]?.name?.substring(0, 3)}</span>
       {steps.map((step, index) => (
         <span key={index} className="continuation-step"><BidCard bid={step} /></span>
       ))}
