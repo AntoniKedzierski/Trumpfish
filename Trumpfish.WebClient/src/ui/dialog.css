@@ -36,6 +36,14 @@
   max-width: 620px;
 }
 
+/* Okno, w którym stoi całe drzewo odzywek: tyle szerokości, ile okno przeglądarki ma do oddania. */
+.ui-dialog.full {
+  max-width: none;
+  height: 88dvh;
+  /* Przewija się to, co w środku - drzewo ma własne przewijanie i dwa jedno w drugim nie przesuwałyby niczego. */
+  overflow: hidden;
+}
+
 .ui-dialog-title {
   margin: 0;
   font-size: var(--text-lg);

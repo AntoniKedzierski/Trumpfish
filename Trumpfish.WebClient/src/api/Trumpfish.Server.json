@@ -2179,6 +2179,9 @@
           "isPreferred": {
             "type": "boolean"
           },
+          "alert": {
+            "type": "boolean"
+          },
           "isDisabled": {
             "type": "boolean"
           },
@@ -2206,6 +2209,13 @@
               "null",
               "string"
             ]
+          },
+          "continuationNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           },
           "type": {
             "$ref": "#/components/schemas/BidType"

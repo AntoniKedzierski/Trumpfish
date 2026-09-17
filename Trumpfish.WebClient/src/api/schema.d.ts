@@ -2005,11 +2005,14 @@ export interface components {
             automaticResponse?: boolean;
             goToOpenings?: boolean;
             isPreferred?: boolean;
+            alert?: boolean;
             isDisabled?: boolean;
             interjection?: null | components["schemas"]["Bid"];
             nextBids?: components["schemas"]["BidNode"][];
             realizedGoal?: components["schemas"]["BiddingGoal"];
             aiSource?: null | string;
+            /** Format: uuid */
+            continuationNodeId?: null | string;
             type?: components["schemas"]["BidType"];
             color?: components["schemas"]["BidColor"];
             /** Format: int32 */

@@ -499,6 +499,12 @@ export function SystemWorkspace({ systemId: imposedId, withinPath, onDirtyChange
     focusConditionKey: conditionFocus,
     inherited: inheritedRanges(state.system, state.selection),
     ancestors: ancestorNodes(state.system, state.selection),
+    system: state.system,
+    /* To samo, co robi kliknięcie w wynik walidacji: zaznacz odzywkę i pokaż ją, choćby leżała w innej gałęzi. */
+    onGoTo: (target: NodePath) => {
+      dispatch({ kind: 'select', target });
+      setRevealKey((key) => key + 1);
+    },
     onChange: (patch: Partial<EditableBidNode>) => dispatch({ kind: 'updateNode', patch }),
   };
 

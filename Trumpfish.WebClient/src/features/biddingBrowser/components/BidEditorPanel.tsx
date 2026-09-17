@@ -4,10 +4,11 @@ import { useMediaQuery } from '@/components/useMediaQuery';
 import { SuitMark } from '@/components/suits';
 import { bidColors, bidTypes, toNumber, type BidType, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
-import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
+import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
 import { readCondition } from '../conditionReader';
 import { BidPath } from './BidPath';
 import { FigureMatrix } from './FigureMatrix';
+import { ContinuationPicker } from './ContinuationPicker';
 import { InterjectionPicker } from './InterjectionPicker';
 
 type StopsField = 'clubsStops' | 'diamondsStops' | 'heartsStops' | 'spadesStops';
@@ -23,19 +24,21 @@ interface BidEditorPanelProps {
   inherited: InheritedRanges;
   /** Bids said before the edited one, from the root down to its parent - they decide which interjections are legal. */
   ancestors: readonly EditableBidNode[];
+  /** Cały system: przejście wskazuje w dowolne jego miejsce, więc wybierak musi widzieć całe drzewo. */
+  system: EditableSystem;
+  /** Zaznacza wskazaną odzywkę w drzewie i przewija do niej - tym chodzi się za przejściem. */
+  onGoTo: (target: NodePath) => void;
   onChange: (patch: Partial<EditableBidNode>) => void;
 }
 
-/** One range per row, each under its own name. What a wide pane has the room to say in full. */
-const rangeFields: { field: RangeField; label: string }[] = [
-  { field: 'pointsRange', label: 'Zakres punktów' },
-  { field: 'clubsCardRange', label: 'Układ trefli' },
-  { field: 'diamondsCardRange', label: 'Układ kar' },
-  { field: 'heartsCardRange', label: 'Układ kierów' },
-  { field: 'spadesCardRange', label: 'Układ pików' },
-];
-
-/** The same five turned on their side, for a screen with height to spare and no width. */
+/**
+ * Pięć zakresów jako jedna tabela: kolumna na zakres, wiersz na granicę.
+ */
+/*
+ * Tak samo na każdej szerokości. Pięć nazwanych par pól pod sobą zajmowało pięć etykiet i dziesięć pudełek w pionie, a
+ * granice - które porównuje się między sobą - nigdy nie stały w jednej linii. Obrócony układ powstał dla telefonu i
+ * okazał się po prostu lepszy, więc tamten drugi zniknął zamiast czekać na swoją szerokość.
+ */
 const rangeColumns: { field: RangeField; label: string }[] = [
   { field: 'pointsRange', label: 'Punkty' },
   { field: 'clubsCardRange', label: 'Trefle' },
@@ -52,6 +55,7 @@ const flagFields: { field: keyof EditableBidNode; label: string }[] = [
   { field: 'gameForcing', label: 'Forsująca do końcówki' },
   { field: 'goToOpenings', label: 'Przejdź do otwarć' },
   { field: 'isPreferred', label: 'Odzywka preferowana' },
+  { field: 'alert', label: 'Alert' },
   { field: 'isDisabled', label: 'Wyłączona z symulacji' },
 ];
 
@@ -62,7 +66,7 @@ const stopsFields: { field: StopsField; label: string }[] = [
   { field: 'spadesStops', label: 'Piki' },
 ];
 
-export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, ancestors, onChange }: BidEditorPanelProps) {
+export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, ancestors, system, onGoTo, onChange }: BidEditorPanelProps) {
   const conditionRef = useRef<HTMLInputElement>(null);
 
   // The same question the page asks to decide whether the editor is a pane or a sheet, asked again for what goes inside it.
@@ -72,7 +76,7 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
    * Eight switches are the longest run of rows in here and the least often touched. A pane with the room shows them; a
    * sheet held over the tree starts with them folded away, and either way they are one tap from being read.
    */
-  const [optionsOpen, setOptionsOpen] = useState(!narrow);
+  const [optionsOpen, setOptionsOpen] = useState(true);
 
   // Runs on the render that follows the new bid, so the field it reaches for is the one belonging to that bid.
   useEffect(() => {
@@ -187,6 +191,17 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
           onChange={(event) => onChange({ convention: event.target.value })}
         />
 
+        <label>Przejście</label>
+        <ContinuationPicker
+          system={system}
+          node={node}
+          pickable={!narrow}
+          onChange={(continuationNodeId) => onChange({ continuationNodeId })}
+          onGoTo={onGoTo}
+        />
+
+        <RangeMatrix node={node} inherited={inherited} onBound={changeRange} />
+
         <section className="editor-options">
           <button
             type="button"
@@ -210,37 +225,6 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
             </div>
           )}
         </section>
-
-        {narrow ? (
-          <RangeMatrix node={node} inherited={inherited} onBound={changeRange} />
-        ) : (
-          rangeFields.map(({ field, label }) => {
-            const range = node[field] as NumberRange | null;
-            const hint = inherited[field];
-
-            return (
-              <div key={field}>
-                <label>{label}</label>
-                <div className="pair">
-                  <input
-                    type="number"
-                    className={conflicts(hint, range, 'lower') ? 'conflict' : undefined}
-                    placeholder={placeholderFor(hint, 'lower')}
-                    value={toNumber(range?.lower) ?? ''}
-                    onChange={(event) => changeRange(field, 'lower', event.target.value)}
-                  />
-                  <input
-                    type="number"
-                    className={conflicts(hint, range, 'upper') ? 'conflict' : undefined}
-                    placeholder={placeholderFor(hint, 'upper')}
-                    value={toNumber(range?.upper) ?? ''}
-                    onChange={(event) => changeRange(field, 'upper', event.target.value)}
-                  />
-                </div>
-              </div>
-            );
-          })
-        )}
 
         <label>Rozkład kolorów</label>
         <input value={node.colorDistribution ?? ''} onChange={(event) => onChange({ colorDistribution: event.target.value })} />

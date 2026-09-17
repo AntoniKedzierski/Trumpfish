@@ -361,3 +361,12 @@ export function SplitIcon({ className }: { className?: string }) {
     </Icon>
   );
 }
+
+/** Strzałka w prawo: przejdź tam, gdzie to wskazuje. */
+export function ArrowRightIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4.5 12h15M13 5.5 19.5 12 13 18.5" {...stroke} />
+    </Icon>
+  );
+}

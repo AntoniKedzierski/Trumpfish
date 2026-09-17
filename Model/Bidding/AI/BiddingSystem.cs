@@ -39,6 +39,43 @@ public class BiddingSystem {
     }
 
 
+    /// <summary>
+    /// Wiąże przejścia: każdemu węzłowi z <see cref="BidNode.ContinuationNodeId"/> podstawia odzywkę o tym identyfikatorze.
+    /// </summary>
+    /// <remarks>
+    /// Robione po wczytaniu, tak samo jak <see cref="AssignParent"/> - z tego samego powodu: przejście wskazuje w bok
+    /// drzewa, więc w serializacji jest samym identyfikatorem, a obiektem staje się dopiero tutaj. Wskazanie w próżnię
+    /// (cel został skasowany) zostawia <c>null</c> i nie jest błędem - identyfikator zostaje, żeby dało się go zobaczyć
+    /// i poprawić w edytorze.
+    /// </remarks>
+    public void AssignContinuations() {
+        var byNodeId = AllNodes().GroupBy(node => node.NodeId).ToDictionary(group => group.Key, group => group.First());
+
+        foreach (var node in AllNodes()) {
+            node.Continuation = node.ContinuationNodeId is Guid target && byNodeId.TryGetValue(target, out var found) ? found : null;
+        }
+    }
+
+
+    /// <summary>Każda odzywka systemu, ze wszystkich korzeni i z każdej głębokości.</summary>
+    public IEnumerable<BidNode> AllNodes() {
+        foreach (var root in Roots) {
+            foreach (var node in root.Bids.SelectMany(Descend)) {
+                yield return node;
+            }
+        }
+    }
+
+
+    private static IEnumerable<BidNode> Descend(BidNode node) {
+        yield return node;
+
+        foreach (var descendant in node.NextBids.SelectMany(Descend)) {
+            yield return descendant;
+        }
+    }
+
+
     public List<BidNode> GetDescendants(List<InterruptedBid> bidSequence) {
         var children = Openings()!.Bids.Concat(Defences()!.Bids).ToList();
 

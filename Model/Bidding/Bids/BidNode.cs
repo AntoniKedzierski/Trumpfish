@@ -3,7 +3,6 @@ using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Model.Bidding.Bids;
 
@@ -27,6 +26,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public NumberRange? DiamondsCardRange { get; set; }
 
     public NumberRange? ClubsCardRange { get; set; }
+
     public decimal? SpadesStops { get; set; }
 
     public decimal? HeartsStops { get; set; }
@@ -63,6 +63,11 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public bool IsPreferred { get; set; }
 
     /// <summary>
+    /// Dotyczy wysoce sztucznych odzywek, wymagających alertu ze strony partnera.
+    /// </summary>
+    public bool Alert { get; set; }
+
+    /// <summary>
     /// Takes this bid, and with it everything below it, out of the simulation without deleting it. Children are not marked in
     /// turn: a branch is reached through its parent, so switching the parent off is enough to switch the whole branch off.
     /// </summary>
@@ -81,8 +86,24 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
     public string? AiSource { get; set; }
 
+    /// <summary>
+    /// Określa, do której gałęzi drzewa przenieść się z dalszą licytacją.
+    /// Wskazywać wolno na odzywkę o tej samej wartości i o tym samym <see cref="OpenerBid"/> - otwierający przechodzi
+    /// tylko do swoich odzywek, odpowiadający do swoich.
+    /// </summary>
+    public Guid? ContinuationNodeId { get; set; }
+
+    /// <summary>
+    /// Odzywka wskazana przez <see cref="ContinuationNodeId"/>, wiązana po wczytaniu przez <c>BiddingSystem.AssignContinuations</c>.
+    /// </summary>
+    /// <remarks>
+    /// Nigdy nie serializowana - tak samo jak <see cref="Parent"/>. Przejście wskazuje w bok drzewa, więc w JSON-ie
+    /// poddrzewo celu pojechałoby drugi raz, a dwa przejścia wskazujące na siebie nawzajem to nieskończona rekurencja.
+    /// Po drucie i do bazy jedzie sam identyfikator.
+    /// </remarks>
     [JsonIgnore, TextJsonIgnore]
-    public string Path { get; set; } = "";
+    public BidNode? Continuation { get; set; }
+
 
     public BidNode() : base() { }
 

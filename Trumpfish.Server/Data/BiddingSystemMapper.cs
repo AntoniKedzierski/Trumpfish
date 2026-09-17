@@ -34,6 +34,7 @@ public static class BiddingSystemMapper {
         }
 
         system.AssignParent();
+        system.AssignContinuations();
         return system;
     }
 
@@ -97,7 +98,9 @@ public static class BiddingSystemMapper {
                 AutomaticResponse = record.AutomaticResponse,
                 GoToOpenings = record.GoToOpenings,
                 IsPreferred = record.IsPreferred,
+                Alert = record.Alert,
                 IsDisabled = record.IsDisabled,
+                ContinuationNodeId = record.ContinuationNodeId,
                 RealizedGoal = record.RealizedGoal,
                 AiSource = record.AiSource,
                 Interjection = ToInterjection(record)
@@ -159,7 +162,9 @@ public static class BiddingSystemMapper {
                 AutomaticResponse = node.AutomaticResponse,
                 GoToOpenings = node.GoToOpenings,
                 IsPreferred = node.IsPreferred,
+                Alert = node.Alert,
                 IsDisabled = node.IsDisabled,
+                ContinuationNodeId = node.ContinuationNodeId,
                 RealizedGoal = node.RealizedGoal,
                 AiSource = node.AiSource,
                 InterjectionType = node.Interjection?.Type,

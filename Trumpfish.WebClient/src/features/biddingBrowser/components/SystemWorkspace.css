@@ -212,6 +212,11 @@
   background: var(--surface-hover);
 }
 
+/* Odzywka, której w tym drzewie nie da się wybrać. Widać ją i widać, gdzie leży - tylko nie jest odpowiedzią na pytanie. */
+.tree-row.faded {
+  opacity: 0.8;
+}
+
 .tree-row.selected {
   background: var(--accent-soft);
   box-shadow: inset 2px 0 0 var(--accent);
@@ -1073,4 +1078,83 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
+}
+
+/*
+ * Przejście: dokąd przenosi się dalsza licytacja.
+ *
+ * Pole jest szerokie, bo mieści całą odpowiedź - gałąź, ścieżkę i znaczenie celu; dwie komendy obok działają na tym
+ * jednym wskazaniu, więc stoją przy nim, a nie pod nim. Wysokość pola daje `.ui-combo-field` z `ui/controls.css`.
+ */
+.editor .continuation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor .continuation-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor .continuation-command {
+  flex: none;
+}
+
+/* Ścieżka do celu, czytana od korzenia: nazwa gałęzi, odzywki po drodze, a na końcu to, co cel znaczy. */
+.continuation-label {
+  display: inline;
+}
+
+.continuation-root {
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.continuation-step::before {
+  content: '·';
+  margin: 0 0.4em;
+  color: var(--text-muted);
+}
+
+.continuation-step + .continuation-step::before {
+  content: '→';
+}
+
+.continuation-meaning {
+  margin-left: 0.6em;
+  color: var(--text-muted);
+}
+
+/*
+ * Okno wyboru: rząd komend nad drzewem, drzewo pod nimi na całą resztę wysokości.
+ *
+ * Komendy są nad drzewem, bo drzewo jest wysokie na całe okno - pod nim odpowiedź na pytanie okna leżałaby na końcu
+ * przewijania, którego nikt nie robi po to, żeby zatwierdzić.
+ */
+.continuation-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.continuation-chosen {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.continuation-tree {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.continuation-tree .tree {
+  flex: 1;
 }
