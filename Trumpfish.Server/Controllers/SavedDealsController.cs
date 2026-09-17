@@ -42,6 +42,19 @@ public class SavedDealsController : ControllerBase {
 
 
     /// <summary>
+    /// Jedno rozdanie w całości: karty, licytacja i kontrakt. Widzi je właściciel i każdy, komu je udostępniono - widok
+    /// analizy otwiera się tak samo z własnej listy, jak z cudzej.
+    /// </summary>
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType<SavedDeal>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<SavedDeal>> Get(Guid id, CancellationToken cancellationToken) {
+        var deal = await _store.GetAsync(User.RequireUserId(), id, cancellationToken);
+        return deal == null ? NotFound("Nie znaleziono rozdania.") : deal;
+    }
+
+
+    /// <summary>
     /// One page of the caller's deals. <paramref name="contract"/> is the search as it is typed - "NT", "1S", "1d, H" -
     /// and <paramref name="tags"/> is a list of keywords every deal in the answer has to carry.
     /// </summary>

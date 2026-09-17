@@ -69,6 +69,7 @@ public partial class Program {
         builder.Services.AddScoped<ISavedDealStore, SavedDealStore>();
         builder.Services.AddSingleton<IBiddingSimulator, BiddingSimulator>();
         builder.Services.AddSingleton<IPracticeService, PracticeService>();
+        builder.Services.AddSingleton<IReplayService, ReplayService>();
 
         // Holds the pool of native solvers and the cache of tables it has already worked out, so it has to outlive a request.
         // It loads nothing until the first deal is actually sent to it.

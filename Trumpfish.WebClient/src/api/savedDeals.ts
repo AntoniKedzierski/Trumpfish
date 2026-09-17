@@ -1,9 +1,14 @@
 import { getJson, postJson, putJson, putNoContent, remove } from './client';
-import type { SaveDealRequest, SavedDealPage, SavedDealSummary, SavedDealTag, SharedDealPage, UpdateSavedDealRequest } from './models';
+import type { SaveDealRequest, SavedDeal, SavedDealPage, SavedDealSummary, SavedDealTag, SharedDealPage, UpdateSavedDealRequest } from './models';
 
 /** Keeps one deal on the signed in user's account. The deal travels exactly as it was drawn. */
 export function saveDeal(request: SaveDealRequest): Promise<SavedDealSummary> {
   return postJson<SavedDealSummary>('/deals', request);
+}
+
+/** Jedno rozdanie w całości - karty, licytacja i kontrakt. Własne i udostępnione otwiera się tak samo. */
+export function getSavedDeal(id: string): Promise<SavedDeal> {
+  return getJson<SavedDeal>(`/deals/${id}`);
 }
 
 /** The user's own keywords, most used first. The tag field suggests from this as it is typed into. */

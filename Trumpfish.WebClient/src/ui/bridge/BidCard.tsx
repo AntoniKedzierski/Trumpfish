@@ -1,4 +1,4 @@
-import type { BidColor, BidType, SimulationContract } from '@/api/models';
+import type { BidColor, BidType, PlayerPosition, SimulationContract } from '@/api/models';
 import { toNumber } from '@/api/models';
 import { DoubleMark, RedoubleMark, SuitMark } from '@/components/suits';
 
@@ -63,6 +63,22 @@ export function Contract({ contract }: { contract: SimulationContract }) {
       <span className="bid-level">{toNumber(contract.value) ?? ''}</span>
       <SuitMark suit={contract.color} />
       {contract.isRedoubled ? <RedoubleMark /> : contract.isDoubled ? <DoubleMark /> : null}
+    </span>
+  );
+}
+
+/**
+ * Kontrakt jako płytka nagłówka: rysunek kontraktu i miejsce, które go gra.
+ */
+/*
+ * Karta rozdania i powtórzona licytacja pokazują dokładnie to samo, więc pokazują to jedną kontrolką. Dwa razy
+ * napisany ten sam ciąg klas to dwa miejsca, w których płytka może przestać wyglądać tak samo.
+ */
+export function ContractChip({ contract, declarer }: { contract: SimulationContract; declarer?: PlayerPosition | null }) {
+  return (
+    <span className={contract.passed ? 'ui-chip deal-contract passed' : 'ui-chip deal-contract'}>
+      <Contract contract={contract} />
+      {declarer === null || declarer === undefined ? '' : ` ${declarer}`}
     </span>
   );
 }

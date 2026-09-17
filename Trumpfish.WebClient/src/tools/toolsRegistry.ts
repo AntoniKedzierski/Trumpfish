@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { BotIcon, CardsIcon, LayersIcon, PlayIcon, SearchIcon, UsersIcon } from '@/components/icons';
+import { analyzerRoute } from '@/features/dealAnalyzer/route';
 
 export interface ToolDescriptor {
   id: string;
@@ -79,9 +80,9 @@ export const tools: ToolDescriptor[] = [
     id: 'deal-analyzer',
     navLabel: 'Analiza rozdania',
     icon: SearchIcon,
-    description: 'Oceń rękę i rozkład, sprawdź sugestie systemu dla konkretnego rozdania. W przygotowaniu.',
-    route: '/tools/analyzer',
-    enabled: false,
+    description: 'Obejrzyj zapisane albo udostępnione rozdanie: wszystkie karty, licytacja i analiza DDS. Możesz też wylicytować je od nowa - sam albo botami.',
+    route: analyzerRoute,
+    enabled: true,
   },
 ];
 

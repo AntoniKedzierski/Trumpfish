@@ -48,6 +48,24 @@ public sealed class SavedDealStore : ISavedDealStore {
     }
 
 
+    /// <summary>Jedno rozdanie w całości. Udostępnienie daje dokładnie to samo prawo do obejrzenia go, co własność.</summary>
+    public async Task<SavedDeal?> GetAsync(Guid userId, Guid id, CancellationToken cancellationToken = default) {
+        var record = await _db.SavedDeals
+            .FirstOrDefaultAsync(
+                deal => deal.Id == id && (deal.OwnerId == userId || _db.SavedDealShares.Any(share => share.DealId == deal.Id && share.ToUserId == userId)),
+                cancellationToken);
+
+        if (record == null) {
+            return null;
+        }
+
+        // Rozdanie wraca w tej samej postaci, w jakiej przyszło: kolumna trzyma dokładnie to, co klient wtedy wysłał.
+        var deal = JsonSerializer.Deserialize<SimulationDealResult>(record.Deal, DealJson);
+
+        return deal == null ? null : new SavedDeal(Describe(record), deal);
+    }
+
+
     public async Task<SavedDealPage> ListAsync(Guid ownerId, string? contract, string? tags, bool oldestFirst, int page, int pageSize, CancellationToken cancellationToken = default) {
         var size = Math.Clamp(pageSize, 5, 200);
         var wanted = Math.Max(page, 1);

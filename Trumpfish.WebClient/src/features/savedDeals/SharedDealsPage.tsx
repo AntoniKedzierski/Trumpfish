@@ -5,6 +5,7 @@ import { listSharedDeals, removeSharedDeal } from '@/api/savedDeals';
 import { TrashIcon } from '@/components/icons';
 import { ToolBar } from '@/components/ToolBar';
 import { Button, ConfirmDialog } from '@/ui';
+import { analyzerLink } from '@/features/dealAnalyzer/route';
 import { DealFilterMenu, DealPager, DealRow, DealSortMenu } from './DealPieces';
 import type { DealFilters } from './DealPieces';
 import { dealWord } from './dealWord';
@@ -97,6 +98,7 @@ export function SharedDealsPage() {
             <DealRow
               key={shared.shareId}
               deal={shared.deal}
+              to={analyzerLink(shared.deal.id)}
               /* The list is ordered by when it was handed over, so that is the date the row says. */
               extra={<> · udostępnił(a) <strong>{shared.sharedBy}</strong>, {new Date(shared.sharedUtc).toLocaleDateString('pl-PL')}</>}
               actions={

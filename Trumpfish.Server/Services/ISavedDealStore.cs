@@ -8,6 +8,12 @@ public interface ISavedDealStore {
     /// <summary>Keeps one deal for this account and answers with the row the list will show.</summary>
     Task<SavedDealSummary> SaveAsync(Guid ownerId, SaveDealRequest request, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Jedno rozdanie w całości - z kartami i licytacją - dla kogoś, kto jest jego właścicielem albo dostał je udostępnione.
+    /// Null, gdy takiego rozdania nie ma albo to konto nie ma prawa go oglądać; jedno i drugie znaczy dla wołającego to samo.
+    /// </summary>
+    Task<SavedDeal?> GetAsync(Guid userId, Guid id, CancellationToken cancellationToken = default);
+
     /// <summary>One page of this account's deals, newest first unless asked otherwise.</summary>
     Task<SavedDealPage> ListAsync(Guid ownerId, string? contract, string? tags, bool oldestFirst, int page, int pageSize, CancellationToken cancellationToken = default);
 

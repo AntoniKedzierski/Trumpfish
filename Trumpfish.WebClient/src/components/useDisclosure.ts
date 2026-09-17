@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { isInsideOverlay } from '@/ui/overlay';
 
 /**
  * The behaviour every dropdown in the top bar shares: it closes on a click outside and on Escape, and Escape hands the focus
@@ -15,7 +16,8 @@ export function useDisclosure<T extends HTMLElement>() {
     }
 
     const onPointerDown = (event: PointerEvent) => {
-      if (root.current !== null && !root.current.contains(event.target as Node)) {
+      // Lista wartości otwarta w środku jest rysowana do `body`, więc leży poza dropdownem, choć należy do niego.
+      if (root.current !== null && !root.current.contains(event.target as Node) && !isInsideOverlay(event.target)) {
         setOpen(false);
       }
     };

@@ -58,13 +58,15 @@
   transform: rotate(-90deg);
 }
 
+/*
+ * Rysowana do `body` i pozycjonowana `fixed`, więc nie obcina jej żaden kontener z własnym przewijaniem ani wysokością.
+ * Położenie i szerokość (dokładnie szerokość pola) wchodzą stylem z komponentu, bo tylko on zna prostokąt pola.
+ *
+ * Warstwa ponad wszystkim: lista wartości otwiera się także w popupie (40), w szufladzie (80) i w oknie modalnym (100).
+ */
 .ui-combo-list {
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 6px);
-  left: 0;
-  /* Exactly the width of the field. Left to size itself, a list of long openings hung off the right of a narrow screen. */
-  width: 100%;
+  position: fixed;
+  z-index: 200;
   max-height: 240px;
   overflow: auto;
   margin: 0;
@@ -79,8 +81,6 @@
 }
 
 .ui-combo-list.drop-up {
-  top: auto;
-  bottom: calc(100% + 6px);
   transform-origin: bottom center;
   animation-name: ui-combo-open-up;
 }

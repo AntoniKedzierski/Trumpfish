@@ -16,6 +16,7 @@
 .app-shell:has(> .bidding-browser),
 .app-shell:has(> .simulation),
 .app-shell:has(> .practice),
+.app-shell:has(> .deal-analyzer),
 .app-shell:has(> .saved-deals) {
   height: 100dvh;
   overflow: hidden;

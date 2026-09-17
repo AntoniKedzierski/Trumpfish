@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Chevron } from './ComboBox';
+import { isInsideOverlay } from './overlay';
 import { Panel } from './Panel';
 import type { PanelAlign } from './Panel';
 import type { ControlSize } from './Button';
@@ -82,7 +83,8 @@ export function Popup({
     }
 
     const onPointerDown = (event: PointerEvent) => {
-      if (root.current !== null && !root.current.contains(event.target as Node)) {
+      // Lista wartości pola z panelu jest rysowana do `body`, więc leży poza panelem, choć należy do niego.
+      if (root.current !== null && !root.current.contains(event.target as Node) && !isInsideOverlay(event.target)) {
         close();
       }
     };

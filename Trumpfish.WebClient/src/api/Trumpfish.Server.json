@@ -1216,6 +1216,124 @@
         }
       }
     },
+    "/api/replay/start": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayStartRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayStartRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/replay/bid": {
+      "post": {
+        "tags": [
+          "Replay"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayBidRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayBidRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayBidRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/deals": {
       "post": {
         "tags": [
@@ -1333,6 +1451,44 @@
       }
     },
     "/api/deals/{id}": {
+      "get": {
+        "tags": [
+          "SavedDeals"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedDeal"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
           "SavedDeals"
@@ -3379,6 +3535,130 @@
           }
         }
       },
+      "ReplayBidRequest": {
+        "required": [
+          "state",
+          "type",
+          "color",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/BidType"
+          },
+          "color": {
+            "$ref": "#/components/schemas/BidColor"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "ReplayStartRequest": {
+        "required": [
+          "systemId",
+          "dealer",
+          "vulnerability",
+          "player",
+          "hands"
+        ],
+        "type": "object",
+        "properties": {
+          "systemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
+          },
+          "player": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "hands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationHandRequest"
+            }
+          }
+        }
+      },
+      "ReplayState": {
+        "required": [
+          "state",
+          "dealer",
+          "vulnerability",
+          "player",
+          "playerHand",
+          "bidding",
+          "playerToBid",
+          "legal",
+          "finished",
+          "result",
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string"
+          },
+          "dealer": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/Vulnerability"
+          },
+          "player": {
+            "$ref": "#/components/schemas/PlayerPosition"
+          },
+          "playerHand": {
+            "$ref": "#/components/schemas/SimulationHand"
+          },
+          "bidding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationBid"
+            }
+          },
+          "playerToBid": {
+            "type": "boolean"
+          },
+          "legal": {
+            "$ref": "#/components/schemas/PracticeLegalBids"
+          },
+          "finished": {
+            "type": "boolean"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SimulationDealResult"
+              }
+            ]
+          },
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "Root": {
         "type": "object",
         "properties": {
@@ -3393,6 +3673,21 @@
             "items": {
               "$ref": "#/components/schemas/BidNode"
             }
+          }
+        }
+      },
+      "SavedDeal": {
+        "required": [
+          "summary",
+          "deal"
+        ],
+        "type": "object",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/SavedDealSummary"
+          },
+          "deal": {
+            "$ref": "#/components/schemas/SimulationDealResult"
           }
         }
       },
@@ -4140,6 +4435,9 @@
     },
     {
       "name": "Practice"
+    },
+    {
+      "name": "Replay"
     },
     {
       "name": "SavedDeals"

@@ -39,11 +39,27 @@
     0 0 0 1px rgb(255 181 21 / 35%);
 }
 
+/*
+ * Nagłówek karty: nazwa z metryczką po lewej, kontrakt po prawej, a pod nimi wiersz przypisu na całą szerokość.
+ *
+ * Siatka, a nie zawijany wiersz. Wiersz układał wszystko w jednej linii i łamał to, co się nie zmieściło - przy długiej
+ * nazwie rozdania spadał z niej kontrakt i stawał sam w drugiej linii, przy prawej krawędzi, daleko od wszystkiego, co
+ * go opisuje. W siatce kolumna kontraktu jest własną kolumną: to nazwa łamie się pod sobą, a płytka zostaje na miejscu.
+ */
 .deal-card header {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
+}
+
+/* Nazwa i metryczka: obok siebie, dopóki się mieszczą, jedna pod drugą, kiedy przestają. Tekst z tekstem - linia pisma. */
+.deal-card-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  min-width: 0;
 }
 
 .deal-card h3 {
@@ -77,8 +93,9 @@
   color: var(--accent);
 }
 
+/* Płytka kontraktu nigdy się nie łamie: to jedna etykieta, a etykieta złamana na dwie linie przestaje być etykietą. */
 .deal-contract {
-  margin-left: auto;
+  white-space: nowrap;
 }
 
 .deal-contract.passed {
@@ -91,8 +108,8 @@
  * row, because both are footnotes on the same auction.
  */
 .deal-footnote {
+  grid-column: 1 / -1;
   display: flex;
-  flex-basis: 100%;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-3);
@@ -112,9 +129,23 @@
 }
 
 .deal-error {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
   font-size: var(--text-xs);
   color: var(--hearts);
+}
+
+/*
+ * Na wąskim ekranie kolumna kontraktu zjadałaby nazwie połowę szerokości, więc płytka schodzi pod nią - do lewej
+ * krawędzi, bo w jednej kolumnie nie ma prawej strony, przy której mogłaby stać.
+ */
+@media (max-width: 480px) {
+  .deal-card header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .deal-card header > .deal-contract {
+    justify-self: start;
+  }
 }
 
 /* Pair strength for the final contract. Shares its row with the analysis chip. */

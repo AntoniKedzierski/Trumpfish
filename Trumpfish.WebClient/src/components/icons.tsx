@@ -339,3 +339,15 @@ export function BroomIcon({ className }: { className?: string }) {
     </Icon>
   );
 }
+
+/** Dwie strzałki w pierścieniu: to samo jeszcze raz. */
+export function RepeatIcon({ className }: { className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="M4 11.5a7.5 7.5 0 0 1 12.8-5.3L20 9.3" {...stroke} />
+      <path d="M20 4.5v4.8h-4.8" {...stroke} />
+      <path d="M20 12.5a7.5 7.5 0 0 1-12.8 5.3L4 14.7" {...stroke} />
+      <path d="M4 19.5v-4.8h4.8" {...stroke} />
+    </Icon>
+  );
+}

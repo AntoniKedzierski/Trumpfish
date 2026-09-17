@@ -22,6 +22,6 @@ export { Popup } from './Popup';
 export { TextBox } from './TextBox';
 
 export { Auction } from './bridge/Auction';
-export { BidCard, Contract } from './bridge/BidCard';
+export { BidCard, Contract, ContractChip } from './bridge/BidCard';
 export { DealCard } from './bridge/DealCard';
 export { Deal, Hand } from './bridge/Hand';

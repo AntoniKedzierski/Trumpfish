@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { toNumber } from '@/api/models';
 import type { SavedDealSummary } from '@/api/models';
 import { HelpTip } from '@/components/HelpTip';
 import { FilterIcon, SortIcon } from '@/components/icons';
-import { BidCard, Chevron, Popup } from '@/ui';
+import { BidCard, Chevron, ComboBoxField, Popup } from '@/ui';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 /* The contract pill is the deal card's own; these lists show the same thing and must not draw a second version of it. */
 import '@/ui/bridge/deal.css';
@@ -18,6 +19,11 @@ export interface DealFilters {
   sharedBy?: string;
 }
 
+/** Z której listy rozdań czytamy. Osobne strony mają po jednej; widok analizy sięga po obie. */
+export type DealSource = 'mine' | 'shared';
+
+const sourceLabels: Record<DealSource, string> = { mine: 'Moje rozdania', shared: 'Udostępnione mi' };
+
 /**
  * What narrows a list of deals, behind one named control - the same arrangement the simulator filters its results with.
  */
@@ -25,11 +31,14 @@ export interface DealFilters {
  * Fields on the bar itself would each need a label beside them, and a bar of labelled fields is a form, not a bar. In a
  * panel the label stands over its field where a label belongs, and the bar keeps to one row of controls.
  */
-export function DealFilterMenu({ value, known, onChange }: {
+export function DealFilterMenu({ value, known, onChange, source, onSource }: {
   value: DealFilters;
   /** Keywords worth suggesting: the ones present in the list as it stands. */
   known: readonly string[];
   onChange: (value: DealFilters) => void;
+  /** Tylko tam, gdzie jeden widok czyta z obu list - wtedy wybór listy jest pierwszym zawężeniem, jakie się robi. */
+  source?: DealSource;
+  onSource?: (source: DealSource) => void;
 }) {
   const [suggesting, setSuggesting] = useState(false);
 
@@ -41,6 +50,17 @@ export function DealFilterMenu({ value, known, onChange }: {
 
   return (
     <Popup label="Filtry" icon={FilterIcon} count={count} scroll={false}>
+      {source === undefined || onSource === undefined ? null : (
+        <div className="ui-panel-section">
+          <ComboBoxField
+            label="Lista"
+            value={source}
+            options={(Object.keys(sourceLabels) as DealSource[]).map((key) => ({ value: key, label: sourceLabels[key] }))}
+            onChange={onSource}
+          />
+        </div>
+      )}
+
       <div className="ui-panel-section">
         <label className="ui-field">
           <span>
@@ -124,13 +144,24 @@ export function DealSortMenu({ oldestFirst, onOldestFirst, pageSize, onPageSize 
   );
 }
 
-/** One kept deal: what was played, what it was called, and whatever the row's own list lets you do to it. */
-export function DealRow({ deal, extra, actions }: { deal: SavedDealSummary; extra?: React.ReactNode; actions: React.ReactNode }) {
+/**
+ * One kept deal: what was played, what it was called, and whatever the row's own list lets you do to it.
+ */
+/*
+ * Wiersz, który gdzieś prowadzi, jest łączem na nazwie i płytką klikalną w całości - tak samo, jak kafelek narzędzia na
+ * stronie startowej. Łącze jest po to, żeby dało się tam dojść z klawiatury i żeby czytnik ekranu miał co przeczytać;
+ * cała płytka jest po to, że nikt nie celuje myszą w sam tytuł. Komendy wiersza zatrzymują kliknięcie u siebie.
+ */
+export function DealRow({ deal, extra, actions, to }: { deal: SavedDealSummary; extra?: React.ReactNode; actions: React.ReactNode; to?: string }) {
+  const navigate = useNavigate();
   const level = toNumber(deal.level);
   const played = level !== null && deal.color !== null && deal.color !== undefined;
 
   return (
-    <article className="saved-deal">
+    <article
+      className={to === undefined ? 'saved-deal' : 'saved-deal openable'}
+      onClick={to === undefined ? undefined : () => void navigate(to)}
+    >
       {/* Drawn the way every contract in the application is drawn, rather than as the text it happens to be stored as. */}
       <span className="deal-contract">
         {!played ? deal.contract : (
@@ -142,7 +173,7 @@ export function DealRow({ deal, extra, actions }: { deal: SavedDealSummary; extr
       </span>
 
       <div className="saved-deal-body">
-        <h2>{deal.name}</h2>
+        <h2>{to === undefined ? deal.name : <Link to={to}>{deal.name}</Link>}</h2>
         <p className="saved-deal-meta">
           {new Date(deal.savedUtc).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })}
           {` · rozdaje ${deal.dealer} · po partii ${vulnerabilityLabels[deal.vulnerability]}`}
@@ -156,7 +187,8 @@ export function DealRow({ deal, extra, actions }: { deal: SavedDealSummary; extr
         {deal.comment === null || deal.comment === undefined || deal.comment === '' ? null : <p className="saved-deal-comment">{deal.comment}</p>}
       </div>
 
-      <div className="saved-deal-actions">{actions}</div>
+      {/* Komenda wiersza jest komendą wiersza, a nie skrótem do jego otwarcia. */}
+      <div className="saved-deal-actions" onClick={(event) => event.stopPropagation()}>{actions}</div>
     </article>
   );
 }

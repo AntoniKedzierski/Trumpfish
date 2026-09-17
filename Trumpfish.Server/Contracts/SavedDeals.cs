@@ -40,3 +40,9 @@ public record SharedDealSummary(Guid ShareId, SavedDealSummary Deal, string Shar
 
 /// <summary>One page of the deals shared with the caller.</summary>
 public record SharedDealPage(IReadOnlyList<SharedDealSummary> Deals, int Total, int Page, int PageSize);
+
+/// <summary>
+/// Jedno zapisane rozdanie w całości: wiersz listy i rozdanie, którym ono jest. Oddawane tylko wtedy, gdy ktoś chce je
+/// obejrzeć - listy chodzą bez rozdań, bo strona pięćdziesięciu rozdań byłaby kilkaset kilobajtów kart i licytacji.
+/// </summary>
+public record SavedDeal(SavedDealSummary Summary, SimulationDealResult Deal);

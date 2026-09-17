@@ -1,0 +1,49 @@
+/*
+ * Widok analizy rozdania. Pasek zostaje na górze, treść przewija się pod nim - ta sama rama, co w symulacji, ćwiczeniu
+ * i na liście zapisanych rozdań (`components/AppLayout.css`).
+ *
+ * Rozdanie, licytacja, ręka i pudełko licytacyjne są rysowane kontrolkami z `src/ui` i arkuszem ćwiczenia z botami
+ * (`features/practice/pages/PracticePage.css`), więc tutaj stoi tylko to, czego nie ma nigdzie indziej.
+ */
+.deal-analyzer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  animation: view-enter var(--duration-slow) var(--ease-out) both;
+}
+
+/*
+ * Reszta okna pod paskiem. Przewija się to, co w środku: rozdanie przez tę ramkę, a lista wyboru własnym `.saved-list`,
+ * który dostaje tu całą wysokość i przewija się sam - dokładnie tak, jak na stronie zapisanych rozdań.
+ */
+.analyzer-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Rozdanie i licytacje stoją w jednej kolumnie - `.stack` z arkusza ćwiczenia; tu tylko oddech nad i pod nią. */
+.analyzer-main > .stack {
+  padding: 20px 16px 40px;
+}
+
+/* Karta startowa maluje swoje akapity tekstem podstawowym; wiersz „rozdaje / po partii" jest cichy wszędzie indziej. */
+.setup-card .deal-meta {
+  color: var(--text-muted);
+}
+
+/* Zdanie nad listą: co robi kliknięcie w wiersz, a co strzałka obok niego. */
+.analyzer-hint {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.analyzer-comment {
+  margin: 0;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
