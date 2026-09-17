@@ -25,6 +25,8 @@ interface PopupProps {
   footer?: React.ReactNode;
   /** Dokładane do panelu tam, gdzie jego treść potrzebuje własnej szerokości albo układu. */
   panelClassName?: string;
+  /** Dokładane do całej kontrolki - tym pasek narzędzi mówi, w której kolejności komendy oddają swoje słowa. */
+  className?: string;
   disabled?: boolean;
   /** Wywoływane przy każdym zamknięciu - to na tym wiesza się "kliknięcie obok znaczy zatwierdź". */
   onClose?: () => void;
@@ -52,6 +54,7 @@ export function Popup({
   inline = false,
   footer,
   panelClassName,
+  className = '',
   disabled = false,
   onClose,
   children,
@@ -107,7 +110,7 @@ export function Popup({
   const classes = ['ui-popup-trigger', size === 'normal' ? '' : size, hideLabel ? 'icon-only' : '', triggerClassName];
 
   return (
-    <div className="ui-popup" ref={root}>
+    <div className={`ui-popup ${className}`.trim()} ref={root}>
       <button
         type="button"
         ref={trigger}

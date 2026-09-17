@@ -1,7 +1,7 @@
 import type { BiddingSystemSummary } from '@/api/models';
 import { ArrowDownIcon, ArrowUpIcon, BranchIcon, BroomIcon, PlusIcon, SaveIcon, SortIcon, TrashIcon } from '@/components/icons';
 import { MenuPopup } from '@/ui';
-import { ToolBar } from '@/components/ToolBar';
+import { ToolBar, toolbarKeepLonger } from '@/components/ToolBar';
 import { ShortcutsHelp } from './ShortcutsHelp';
 import { SystemMenu } from './SystemMenu';
 
@@ -82,8 +82,8 @@ export function Toolbar(props: ToolbarProps) {
         ]}
       />
 
-      {/* The one command that writes to the server is the one that looks like it does. */}
-      <button type="button" className="primary" onClick={props.onSave} disabled={busy}>
+      {/* The one command that writes to the server is the one that looks like it does - and the last to give up its word. */}
+      <button type="button" className={`primary ${toolbarKeepLonger}`} onClick={props.onSave} disabled={busy}>
         <SaveIcon />
         <span>Zapisz{dirty ? ' *' : ''}</span>
       </button>

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import type { BiddingSystemSummary } from '@/api/models';
 import { CheckIcon, DownloadIcon, LayersIcon, PlusIcon, UploadIcon } from '@/components/icons';
 import { Popup } from '@/ui';
+import { toolbarKeep } from '@/components/ToolBar';
 import { SystemPicker } from '@/components/SystemPicker';
 import './SystemMenu.css';
 
@@ -49,8 +50,9 @@ export function SystemMenu(props: SystemMenuProps) {
   // The trigger names what is open. Until something has been opened there is no name to give, and it says what it is instead.
   const label = props.systemId === null ? 'System' : props.systemName;
 
+  // Nazwa otwartego systemu zostaje na pasku na każdej szerokości: sam znak nie powie, co się właśnie edytuje.
   return (
-    <Popup label={label} icon={LayersIcon} scroll={false}>
+    <Popup label={label} icon={LayersIcon} scroll={false} className={toolbarKeep}>
       <div className="ui-panel-section">
         <p className="system-current">
           <span>Edytujesz</span>
