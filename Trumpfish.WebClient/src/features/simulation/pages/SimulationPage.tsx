@@ -3,7 +3,7 @@ import { listBiddingSystems } from '@/api/biddingSystems';
 import { simulateBidding } from '@/api/simulation';
 import type { BiddingSystemSummary, SimulationResponse } from '@/api/models';
 import { CardsIcon } from '@/components/icons';
-import { ToolBar } from '@/components/ToolBar';
+import { ToolBar, toolbarKeepLonger } from '@/components/ToolBar';
 import { ConfigMenu } from '../components/ConfigMenu';
 import { DealResultCard } from '../components/DealResultCard';
 import { FilterMenu } from '../components/FilterMenu';
@@ -85,7 +85,7 @@ export function SimulationPage() {
           <>
             {busy ? <span className="status">Symulacja…</span> : null}
             {error === null ? null : <span className="status error">{error}</span>}
-            {result === null ? null : <span>{sortedDeals.length} z {result.dealCount} rozdań, błędów: {result.failedCount}</span>}
+            {result === null ? null : <span>{sortedDeals.length} z {result.dealCount} rozdań</span>}
           </>
         }
       >
@@ -100,7 +100,8 @@ export function SimulationPage() {
           disabled={busy}
         />
 
-        <button type="button" className="primary" onClick={() => void run()} disabled={busy || systemId === ''}>
+        {/* Komenda, po którą się tu przyszło: oddaje swoje słowo jako ostatnia. */}
+        <button type="button" className={`primary ${toolbarKeepLonger}`} onClick={() => void run()} disabled={busy || systemId === ''}>
           <CardsIcon />
           <span>Symuluj</span>
         </button>

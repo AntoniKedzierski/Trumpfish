@@ -92,8 +92,15 @@
  * przycisków i wartość ComboBoksa, który jest przecież zwykłym `<span>` w `<button>`. Pasek chowa słowa u siebie, a nie
  * we wszystkim, co z niego wyrasta.
  */
-.toolbar.icons-only > .toolbar-commands > button > span:not(.ui-badge),
-.toolbar.icons-only > .toolbar-commands > .ui-popup > .ui-popup-trigger > .ui-popup-label {
+/*
+ * Po kolei, a nie wszystkie naraz. Komenda z `toolbar-keep` nie oddaje słowa nigdy - sam znak nie powie, który system
+ * jest otwarty - a z `toolbar-keep-longer` oddaje je jako ostatnia, kiedy pasek dokłada `shed-all`. Reszta milknie
+ * pierwsza, bo znak plusa przy "Dodaj" i tak mówi to samo, co słowo obok niego.
+ */
+.toolbar.icons-only > .toolbar-commands > button:not(.toolbar-keep):not(.toolbar-keep-longer) > span:not(.ui-badge),
+.toolbar.icons-only > .toolbar-commands > .ui-popup:not(.toolbar-keep):not(.toolbar-keep-longer) > .ui-popup-trigger > .ui-popup-label,
+.toolbar.icons-only.shed-all > .toolbar-commands > button:not(.toolbar-keep) > span:not(.ui-badge),
+.toolbar.icons-only.shed-all > .toolbar-commands > .ui-popup:not(.toolbar-keep) > .ui-popup-trigger > .ui-popup-label {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -105,8 +112,10 @@
   clip-path: inset(50%);
 }
 
-.toolbar.icons-only > .toolbar-commands > button,
-.toolbar.icons-only > .toolbar-commands > .ui-popup > .ui-popup-trigger {
+.toolbar.icons-only > .toolbar-commands > button:not(.toolbar-keep):not(.toolbar-keep-longer),
+.toolbar.icons-only > .toolbar-commands > .ui-popup:not(.toolbar-keep):not(.toolbar-keep-longer) > .ui-popup-trigger,
+.toolbar.icons-only.shed-all > .toolbar-commands > button:not(.toolbar-keep),
+.toolbar.icons-only.shed-all > .toolbar-commands > .ui-popup:not(.toolbar-keep) > .ui-popup-trigger {
   padding: 0 var(--space-2);
 }
 
@@ -116,4 +125,22 @@
  */
 .toolbar-commands > * {
   flex: none;
+}
+
+/*
+ * Jeden wyjątek, na samym dnie. Kiedy pasek oddał już wszystkie słowa, jakie mógł, a miejsca i tak brakuje, komenda,
+ * która swojego słowa nie oddaje, pozwala je skrócić zamiast rozpychać rząd - dalej i tak nie ma czego mierzyć, bo
+ * głębszego stopnia nie ma.
+ *
+ * Tylko pozwolenie na ściśnięcie i nic więcej: samo skracanie robi `.ui-popup-label` w `ui/panel.css`, i robi je dopiero
+ * wtedy, gdy słowo naprawdę nie mieści się w kontrolce. Dołożone tu cieniowanie prawej krawędzi gasiło ostatnie litery
+ * także wtedy, gdy miejsca było pod dostatkiem - bo maska nie wie, czy coś wystaje poza krawędź, a wielokropek wie.
+ */
+.toolbar.icons-only.shed-all > .toolbar-commands > .toolbar-keep {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.toolbar.icons-only.shed-all > .toolbar-commands > .toolbar-keep > .ui-popup-trigger {
+  min-width: 0;
 }

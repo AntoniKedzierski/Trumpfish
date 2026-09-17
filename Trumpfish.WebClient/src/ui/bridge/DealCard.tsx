@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { PlayerPosition, SimulationBid, SimulationContract, SimulationHand } from '@/api/models';
 import { Auction } from './Auction';
-import { Contract } from './BidCard';
+import { ContractChip } from './BidCard';
 import { Deal } from './Hand';
 import './deal.css';
 
@@ -52,13 +52,13 @@ export function DealCard({
   return (
     <article className={`deal-card${game ? ' game' : ''}`}>
       <header>
-        <h3>{title}</h3>
-        <span className="deal-meta">{meta}</span>
+        {/* Nazwa i wiersz „rozdaje / po partii" to jedno zdanie o tym rozdaniu, więc stoją razem i razem się łamią. */}
+        <div className="deal-card-name">
+          <h3>{title}</h3>
+          <span className="deal-meta">{meta}</span>
+        </div>
 
-        <span className={`ui-chip deal-contract${contract.passed ? ' passed' : ''}`}>
-          <Contract contract={contract} />
-          {declarer === null || declarer === undefined ? '' : ` ${declarer}`}
-        </span>
+        <ContractChip contract={contract} declarer={declarer} />
 
         {error === null || error === undefined ? null : <span className="deal-error">{error}</span>}
 

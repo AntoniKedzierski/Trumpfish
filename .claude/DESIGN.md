@@ -75,6 +75,12 @@ Jedna definicja: `components/ToolBar.tsx` + `styles/toolbar.css`. Żaden widok n
   uwagi mają stać w jednej kolumnie lewych krawędzi.
 - Pozycje list: do lewej, z ikonką (dla menu komend).
 - Okno modalne: `ui/Dialog.tsx`, pytanie z dwiema odpowiedziami: `ui/Dialog.tsx → ConfirmDialog`.
+- **Żadna warstwa otwierana przez kontrolkę nie ma prawa być przycięta przez kontener, w którym ta kontrolka stoi** —
+  ani przez panel popupu, ani przez kartę, ani przez ramkę z własnym przewijaniem. Lista wartości `ComboBoksa` jest
+  rysowana przez `createPortal` do `body` i pozycjonowana `fixed` z prostokąta pola (`ui/ComboBox.tsx`). Taka warstwa
+  nosi `data-ui-overlay`, a każdy, kto nasłuchuje „kliknięcia obok", pyta o nią `isInsideOverlay` z `ui/overlay.ts` —
+  inaczej popup zamyka się w chwili wyboru z listy, która w nim stoi. Rozmiar dziedziczony po kontenerze (`.ui-panel *`)
+  już do niej nie dociera, więc jedzie z nią jako klasa (`.ui-combo-list.small`).
 
 ## 6. Gdzie wolno ustawiać styl kontrolki
 

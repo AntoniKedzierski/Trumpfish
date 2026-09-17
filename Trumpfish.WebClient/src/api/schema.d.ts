@@ -1362,6 +1362,124 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/replay/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ReplayStartRequest"];
+                    "text/json": components["schemas"]["ReplayStartRequest"];
+                    "application/*+json": components["schemas"]["ReplayStartRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReplayState"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/replay/bid": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ReplayBidRequest"];
+                    "text/json": components["schemas"]["ReplayBidRequest"];
+                    "application/*+json": components["schemas"]["ReplayBidRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReplayState"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/deals": {
         parameters: {
             query?: never;
@@ -1444,7 +1562,37 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SavedDeal"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
         put: {
             parameters: {
                 query?: never;
@@ -2159,9 +2307,41 @@ export interface components {
         RenameSystemRequest: {
             name: string;
         };
+        ReplayBidRequest: {
+            state: string;
+            type: components["schemas"]["BidType"];
+            color: components["schemas"]["BidColor"];
+            /** Format: int32 */
+            value: null | number | string;
+        };
+        ReplayStartRequest: {
+            /** Format: uuid */
+            systemId: string;
+            dealer: components["schemas"]["PlayerPosition"];
+            vulnerability: components["schemas"]["Vulnerability"];
+            player: components["schemas"]["PlayerPosition"];
+            hands: components["schemas"]["SimulationHandRequest"][];
+        };
+        ReplayState: {
+            state: string;
+            dealer: components["schemas"]["PlayerPosition"];
+            vulnerability: components["schemas"]["Vulnerability"];
+            player: components["schemas"]["PlayerPosition"];
+            playerHand: components["schemas"]["SimulationHand"];
+            bidding: components["schemas"]["SimulationBid"][];
+            playerToBid: boolean;
+            legal: components["schemas"]["PracticeLegalBids"];
+            finished: boolean;
+            result: null | components["schemas"]["SimulationDealResult"];
+            error: null | string;
+        };
         Root: {
             name?: null | string;
             bids?: components["schemas"]["BidNode"][];
+        };
+        SavedDeal: {
+            summary: components["schemas"]["SavedDealSummary"];
+            deal: components["schemas"]["SimulationDealResult"];
         };
         SavedDealPage: {
             deals: components["schemas"]["SavedDealSummary"][];

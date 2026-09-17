@@ -13,6 +13,11 @@
   animation: view-enter var(--duration-slow) var(--ease-out) both;
 }
 
+/* Wbudowany w inny widok: edytor jest wtedy kolumną, a nie całym oknem, i musi dać się zwęzić poniżej swojej treści. */
+.bidding-browser.embedded {
+  min-width: 0;
+}
+
 /* Sits above the toolbar so an out-of-date fork is impossible to miss on opening it. */
 .seed-update {
   display: flex;
@@ -74,9 +79,10 @@
   padding: 20px 28px;
 }
 
+/* Uchwyt i jego marginesy składają się na `--splitter-column` - odstęp, jaki panele mają po obu jego stronach. */
 .workspace-splitter {
-  width: 6px;
-  margin: 0 7px;
+  width: var(--splitter-handle);
+  margin: 0 calc((var(--splitter-column) - var(--splitter-handle)) / 2);
   border-radius: 999px;
   background: transparent;
   cursor: col-resize;

@@ -315,7 +315,11 @@ button.icon-only .icon,
   font-size: var(--text-xs);
 }
 
-.ui-panel .ui-combo-option {
+/*
+ * Lista wartości pola z popupu. Rysowana jest do `body` (patrz `ComboBox.tsx`), więc `.ui-panel *` już jej nie sięga i
+ * rozmiar jedzie z nią jako klasa - inaczej lista otwarta z panelu byłaby jedyną rzeczą w popupie o innym stopniu pisma.
+ */
+.ui-combo-list.small .ui-combo-option {
   padding: var(--space-1) var(--space-2) var(--space-1) 22px;
   font-size: var(--text-xs);
 }

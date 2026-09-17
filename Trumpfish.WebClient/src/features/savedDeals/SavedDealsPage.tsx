@@ -5,6 +5,7 @@ import { deleteSavedDeal, listSavedDeals, updateSavedDeal } from '@/api/savedDea
 import { PencilIcon, ShareIcon, TrashIcon } from '@/components/icons';
 import { ToolBar } from '@/components/ToolBar';
 import { Button, ConfirmDialog } from '@/ui';
+import { analyzerLink } from '@/features/dealAnalyzer/route';
 import { DealDetailsDialog } from './DealDetailsDialog';
 import { DealFilterMenu, DealPager, DealRow, DealSortMenu } from './DealPieces';
 import type { DealFilters } from './DealPieces';
@@ -105,6 +106,8 @@ export function SavedDealsPage() {
             <DealRow
               key={deal.id}
               deal={deal}
+              /* Kliknięcie w wiersz otwiera rozdanie tam, gdzie się je ogląda - w widoku analizy. */
+              to={analyzerLink(deal.id)}
               actions={
                 <>
                   <Button iconOnly icon={PencilIcon} className="deal-save" title="Edytuj nazwę, tagi i komentarz" aria-label="Edytuj" onClick={() => setEditing(deal)} />

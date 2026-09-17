@@ -111,6 +111,26 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Wiersz, który gdzieś prowadzi: cała płytka jest celem, a pod wskaźnikiem mówi o tym ramką - jak kafelek narzędzia. */
+.saved-deal.openable {
+  cursor: pointer;
+}
+
+.saved-deal.openable:hover {
+  border-color: var(--accent);
+}
+
+/* Nazwa jest łączem, ale nie ma być podkreślonym łączem w środku karty - płytka i tak prowadzi w to samo miejsce. */
+.saved-deal-body h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.saved-deal.openable:hover .saved-deal-body h2 a,
+.saved-deal-body h2 a:focus-visible {
+  color: var(--accent);
+}
+
 /* The contract is drawn as the same pill the deal card draws it as; only its place in the row belongs to this list. */
 .saved-deal .deal-contract {
   flex: none;

@@ -1,6 +1,7 @@
 import type { BiddingSystemSummary } from '@/api/models';
 import { SettingsIcon } from '@/components/icons';
 import { Popup } from '@/ui';
+import { toolbarKeep } from '@/components/ToolBar';
 import { SystemPicker } from '@/components/SystemPicker';
 
 interface ConfigMenuProps {
@@ -25,8 +26,9 @@ export function ConfigMenu({ systems, systemId, onSystemId, dealCount, onDealCou
   // The trigger names the system that will be bidding: it is the one setting in here that decides what a run means.
   const chosen = systems.find((system) => system.id === systemId);
 
+  // Nazwa systemu, który będzie licytował, zostaje na pasku na każdej szerokości - to ona mówi, czym będzie ten przebieg.
   return (
-    <Popup label={chosen?.name ?? 'Konfiguracja'} icon={SettingsIcon} scroll={false}>
+    <Popup label={chosen?.name ?? 'Konfiguracja'} icon={SettingsIcon} scroll={false} className={toolbarKeep}>
       <div className="ui-panel-section">
         <SystemPicker systems={systems} systemId={systemId} onSystemId={onSystemId} disabled={disabled} />
       </div>

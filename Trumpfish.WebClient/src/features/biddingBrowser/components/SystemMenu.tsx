@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import type { BiddingSystemSummary } from '@/api/models';
 import { CheckIcon, DownloadIcon, LayersIcon, PlusIcon, UploadIcon } from '@/components/icons';
-import { Popup } from '@/ui';
+import { PanelNote, Popup } from '@/ui';
+import { toolbarKeep } from '@/components/ToolBar';
 import { SystemPicker } from '@/components/SystemPicker';
 import './SystemMenu.css';
 
@@ -12,6 +13,8 @@ interface SystemMenuProps {
   systemId: string | null;
   savedSystems: BiddingSystemSummary[];
   busy: boolean;
+  /** System przychodzi z widoku, w którym edytor stoi, więc tutaj nie wybiera się go. Reszta menu działa jak zawsze. */
+  lockedSystem?: boolean;
   onLoad: (id: string) => void;
   onCreate: (name: string) => void;
   onValidate: () => void;
@@ -36,6 +39,9 @@ export function SystemMenu(props: SystemMenuProps) {
   const [name, setName] = useState('');
   const file = useRef<HTMLInputElement>(null);
 
+  // Wszystko, co zakłada, wnosi albo wynosi system, jest sprawą widoku, który system wybiera.
+  const locked = props.lockedSystem === true;
+
   const create = () => {
     const trimmed = name.trim();
     if (trimmed === '') {
@@ -49,8 +55,9 @@ export function SystemMenu(props: SystemMenuProps) {
   // The trigger names what is open. Until something has been opened there is no name to give, and it says what it is instead.
   const label = props.systemId === null ? 'System' : props.systemName;
 
+  // Nazwa otwartego systemu zostaje na pasku na każdej szerokości: sam znak nie powie, co się właśnie edytuje.
   return (
-    <Popup label={label} icon={LayersIcon} scroll={false}>
+    <Popup label={label} icon={LayersIcon} scroll={false} className={toolbarKeep}>
       <div className="ui-panel-section">
         <p className="system-current">
           <span>Edytujesz</span>
@@ -61,10 +68,17 @@ export function SystemMenu(props: SystemMenuProps) {
           systems={props.savedSystems}
           systemId={props.systemId ?? ''}
           onSystemId={props.onLoad}
-          disabled={props.busy}
+          disabled={props.busy || locked}
           placeholder="Wczytaj system…"
           note={(system) => `${system.bidCount ?? 0}`}
         />
+
+        {props.lockedSystem !== true ? null : (
+          <PanelNote>
+            System wybierasz w „Ustawieniach” analizy - to ten sam system, którym licytują boty. Tutaj można go tylko
+            edytować i sprawdzać.
+          </PanelNote>
+        )}
       </div>
 
       <div className="ui-panel-section">
@@ -75,7 +89,7 @@ export function SystemMenu(props: SystemMenuProps) {
             type="text"
             value={name}
             placeholder="Nazwa"
-            disabled={props.busy}
+            disabled={props.busy || locked}
             onChange={(event) => setName(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -87,7 +101,7 @@ export function SystemMenu(props: SystemMenuProps) {
         </label>
 
         <div className="system-commands">
-          <button type="button" className="small" onClick={create} disabled={props.busy || name.trim() === ''}>
+          <button type="button" className="small" onClick={create} disabled={props.busy || locked || name.trim() === ''}>
             <PlusIcon />
             <span>Utwórz</span>
           </button>
@@ -102,12 +116,12 @@ export function SystemMenu(props: SystemMenuProps) {
             <span>Sprawdź</span>
           </button>
 
-          <button type="button" className="small" onClick={props.onExport}>
+          <button type="button" className="small" onClick={props.onExport} disabled={locked}>
             <DownloadIcon />
             <span>Eksportuj JSON</span>
           </button>
 
-          <button type="button" className="small" onClick={() => file.current?.click()}>
+          <button type="button" className="small" onClick={() => file.current?.click()} disabled={locked}>
             <UploadIcon />
             <span>Importuj JSON</span>
           </button>

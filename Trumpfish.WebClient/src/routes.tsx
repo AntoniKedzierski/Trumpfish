@@ -3,6 +3,8 @@ import { RequireAuth } from '@/auth/RequireAuth';
 import { AppLayout } from '@/components/AppLayout';
 import { BiddingBrowserPage } from '@/features/biddingBrowser/pages/BiddingBrowserPage';
 import { ManageSystemsPage } from '@/features/biddingBrowser/pages/ManageSystemsPage';
+import { DealAnalyzerPage } from '@/features/dealAnalyzer/pages/DealAnalyzerPage';
+import { analyzerRoute } from '@/features/dealAnalyzer/route';
 import { DuoPracticePage } from '@/features/duoPractice/pages/DuoPracticePage';
 import { duoRoute } from '@/features/duoPractice/route';
 import { PracticePage } from '@/features/practice/pages/PracticePage';
@@ -37,6 +39,8 @@ export const routes: RouteObject[] = [
       { path: '/tools/simulation', element: <SimulationPage /> },
       { path: '/tools/practice', element: <PracticePage /> },
       { path: duoRoute, element: <DuoPracticePage /> },
+      { path: analyzerRoute, element: <DealAnalyzerPage /> },
+      { path: `${analyzerRoute}/:dealId`, element: <DealAnalyzerPage /> },
     ],
   },
   { path: '*', element: <NotFoundPage /> },
