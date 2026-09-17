@@ -41,7 +41,10 @@ export function SimulationPage() {
    * crawled once there was a run behind it, and why it was perfectly quick before the first one. React skips a subtree
    * whose element it has already seen, so keeping the elements is what keeps the field responsive.
    */
-  const cards = useMemo(() => sortedDeals.map((deal) => <DealResultCard key={deal.index} deal={deal} />), [sortedDeals]);
+  const cards = useMemo(
+    () => sortedDeals.map((deal) => <DealResultCard key={deal.index} deal={deal} analyseWithSystemId={systemId} />),
+    [sortedDeals, systemId],
+  );
 
   useEffect(() => {
     let cancelled = false;

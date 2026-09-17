@@ -48,21 +48,29 @@ public class BiddingSystem {
 
         // Logika analogiczna do GetMatchingChildren.
         var lastBid = bidSequence.Last();
-        var candidates = children.Where(e => e.Equals(lastBid) && !e.IsDisabled);
+        var candidates = children.Where(e => e.Equals(lastBid) && !e.IsDisabled).ToList();
 
         // Brak wcięcia, zwracamy tylko odzywki bez przypisanego wcięcia.
         if (lastBid.Interruption == null) {
             return candidates.Where(e => e.Interjection == null).ToList();
         }
 
-        // Nastąpiło wcięcie.
-        // Jeżeli wśród kandydatów są jakiekowliek wcięcia, to zwracamy tylko je.
-        if (candidates.Any(e => e.Interjection != null)) {
-            return candidates.Where(e => e.Interjection != null && e.Interjection.Equals(lastBid.Interruption)).ToList();
+        // Odzywki dokładnie po tym wcięciu.
+        var interjectedBids = candidates
+            .Where(e => e.Interjection?.Equals(lastBid.Interruption) ?? false)
+            .ToList();
+
+        // Odzywki po innych wcięciach (debug).
+        var otherInterjectedBids = candidates
+            .Where(e => e.Interjection != null && !e.Interjection.Equals(lastBid.Interruption))
+            .ToList();
+
+        // Jeżeli nie ma odzywek po tym wcięciu, to zwracamy tak, jakby wcięcia nie było.
+        if (interjectedBids.Count == 0) {
+            return candidates.Where(e => e.Interjection == null).ToList();
         }
 
-        // Jeżeli nie, to wszystko.
-        return candidates.ToList();
+        return interjectedBids;
     }
 
 

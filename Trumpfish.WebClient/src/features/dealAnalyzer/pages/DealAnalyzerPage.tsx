@@ -79,7 +79,8 @@ export function DealAnalyzerPage() {
   const [pending, setPending] = useState<{ systemId: string } | { close: true } | null>(null);
 
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
-  const [systemId, setSystemId] = useState('');
+  // Widok otwarty z symulacji przynosi system w adresie; bez niego bierze się pierwszy z listy, kiedy ta przyjdzie.
+  const [systemId, setSystemId] = useState(search.get('system') ?? '');
   const [seat, setSeat] = useState<PlayerPosition>('South');
 
   const [session, setSession] = useState<Session | null>(null);
@@ -338,7 +339,11 @@ export function DealAnalyzerPage() {
         Powtórz licytację
       </Button>
 
-      <Popup label="Rozegraj licytację" icon={PlayIcon} className={toolbarKeepLonger} disabled={busy || bidding || systemId === ''}>
+      <Popup
+        label="Rozegraj licytację"
+        icon={PlayIcon}
+        className={toolbarKeepLonger}
+        disabled={busy || bidding || systemId === ''}>
         {(close) => (
           <>
             <div className="ui-panel-section">

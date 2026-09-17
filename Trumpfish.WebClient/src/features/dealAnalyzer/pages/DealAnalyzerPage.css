@@ -45,8 +45,9 @@
 }
 
 /*
- * Odstęp przez splitter jest dokładnie tym, czym jest między drzewem a edytorem: samym splitterem. Panele nie dokładają
- * do niego własnych wcięć od strony podziału, bo dwa wcięcia plus splitter to trzy odstępy zamiast jednego.
+ * Odstęp przez splitter jest dokładnie tym, czym jest między drzewem a edytorem: samym splitterem. Żadna z połówek nie
+ * dokłada do niego własnego wcięcia - ani treść, ani pasek nad nią - bo dwa wcięcia plus splitter to trzy odstępy
+ * zamiast jednego. Dzięki temu w każdej połówce pasek i treść stoją na tej samej krawędzi, jedno pod drugim.
  */
 .analyzer-split > .bidding-browser .workspace {
   padding-right: 0;
@@ -54,6 +55,10 @@
 
 .analyzer-split > .bidding-browser .validation {
   margin-right: 0;
+}
+
+.analyzer-split .analysis-pane > .toolbar {
+  padding-left: 0;
 }
 
 .analyzer-split .analyzer-main > .stack {
@@ -67,7 +72,7 @@
  */
 .analyzer-split > .bidding-browser > .toolbar {
   margin-right: calc(var(--splitter-column) * -1);
-  padding-right: calc(var(--space-5) + var(--splitter-column));
+  padding-right: var(--splitter-column);
 }
 
 /* Za wąskie okno: zostaje sama analiza. Edytor jest schowany, a nie usunięty - wraca z tym, co było w nim napisane. */

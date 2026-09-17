@@ -76,7 +76,8 @@
   grid-template-columns: minmax(0, 1fr) auto 460px;
   flex: 1;
   min-height: 0;
-  padding: 20px 28px;
+  /* Bok taki sam, jak w pasku nad nim (`--space-5` w `styles/toolbar.css`) - drzewo zaczyna się pod pierwszą komendą. */
+  padding: 20px var(--space-5);
 }
 
 /* Uchwyt i jego marginesy składają się na `--splitter-column` - odstęp, jaki panele mają po obu jego stronach. */
@@ -828,7 +829,7 @@
 .validation {
   max-height: 280px;
   overflow: auto;
-  margin: 0 28px 20px;
+  margin: 0 var(--space-5) 20px;
   padding: 18px 20px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);

@@ -162,14 +162,15 @@ export function DealRow({ deal, extra, actions, to }: { deal: SavedDealSummary; 
       className={to === undefined ? 'saved-deal' : 'saved-deal openable'}
       onClick={to === undefined ? undefined : () => void navigate(to)}
     >
-      {/* Drawn the way every contract in the application is drawn, rather than as the text it happens to be stored as. */}
-      <span className="deal-contract">
-        {!played ? deal.contract : (
-          <>
-            <BidCard bid={{ color: deal.color!, value: level }} />
-            {deal.declarer === null || deal.declarer === undefined ? null : <span className="saved-deal-declarer">{deal.declarer}</span>}
-          </>
-        )}
+      {/*
+        * Ta sama płytka, co w nagłówku karty rozdania - łącznie z `ui-chip`, który daje jej wysokość i oddech. Bez niego
+        * kontrakt w wierszu był samym rysunkiem wciśniętym w obrys.
+        *
+        * Sam kontrakt, bez miejsca, które go gra: wiersz listy odpowiada na pytanie „co to za rozdanie", a kto siedział
+        * na rozgrywce, widać na karcie po jego otwarciu.
+        */}
+      <span className="ui-chip deal-contract">
+        {!played ? deal.contract : <BidCard bid={{ color: deal.color!, value: level }} />}
       </span>
 
       <div className="saved-deal-body">

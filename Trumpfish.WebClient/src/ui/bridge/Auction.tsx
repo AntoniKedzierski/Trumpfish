@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { PlayerPosition, SimulationBid } from '@/api/models';
 import { playerPositions, toNumber } from '@/api/models';
+import { horizontalNudge } from '../keepOnScreen';
 import { BidCard } from './BidCard';
 import './deal.css';
 
@@ -91,9 +92,9 @@ function BidCell({ bid, explain, flagOffSystem, open, onToggle, onClose }: BidCe
   const [shift, setShift] = useState(0);
 
   /*
-   * Dymek jest wyśrodkowany pod swoją odzywką, co dla pierwszej i ostatniej kolumny wypycha jego połowę poza ekran.
-   * Mierzony raz przy otwarciu - przesunięcie jest wtedy zerowe, więc mierzone jest położenie niepoprawione - i cofany
-   * o tyle, ile wystaje.
+   * Dymek jest wyśrodkowany pod swoją odzywką, co dla pierwszej i ostatniej kolumny wypycha jego połowę poza to, co
+   * widać. Mierzony raz przy otwarciu - przesunięcie jest wtedy zerowe, więc mierzone jest położenie niepoprawione - i
+   * cofany o tyle, ile wystaje. Granicę wyznacza `keepOnScreen`: okno i każda przewijana ramka nad dymkiem.
    */
   useLayoutEffect(() => {
     if (!open || bubble.current === null) {
@@ -101,13 +102,7 @@ function BidCell({ bid, explain, flagOffSystem, open, onToggle, onClose }: BidCe
       return;
     }
 
-    const margin = 8;
-    const box = bubble.current.getBoundingClientRect();
-    if (box.left < margin) {
-      setShift(Math.round(margin - box.left));
-    } else if (box.right > window.innerWidth - margin) {
-      setShift(Math.round(window.innerWidth - margin - box.right));
-    }
+    setShift(horizontalNudge(bubble.current));
   }, [open]);
 
   // Pas nigdy nie jest naprawdę „spoza systemu", więc oznaczanie go dokładałoby tabeli tylko szumu.

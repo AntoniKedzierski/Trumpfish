@@ -47560,7 +47560,26 @@
               "goToOpenings": false,
               "isPreferred": true,
               "isDisabled": false,
-              "nextBids": [],
+              "nextBids": [
+                {
+                  "nodeId": "671b5a74-bb15-47e8-b664-1e448f714db9",
+                  "condition": "Dogranie ko\u0144c\u00F3wki.",
+                  "openerBid": true,
+                  "signOff": false,
+                  "oneRoundForcing": false,
+                  "gameForcing": false,
+                  "automaticResponse": false,
+                  "goToOpenings": false,
+                  "isPreferred": false,
+                  "isDisabled": false,
+                  "nextBids": [],
+                  "realizedGoal": "None",
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 4,
+                  "isFromSystem": false
+                }
+              ],
               "realizedGoal": "None",
               "type": "Submit",
               "color": "NoTrump",
