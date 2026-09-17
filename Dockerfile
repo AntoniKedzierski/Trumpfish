@@ -15,18 +15,18 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY Trumpfish.Server/Trumpfish.Server.csproj Trumpfish.Server/
 COPY Model/Model.csproj Model/
-RUN --mount=type=cache,target=/root/.nuget/packages \
-    dotnet restore Trumpfish.Server/Trumpfish.Server.csproj -p:SkipSpaBuild=true
+# Restored into the layer rather than into a mounted cache. A cache mount is never part of the layer and never
+# travels with the layer cache that the pipeline exports, so a runner reusing this step would inherit an assets
+# file naming packages that are not on its disk, and the publish below would fail looking for them.
+RUN dotnet restore Trumpfish.Server/Trumpfish.Server.csproj -p:SkipSpaBuild=true
 COPY Model/ Model/
 COPY Trumpfish.Server/ Trumpfish.Server/
 # The double dummy solver, if this working copy has it built. The project file picks it up when it is there and leaves the
 # analysis endpoint reporting itself unavailable when it is not, so the image builds either way. See native/README.md.
 COPY native/ native/
 COPY --from=spa /spa/dist/ Trumpfish.WebClient/dist/
-# The same cache has to be mounted here: --no-restore trusts the restore above, whose packages live in the cache rather than
-# in a layer of their own.
-RUN --mount=type=cache,target=/root/.nuget/packages \
-    dotnet publish Trumpfish.Server/Trumpfish.Server.csproj \
+# --no-restore trusts the restore above, whose packages now live in a layer of their own and are always present.
+RUN dotnet publish Trumpfish.Server/Trumpfish.Server.csproj \
     --no-restore \
     --configuration Release \
     --output /app/publish \

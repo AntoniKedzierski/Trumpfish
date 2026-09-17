@@ -1,0 +1,159 @@
+name: Build and deploy
+
+# Every push to master builds the image, publishes it to GHCR and rolls it out onto the Azure virtual machine. A pull
+# request runs the same build and stops there: nothing is published and nothing is deployed, so a branch that no longer
+# compiles is caught before it can be merged rather than after.
+#
+# The machine is reached through `az vm run-command invoke`, not over SSH. That goes through Azure Resource Manager, so
+# the network security group keeps port 22 closed to everything but the administrator's own address and no private key
+# ever has to live in this repository. Authentication is OIDC - see infra/github-oidc.sh for the one time setup and for
+# the three secrets it prints.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+  AZURE_RESOURCE_GROUP: rg-trumpfish-prod
+  AZURE_VM_NAME: vm-trumpfish
+
+concurrency:
+  # Two deployments onto one machine would race over the same containers. A pull request build is disposable, so a newer
+  # push cancels the one still running; a deployment is not, and is always left to finish.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Obraz
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image: ${{ steps.image.outputs.ref }}
+
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@v5
+
+      - name: Ustalenie nazwy obrazu
+        id: image
+        run: |
+          # Container references have to be lower case and the repository name is not, so it cannot be used as it stands.
+          repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          name="${REGISTRY}/${repo}"
+
+          # The deployment always runs the tag of this very commit rather than a moving one, so what a green pipeline
+          # says is running is what is running. `latest` is published alongside it for anything that pulls by hand.
+          echo "ref=${name}:sha-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+              echo "tags=${name}:sha-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          else
+              echo "tags=${name}:sha-${{ github.sha }},${name}:latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Logowanie do GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Budowa i publikacja
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.image.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          # The layer cache lives with the workflow, which is what keeps a rebuild that changed one C# file from
+          # reinstalling npm packages and restoring NuGet from scratch.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # Without this the push produces an image index with an attestation next to the image. Nothing here reads the
+          # attestation and a plain manifest is what the machine pulls fastest.
+          provenance: false
+
+  deploy:
+    name: Wdrożenie
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    environment:
+      name: production
+      url: https://trumpfish.polandcentral.cloudapp.azure.com
+
+    permissions:
+      contents: read
+      # Read, not write: the token is handed to the machine so it can pull the image it was just told to run.
+      packages: read
+      # Required by the OIDC handshake below. Without it azure/login has no token to exchange.
+      id-token: write
+
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@v5
+
+      - name: Logowanie do Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Uruchomienie wdrożenia na maszynie
+        run: |
+          set -euo pipefail
+
+          # The parameter names are cosmetic: RunShellScript passes them to the script positionally, as $1, $2 and $3.
+          # The registry token is the workflow's own, so it expires the moment this job ends - there is no long lived
+          # credential to leak from the machine.
+          az vm run-command invoke \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --name "$AZURE_VM_NAME" \
+              --command-id RunShellScript \
+              --scripts @deploy/deploy.sh \
+              --parameters \
+                  "image=${{ needs.build.outputs.image }}" \
+                  "registryUser=${{ github.actor }}" \
+                  "registryToken=${{ secrets.GITHUB_TOKEN }}" \
+              --query "value[0].message" -o tsv | tee wynik.txt
+
+          # `az vm run-command invoke` reports success as long as the script was delivered and ran at all - a script that
+          # exited non zero looks exactly the same from here. The sentinel the script prints as its last line is the only
+          # reliable signal, so the job's result hangs on finding it.
+          if ! grep -q "WDROZENIE_OK" wynik.txt; then
+              echo "::error::Wdrożenie nie zakończyło się powodzeniem - szczegóły w wyjściu powyżej."
+              exit 1
+          fi
+
+      - name: Podsumowanie
+        run: |
+          {
+              echo "### Wdrożono"
+              echo
+              echo "Obraz: \`${{ needs.build.outputs.image }}\`"
+              echo
+              echo "Adres: <https://trumpfish.polandcentral.cloudapp.azure.com>"
+          } >> "$GITHUB_STEP_SUMMARY"

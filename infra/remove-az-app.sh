@@ -1,0 +1,1 @@
+az ad app delete --id 20137d95-3b3b-4592-ac4b-fd77c4c89c5d
