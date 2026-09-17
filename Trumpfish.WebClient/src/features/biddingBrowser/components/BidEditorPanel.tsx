@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Chevron, ComboBox } from '@/ui';
 import { useMediaQuery } from '@/components/useMediaQuery';
+import { SuitMark } from '@/components/suits';
 import { bidColors, bidTypes, toNumber, type BidType, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
 import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode } from '../model';
@@ -134,9 +135,24 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
 
           <label className="field">
             <span>Kolor</span>
+            {/*
+              * Kolor nazwany znakiem i słowem, w tej kolejności - znak jest tym, czego oko szuka na liście, a słowo tym,
+              * co czyta czytnik ekranu i dymek. Znak rysuje `SuitMark`, jak wszędzie indziej w aplikacji; stoi w zwykłym
+              * tekście wewnątrz `.bid-call`, bo w kontenerze flex przestałby słuchać linii pisma (DESIGN.md, rozdział 10).
+              */}
             <ComboBox
               value={node.color ?? 'NoColor'}
-              options={bidColors.map((color) => ({ value: color, label: bidColorLabels[color], labelClassName: suitClassName({ type: 'Submit', color }) }))}
+              options={bidColors.map((color) => ({
+                value: color,
+                label: bidColorLabels[color],
+                labelClassName: suitClassName({ type: 'Submit', color }),
+                labelNode: color === 'NoColor' ? undefined : (
+                  <span className="bid-call">
+                    <SuitMark suit={color} />
+                    <span className="bid-color-name">{bidColorLabels[color]}</span>
+                  </span>
+                ),
+              }))}
               onChange={(color) => onChange({ color })}
             />
           </label>

@@ -150,4 +150,9 @@ function colorOrder(color: BidColor | undefined): number {
 
 export const bidTypeLabels: Record<BidType, string> = { Pass: 'Pas', Submit: 'Odzywka', Double: 'Kontra', Redouble: 'Rekontra' };
 
-export const bidColorLabels: Record<BidColor, string> = { NoColor: '-', Clubs: 'Trefle ♣', Diamonds: 'Kara ♦', Hearts: 'Kiery ♥', Spades: 'Piki ♠', NoTrump: 'Bez atu' };
+/*
+ * Same słowa. Znak koloru dokłada do nich `SuitMark` tam, gdzie lista jest rysowana - znak wpisany w tekst jako `♣` jest
+ * znakiem z czcionki systemowej, który na iOS podmienia się na kolorowe emoji i przestaje słuchać barwy (patrz
+ * `components/suits.tsx`). Etykieta zostaje więc tym, czym jest: nazwą, którą czyta czytnik ekranu i dymek.
+ */
+export const bidColorLabels: Record<BidColor, string> = { NoColor: '-', Clubs: 'Trefle', Diamonds: 'Kara', Hearts: 'Kiery', Spades: 'Piki', NoTrump: 'Bez atu' };

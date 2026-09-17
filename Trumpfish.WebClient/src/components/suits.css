@@ -63,3 +63,13 @@
   display: inline-block;
   white-space: nowrap;
 }
+
+/*
+ * Nazwa koloru stojąca za jego znakiem: „♣ Trefle".
+ *
+ * Odstęp jest na słowie, a nie na znaku, bo opakowanie znaku nie ma pudełka (`display: contents`), na którym dałoby się
+ * go postawić. W poziomie ułamek ema nie szkodzi - inaczej niż w pionie, gdzie zawsze prędzej czy później wychodzi.
+ */
+.mark + .bid-color-name {
+  margin-left: 0.3em;
+}
