@@ -619,6 +619,15 @@
 }
 
 /*
+ * Dwa pola tej samej wagi dzielą wiersz po połowie. Taki wiersz stoi w środku formularza, między etykietami na własnych
+ * liniach, więc odstęp nad nim jest ich odstępem - nie węższym odstępem pierwszego rzędu pod ścieżką odzywki.
+ */
+.editor .field-grid.even {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 14px;
+}
+
+/*
  * The label is the wrapper here, not a sibling, so the control inside it inherits whatever the label is set in. Its name
  * carries the label styling instead, and the wrapper hands the control back ordinary text - uppercased option labels were
  * exactly what a combobox reading "TREFLE" looked like.

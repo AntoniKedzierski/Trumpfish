@@ -13,6 +13,12 @@ public class NumberRange {
     }
 
 
+    public NumberRange(NumberRange other) {
+        Lower = other.Lower;
+        Upper = other.Upper;
+    }
+
+
     public NumberRange(int? lower, int? upper) {
         Lower = lower;
         Upper = upper;
@@ -28,6 +34,25 @@ public class NumberRange {
         }
         if (newValue.Upper != null && (Upper == null || newValue.Upper < Upper)) {
             Upper = newValue.Upper;
+        }
+    }
+
+
+    public void Combine(NumberRange other, int limit) {
+        Lower = Lower != null || other.Lower != null 
+            ? (Lower ?? 0) + (other.Lower ?? 0) 
+            : null;
+
+        Upper = Upper != null || other.Upper != null
+            ? (Upper ?? 0) + (other.Upper ?? 0)
+            : null;
+
+        if (Upper > limit) {
+            Upper = limit;
+        }
+
+        if (Lower > Upper) {
+            Lower = Upper;
         }
     }
 

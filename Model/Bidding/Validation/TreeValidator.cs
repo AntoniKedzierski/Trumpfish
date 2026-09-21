@@ -25,6 +25,7 @@ public sealed class TreeValidator {
     private static readonly Regex BelowPcPattern = new(@"^\s*poniżej\s+(?<upper>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private static readonly Regex AbovePcPattern = new(@"^\s*powyżej\s+(?<lower>\d{1,2})\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
     private static readonly Regex AbovePcPulsPattern = new(@"^(?<lower>\d{1,2})\+\s*PC\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 

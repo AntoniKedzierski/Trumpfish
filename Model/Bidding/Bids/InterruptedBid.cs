@@ -10,6 +10,8 @@ public class InterruptedBid : Bid {
 
     public Bid? Interruption { get; set; }
 
+    public InterruptedBid() : base() { }
+
     public InterruptedBid(Bid bid) {
         Type = bid.Type;
         Color = bid.Color;

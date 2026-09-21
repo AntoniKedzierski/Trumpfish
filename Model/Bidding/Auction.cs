@@ -112,14 +112,25 @@ public class Auction {
     /// Ostatnia odzywka danego gracza.
     /// </summary>
     /// <param name="passAsNull">Gdy true, pas traktowany jest jak brak odzywki (null).</param>
-    public Bid? GetLastPlayerBid(PlayerPosition bidderPosition, bool passAsNull = false) {
+    public InterruptedBid? GetLastPlayerBid(PlayerPosition bidderPosition, bool passAsNull = false) {
         for (int i = AuctionHistory.Count - 1; i >= 0; i--) {
             if (GetBidder(i) != bidderPosition) {
                 continue;
             }
 
             var bid = AuctionHistory[i];
-            return passAsNull && bid.Type == BidType.Pass ? null : bid;
+            if (passAsNull && bid.Type == BidType.Pass) {
+                return null;
+            }
+            else {
+                if (i >= 1 && AuctionHistory[i - 1].Type == BidType.Submit) {
+                    return new InterruptedBid(AuctionHistory[i]) {
+                        Interruption = AuctionHistory[i - 1]
+                    };
+                }
+
+                return new InterruptedBid(bid);
+            }
         }
 
         return null;
@@ -172,6 +183,44 @@ public class Auction {
         }
 
         return null;
+    }
+
+
+    public BidColor? GetCurrentContractColor() {
+        for (int i = AuctionHistory.Count - 1; i >= 0; i--) {
+            if (AuctionHistory[i].Type == BidType.Submit) {
+                return AuctionHistory[i].Color;
+            }
+        }
+
+        return null;
+    }
+
+
+    public BidColor? GetCurrentContractColor(out PlayerPosition? proposedByPlayer) {
+        proposedByPlayer = null;
+        var lastSubmitIndex = -1;
+        BidColor? resultColor = null;
+
+        for (int i = AuctionHistory.Count - 1; i >= 0; i--) {
+            if (AuctionHistory[i].Type == BidType.Submit) {
+                lastSubmitIndex = i;
+                resultColor = AuctionHistory[i].Color;
+            }
+        }
+
+        if (lastSubmitIndex < 0 || resultColor == null) {
+            return null;
+        }
+
+        // Iteracja co dwie odzywki (tylko w parze), w celu znalezienia gracza, który ma to grać.
+        for (int i = lastSubmitIndex; i >= 0; i -= 2) {
+            if (AuctionHistory[i].Type == BidType.Submit && AuctionHistory[i].Color == resultColor) {
+                proposedByPlayer = GetBidder(i);
+            }
+        }
+
+        return resultColor;
     }
 
 
@@ -360,4 +409,8 @@ public class Auction {
     public bool ReachedGameLevel() => GetLastSubmittedBid(onlySubmitions: true)?.MakesGame() ?? false;
 
     public bool AnySubmits() => AuctionHistory.Any(e => e.Type == BidType.Submit);
+
+    public bool CanSubmit(int value, BidColor bidColor) {
+        return GetLowestLegalValue(bidColor) <= value;
+    }
 }

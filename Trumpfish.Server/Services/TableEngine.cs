@@ -53,7 +53,7 @@ internal static class TableEngine {
         var players = new Player[4];
 
         foreach (var position in Enum.GetValues<PlayerPosition>()) {
-            players[(int)position] = new Player("bot", position, new BidEngine(auction, position, system, dealIndex));
+            players[(int)position] = new Player("bot", position, new BidEngine(hands[position], auction, position, system, dealIndex));
             players[(int)position].GiveHand(hands[position]);
         }
 
@@ -210,7 +210,7 @@ internal static class TableEngine {
         }
 
         var sequence = auction.GetPlayersSequence(player, out _).Where(entry => entry.Type != BidType.Pass).ToList();
-        var matches = system.GetDescendants(sequence);
+        var matches = system.GetBranchHeads(sequence);
 
         bid.IsFromSystem = matches.Count > 0;
         bid.Explanation = matches.Count == 0

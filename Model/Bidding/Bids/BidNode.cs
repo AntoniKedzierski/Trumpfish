@@ -1,4 +1,5 @@
 using Model.Bidding.AI.Engine;
+using Model.Bidding.AI.Eval;
 using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json;
@@ -6,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Model.Bidding.Bids;
 
-public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, IComparable<BidNode> {
+public class BidNode : InterruptedBid, IEquatable<BidNode>, IEqualityComparer<BidNode>, IComparable<BidNode> {
 
     /// <summary>Stable identity of the node, serialized so clients can address one exact bid even when several share the same path.</summary>
     public Guid NodeId { get; set; } = Guid.NewGuid();
@@ -104,6 +105,15 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     [JsonIgnore, TextJsonIgnore]
     public BidNode? Continuation { get; set; }
 
+    public BidColor? OutputGameColor { get; set; }
+
+    public BidColor? InputBidColor { get; set; }
+
+    /// <summary>Aspiracje szlemikowe - odzywka szuka kontraktu wyższego niż końcówka.</summary>
+    public bool TryPremiumContract { get; set; }
+
+    public int? SlamConventionIndex { get; set; }
+
 
     public BidNode() : base() { }
 
@@ -133,15 +143,6 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
         .ToList();
 
 
-    public BidNode GetRoot() {
-        if (Parent == null) {
-            return this;
-        }
-
-        return Parent.GetRoot();
-    }
-
-
     public List<BidNode> GetPath() {
         if (Parent == null) {
             return [this];
@@ -156,9 +157,61 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     }
 
 
+    public bool MatchesEntirePath(Hand hand) {
+        if (GetDepth() <= 1) {
+            return true;
+        }
+
+        var lastOwnBidCandidate = GetGrandparent();
+        while (lastOwnBidCandidate != null) {
+            if (!lastOwnBidCandidate.Matches(hand)) {
+                return false;
+            }
+            lastOwnBidCandidate = lastOwnBidCandidate.GetGrandparent();
+        }
+
+        return true;
+    }
+
+
     public bool Matches(Bid bid) => Type == bid.Type && Color == bid.Color && Value == bid.Value;
 
 
+    public HandEvaluation Evaluate() {
+        // Wszystkie odzwyki tego gracza, od góry drzewa.
+        var path = GetPath()
+            .Where(e => e.OpenerBid == OpenerBid)
+            .OrderBy(e => e)
+            .ToList();
+
+        var result = new HandEvaluation();
+
+        foreach (var bidNode in path) {
+            result.Evaluate(bidNode);
+        }
+
+        return result;
+    }
+
+
+    public BidColor? GetDeclaredGameColor() {
+        if (OutputGameColor != null) {
+            return OutputGameColor;
+        }
+
+        var parent = Parent;
+        while (parent != null) {
+            if (parent.OutputGameColor != null) {
+                return parent.OutputGameColor;
+            }
+            parent = parent.Parent;
+        }
+
+        return null;
+    }
+
+
+    #region Submits
     public static BidNode Submit(int value, BidColor color, string explanation) => new() {
         Type = BidType.Submit,
         Value = value,
@@ -215,7 +268,6 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
         var lowestValue = auction.GetLowestLegalValue(color);
 
         // Póki co brak kontry.
-
         return color switch {
             BidColor.NoTrump => Submit(Math.Max(3, lowestValue), BidColor.NoTrump, explanation),
             BidColor.Spades => Submit(Math.Max(4, lowestValue), BidColor.Spades, explanation),
@@ -224,6 +276,21 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
             BidColor.Clubs => Submit(Math.Max(5, lowestValue), BidColor.Clubs, explanation),
             _ => throw new Exception("Invalid color.")
         };
+    }
+
+
+    public static BidNode SubmitGameOrPass(Auction auction, BidColor color, string explanation) {
+        var lowestValue = auction.GetLowestLegalValue(color);
+
+        if (color.IsNoTrumpGame()) {
+            return lowestValue >= 4 ? Pass(explanation) : Submit(3, BidColor.NoTrump, explanation);
+        }
+
+        if (color.IsMajor()) {
+            return lowestValue >= 5 ? Pass(explanation) : Submit(4, color, explanation);
+        }
+
+        return lowestValue >= 6 ? Pass(explanation) : Submit(5, color, explanation);
     }
 
 
@@ -252,6 +319,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
         Explanation = explanation,
         IsFromSystem = false
     };
+    #endregion
 
 
     public Bid ToBid() {
@@ -380,6 +448,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
         // Porządek: ♣ < ♦ < ♥ < ♠ < NoTrump
         return GetColorOrder(Color).CompareTo(GetColorOrder(other.Color));
     }
+
 
     private static int GetColorOrder(BidColor color) {
         return color switch {

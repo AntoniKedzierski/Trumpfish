@@ -115,6 +115,15 @@ public class BidNodeRecord {
     /// </summary>
     public Guid? ContinuationNodeId { get; set; }
 
+    public BidColor? OutputGameColor { get; set; }
+
+    public BidColor? InputBidColor { get; set; }
+
+    /// <summary>Aspiracje szlemikowe - odzywka szuka kontraktu wyższego niż końcówka.</summary>
+    public bool TryPremiumContract { get; set; }
+
+    public int? SlamConventionIndex { get; set; }
+
     /// <summary>Excluded from the simulation together with everything below it. Only the head of the branch carries the flag.</summary>
     public bool IsDisabled { get; set; }
 

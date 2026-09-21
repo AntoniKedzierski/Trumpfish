@@ -2,10 +2,11 @@ using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Model.Bidding.Bids;
 
-public class Bid : IEquatable<Bid> {
+public class Bid : IEquatable<Bid>, IEqualityComparer<Bid> {
 
     public BidType Type { get; set; }
 
@@ -115,8 +116,24 @@ public class Bid : IEquatable<Bid> {
         return other.Color == Color && other.Type == Type && (other.Value?.Equals(Value) ?? true);
     }
 
+
+    public int GetBidCode() {
+        return (Value ?? 0) * 10000 + (int)Type * 1000 + (int)Color * 100;
+    }
+
+
     public static Bid Pass(string? explanation = null) {
         return new Bid { Type = BidType.Pass, Explanation = explanation };
+    }
+
+
+    public bool Equals(Bid? x, Bid? y) {
+        return x?.Equals(y) ?? true;
+    }
+
+
+    public int GetHashCode([DisallowNull] Bid obj) {
+        return obj.GetBidCode();
     }
 }
 

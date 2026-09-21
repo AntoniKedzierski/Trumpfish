@@ -1,4 +1,6 @@
+using Model.Bidding.AI.Engine;
 using Model.Bidding.Bids;
+using Model.Enums;
 using Newtonsoft.Json;
 
 namespace Model.Bidding.AI;
@@ -76,7 +78,32 @@ public class BiddingSystem {
     }
 
 
-    public List<BidNode> GetDescendants(List<InterruptedBid> bidSequence) {
+    public List<SystemBranch> GetBranches(IEnumerable<InterruptedBid> bidSequence, Hand hand, Auction auction, PlayerPosition position) {
+        return GetBranchHeads(bidSequence.ToList())
+            .Select(e => new SystemBranch(e, hand, auction, position))
+            .ToList();
+    }
+
+
+    public List<SystemBranch> ExpandBranch(SystemBranch branch, InterruptedBid nextBid, bool partnerOpened) {
+        // Do gałęzi, która już się skończyła, nie dołączamy odzywek z systemu.
+        if (branch is ExtendedSystemBranch extendedBranch) {
+            extendedBranch.Add(nextBid);
+            return [extendedBranch];
+        }
+
+        var children = branch.Head.GetNextBids();
+        var nextHeads = GetMatchingBids(children, nextBid);
+
+        if (nextHeads.Count == 0) {
+            return [new ExtendedSystemBranch(nextBid, branch, partnerOpened)];
+        }
+
+        return nextHeads.Select(e => new SystemBranch(e, branch.Hand, branch.Auction, branch.Position)).ToList();
+    }
+
+
+    public List<BidNode> GetBranchHeads(List<InterruptedBid> bidSequence) {
         var children = Openings()!.Bids.Concat(Defences()!.Bids).ToList();
 
         for (int i = 0; i < bidSequence.Count - 1; ++i) {
@@ -93,33 +120,11 @@ public class BiddingSystem {
     }
 
 
-    public IEnumerable<BidNode> GetDescendants(BidNode parent, Bid bid) {
-        foreach (var child in parent.NextBids) {
-            if (child.IsDisabled) {
-                continue;
-            }
-
-            if (child.Matches(bid)) {
-                yield return child;
-            }
-        }
-    }
-
-
-    public IEnumerable<BidNode> GetDescendants(Root root, Bid bid) {
-        foreach (var child in root.Bids) {
-            if (child.IsDisabled) {
-                continue;
-            }
-
-            if (child.Matches(bid)) {
-                yield return child;
-            }
-        }
-    }
-
-
     public List<BidNode> GetMatchingBids(List<BidNode> bidCollection, InterruptedBid lookup) {
+        if (bidCollection.Count == 0) {
+            return [];
+        }
+
         var matchingBids = bidCollection
             .Where(e => e.Equals(lookup))
             .Where(e => !e.IsDisabled);

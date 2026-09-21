@@ -1,3 +1,4 @@
+using Model.Bidding.AI.Engine;
 using Model.Bidding.Bids;
 using Model.Enums;
 
@@ -13,13 +14,13 @@ public class Player {
 
     public Hand Hand { get; private set; }
 
-    public IBidInput BidInput { get; private set; }
+    public BidEngine Engine { get; private set; }
 
 
-    public Player(string name, PlayerPosition startingPosition, IBidInput BidInput) {
+    public Player(string name, PlayerPosition startingPosition, BidEngine engine) {
         Name = name;
         CurrentPosition = startingPosition;
-        this.BidInput = BidInput;
+        Engine = engine;
     }
 
 
@@ -29,7 +30,7 @@ public class Player {
 
 
     public virtual Bid MakeBid() {
-        return BidInput.Get(Hand);
+        return Engine.Get();
     }
 
 }

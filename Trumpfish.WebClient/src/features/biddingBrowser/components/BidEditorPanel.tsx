@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Chevron, ComboBox } from '@/ui';
 import { useMediaQuery } from '@/components/useMediaQuery';
-import { SuitMark } from '@/components/suits';
-import { bidColors, bidTypes, toNumber, type BidType, type NumberRange } from '@/api/models';
+import { bidTypes, toNumber, type BidType, type NumberRange } from '@/api/models';
 import { conflicts, placeholderFor, type InheritedRanges, type RangeField } from '../constraints';
-import { bidColorLabels, bidTypeLabels, suitClassName, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
+import { bidTypeLabels, type EditableBidNode, type EditableSystem, type NodePath } from '../model';
 import { readCondition } from '../conditionReader';
+import { BidColorPicker } from './BidColorPicker';
 import { BidPath } from './BidPath';
 import { FigureMatrix } from './FigureMatrix';
 import { ContinuationPicker } from './ContinuationPicker';
@@ -53,6 +53,7 @@ const flagFields: { field: keyof EditableBidNode; label: string }[] = [
   { field: 'automaticResponse', label: 'Odzywka automatyczna' },
   { field: 'oneRoundForcing', label: 'Forsująca na jedno kółko' },
   { field: 'gameForcing', label: 'Forsująca do końcówki' },
+  { field: 'tryPremiumContract', label: 'Aspiracje szlemikowe' },
   { field: 'goToOpenings', label: 'Przejdź do otwarć' },
   { field: 'isPreferred', label: 'Odzywka preferowana' },
   { field: 'alert', label: 'Alert' },
@@ -139,26 +140,7 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
 
           <label className="field">
             <span>Kolor</span>
-            {/*
-              * Kolor nazwany znakiem i słowem, w tej kolejności - znak jest tym, czego oko szuka na liście, a słowo tym,
-              * co czyta czytnik ekranu i dymek. Znak rysuje `SuitMark`, jak wszędzie indziej w aplikacji; stoi w zwykłym
-              * tekście wewnątrz `.bid-call`, bo w kontenerze flex przestałby słuchać linii pisma (DESIGN.md, rozdział 10).
-              */}
-            <ComboBox
-              value={node.color ?? 'NoColor'}
-              options={bidColors.map((color) => ({
-                value: color,
-                label: bidColorLabels[color],
-                labelClassName: suitClassName({ type: 'Submit', color }),
-                labelNode: color === 'NoColor' ? undefined : (
-                  <span className="bid-call">
-                    <SuitMark suit={color} />
-                    <span className="bid-color-name">{bidColorLabels[color]}</span>
-                  </span>
-                ),
-              }))}
-              onChange={(color) => onChange({ color })}
-            />
+            <BidColorPicker value={node.color} onChange={(color) => onChange({ color })} />
           </label>
 
           <label className="field">
@@ -184,12 +166,25 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
         <label>Dodatkowy opis</label>
         <input value={node.description ?? ''} onChange={(event) => onChange({ description: event.target.value })} />
 
-        <label>Konwencja</label>
-        <input
-          value={node.convention ?? ''}
-          title="Puste = naturalna. 'Sztuczne' = sztuczna bez konwencji. Nazwa z dużej litery."
-          onChange={(event) => onChange({ convention: event.target.value })}
-        />
+        <div className="field-grid even">
+          <label className="field">
+            <span>Konwencja</span>
+            <input
+              value={node.convention ?? ''}
+              title="Puste = naturalna. 'Sztuczne' = sztuczna bez konwencji. Nazwa z dużej litery."
+              onChange={(event) => onChange({ convention: event.target.value })}
+            />
+          </label>
+
+          <label className="field">
+            <span>Indeks szlemowy</span>
+            <input
+              type="number"
+              value={toNumber(node.slamConventionIndex) ?? ''}
+              onChange={(event) => onChange({ slamConventionIndex: event.target.value === '' ? null : Number(event.target.value) })}
+            />
+          </label>
+        </div>
 
         <label>Przejście</label>
         <ContinuationPicker
@@ -199,6 +194,19 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
           onChange={(continuationNodeId) => onChange({ continuationNodeId })}
           onGoTo={onGoTo}
         />
+
+        {/* Dwa kolory, o które pyta się tą samą listą co o kolor odzywki; myślnik na liście czyści pole. */}
+        <div className="field-grid even">
+          <label className="field">
+            <span>Kolor końcówki</span>
+            <BidColorPicker value={node.outputGameColor} onChange={(color) => onChange({ outputGameColor: color === 'NoColor' ? null : color })} />
+          </label>
+
+          <label className="field">
+            <span>Kolor wejściowy</span>
+            <BidColorPicker value={node.inputBidColor} onChange={(color) => onChange({ inputBidColor: color === 'NoColor' ? null : color })} />
+          </label>
+        </div>
 
         <RangeMatrix node={node} inherited={inherited} onBound={changeRange} />
 

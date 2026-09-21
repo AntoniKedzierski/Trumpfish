@@ -2217,6 +2217,38 @@
             ],
             "format": "uuid"
           },
+          "outputGameColor": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BidColor"
+              }
+            ]
+          },
+          "inputBidColor": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BidColor"
+              }
+            ]
+          },
+          "tryPremiumContract": {
+            "type": "boolean"
+          },
+          "slamConventionIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
           "type": {
             "$ref": "#/components/schemas/BidType"
           },
