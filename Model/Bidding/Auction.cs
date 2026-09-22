@@ -108,6 +108,11 @@ public class Auction {
     }
 
 
+    public Bid? GetLastBid() {
+        return AuctionHistory.LastOrDefault(e => e.Type != BidType.Pass);
+    }
+
+
     /// <summary>
     /// Ostatnia odzywka danego gracza.
     /// </summary>
@@ -125,7 +130,7 @@ public class Auction {
             else {
                 if (i >= 1 && AuctionHistory[i - 1].Type == BidType.Submit) {
                     return new InterruptedBid(AuctionHistory[i]) {
-                        Interruption = AuctionHistory[i - 1]
+                        Interjection = AuctionHistory[i - 1]
                     };
                 }
 
@@ -183,6 +188,21 @@ public class Auction {
         }
 
         return null;
+    }
+
+
+    public bool CanDouble(PlayerPosition position) {
+        var lastBid = GetLastBid();
+        if (lastBid == null) {
+            return false;
+        }
+
+        if (lastBid.Type != BidType.Submit) {
+            return false;
+        }
+
+        _ = GetLastSubmittedBid(out var bidderPosition);
+        return bidderPosition == position.GetLeftOpponent() || bidderPosition == position.GetRightOpponent();
     }
 
 
@@ -317,7 +337,7 @@ public class Auction {
             var bid = new InterruptedBid(AuctionHistory[i]);
             var interruption = i >= 1 ? AuctionHistory[i - 1] : null;
             if (interruption != null && interruption.Type != BidType.Pass) {
-                bid.Interruption = interruption;
+                bid.Interjection = interruption;
             }
 
             playerBids.Add(bid);

@@ -74,9 +74,6 @@ public class BidNode : InterruptedBid, IEquatable<BidNode>, IEqualityComparer<Bi
     /// </summary>
     public bool IsDisabled { get; set; }
 
-    /// <summary>Bid made by the preceding opponent, so sequences with interjections can be described. Only <see cref="BidType.Submit"/> or <see cref="BidType.Double"/> make sense here.</summary>
-    public Bid? Interjection { get; set; }
-
     public List<BidNode> NextBids { get; set; } = [];
 
     /// <summary>Back-reference assigned after deserialization. Never serialized, otherwise the tree becomes cyclic.</summary>
@@ -434,29 +431,6 @@ public class BidNode : InterruptedBid, IEquatable<BidNode>, IEqualityComparer<Bi
 
 
     public int CompareTo(BidNode? other) {
-        if (other == null) {
-            return 1;
-        }
-
-        // Najpierw porównujemy Value (poziom odzywki: 1-7)
-        int valueComparison = Nullable.Compare(Value, other.Value);
-        if (valueComparison != 0) {
-            return valueComparison;
-        }
-
-        // Jeśli Value są równe, porównujemy Color
-        // Porządek: ♣ < ♦ < ♥ < ♠ < NoTrump
-        return GetColorOrder(Color).CompareTo(GetColorOrder(other.Color));
-    }
-
-
-    private static int GetColorOrder(BidColor color) {
-        return color switch {
-            BidColor.Clubs => 0,
-            BidColor.Diamonds => 1,
-            BidColor.Hearts => 2,
-            BidColor.Spades => 3,
-            _ => 4 // NoColor/NoTrump
-        };
+        return base.CompareTo(other);
     }
 }

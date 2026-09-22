@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Model.Bidding.Bids {
 
-    public class BidComparer : IEqualityComparer<Bid> {
+    public class BidComparer : IEqualityComparer<InterruptedBid> {
 
-        public bool Equals(Bid? x, Bid? y) {
+        public bool Equals(InterruptedBid? x, InterruptedBid? y) {
             return x?.Equals(y) ?? true;
         }
 
 
-        public int GetHashCode([DisallowNull] Bid obj) {
+        public int GetHashCode([DisallowNull] InterruptedBid obj) {
             return obj.GetBidCode();
         }
 

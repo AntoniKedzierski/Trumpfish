@@ -21,7 +21,7 @@ public partial class BidEngine {
 
     public PlayerPosition RightOpponentPosition => Position.GetRightOpponent();
 
-    public List<BidNode> OwnBidsHistory { get; private set; } = [];
+    public List<Bid> OwnBidsHistory { get; private set; } = [];
 
     public List<SystemBranch> Branches { get; private set; } = [];
 
@@ -46,7 +46,6 @@ public partial class BidEngine {
 
     public Bid Get() {
         var selectedBidNode = SelectOptimalBid();
-
         if (selectedBidNode?.IsBidLegal(Auction) == false) {
             throw new Exception("Nielegalna odzywka ma zostać zgłoszona!");
         }
@@ -56,7 +55,7 @@ public partial class BidEngine {
         }
 
         OwnBidsHistory.Add(selectedBidNode);
-        return selectedBidNode.ToBid();
+        return selectedBidNode;
     }
 
 
@@ -71,58 +70,28 @@ public partial class BidEngine {
             return;
         }
 
-        Branches = [new SystemBranch(ownBid, Hand, Auction, Position)];
+        Branches = [BiddingSystem.CreateOwnBranch(ownBid, Hand, Auction, Position)];
     }
 
 
-    public void UpdateBranches(BidNode ownBid) {
-        if (Branches.Count == 0) {
-            InitializeBranch(ownBid);
-            return;
-        }
-
-        // Aktualizacja gałęzi o nową odzywkę.
-        var newBranches = new List<SystemBranch>();
-        foreach (var branch in Branches) {
-            newBranches.AddRange(BiddingSystem.ExpandBranch(branch, ownBid, PartnerOpened));
-        }
-
-        Branches = newBranches;
-    }
-
-
-    public void UpdateBranches() {
-        var bidSequence = GetBidSequence();
-        if (bidSequence.Count == 0) {
+    public void UpdateBranches(InterruptedBid? lastPartnerBid) {
+        if (lastPartnerBid == null) {
+            Branches = [];
             return;
         }
 
         // Inicjalizacja gałęzi odzywką partnera.
         if (Branches.Count == 0) {
-            Branches = BiddingSystem.GetBranches(bidSequence, Hand, Auction, Position);
+            Branches = BiddingSystem.CreatePartnerBranches(lastPartnerBid, Hand, Auction, Position);
             return;
         }
 
         // Aktualizacja gałęzi o nową odzywkę.
-        var newBranches = new List<SystemBranch>();
-        var newBid = bidSequence.Last();
-
-        foreach (var branch in Branches) {
-            newBranches.AddRange(BiddingSystem.ExpandBranch(branch, newBid, PartnerOpened));
-        }
-
-        // Jeżeli jakaś gałąź nie jest Extended, to znaczy, że istnieje jeszcze ścieżka w systemie.
-        // Usuwamy wszystkie extendy.
-        if (newBranches.Any(e => e.OnlySystem)) {
-            Branches = newBranches.Where(e => e.OnlySystem).ToList();
-        }
-        else {
-            Branches = newBranches;
-        }
+        Branches = Branches.SelectMany(e => e.UpdateBranch(lastPartnerBid)).ToList();
     }
 
 
-    private BidNode? SelectOptimalBid() {
+    private Bid? SelectOptimalBid() {
         // Sprawdzenie, kto otworzył licytację.
         PartnerOpened = Auction.PlayerOpenedAuction(PartnerPosition);
 
@@ -155,7 +124,7 @@ public partial class BidEngine {
             if (OwnBidsHistory.Count == 0) {
                 // Mimo wszystko preferowane jest otwarcie z systemu.
                 // Gdy dostajemy null, to próbujemy odzywek obronnych.
-                return TrySystemOpening(Hand) ?? TrySystemDefence(Hand, rightOpponentBid ?? leftOpponentBid);
+                return TrySystemOpening(Hand) ?? TrySystemDefence(Hand, (rightOpponentBid ?? leftOpponentBid)!);
 
                 // Tutaj dopisać wcinanie się na wyższym poziomie, pod minimalizację straty.
             }
@@ -165,14 +134,8 @@ public partial class BidEngine {
 
         // Utwórz zbiór wszystkich możliwych gałęzi w sekwensie odzywek.
         // To zadziała na podstawie odzywki partnera.
-        UpdateBranches();
-        var result = Branches.GetNextBid();
-
-        // Dołożenie własnej odzywki do gałęzi.
-        if (result != null) {
-            UpdateBranches(result);
-        }
-
+        UpdateBranches(lastPartnerBid);
+        Branches = Branches.GetNextBid(out var result);
         return result;
     }
 
@@ -188,6 +151,7 @@ public partial class BidEngine {
 
         if (result != null) {
             result.IsFromSystem = true;
+            result.Explanation = result.Condition;
             InitializeBranch(result);
         }
 
@@ -223,6 +187,7 @@ public partial class BidEngine {
             return TrySystemOpening(hand);
         }
 
+        result.Explanation = result.Condition;
         InitializeBranch(result);
         return result;
     }

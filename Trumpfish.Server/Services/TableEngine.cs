@@ -210,7 +210,7 @@ internal static class TableEngine {
         }
 
         var sequence = auction.GetPlayersSequence(player, out _).Where(entry => entry.Type != BidType.Pass).ToList();
-        var matches = system.GetBranchHeads(sequence);
+        var matches = system.GetSequenceHeads(sequence);
 
         bid.IsFromSystem = matches.Count > 0;
         bid.Explanation = matches.Count == 0

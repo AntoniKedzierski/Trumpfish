@@ -11,52 +11,110 @@ namespace Model.Bidding.AI.Engine;
 
 public static class SystemBranchHelper {
 
-    public static BidNode? GetNextBid(this IEnumerable<SystemBranch> branches) {
+    public static List<SystemBranch> GetNextBid(this IEnumerable<SystemBranch> branches, out Bid? nextBid) {
+        nextBid = null;
         if (!branches.Any()) {
-            return null;
+            return [];
         }
 
-        var confusingBids = branches
-            .SelectMany(e => e.Head.GetNextBids())
-            .Select(e => (Bid)e)
-            .ToHashSet(new BidComparer());
+        // Wspólne dla wszystkich gałęzi.
+        var confusingBids = branches.GetConfusingBids();
+        var newBranches = new List<SystemBranch>(branches.Count());
+        var candidates = new Dictionary<Bid, bool>();
 
-        var candidates = branches
-            .Select(e => e.GetNextBid(confusingBids))
-            .Where(e => e != null)
-            .Select(e => e!)
-            .ToList();
-
-        if (candidates.Count == 0) {
-            return null;
+        // Każda gałąź robi swojego NextBida i przedłuża samą siebie.
+        foreach (var branch in branches) {
+            var branchContinuation = branch.MakeNextBid(confusingBids);
+            if (branchContinuation != null) {
+                candidates.Add(branchContinuation.Result, branchContinuation.OnlySystem);
+                newBranches.Add(branchContinuation);
+            }
         }
 
-        // Preferowanie odzywek z systemu.
-        if (candidates.Any(e => e.SystemResponse)) {
-            var systemCandidates = candidates.Where(e => e.SystemResponse).ToList();
-            var firstChosenBid = systemCandidates[0].BidNode;
-            if (systemCandidates.Count <= 1 || !systemCandidates.Any(e => !e.BidNode.EqualsByColorAndValue(firstChosenBid))) {
-                return firstChosenBid;
+        // Brak dalszych odzywek, wychodzimy.
+        if (newBranches.Count == 0) {
+            return [];
+        }
+
+        // Jeżeli wszystkie gałęzie są z systemu:
+        if (newBranches.All(e => e.OnlySystem)) {
+            var systemCandidates = newBranches
+                .Select(e => e.Head)
+                .ToList();
+
+            var message = string.Join("\n\r", systemCandidates.Select(e => e.ToString() + ": " + e.Condition));
+
+            // Sprawdzenie, czy system daje jednoznaczną odpowiedź.
+            if (systemCandidates.Any(e => !e.EqualsByColorAndValue(systemCandidates[0]))) {
+                throw new Exception("Multiple tree branches possible: " + message);
             }
 
-            throw new Exception(
-                "Multiple tree branches possible: " +
-                string.Join("\n\r",
-                    systemCandidates.Select(e => e.ToString() + ": " + e.BidNode.Condition)
-                )
-            );
+            nextBid = systemCandidates[0];
+            nextBid.Explanation = systemCandidates[0].Condition;
+            return newBranches;
+        }
+        // Wszystkie gałęzie przedłużone (naturalne).
+        else if (newBranches.All(e => !e.OnlySystem)) {
+            // Zwracamy najniższą mozliwą.
+            nextBid = newBranches
+                .Select(e => e.Result)
+                .OrderBy(e => e)
+                .First();
+
+            return newBranches;
         }
 
-        var result = candidates
-            .OrderByDescending(e => e.Score)
-            .FirstOrDefault();
+        var invalidBids = string.Join('·', candidates.Select(e => e.Value ? e.Key.ToString() : $"({e.Key})"));
+        throw new Exception("Some branches are system, some are natural: " + invalidBids);
+    }
 
-        if (result == null) {
-            return null;
+
+    public static List<InterruptedBid> GetCommonBidSequence(this IEnumerable<SystemBranch> branches) {
+        var paths = branches
+            .Select(e => e.Head
+                .GetPath()
+                .Cast<InterruptedBid>()
+                .ToList()
+            ).ToArray();
+
+        if (paths.Length == 0) {
+            return [];
         }
 
-        result.BidNode.Explanation += $" (score: {result.Score})";
-        return result.BidNode;
+        var firstPath = paths[0];
+        var pathLength = firstPath.Count;
+        for (int i = 1; i < paths.Length; ++i) {
+            if (paths[i].Count != pathLength) {
+                throw new Exception("Invalid path length.");
+            }
+
+            // Sprawdzenie, czy odzywki na ścieżkach są identyczne.
+            for (int j = 0; j < pathLength; ++j) {
+                // To sprawdza również wtrącenie!
+                if (!firstPath[j].ValueEquals(paths[i][j])) {
+                    throw new Exception($"Paths: {firstPath} and {paths[i]} are different at {j + 1} position.");
+                }
+            }
+        }
+
+        return firstPath;
+    }
+
+
+    public static HashSet<InterruptedBid> GetConfusingBids(this IEnumerable<SystemBranch> branches) {
+        if (!branches.Any()) {
+            return [];
+        }
+
+        var commonBidSequence = branches.GetCommonBidSequence();
+        var biddingSystem = branches.First().BiddingSystem;
+        var auction = branches.First().Auction;
+
+        return biddingSystem
+            .GetNextBids(commonBidSequence)
+            .Where(e => e.IsBidLegal(auction))
+            .Cast<InterruptedBid>()
+            .ToHashSet(new BidComparer());
     }
 
 
@@ -69,7 +127,7 @@ public static class SystemBranchHelper {
     }
 
 
-    public static SystemBranchResponse? ToNaturalResponse(this BidNode? bidNode, HandEvaluation combinedHand, HashSet<Bid>? confusingBids = null) {
+    public static SystemBranchResponse? ToNaturalResponse(this BidNode? bidNode, HandEvaluation combinedHand, HashSet<InterruptedBid>? confusingBids = null) {
         if (bidNode == null) {
             return null;
         }

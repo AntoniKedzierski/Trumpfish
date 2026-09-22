@@ -20,22 +20,16 @@ public class ExtendedSystemBranch : SystemBranch {
 
     public InterruptedBid HeadOffSystem => _offSystemBids.Last();
 
+    public override Bid Result => HeadOffSystem;
 
-    public ExtendedSystemBranch(InterruptedBid offSystemBid, SystemBranch baseBranch, bool partnerOpened) : base(baseBranch) {
+
+    public ExtendedSystemBranch(InterruptedBid offSystemBid, SystemBranch baseBranch) : base(baseBranch) {
         _offSystemBids = [offSystemBid];
-
-
         _partnersHand = baseBranch.Head.Evaluate();
     }
 
 
-    public void Add(InterruptedBid offSystemBid) {
-        _offSystemBids ??= [];
-        _offSystemBids.Add(offSystemBid);
-    }
-
-
-    public override SystemBranchResponse? GetNextBid(HashSet<Bid> confusingBids) {
+    protected override SystemBranchResponse? GetNextBid(HashSet<InterruptedBid> confusingBids) {
         var combinedHand = _partnersHand.Combine(Hand);
 
         // Rozpoznanie inwitu.
@@ -53,7 +47,7 @@ public class ExtendedSystemBranch : SystemBranch {
     /// <summary>
     /// Sprawdza, czy ostatnia odzywka była inwitem.
     /// </summary>
-    public bool RecognizeInvite(out BidColor inviteColor) {
+    private bool RecognizeInvite(out BidColor inviteColor) {
         inviteColor = BidColor.NoColor;
 
         if (_offSystemBids.Count == 0) {
@@ -78,15 +72,15 @@ public class ExtendedSystemBranch : SystemBranch {
     }
 
 
-    public BidNode? ResponseNoTrumpInvite(HandEvaluation combinedHand) {
+    private BidNode? ResponseNoTrumpInvite(HandEvaluation combinedHand) {
         // 1. Akceptacja inwitu, jeżeli możemy.
         if (combinedHand.FitsNoTrump()) {
-            return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump, "Akceptacja inwitu do BA.");
+            return BidNode.SubmitGameOrPass(Auction, BidColor.NoTrump, "Akceptacja inwitu do BA.");
         }
 
         // 2. Zagranie końcówki w kolor, jeżeli możemy.
         if (combinedHand.CanClaimColorContract(out var color)) {
-            return BidNode.SubmitLowestLegalGameOrDouble(Auction, color, "Zagranie gry w kolor.");
+            return BidNode.SubmitGameOrPass(Auction, color, "Zagranie gry w kolor.");
         }
 
         // 3. Inwit do gry kolorowej.
@@ -109,15 +103,15 @@ public class ExtendedSystemBranch : SystemBranch {
     }
 
 
-    public BidNode? ResponseColorInvite(HandEvaluation combinedHand, BidColor proposedColor) {
+    private BidNode? ResponseColorInvite(HandEvaluation combinedHand, BidColor proposedColor) {
         // 1. Akceptacja inwitu, jeżeli możemy.
         if (combinedHand.GoodToPlayColor(proposedColor)) {
-            return BidNode.SubmitLowestLegalGameOrDouble(Auction, proposedColor, "Zaakceptowanie inwitu.");
+            return BidNode.SubmitGameOrPass(Auction, proposedColor, "Zaakceptowanie inwitu.");
         }
 
         // 2. Po prostu zagranie BA, jeżeli wchodzi nam, że możemy.
         if (combinedHand.CanClaimNoTrumpContract()) {
-            return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump, "Po prostu wychodzi BA z punktów.");
+            return BidNode.SubmitGameOrPass(Auction, BidColor.NoTrump, "Po prostu wychodzi BA z punktów.");
         }
 
         // 3. Propozycja BA w zamian (zależnie od wysokości odzywki).

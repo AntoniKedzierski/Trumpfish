@@ -78,32 +78,19 @@ public class BiddingSystem {
     }
 
 
-    public List<SystemBranch> GetBranches(IEnumerable<InterruptedBid> bidSequence, Hand hand, Auction auction, PlayerPosition position) {
-        return GetBranchHeads(bidSequence.ToList())
-            .Select(e => new SystemBranch(e, hand, auction, position))
+    public SystemBranch CreateOwnBranch(BidNode ownBid, Hand hand, Auction auction, PlayerPosition position) {
+        return new SystemBranch(this, ownBid, hand, auction, position, partnerOpened: false);
+    }
+
+
+    public List<SystemBranch> CreatePartnerBranches(InterruptedBid partnerBid, Hand hand, Auction auction, PlayerPosition position) {
+        return GetSequenceHeads([partnerBid])
+            .Select(e => new SystemBranch(this, e, hand, auction, position, partnerOpened: true))
             .ToList();
     }
 
 
-    public List<SystemBranch> ExpandBranch(SystemBranch branch, InterruptedBid nextBid, bool partnerOpened) {
-        // Do gałęzi, która już się skończyła, nie dołączamy odzywek z systemu.
-        if (branch is ExtendedSystemBranch extendedBranch) {
-            extendedBranch.Add(nextBid);
-            return [extendedBranch];
-        }
-
-        var children = branch.Head.GetNextBids();
-        var nextHeads = GetMatchingBids(children, nextBid);
-
-        if (nextHeads.Count == 0) {
-            return [new ExtendedSystemBranch(nextBid, branch, partnerOpened)];
-        }
-
-        return nextHeads.Select(e => new SystemBranch(e, branch.Hand, branch.Auction, branch.Position)).ToList();
-    }
-
-
-    public List<BidNode> GetBranchHeads(List<InterruptedBid> bidSequence) {
+    public List<BidNode> GetSequenceHeads(List<InterruptedBid> bidSequence) {
         var children = Openings()!.Bids.Concat(Defences()!.Bids).ToList();
 
         for (int i = 0; i < bidSequence.Count - 1; ++i) {
@@ -130,12 +117,12 @@ public class BiddingSystem {
             .Where(e => !e.IsDisabled);
 
         // Wyjęcie pasujących odzywek względem wcięcia.
-        if (lookup.Interruption == null) {
+        if (lookup.Interjection == null) {
             matchingBids = matchingBids.Where(e => e.Interjection == null);
         }
         else {
             var interjectedBids = matchingBids
-                .Where(e => e.Interjection?.Equals(lookup.Interruption) ?? false)
+                .Where(e => e.Interjection?.Equals(lookup.Interjection) ?? false)
                 .ToList();
 
             matchingBids = interjectedBids.Count > 0
@@ -145,6 +132,12 @@ public class BiddingSystem {
 
         // Zmaterializowanie listy pasujących odzywek.
         return matchingBids.ToList();
+    }
+
+
+    public List<BidNode> GetNextBids(List<InterruptedBid> bidSequence) {
+        var sequence = GetSequenceHeads(bidSequence);
+        return sequence.SelectMany(e => e.GetNextBids()).ToList();
     }
 
 

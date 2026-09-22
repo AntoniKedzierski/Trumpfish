@@ -15,30 +15,83 @@ public class SystemBranch {
 
     public BidNode Head { get; private set; }
 
+    public BiddingSystem BiddingSystem { get; private set; }
+
     public Hand Hand { get; private set; }
 
     public Auction Auction { get; private set; }
 
     public PlayerPosition Position { get; private set; }
 
+    public bool PartnerOpened { get; private set; }
+
     public bool GameForcing { get; set; } = false;
 
     public virtual bool OnlySystem => true;
 
+    public virtual Bid Result => Head;
 
-    public SystemBranch(BidNode branchHead, Hand hand, Auction auction, PlayerPosition position) {
+
+    public SystemBranch(BiddingSystem system, BidNode branchHead, Hand hand, Auction auction, PlayerPosition position, bool partnerOpened) {
+        BiddingSystem = system;
         Head = branchHead;
         Hand = hand;
         Auction = auction;
         Position = position;
+        PartnerOpened = partnerOpened;
     }
 
 
     public SystemBranch(SystemBranch other) {
+        BiddingSystem = other.BiddingSystem;
         Head = other.Head;
         Hand = other.Hand;
         Auction = other.Auction;
         Position = other.Position;
+        PartnerOpened = other.PartnerOpened;
+    }
+
+
+    public SystemBranch? MakeNextBid(HashSet<InterruptedBid> confusingBids) {
+        var nextBid = GetNextBid(confusingBids);
+        if (nextBid == null) {
+            return null;
+        }
+
+        // Odpowiedź z systemu - zmieniamy head na wybraną odzywkę.
+        if (nextBid.SystemResponse) {
+            Head = nextBid.BidNode;
+            return this;
+        }
+
+        return new ExtendedSystemBranch(nextBid.BidNode, this);
+    }
+
+
+    public List<SystemBranch> UpdateBranch(InterruptedBid lastPartnerBid) {
+        var bidSequence = Head.GetPath().Cast<InterruptedBid>().Append(lastPartnerBid).ToList();
+        var newHeads = BiddingSystem.GetSequenceHeads(bidSequence);
+
+        // Odzwyka partnera była spoza systemu.
+        if (newHeads.Count == 0) {
+            return [new ExtendedSystemBranch(lastPartnerBid, this)];
+        }
+
+        var newBranches = new List<SystemBranch>();
+        foreach (var newHead in newHeads) {
+            // Przodek odzywki partnera musi być identyczny, jak bieżący head (żeby pasowało do naszej ścieżki).
+            if (newHead.Parent == null || !newHead.Parent.Equals(Head)) {
+                continue;
+            }
+
+            var newBranch = new SystemBranch(this) {
+                Head = newHead
+            };
+
+            newBranches.Add(newBranch);
+        }
+
+        return newBranches;
     }
 
 
@@ -59,7 +112,21 @@ public class SystemBranch {
     }
 
 
-    public virtual SystemBranchResponse? GetNextBid(HashSet<Bid> confusingBids) {
+    public List<BidNode> GetNextLegalBids() {
+        var leftOpponentsBid = Auction.GetLastPlayerBid(Position.GetLeftOpponent(), passAsNull: true);
+        var rightOpponentsBid = Auction.GetLastPlayerBid(Position.GetRightOpponent(), passAsNull: true);
+        var lastOpponentsBid = rightOpponentsBid ?? leftOpponentsBid;
+
+        var matchingBids = Head.GetNextBids().Where(e => e.IsBidLegal(Auction));
+        matchingBids = lastOpponentsBid != null
+            ? matchingBids.Where(e => e.Interjection == null || e.Interjection.Equals(lastOpponentsBid))
+            : matchingBids.Where(e => e.Interjection == null);
+
+        return matchingBids.ToList();
+    }
+
+
+    protected virtual SystemBranchResponse? GetNextBid(HashSet<InterruptedBid> confusingBids) {
         var matchingBids = GetMatchingBids();
         var legalBids = matchingBids.Where(e => e.IsBidLegal(Auction)).ToList();
 
@@ -144,21 +211,28 @@ public class SystemBranch {
     protected virtual BidNode? ClaimGame(HandEvaluation combinedHand) {
         // Zatwierdzanie kontraktów.
         var lastSubmit = Auction.GetLastSubmittedBid(out var bidderPosition)!;
-        if (bidderPosition != Position && bidderPosition != Position.GetPartner()) {
-            return BidNode.Double("Kontra na mięso.");
-        }
 
         if (combinedHand.CanClaimColorContract(out var contractColor)) {
-            if (lastSubmit.MakesGame() && lastSubmit.Color == contractColor) {
+            if (bidderPosition != Position && bidderPosition != Position.GetPartner() && Auction.CanDouble(Position)) {
+                return BidNode.Double("Kontra na mięso.");
+            }
+
+            if (lastSubmit.MakesGame()) {
                 return BidNode.Pass("Już robimy grę.");
             }
+
             return BidNode.SubmitLowestLegalGameOrDouble(Auction, contractColor, $"Zgłoszenie pasującego koloru.");
         }
 
         if (combinedHand.CanClaimNoTrumpContract()) {
-            if (lastSubmit.MakesGame() && lastSubmit.Color == BidColor.NoTrump) {
+            if (bidderPosition != Position && bidderPosition != Position.GetPartner() && Auction.CanDouble(Position)) {
+                return BidNode.Double("Kontra na mięso.");
+            }
+
+            if (lastSubmit.MakesGame()) {
                 return BidNode.Pass("Już robimy grę.");
             }
+
             return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump, $"Zgłoszenie BA (brak możliwości gry kolorowej).");
         }
 
@@ -211,13 +285,21 @@ public class SystemBranch {
             return true;
         }
 
+        // Jeżeli grane było BA i wiemy o istnieniu 9 kartowego koloru, to go zgłaszamy.
+        if (currentContractColor == BidColor.NoTrump && colorToBePlayedInstead.Value < 9) {
+            return true;
+        }
+
         shouldBePlayedInstead = BidNode.SubmitLowest(
-            Auction, 
-            colorToBePlayedInstead.Key.ToBidColor(), 
+            Auction,
+            colorToBePlayedInstead.Key.ToBidColor(),
             $"Obecnie licytowany kolor nie nadawał się do zostawienia na poziomie gry."
         );
         return false;
     }
+
+
+    public string Description => string.Join("\r\n", Head.GetPath().Select(e => e.Condition));
 
 
     public override string ToString() {
