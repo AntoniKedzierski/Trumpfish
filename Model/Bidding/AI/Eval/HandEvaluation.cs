@@ -318,7 +318,7 @@ public class HandEvaluation {
         }
 
         // To jest siła połączonych rąk.
-        return colorRanges.All(e => e.Value >= 4);
+        return colorRanges.All(e => e.Value >= 4) || Points >= 28;
     }
 
 
