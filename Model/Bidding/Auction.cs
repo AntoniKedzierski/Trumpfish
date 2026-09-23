@@ -28,6 +28,8 @@ public class Auction {
 
     public Bid? LastBid => AuctionHistory.Count > 0 ? AuctionHistory[^1] : null;
 
+    public bool AtGameLevel => GetLastSubmittedBid(onlySubmitions: true)?.MakesGame() ?? false;
+
 
     public void Start(PlayerPosition dealer) {
         Dealer = dealer;

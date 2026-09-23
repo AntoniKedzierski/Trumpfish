@@ -44,6 +44,7 @@ public class SystemBranch {
 
     public SystemBranch(SystemBranch other) {
         BiddingSystem = other.BiddingSystem;
+        GameForcing = other.GameForcing;
         Head = other.Head;
         Hand = other.Hand;
         Auction = other.Auction;
@@ -61,6 +62,7 @@ public class SystemBranch {
         // Odpowiedź z systemu - zmieniamy head na wybraną odzywkę.
         if (nextBid.SystemResponse) {
             Head = nextBid.BidNode;
+            GameForcing |= nextBid.BidNode.GameForcing;
             return this;
         }
 
@@ -85,9 +87,10 @@ public class SystemBranch {
             }
 
             var newBranch = new SystemBranch(this) {
-                Head = newHead
+                Head = newHead,
             };
 
+            newBranch.GameForcing |= newHead.GameForcing;
             newBranches.Add(newBranch);
         }
 
@@ -217,6 +220,8 @@ public class SystemBranch {
                 return BidNode.Double("Kontra na mięso.");
             }
 
+            // Wywalenie GF po zgłoszeniu kontraktu.
+            GameForcing = false;
             if (lastSubmit.MakesGame()) {
                 return BidNode.Pass("Już robimy grę.");
             }
@@ -229,6 +234,8 @@ public class SystemBranch {
                 return BidNode.Double("Kontra na mięso.");
             }
 
+            // Wywalenie GF po zgłoszeniu kontraktu.
+            GameForcing = false;
             if (lastSubmit.MakesGame()) {
                 return BidNode.Pass("Już robimy grę.");
             }
@@ -236,7 +243,7 @@ public class SystemBranch {
             return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump, $"Zgłoszenie BA (brak możliwości gry kolorowej).");
         }
 
-        return null;
+        return GetForcedBid(combinedHand);
     }
 
 
@@ -256,7 +263,7 @@ public class SystemBranch {
                 : BidNode.SubmitLowest(Auction, inviteColor, 4, "Zaproszenie do gry w kolor młodszy.");
         }
 
-        return null;
+        return GetForcedBid(combinedHand);
     }
 
 
@@ -296,6 +303,23 @@ public class SystemBranch {
             $"Obecnie licytowany kolor nie nadawał się do zostawienia na poziomie gry."
         );
         return false;
+    }
+
+
+    protected BidNode? GetForcedBid(HandEvaluation combinedHand) {
+        // GF - powiedzenie najlepszego koloru.
+        if (GameForcing) {
+            if (Auction.AtGameLevel) {
+                GameForcing = false;
+                return null;
+            }
+
+            var bestColor = combinedHand.FindFit();
+            GameForcing = false;
+            return BidNode.SubmitLowest(Auction, bestColor, "GF - inwit z najlepszy kolor.");
+        }
+
+        return null;
     }
 
 

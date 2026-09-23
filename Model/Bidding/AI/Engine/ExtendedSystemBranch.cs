@@ -40,7 +40,7 @@ public class ExtendedSystemBranch : SystemBranch {
                 : ResponseColorInvite(combinedHand, inviteColor)?.ToNaturalResponse(combinedHand);
         }
 
-        return null;
+        return GetForcedBid(combinedHand)?.ToNaturalResponse(combinedHand);
     }
 
 
@@ -75,12 +75,12 @@ public class ExtendedSystemBranch : SystemBranch {
     private BidNode? ResponseNoTrumpInvite(HandEvaluation combinedHand) {
         // 1. Akceptacja inwitu, jeżeli możemy.
         if (combinedHand.FitsNoTrump()) {
-            return BidNode.SubmitGameOrPass(Auction, BidColor.NoTrump, "Akceptacja inwitu do BA.");
+            return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump, "Akceptacja inwitu do BA.");
         }
 
         // 2. Zagranie końcówki w kolor, jeżeli możemy.
         if (combinedHand.CanClaimColorContract(out var color)) {
-            return BidNode.SubmitGameOrPass(Auction, color, "Zagranie gry w kolor.");
+            return BidNode.SubmitLowestLegalGameOrDouble(Auction, color, "Zagranie gry w kolor.");
         }
 
         // 3. Inwit do gry kolorowej.
@@ -99,19 +99,19 @@ public class ExtendedSystemBranch : SystemBranch {
             }
         }
 
-        return null;
+        return GetForcedBid(combinedHand);
     }
 
 
     private BidNode? ResponseColorInvite(HandEvaluation combinedHand, BidColor proposedColor) {
         // 1. Akceptacja inwitu, jeżeli możemy.
         if (combinedHand.GoodToPlayColor(proposedColor)) {
-            return BidNode.SubmitGameOrPass(Auction, proposedColor, "Zaakceptowanie inwitu.");
+            return BidNode.SubmitLowestLegalGameOrDouble(Auction, proposedColor, "Zaakceptowanie inwitu.");
         }
 
         // 2. Po prostu zagranie BA, jeżeli wchodzi nam, że możemy.
         if (combinedHand.CanClaimNoTrumpContract()) {
-            return BidNode.SubmitGameOrPass(Auction, BidColor.NoTrump, "Po prostu wychodzi BA z punktów.");
+            return BidNode.SubmitLowestLegalGameOrDouble(Auction, BidColor.NoTrump, "Po prostu wychodzi BA z punktów.");
         }
 
         // 3. Propozycja BA w zamian (zależnie od wysokości odzywki).
@@ -131,7 +131,7 @@ public class ExtendedSystemBranch : SystemBranch {
                 : BidNode.SubmitLowest(Auction, inviteColor, 4, "Propozycja gry w inny kolor młodszy.");
         }
 
-        return null;
+        return GetForcedBid(combinedHand);
     }
 
 
