@@ -1,104 +1,33 @@
 {
-  "id": "5189dea4-5c10-495f-9293-bc776bf28ee7",
+  "id": "d7b4822c-e217-4858-91ac-35d20c4f6a54",
   "owner": "admin",
-  "name": "Nie licytuj\u0105 po kontrze wywo\u0142awczej.",
-  "tags": "kontra",
-  "contract": "1\u2660 North",
+  "name": "1\u2661 South \u00B7 rozdanie 495",
+  "tags": "",
+  "contract": "1\u2661 South",
   "dealer": "South",
   "vulnerability": "EastWest",
-  "savedUtc": "2026-09-17T07:53:22.6516173+00:00",
+  "savedUtc": "2026-09-23T07:47:09.8978061+00:00",
   "deal": {
-    "index": 486,
+    "index": 494,
     "dealer": "South",
     "hands": [
       {
         "position": "North",
         "cards": [
           {
-            "value": "Ace",
-            "color": "Spades",
-            "label": "A\u2660"
-          },
-          {
-            "value": "Queen",
-            "color": "Spades",
-            "label": "Q\u2660"
-          },
-          {
             "value": "Jack",
             "color": "Spades",
             "label": "J\u2660"
           },
-          {
-            "value": "Ten",
-            "color": "Spades",
-            "label": "10\u2660"
-          },
-          {
-            "value": "Seven",
-            "color": "Spades",
-            "label": "7\u2660"
-          },
-          {
-            "value": "Four",
-            "color": "Spades",
-            "label": "4\u2660"
-          },
-          {
-            "value": "Three",
-            "color": "Spades",
-            "label": "3\u2660"
-          },
-          {
-            "value": "Three",
-            "color": "Hearts",
-            "label": "3\u2661"
-          },
-          {
-            "value": "King",
-            "color": "Diamonds",
-            "label": "K\u2662"
-          },
-          {
-            "value": "Queen",
-            "color": "Diamonds",
-            "label": "Q\u2662"
-          },
-          {
-            "value": "Jack",
-            "color": "Diamonds",
-            "label": "J\u2662"
-          },
-          {
-            "value": "Five",
-            "color": "Diamonds",
-            "label": "5\u2662"
-          },
-          {
-            "value": "King",
-            "color": "Clubs",
-            "label": "K\u2663"
-          }
-        ],
-        "points": 18,
-        "pointsNt": 16,
-        "spades": 7,
-        "hearts": 1,
-        "diamonds": 4,
-        "clubs": 1
-      },
-      {
-        "position": "East",
-        "cards": [
           {
             "value": "Six",
             "color": "Spades",
             "label": "6\u2660"
           },
           {
-            "value": "Two",
+            "value": "Three",
             "color": "Spades",
-            "label": "2\u2660"
+            "label": "3\u2660"
           },
           {
             "value": "King",
@@ -111,80 +40,9 @@
             "label": "8\u2661"
           },
           {
-            "value": "Seven",
-            "color": "Hearts",
-            "label": "7\u2661"
-          },
-          {
             "value": "Six",
             "color": "Hearts",
             "label": "6\u2661"
-          },
-          {
-            "value": "Four",
-            "color": "Hearts",
-            "label": "4\u2661"
-          },
-          {
-            "value": "Ten",
-            "color": "Diamonds",
-            "label": "10\u2662"
-          },
-          {
-            "value": "Seven",
-            "color": "Diamonds",
-            "label": "7\u2662"
-          },
-          {
-            "value": "Six",
-            "color": "Diamonds",
-            "label": "6\u2662"
-          },
-          {
-            "value": "Two",
-            "color": "Diamonds",
-            "label": "2\u2662"
-          },
-          {
-            "value": "Eight",
-            "color": "Clubs",
-            "label": "8\u2663"
-          },
-          {
-            "value": "Five",
-            "color": "Clubs",
-            "label": "5\u2663"
-          }
-        ],
-        "points": 5,
-        "pointsNt": 3,
-        "spades": 2,
-        "hearts": 5,
-        "diamonds": 4,
-        "clubs": 2
-      },
-      {
-        "position": "South",
-        "cards": [
-          {
-            "value": "Eight",
-            "color": "Spades",
-            "label": "8\u2660"
-          },
-          {
-            "value": "Queen",
-            "color": "Hearts",
-            "label": "Q\u2661"
-          },
-          {
-            "value": "Ten",
-            "color": "Hearts",
-            "label": "10\u2661"
-          },
-          {
-            "value": "Five",
-            "color": "Hearts",
-            "label": "5\u2661"
           },
           {
             "value": "Ace",
@@ -192,9 +50,14 @@
             "label": "A\u2662"
           },
           {
-            "value": "Eight",
+            "value": "Queen",
             "color": "Diamonds",
-            "label": "8\u2662"
+            "label": "Q\u2662"
+          },
+          {
+            "value": "Six",
+            "color": "Diamonds",
+            "label": "6\u2662"
           },
           {
             "value": "Four",
@@ -202,24 +65,9 @@
             "label": "4\u2662"
           },
           {
-            "value": "Ace",
-            "color": "Clubs",
-            "label": "A\u2663"
-          },
-          {
-            "value": "Jack",
-            "color": "Clubs",
-            "label": "J\u2663"
-          },
-          {
-            "value": "Ten",
-            "color": "Clubs",
-            "label": "10\u2663"
-          },
-          {
-            "value": "Seven",
-            "color": "Clubs",
-            "label": "7\u2663"
+            "value": "Two",
+            "color": "Diamonds",
+            "label": "2\u2662"
           },
           {
             "value": "Four",
@@ -227,40 +75,35 @@
             "label": "4\u2663"
           },
           {
-            "value": "Two",
+            "value": "Three",
             "color": "Clubs",
-            "label": "2\u2663"
+            "label": "3\u2663"
           }
         ],
-        "points": 13,
-        "pointsNt": 11,
-        "spades": 1,
+        "points": 11,
+        "pointsNt": 10,
+        "spades": 3,
         "hearts": 3,
-        "diamonds": 3,
-        "clubs": 6
+        "diamonds": 5,
+        "clubs": 2
       },
       {
-        "position": "West",
+        "position": "East",
         "cards": [
           {
-            "value": "King",
+            "value": "Ten",
             "color": "Spades",
-            "label": "K\u2660"
+            "label": "10\u2660"
           },
           {
-            "value": "Nine",
+            "value": "Seven",
             "color": "Spades",
-            "label": "9\u2660"
+            "label": "7\u2660"
           },
           {
-            "value": "Five",
+            "value": "Two",
             "color": "Spades",
-            "label": "5\u2660"
-          },
-          {
-            "value": "Ace",
-            "color": "Hearts",
-            "label": "A\u2661"
+            "label": "2\u2660"
           },
           {
             "value": "Jack",
@@ -273,14 +116,24 @@
             "label": "9\u2661"
           },
           {
-            "value": "Two",
+            "value": "Five",
             "color": "Hearts",
-            "label": "2\u2661"
+            "label": "5\u2661"
           },
           {
-            "value": "Nine",
+            "value": "Three",
+            "color": "Hearts",
+            "label": "3\u2661"
+          },
+          {
+            "value": "Ten",
             "color": "Diamonds",
-            "label": "9\u2662"
+            "label": "10\u2662"
+          },
+          {
+            "value": "Seven",
+            "color": "Diamonds",
+            "label": "7\u2662"
           },
           {
             "value": "Three",
@@ -288,9 +141,80 @@
             "label": "3\u2662"
           },
           {
+            "value": "King",
+            "color": "Clubs",
+            "label": "K\u2663"
+          },
+          {
+            "value": "Eight",
+            "color": "Clubs",
+            "label": "8\u2663"
+          },
+          {
+            "value": "Two",
+            "color": "Clubs",
+            "label": "2\u2663"
+          }
+        ],
+        "points": 4,
+        "pointsNt": 4,
+        "spades": 3,
+        "hearts": 4,
+        "diamonds": 3,
+        "clubs": 3
+      },
+      {
+        "position": "South",
+        "cards": [
+          {
+            "value": "King",
+            "color": "Spades",
+            "label": "K\u2660"
+          },
+          {
+            "value": "Queen",
+            "color": "Spades",
+            "label": "Q\u2660"
+          },
+          {
+            "value": "Ace",
+            "color": "Hearts",
+            "label": "A\u2661"
+          },
+          {
+            "value": "Queen",
+            "color": "Hearts",
+            "label": "Q\u2661"
+          },
+          {
+            "value": "Seven",
+            "color": "Hearts",
+            "label": "7\u2661"
+          },
+          {
+            "value": "Four",
+            "color": "Hearts",
+            "label": "4\u2661"
+          },
+          {
+            "value": "King",
+            "color": "Diamonds",
+            "label": "K\u2662"
+          },
+          {
+            "value": "Ace",
+            "color": "Clubs",
+            "label": "A\u2663"
+          },
+          {
             "value": "Queen",
             "color": "Clubs",
             "label": "Q\u2663"
+          },
+          {
+            "value": "Ten",
+            "color": "Clubs",
+            "label": "10\u2663"
           },
           {
             "value": "Nine",
@@ -298,22 +222,98 @@
             "label": "9\u2663"
           },
           {
+            "value": "Seven",
+            "color": "Clubs",
+            "label": "7\u2663"
+          },
+          {
             "value": "Six",
             "color": "Clubs",
             "label": "6\u2663"
-          },
-          {
-            "value": "Three",
-            "color": "Clubs",
-            "label": "3\u2663"
           }
         ],
-        "points": 11,
-        "pointsNt": 10,
-        "spades": 3,
+        "points": 20,
+        "pointsNt": 20,
+        "spades": 2,
         "hearts": 4,
-        "diamonds": 2,
-        "clubs": 4
+        "diamonds": 1,
+        "clubs": 6
+      },
+      {
+        "position": "West",
+        "cards": [
+          {
+            "value": "Ace",
+            "color": "Spades",
+            "label": "A\u2660"
+          },
+          {
+            "value": "Nine",
+            "color": "Spades",
+            "label": "9\u2660"
+          },
+          {
+            "value": "Eight",
+            "color": "Spades",
+            "label": "8\u2660"
+          },
+          {
+            "value": "Five",
+            "color": "Spades",
+            "label": "5\u2660"
+          },
+          {
+            "value": "Four",
+            "color": "Spades",
+            "label": "4\u2660"
+          },
+          {
+            "value": "Ten",
+            "color": "Hearts",
+            "label": "10\u2661"
+          },
+          {
+            "value": "Two",
+            "color": "Hearts",
+            "label": "2\u2661"
+          },
+          {
+            "value": "Jack",
+            "color": "Diamonds",
+            "label": "J\u2662"
+          },
+          {
+            "value": "Nine",
+            "color": "Diamonds",
+            "label": "9\u2662"
+          },
+          {
+            "value": "Eight",
+            "color": "Diamonds",
+            "label": "8\u2662"
+          },
+          {
+            "value": "Five",
+            "color": "Diamonds",
+            "label": "5\u2662"
+          },
+          {
+            "value": "Jack",
+            "color": "Clubs",
+            "label": "J\u2663"
+          },
+          {
+            "value": "Five",
+            "color": "Clubs",
+            "label": "5\u2663"
+          }
+        ],
+        "points": 7,
+        "pointsNt": 6,
+        "spades": 5,
+        "hearts": 2,
+        "diamonds": 4,
+        "clubs": 2
       }
     ],
     "bidding": [
@@ -325,27 +325,27 @@
         "value": 1,
         "isFromSystem": true,
         "label": "1\u2663",
-        "explanation": "12-17 PC, 5\u002B trefli, brak starszej pi\u0105tki."
+        "explanation": "18\u002B PC, uk\u0142ad dowolny."
       },
       {
         "index": 1,
         "bidder": "West",
-        "type": "Double",
+        "type": "Pass",
         "color": "NoColor",
         "value": null,
-        "isFromSystem": true,
-        "label": "X",
-        "explanation": "11-17 PC, sk\u0142ad zr\u00F3wnowa\u017Cony, singiel mo\u017Cliwy tylko w treflach."
+        "isFromSystem": false,
+        "label": "Pass",
+        "explanation": "Nie znaleziono \u017Cadnej pasuj\u0105cej odzywki w systemie ani naturalnie."
       },
       {
         "index": 2,
         "bidder": "North",
         "type": "Submit",
-        "color": "Spades",
+        "color": "Diamonds",
         "value": 1,
         "isFromSystem": true,
-        "label": "1\u2660",
-        "explanation": "7\u002B PC, 5\u002B pik\u00F3w, maksymalnie 5 kier\u00F3w."
+        "label": "1\u2662",
+        "explanation": "7-11 PC, brak starszej czw\u00F3rki, 5\u002B karo."
       },
       {
         "index": 3,
@@ -360,12 +360,12 @@
       {
         "index": 4,
         "bidder": "South",
-        "type": "Pass",
-        "color": "NoColor",
-        "value": null,
-        "isFromSystem": false,
-        "label": "Pass",
-        "explanation": "Nie znaleziono \u017Cadnej pasuj\u0105cej odzywki w systemie ani naturalnie."
+        "type": "Submit",
+        "color": "Hearts",
+        "value": 1,
+        "isFromSystem": true,
+        "label": "1\u2661",
+        "explanation": "18-21 PC, 4\u002B kier\u00F3w."
       },
       {
         "index": 5,
@@ -376,18 +376,38 @@
         "isFromSystem": false,
         "label": "Pass",
         "explanation": "Nie znaleziono \u017Cadnej pasuj\u0105cej odzywki w systemie ani naturalnie."
+      },
+      {
+        "index": 6,
+        "bidder": "North",
+        "type": "Pass",
+        "color": "NoColor",
+        "value": null,
+        "isFromSystem": false,
+        "label": "Pass",
+        "explanation": "Odzywka naturalna anulowana, gdy\u017C myli\u0142a si\u0119 z systemem."
+      },
+      {
+        "index": 7,
+        "bidder": "East",
+        "type": "Pass",
+        "color": "NoColor",
+        "value": null,
+        "isFromSystem": false,
+        "label": "Pass",
+        "explanation": "Nie znaleziono \u017Cadnej pasuj\u0105cej odzywki w systemie ani naturalnie."
       }
     ],
     "contract": {
       "passed": false,
-      "declarer": "North",
+      "declarer": "South",
       "value": 1,
-      "color": "Spades",
+      "color": "Hearts",
       "isDoubled": false,
       "isRedoubled": false,
-      "label": "1\u2660",
+      "label": "1\u2661",
       "pairPoints": 31,
-      "trumpCount": 8
+      "trumpCount": 7
     },
     "error": null
   }

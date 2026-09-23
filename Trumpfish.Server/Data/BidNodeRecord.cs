@@ -56,23 +56,31 @@ public class BidNodeRecord {
     public string? Convention { get; set; }
 
     public int? PointsLower { get; set; }
+
     public int? PointsUpper { get; set; }
 
     public int? SpadesLower { get; set; }
+
     public int? SpadesUpper { get; set; }
 
     public int? HeartsLower { get; set; }
+
     public int? HeartsUpper { get; set; }
 
     public int? DiamondsLower { get; set; }
+
     public int? DiamondsUpper { get; set; }
 
     public int? ClubsLower { get; set; }
+
     public int? ClubsUpper { get; set; }
 
     public decimal? SpadesStops { get; set; }
+
     public decimal? HeartsStops { get; set; }
+
     public decimal? DiamondsStops { get; set; }
+
     public decimal? ClubsStops { get; set; }
 
     public string? ColorDistribution { get; set; }
@@ -97,6 +105,24 @@ public class BidNodeRecord {
     public bool GoToOpenings { get; set; }
 
     public bool IsPreferred { get; set; }
+
+    /// <summary>Odzywka sztuczna na tyle, że partner musi ją zaalertować.</summary>
+    public bool Alert { get; set; }
+
+    /// <summary>
+    /// Odzywka, do której przechodzi dalsza licytacja. Trzymany jest sam <c>BidNode.NodeId</c>, bez klucza obcego:
+    /// identyfikator jest unikalny w obrębie systemu, a zapis kasuje i odtwarza wszystkie wiersze z nowymi <see cref="Id"/>.
+    /// </summary>
+    public Guid? ContinuationNodeId { get; set; }
+
+    public BidColor? OutputGameColor { get; set; }
+
+    public BidColor? InputBidColor { get; set; }
+
+    /// <summary>Aspiracje szlemikowe - odzywka szuka kontraktu wyższego niż końcówka.</summary>
+    public bool TryPremiumContract { get; set; }
+
+    public int? SlamConventionIndex { get; set; }
 
     /// <summary>Excluded from the simulation together with everything below it. Only the head of the branch carries the flag.</summary>
     public bool IsDisabled { get; set; }

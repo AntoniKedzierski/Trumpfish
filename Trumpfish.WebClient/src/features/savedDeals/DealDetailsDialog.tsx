@@ -10,6 +10,14 @@ export interface DealDetails {
   comment: string;
 }
 
+/** Druga odpowiedź na to samo pytanie: zapisać i zrobić z rozdaniem coś jeszcze. Bez niej okno ma jedną komendę. */
+export interface DealDetailsExtra {
+  label: string;
+  busyLabel: string;
+  icon: React.ComponentType<{ className?: string }>;
+  onSubmit: (details: DealDetails) => Promise<unknown>;
+}
+
 interface DealDetailsDialogProps {
   title: string;
   initial: DealDetails;
@@ -18,6 +26,7 @@ interface DealDetailsDialogProps {
   busyLabel: string;
   /** Odrzuca wiadomością do pokazania; spełnienie znaczy „gotowe" i okno zamyka się samo. */
   onSubmit: (details: DealDetails) => Promise<unknown>;
+  extra?: DealDetailsExtra;
   onClose: () => void;
 }
 
@@ -28,7 +37,7 @@ interface DealDetailsDialogProps {
  * Jedno okno na zapisanie rozdania i na edycję już zapisanego. Zadają dokładnie te same trzy pytania, a dwie kopie
  * byłyby dwoma miejscami, w których pole tagów może zacząć zachowywać się inaczej.
  */
-export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSubmit, onClose }: DealDetailsDialogProps) {
+export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSubmit, extra, onClose }: DealDetailsDialogProps) {
   const [name, setName] = useState(initial.name);
   const [tags, setTags] = useState(initial.tags);
   const [comment, setComment] = useState(initial.comment);
@@ -63,7 +72,11 @@ export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSu
     setSuggesting(false);
   };
 
-  const submit = () => {
+  /*
+   * Obie komendy okna robią to samo z tym samym: zapisują to, co w nim wpisano. Różnią się tylko tym, co dzieje się
+   * potem, więc sprawdzenie nazwy, stan czekania i wiadomość o błędzie są wspólne, a nie przepisane dwa razy.
+   */
+  const submit = (action: (details: DealDetails) => Promise<unknown>) => {
     if (name.trim() === '') {
       setError('Nazwij rozdanie, żeby dało się je później odnaleźć.');
       return;
@@ -71,7 +84,7 @@ export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSu
 
     setBusy(true);
     setError(null);
-    onSubmit({ name: name.trim(), tags, comment: comment.trim() })
+    action({ name: name.trim(), tags, comment: comment.trim() })
       .then(() => onClose())
       .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
       .finally(() => setBusy(false));
@@ -85,7 +98,14 @@ export function DealDetailsDialog({ title, initial, submitLabel, busyLabel, onSu
       actions={
         <>
           <Button size="small" icon={CloseIcon} disabled={busy} onClick={onClose}>Odrzuć</Button>
-          <Button size="small" icon={CheckIcon} variant="primary" disabled={busy || name.trim() === ''} onClick={submit}>
+
+          {extra === undefined ? null : (
+            <Button size="small" icon={extra.icon} disabled={busy || name.trim() === ''} onClick={() => submit(extra.onSubmit)}>
+              {busy ? extra.busyLabel : extra.label}
+            </Button>
+          )}
+
+          <Button size="small" icon={CheckIcon} variant="primary" disabled={busy || name.trim() === ''} onClick={() => submit(onSubmit)}>
             {busy ? busyLabel : submitLabel}
           </Button>
         </>

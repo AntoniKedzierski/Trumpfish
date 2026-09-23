@@ -32,6 +32,11 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  /*
+   * Przesunięcie o tyle, ile panel wystawałby poza to, co widać - liczy je `ui/keepOnScreen.ts`. Własną właściwością, a
+   * nie `transform`, bo `transform` należy tu do animacji otwarcia i jedno gasiłoby drugie.
+   */
+  translate: var(--panel-shift, 0) 0;
   animation: view-enter var(--duration-fast) var(--ease-out) both;
 }
 
@@ -320,10 +325,27 @@
   border-radius: var(--radius-sm);
 }
 
-.ui-panel .ui-check:focus-within {
+/*
+ * Obwódka tylko dla klawiatury.
+ *
+ * Zapisana przez `:focus-within` zostawała po każdym kliknięciu myszą - wiersz, który ktoś właśnie zaznaczył, świecił
+ * ramką grubszą niż wszystko wokół, aż do kliknięcia gdzie indziej. `:focus-visible` odpowiada na to samo pytanie, ale
+ * zadane przez przeglądarkę: czy fokus trzeba pokazać.
+ */
+.ui-panel .ui-check:has(:focus-visible) {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
   border-radius: var(--radius-sm);
+}
+
+/*
+ * W popupie wszystko jest małe, więc kwadracik i kółko też. Szesnaście pikseli przy dwunastopunktowym piśmie to
+ * kontrolka wyższa od wiersza, który opisuje - i to ona rzuca się w oczy zamiast tego, co jest w nim napisane.
+ */
+.ui-panel input[type='checkbox'],
+.ui-panel input[type='radio'] {
+  width: 14px;
+  height: 14px;
 }
 
 /*

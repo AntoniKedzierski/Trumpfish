@@ -6,8 +6,13 @@ import { makesGame } from '../sorting';
 import { vulnerabilityLabels, vulnerabilityOf } from '../vulnerability';
 import { DealAnalysis } from './DealAnalysis';
 
-/** Jedno rozdanie z symulacji: wspólna karta rozdania plus komendy, które ma tylko ten widok. */
-export function DealResultCard({ deal }: { deal: SimulationDealResult }) {
+/**
+ * Jedno rozdanie z symulacji: wspólna karta rozdania plus komendy, które ma tylko ten widok.
+ *
+ * `analyseWithSystemId` podaje tylko symulacja - to ona ma na ekranie wynik, którego nie wolno zgubić, więc tylko ona
+ * oferuje zapisanie rozdania razem z otwarciem analizy w nowej karcie.
+ */
+export function DealResultCard({ deal, analyseWithSystemId }: { deal: SimulationDealResult; analyseWithSystemId?: string }) {
   // Numer rozdania decyduje, kto jest po partii - tak samo jak na turnieju.
   const board = toNumber(deal.index) ?? 0;
   const vulnerability = vulnerabilityOf(board);
@@ -27,7 +32,7 @@ export function DealResultCard({ deal }: { deal: SimulationDealResult }) {
         <>
           <ContractSummary contract={deal.contract} />
           {/* Oba przy prawej krawędzi, ciche pierwsze: zapisanie rozdania to notatka dla siebie, analiza to sprawa, po którą ktoś przyszedł. */}
-          <SaveDealButton deal={deal} vulnerability={vulnerability} />
+          <SaveDealButton deal={deal} vulnerability={vulnerability} analyseWithSystemId={analyseWithSystemId} />
           <DealAnalysis deal={deal} vulnerability={vulnerability} />
         </>
       }

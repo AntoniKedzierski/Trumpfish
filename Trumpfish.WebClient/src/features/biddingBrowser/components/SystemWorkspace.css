@@ -76,7 +76,8 @@
   grid-template-columns: minmax(0, 1fr) auto 460px;
   flex: 1;
   min-height: 0;
-  padding: 20px 28px;
+  /* Bok taki sam, jak w pasku nad nim (`--space-5` w `styles/toolbar.css`) - drzewo zaczyna się pod pierwszą komendą. */
+  padding: 20px var(--space-5);
 }
 
 /* Uchwyt i jego marginesy składają się na `--splitter-column` - odstęp, jaki panele mają po obu jego stronach. */
@@ -209,6 +210,11 @@
 
 .tree-row:hover {
   background: var(--surface-hover);
+}
+
+/* Odzywka, której w tym drzewie nie da się wybrać. Widać ją i widać, gdzie leży - tylko nie jest odpowiedzią na pytanie. */
+.tree-row.faded {
+  opacity: 0.8;
 }
 
 .tree-row.selected {
@@ -613,6 +619,15 @@
 }
 
 /*
+ * Dwa pola tej samej wagi dzielą wiersz po połowie. Taki wiersz stoi w środku formularza, między etykietami na własnych
+ * liniach, więc odstęp nad nim jest ich odstępem - nie węższym odstępem pierwszego rzędu pod ścieżką odzywki.
+ */
+.editor .field-grid.even {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 14px;
+}
+
+/*
  * The label is the wrapper here, not a sibling, so the control inside it inherits whatever the label is set in. Its name
  * carries the label styling instead, and the wrapper hands the control back ordinary text - uppercased option labels were
  * exactly what a combobox reading "TREFLE" looked like.
@@ -828,7 +843,7 @@
 .validation {
   max-height: 280px;
   overflow: auto;
-  margin: 0 28px 20px;
+  margin: 0 var(--space-5) 20px;
   padding: 18px 20px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -1072,4 +1087,87 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
+}
+
+/*
+ * Przejście: dokąd przenosi się dalsza licytacja.
+ *
+ * Pole jest szerokie, bo mieści całą odpowiedź - gałąź, ścieżkę i znaczenie celu; dwie komendy obok działają na tym
+ * jednym wskazaniu, więc stoją przy nim, a nie pod nim. Wysokość pola daje `.ui-combo-field` z `ui/controls.css`.
+ */
+.editor .continuation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor .continuation-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor .continuation-command {
+  flex: none;
+}
+
+/* Ścieżka do celu, czytana od korzenia: nazwa gałęzi, odzywki po drodze, a na końcu to, co cel znaczy. */
+.continuation-label {
+  display: inline;
+}
+
+.continuation-root {
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.continuation-root::after {
+    content: '.';
+}
+
+.continuation-step::before {
+  content: '·';
+  margin: 0 0.4em;
+  color: var(--text-muted);
+}
+
+.continuation-step + .continuation-step::before {
+  content: '→';
+}
+
+.continuation-meaning {
+  margin-left: 0.6em;
+  color: var(--text-muted);
+}
+
+/*
+ * Okno wyboru: rząd komend nad drzewem, drzewo pod nimi na całą resztę wysokości.
+ *
+ * Komendy są nad drzewem, bo drzewo jest wysokie na całe okno - pod nim odpowiedź na pytanie okna leżałaby na końcu
+ * przewijania, którego nikt nie robi po to, żeby zatwierdzić.
+ */
+.continuation-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.continuation-chosen {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.continuation-tree {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.continuation-tree .tree {
+  flex: 1;
 }

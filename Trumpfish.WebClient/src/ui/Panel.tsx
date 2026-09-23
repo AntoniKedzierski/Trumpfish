@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef, useState } from 'react';
+import { horizontalNudge } from './keepOnScreen';
 import './panel.css';
 
 export type PanelAlign = 'start' | 'end';
@@ -25,9 +27,29 @@ interface PanelProps {
  */
 export function Panel({ align = 'start', scroll = true, inline = false, footer, id, className = '', children }: PanelProps) {
   const classes = ['ui-panel', `align-${align}`, scroll ? 'scroll' : '', inline ? 'inline' : '', className];
+  const panel = useRef<HTMLDivElement>(null);
+  const [shift, setShift] = useState(0);
+
+  /*
+   * Panel opada spod wyzwalacza, a wyzwalacz bywa przy samej krawędzi - ostatnia komenda paska, kolumna w podzielonym
+   * widoku, telefon. Mierzony raz, przy otwarciu (panel żyje tylko otwarty, więc to jest jego jedyny montaż), i cofany
+   * o tyle, ile wystaje poza to, co widać. Kiedy się mieści, przesunięcie jest zerem i nic się nie zmienia.
+   */
+  useLayoutEffect(() => {
+    if (panel.current === null || inline) {
+      return;
+    }
+
+    setShift(horizontalNudge(panel.current));
+  }, [inline]);
 
   return (
-    <div className={classes.filter((name) => name !== '').join(' ')} id={id}>
+    <div
+      className={classes.filter((name) => name !== '').join(' ')}
+      id={id}
+      ref={panel}
+      style={shift === 0 ? undefined : ({ '--panel-shift': `${shift}px` } as React.CSSProperties)}
+    >
       <div className="ui-panel-body">{children}</div>
       {footer === undefined ? null : <div className="ui-panel-footer">{footer}</div>}
     </div>

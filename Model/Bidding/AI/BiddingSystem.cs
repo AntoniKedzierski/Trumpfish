@@ -1,4 +1,6 @@
+using Model.Bidding.AI.Engine;
 using Model.Bidding.Bids;
+using Model.Enums;
 using Newtonsoft.Json;
 
 namespace Model.Bidding.AI;
@@ -39,86 +41,109 @@ public class BiddingSystem {
     }
 
 
-    public List<BidNode> GetDescendants(List<InterruptedBid> bidSequence) {
+    /// <summary>
+    /// Wiąże przejścia: każdemu węzłowi z <see cref="BidNode.ContinuationNodeId"/> podstawia odzywkę o tym identyfikatorze.
+    /// </summary>
+    /// <remarks>
+    /// Robione po wczytaniu, tak samo jak <see cref="AssignParent"/> - z tego samego powodu: przejście wskazuje w bok
+    /// drzewa, więc w serializacji jest samym identyfikatorem, a obiektem staje się dopiero tutaj. Wskazanie w próżnię
+    /// (cel został skasowany) zostawia <c>null</c> i nie jest błędem - identyfikator zostaje, żeby dało się go zobaczyć
+    /// i poprawić w edytorze.
+    /// </remarks>
+    public void AssignContinuations() {
+        var byNodeId = AllNodes().GroupBy(node => node.NodeId).ToDictionary(group => group.Key, group => group.First());
+
+        foreach (var node in AllNodes()) {
+            node.Continuation = node.ContinuationNodeId is Guid target && byNodeId.TryGetValue(target, out var found) ? found : null;
+        }
+    }
+
+
+    /// <summary>Każda odzywka systemu, ze wszystkich korzeni i z każdej głębokości.</summary>
+    public IEnumerable<BidNode> AllNodes() {
+        foreach (var root in Roots) {
+            foreach (var node in root.Bids.SelectMany(Descend)) {
+                yield return node;
+            }
+        }
+    }
+
+
+    private static IEnumerable<BidNode> Descend(BidNode node) {
+        yield return node;
+
+        foreach (var descendant in node.NextBids.SelectMany(Descend)) {
+            yield return descendant;
+        }
+    }
+
+
+    public SystemBranch CreateOwnBranch(BidNode ownBid, Hand hand, Auction auction, PlayerPosition position) {
+        return new SystemBranch(this, ownBid, hand, auction, position, partnerOpened: false);
+    }
+
+
+    public List<SystemBranch> CreatePartnerBranches(InterruptedBid partnerBid, Hand hand, Auction auction, PlayerPosition position) {
+        return GetSequenceHeads([partnerBid])
+            .Select(e => new SystemBranch(this, e, hand, auction, position, partnerOpened: true))
+            .ToList();
+    }
+
+
+    public List<BidNode> GetSequenceHeads(List<InterruptedBid> bidSequence) {
         var children = Openings()!.Bids.Concat(Defences()!.Bids).ToList();
 
         for (int i = 0; i < bidSequence.Count - 1; ++i) {
-            children = [.. GetMatchingChildren(children, bidSequence[i])];
+            // Odzwyki pasujące na tym poziomie.
+            var matchingBids = GetMatchingBids(children, bidSequence[i]);
+
+            // Bierzemy ich dzieci.
+            children = GetChildren(matchingBids);
         }
 
         // Logika analogiczna do GetMatchingChildren.
         var lastBid = bidSequence.Last();
-        var candidates = children.Where(e => e.Equals(lastBid) && !e.IsDisabled);
-
-        // Brak wcięcia, zwracamy tylko odzywki bez przypisanego wcięcia.
-        if (lastBid.Interruption == null) {
-            return candidates.Where(e => e.Interjection == null).ToList();
-        }
-
-        // Nastąpiło wcięcie.
-        // Jeżeli wśród kandydatów są jakiekowliek wcięcia, to zwracamy tylko je.
-        if (candidates.Any(e => e.Interjection != null)) {
-            return candidates.Where(e => e.Interjection != null && e.Interjection.Equals(lastBid.Interruption)).ToList();
-        }
-
-        // Jeżeli nie, to wszystko.
-        return candidates.ToList();
+        return GetMatchingBids(children, lastBid);
     }
 
 
-    public IEnumerable<BidNode> GetDescendants(BidNode parent, Bid bid) {
-        foreach (var child in parent.NextBids) {
-            if (child.IsDisabled) {
-                continue;
-            }
-
-            if (child.Matches(bid)) {
-                yield return child;
-            }
+    public List<BidNode> GetMatchingBids(List<BidNode> bidCollection, InterruptedBid lookup) {
+        if (bidCollection.Count == 0) {
+            return [];
         }
-    }
 
-
-    public IEnumerable<BidNode> GetDescendants(Root root, Bid bid) {
-        foreach (var child in root.Bids) {
-            if (child.IsDisabled) {
-                continue;
-            }
-
-            if (child.Matches(bid)) {
-                yield return child;
-            }
-        }
-    }
-
-
-    public List<BidNode> GetMatchingChildren(List<BidNode> parentNodes, InterruptedBid nextBid) {
-        var candidates = parentNodes
-            .Where(e => e.Equals(nextBid))
+        var matchingBids = bidCollection
+            .Where(e => e.Equals(lookup))
             .Where(e => !e.IsDisabled);
 
-        // Brak wcięcia, zwracamy tylko odzywki bez przypisanego wcięcia.
-        if (nextBid.Interruption == null) {
-            return candidates
-                .Where(e => e.Interjection == null)
-                .SelectMany(e => e.NextBids)
+        // Wyjęcie pasujących odzywek względem wcięcia.
+        if (lookup.Interjection == null) {
+            matchingBids = matchingBids.Where(e => e.Interjection == null);
+        }
+        else {
+            var interjectedBids = matchingBids
+                .Where(e => e.Interjection?.Equals(lookup.Interjection) ?? false)
                 .ToList();
+
+            matchingBids = interjectedBids.Count > 0
+                ? interjectedBids
+                : matchingBids.Where(e => e.Interjection == null);
         }
 
-        // Nastąpiło wcięcie.
-        // Jeżeli wśród kandydatów są jakiekowliek wcięcia, to zwracamy tylko je.
-        if (candidates.Any(e => e.Interjection != null)) {
-            return candidates
-                .Where(e => e.Interjection != null && e.Interjection.Equals(nextBid.Interruption))
-                .SelectMany(e => e.NextBids)
-                .ToList();
-        }
-
-        // Jeżeli nie, to wszystko.
-        return candidates
-            .SelectMany(e => e.NextBids)
-            .ToList();
+        // Zmaterializowanie listy pasujących odzywek.
+        return matchingBids.ToList();
     }
+
+
+    public List<BidNode> GetNextBids(List<InterruptedBid> bidSequence) {
+        var sequence = GetSequenceHeads(bidSequence);
+        return sequence.SelectMany(e => e.GetNextBids()).ToList();
+    }
+
+
+    public List<BidNode> GetChildren(List<BidNode> parentNodes) => parentNodes
+        .SelectMany(e => e.GetNextBids())
+        .ToList();
 
 
     public IEnumerable<BidNode> GetOpenings(Bid bid) {

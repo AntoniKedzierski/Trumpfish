@@ -81,6 +81,13 @@ Jedna definicja: `components/ToolBar.tsx` + `styles/toolbar.css`. Żaden widok n
   nosi `data-ui-overlay`, a każdy, kto nasłuchuje „kliknięcia obok", pyta o nią `isInsideOverlay` z `ui/overlay.ts` —
   inaczej popup zamyka się w chwili wyboru z listy, która w nim stoi. Rozmiar dziedziczony po kontenerze (`.ui-panel *`)
   już do niej nie dociera, więc jedzie z nią jako klasa (`.ui-combo-list.small`).
+- **Żadna warstwa nie ma prawa wystawać poza to, co widać.** Panel opada spod wyzwalacza, a wyzwalacz bywa przy samej
+  krawędzi — ostatnia komenda paska, kolumna podzielonego widoku, telefon — i wtedy połowa panelu jest poza ekranem.
+  Warstwa jest **mierzona przy otwarciu i cofana** o tyle, ile wystaje: `horizontalNudge` z `ui/keepOnScreen.ts`,
+  nałożone przez `translate` (`--panel-shift` w `ui/Panel.tsx`, `--bid-shift` w dymku odzywki). **Granicą nie jest samo
+  okno**, tylko okno **i każda przewijana ramka nad warstwą** — w tej aplikacji każdy widok z paskiem narzędzi jest taką
+  ramką, więc dymek mieszczący się w oknie bywa ucinany przez kolumnę, w której stoi. Kiedy warstwa się mieści,
+  przesunięcie jest zerem i nie zmienia się nic.
 
 ## 6. Gdzie wolno ustawiać styl kontrolki
 

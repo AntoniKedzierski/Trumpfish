@@ -35,6 +35,9 @@ namespace Trumpfish.Server.Data.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("character varying(400)");
 
+                    b.Property<bool>("Alert")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("AutomaticResponse")
                         .HasColumnType("boolean");
 
@@ -58,6 +61,9 @@ namespace Trumpfish.Server.Data.Migrations
 
                     b.Property<string>("Condition")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("ContinuationNodeId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Convention")
                         .HasMaxLength(400)
@@ -94,6 +100,9 @@ namespace Trumpfish.Server.Data.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<int?>("HeartsUpper")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("InputBidColor")
                         .HasColumnType("integer");
 
                     b.Property<string>("InterjectionColor")
@@ -134,6 +143,9 @@ namespace Trumpfish.Server.Data.Migrations
                     b.Property<bool>("OpenerBid")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("OutputGameColor")
+                        .HasColumnType("integer");
+
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
 
@@ -154,6 +166,9 @@ namespace Trumpfish.Server.Data.Migrations
                     b.Property<bool>("SignOff")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("SlamConventionIndex")
+                        .HasColumnType("integer");
+
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
 
@@ -165,6 +180,9 @@ namespace Trumpfish.Server.Data.Migrations
 
                     b.Property<int?>("SpadesUpper")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("TryPremiumContract")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Type")
                         .IsRequired()

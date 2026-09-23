@@ -137,10 +137,6 @@
   margin-top: 2px;
 }
 
-.saved-deal-declarer {
-  color: var(--text-muted);
-}
-
 .saved-deal-body {
   flex: 1;
   min-width: 0;

@@ -150,4 +150,30 @@ function colorOrder(color: BidColor | undefined): number {
 
 export const bidTypeLabels: Record<BidType, string> = { Pass: 'Pas', Submit: 'Odzywka', Double: 'Kontra', Redouble: 'Rekontra' };
 
-export const bidColorLabels: Record<BidColor, string> = { NoColor: '-', Clubs: 'Trefle ♣', Diamonds: 'Kara ♦', Hearts: 'Kiery ♥', Spades: 'Piki ♠', NoTrump: 'Bez atu' };
+/*
+ * Same słowa. Znak koloru dokłada do nich `SuitMark` tam, gdzie lista jest rysowana - znak wpisany w tekst jako `♣` jest
+ * znakiem z czcionki systemowej, który na iOS podmienia się na kolorowe emoji i przestaje słuchać barwy (patrz
+ * `components/suits.tsx`). Etykieta zostaje więc tym, czym jest: nazwą, którą czyta czytnik ekranu i dymek.
+ */
+export const bidColorLabels: Record<BidColor, string> = { NoColor: '-', Clubs: 'Trefle', Diamonds: 'Kara', Hearts: 'Kiery', Spades: 'Piki', NoTrump: 'Bez atu' };
+
+/**
+ * Czy z jednej odzywki wolno przejść do drugiej.
+ */
+/*
+ * Dwa warunki i nic więcej: ta sama wartość, bo przejście oznacza dalszy ciąg tej samej odzywki, i ten sam gracz, bo
+ * otwierający prowadzi swoją gałąź, a odpowiadający swoją. Sama siebie odzywka wskazać nie może - to byłaby pętla.
+ */
+export function canContinueTo(source: EditableBidNode, candidate: EditableBidNode): boolean {
+  if (source.type === "Double") {
+    return candidate.nodeId !== source.nodeId && (source.openerBid ?? false) === (candidate.openerBid ?? false);
+  }
+
+  return candidate.nodeId !== source.nodeId
+    && sameValue(source.value, candidate.value)
+    && (source.openerBid ?? false) === (candidate.openerBid ?? false);
+}
+
+function sameValue(left: number | string | null | undefined, right: number | string | null | undefined): boolean {
+  return (left ?? null) === null && (right ?? null) === null ? true : Number(left) === Number(right);
+}

@@ -15,9 +15,11 @@ interface BidTreeViewProps {
    * a press and hold is what asks for it.
    */
   onEdit?: (target: NodePath) => void;
+  /** Odzywki, których w tym drzewie nie da się wybrać - rysowane przygaszone. Bez tego drzewo jest po prostu drzewem. */
+  fade?: (node: EditableBidNode) => boolean;
 }
 
-export function BidTreeView({ system, selection, revealKey, onSelect, onEdit }: BidTreeViewProps) {
+export function BidTreeView({ system, selection, revealKey, onSelect, onEdit, fade }: BidTreeViewProps) {
   return (
     <ul className="tree">
       {system.roots.map((root, rootIndex) => (
@@ -30,6 +32,7 @@ export function BidTreeView({ system, selection, revealKey, onSelect, onEdit }: 
           revealKey={revealKey}
           onSelect={onSelect}
           onEditChild={onEdit}
+          fadeChild={fade}
           initiallyExpanded
         />
       ))}
@@ -50,10 +53,17 @@ interface TreeBranchProps {
   onEditChild?: (target: NodePath) => void;
   /** Marks the branch as switched off. Only the head of the branch is told; the styling reaches the rest through the cascade. */
   disabled?: boolean;
+  /** Ten jeden wiersz jest przygaszony - nie da się go wybrać tam, gdzie drzewo służy do wyboru. */
+  faded?: boolean;
+  /** To samo pytanie o wiersze poniżej. Przewlekane, a nie zadawane tutaj, bo gałąź rysuje swoje dzieci sama. */
+  fadeChild?: (node: EditableBidNode) => boolean;
   initiallyExpanded?: boolean;
 }
 
-function TreeBranch({ label, target, children_, selection, revealKey, onSelect, onEdit, onEditChild, disabled = false, initiallyExpanded = false }: TreeBranchProps) {
+function TreeBranch({
+  label, target, children_, selection, revealKey, onSelect, onEdit, onEditChild,
+  disabled = false, faded = false, fadeChild, initiallyExpanded = false,
+}: TreeBranchProps) {
   const [expanded, setExpanded] = useState(initiallyExpanded);
   // Children mount on the first expand and then stay mounted, so the collapse can animate instead of snapping shut.
   const [mounted, setMounted] = useState(initiallyExpanded);
@@ -109,7 +119,7 @@ function TreeBranch({ label, target, children_, selection, revealKey, onSelect, 
       {/* A double click both selects the row and expands it: the click that opens the branch is also the one that picks it. */}
       <div
         ref={rowRef}
-        className={`tree-row${selected ? ' selected' : ''}${press.holding ? ' holding' : ''}`}
+        className={`tree-row${selected ? ' selected' : ''}${faded ? ' faded' : ''}${press.holding ? ' holding' : ''}`}
         style={press.holding ? ({ '--hold-delay': `${longPressDelay}ms` } as React.CSSProperties) : undefined}
         onClick={() => onSelect(target)}
         onDoubleClick={toggle}
@@ -125,7 +135,7 @@ function TreeBranch({ label, target, children_, selection, revealKey, onSelect, 
       {(mounted || holdsSelection) && !leaf && (
         <div className={`tree-children${open ? ' expanded' : ''}`}>
           <ul>
-            <TreeChildren container={target} children_={children_} selection={selection} revealKey={revealKey} onSelect={onSelect} onEdit={onEditChild} />
+            <TreeChildren container={target} children_={children_} selection={selection} revealKey={revealKey} onSelect={onSelect} onEdit={onEditChild} fade={fadeChild} />
           </ul>
         </div>
       )}
@@ -140,6 +150,7 @@ interface TreeChildrenProps {
   revealKey: number;
   onSelect: (target: NodePath) => void;
   onEdit?: (target: NodePath) => void;
+  fade?: (node: EditableBidNode) => boolean;
 }
 
 /**
@@ -148,13 +159,13 @@ interface TreeChildrenProps {
  * The folder is drawn, not stored. Interjected bids are kept at the front of the list, so it is simply the leading run of that
  * list given a heading - which is why the positions the rest of the browser addresses stay exactly what they were.
  */
-function TreeChildren({ container, children_, selection, revealKey, onSelect, onEdit }: TreeChildrenProps) {
+function TreeChildren({ container, children_, selection, revealKey, onSelect, onEdit, fade }: TreeChildrenProps) {
   const count = interjectedCount(children_);
 
   return (
     <>
       {count > 0 && (
-        <InterjectionFolder container={container} held={children_.slice(0, count)} selection={selection} revealKey={revealKey} onSelect={onSelect} onEdit={onEdit} />
+        <InterjectionFolder container={container} held={children_.slice(0, count)} selection={selection} revealKey={revealKey} onSelect={onSelect} onEdit={onEdit} fade={fade} />
       )}
 
       {children_.slice(count).map((node, offset) => (
@@ -169,6 +180,8 @@ function TreeChildren({ container, children_, selection, revealKey, onSelect, on
           onEdit={onEdit === undefined ? undefined : () => onEdit(childPath(container, count + offset))}
           onEditChild={onEdit}
           disabled={node.isDisabled}
+          faded={fade?.(node)}
+          fadeChild={fade}
         />
       ))}
     </>
@@ -182,10 +195,11 @@ interface InterjectionFolderProps {
   revealKey: number;
   onSelect: (target: NodePath) => void;
   onEdit?: (target: NodePath) => void;
+  fade?: (node: EditableBidNode) => boolean;
 }
 
 /** Heading over the bids said after an opponent call. Selectable, so a bid can be added into it, but it is not a bid itself. */
-function InterjectionFolder({ container, held, selection, revealKey, onSelect, onEdit }: InterjectionFolderProps) {
+function InterjectionFolder({ container, held, selection, revealKey, onSelect, onEdit, fade }: InterjectionFolderProps) {
   const target = folderPathUnder(container);
   const [expanded, setExpanded] = useState(false);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -223,6 +237,8 @@ function InterjectionFolder({ container, held, selection, revealKey, onSelect, o
               onEdit={onEdit === undefined ? undefined : () => onEdit(childPath(container, index))}
               onEditChild={onEdit}
               disabled={node.isDisabled}
+              faded={fade?.(node)}
+              fadeChild={fade}
             />
           ))}
         </ul>

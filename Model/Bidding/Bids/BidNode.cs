@@ -1,13 +1,13 @@
 using Model.Bidding.AI.Engine;
+using Model.Bidding.AI.Eval;
 using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Model.Bidding.Bids;
 
-public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, IComparable<BidNode> {
+public class BidNode : InterruptedBid, IEquatable<BidNode>, IEqualityComparer<BidNode>, IComparable<BidNode> {
 
     /// <summary>Stable identity of the node, serialized so clients can address one exact bid even when several share the same path.</summary>
     public Guid NodeId { get; set; } = Guid.NewGuid();
@@ -27,6 +27,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public NumberRange? DiamondsCardRange { get; set; }
 
     public NumberRange? ClubsCardRange { get; set; }
+
     public decimal? SpadesStops { get; set; }
 
     public decimal? HeartsStops { get; set; }
@@ -63,13 +64,15 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public bool IsPreferred { get; set; }
 
     /// <summary>
+    /// Dotyczy wysoce sztucznych odzywek, wymagających alertu ze strony partnera.
+    /// </summary>
+    public bool Alert { get; set; }
+
+    /// <summary>
     /// Takes this bid, and with it everything below it, out of the simulation without deleting it. Children are not marked in
     /// turn: a branch is reached through its parent, so switching the parent off is enough to switch the whole branch off.
     /// </summary>
     public bool IsDisabled { get; set; }
-
-    /// <summary>Bid made by the preceding opponent, so sequences with interjections can be described. Only <see cref="BidType.Submit"/> or <see cref="BidType.Double"/> make sense here.</summary>
-    public Bid? Interjection { get; set; }
 
     public List<BidNode> NextBids { get; set; } = [];
 
@@ -81,8 +84,33 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
     public string? AiSource { get; set; }
 
+    /// <summary>
+    /// Określa, do której gałęzi drzewa przenieść się z dalszą licytacją.
+    /// Wskazywać wolno na odzywkę o tej samej wartości i o tym samym <see cref="OpenerBid"/> - otwierający przechodzi
+    /// tylko do swoich odzywek, odpowiadający do swoich.
+    /// </summary>
+    public Guid? ContinuationNodeId { get; set; }
+
+    /// <summary>
+    /// Odzywka wskazana przez <see cref="ContinuationNodeId"/>, wiązana po wczytaniu przez <c>BiddingSystem.AssignContinuations</c>.
+    /// </summary>
+    /// <remarks>
+    /// Nigdy nie serializowana - tak samo jak <see cref="Parent"/>. Przejście wskazuje w bok drzewa, więc w JSON-ie
+    /// poddrzewo celu pojechałoby drugi raz, a dwa przejścia wskazujące na siebie nawzajem to nieskończona rekurencja.
+    /// Po drucie i do bazy jedzie sam identyfikator.
+    /// </remarks>
     [JsonIgnore, TextJsonIgnore]
-    public string Path { get; set; } = "";
+    public BidNode? Continuation { get; set; }
+
+    public BidColor? OutputGameColor { get; set; }
+
+    public BidColor? InputBidColor { get; set; }
+
+    /// <summary>Aspiracje szlemikowe - odzywka szuka kontraktu wyższego niż końcówka.</summary>
+    public bool TryPremiumContract { get; set; }
+
+    public int? SlamConventionIndex { get; set; }
+
 
     public BidNode() : base() { }
 
@@ -103,13 +131,13 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     public BidNode? GetGrandparent() => Parent?.Parent;
 
 
-    public BidNode GetRoot() {
-        if (Parent == null) {
-            return this;
-        }
-
-        return Parent.GetRoot();
-    }
+    public List<BidNode> GetNextBids() => (
+        Continuation == null
+            ? NextBids
+            : NextBids.Concat(Continuation.NextBids)
+        )
+        .Where(e => !e.IsDisabled)
+        .ToList();
 
 
     public List<BidNode> GetPath() {
@@ -126,9 +154,61 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
     }
 
 
+    public bool MatchesEntirePath(Hand hand) {
+        if (GetDepth() <= 1) {
+            return true;
+        }
+
+        var lastOwnBidCandidate = GetGrandparent();
+        while (lastOwnBidCandidate != null) {
+            if (!lastOwnBidCandidate.Matches(hand)) {
+                return false;
+            }
+            lastOwnBidCandidate = lastOwnBidCandidate.GetGrandparent();
+        }
+
+        return true;
+    }
+
+
     public bool Matches(Bid bid) => Type == bid.Type && Color == bid.Color && Value == bid.Value;
 
 
+    public HandEvaluation Evaluate() {
+        // Wszystkie odzwyki tego gracza, od góry drzewa.
+        var path = GetPath()
+            .Where(e => e.OpenerBid == OpenerBid)
+            .OrderBy(e => e)
+            .ToList();
+
+        var result = new HandEvaluation();
+
+        foreach (var bidNode in path) {
+            result.Evaluate(bidNode);
+        }
+
+        return result;
+    }
+
+
+    public BidColor? GetDeclaredGameColor() {
+        if (OutputGameColor != null) {
+            return OutputGameColor;
+        }
+
+        var parent = Parent;
+        while (parent != null) {
+            if (parent.OutputGameColor != null) {
+                return parent.OutputGameColor;
+            }
+            parent = parent.Parent;
+        }
+
+        return null;
+    }
+
+
+    #region Submits
     public static BidNode Submit(int value, BidColor color, string explanation) => new() {
         Type = BidType.Submit,
         Value = value,
@@ -185,7 +265,6 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
         var lowestValue = auction.GetLowestLegalValue(color);
 
         // Póki co brak kontry.
-
         return color switch {
             BidColor.NoTrump => Submit(Math.Max(3, lowestValue), BidColor.NoTrump, explanation),
             BidColor.Spades => Submit(Math.Max(4, lowestValue), BidColor.Spades, explanation),
@@ -194,6 +273,21 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
             BidColor.Clubs => Submit(Math.Max(5, lowestValue), BidColor.Clubs, explanation),
             _ => throw new Exception("Invalid color.")
         };
+    }
+
+
+    public static BidNode SubmitGameOrPass(Auction auction, BidColor color, string explanation) {
+        var lowestValue = auction.GetLowestLegalValue(color);
+
+        if (color.IsNoTrumpGame()) {
+            return lowestValue >= 4 ? Pass(explanation) : Submit(3, BidColor.NoTrump, explanation);
+        }
+
+        if (color.IsMajor()) {
+            return lowestValue >= 5 ? Pass(explanation) : Submit(4, color, explanation);
+        }
+
+        return lowestValue >= 6 ? Pass(explanation) : Submit(5, color, explanation);
     }
 
 
@@ -222,6 +316,7 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
         Explanation = explanation,
         IsFromSystem = false
     };
+    #endregion
 
 
     public Bid ToBid() {
@@ -336,28 +431,6 @@ public class BidNode : Bid, IEquatable<BidNode>, IEqualityComparer<BidNode>, ICo
 
 
     public int CompareTo(BidNode? other) {
-        if (other == null) {
-            return 1;
-        }
-
-        // Najpierw porównujemy Value (poziom odzywki: 1-7)
-        int valueComparison = Nullable.Compare(Value, other.Value);
-        if (valueComparison != 0) {
-            return valueComparison;
-        }
-
-        // Jeśli Value są równe, porównujemy Color
-        // Porządek: ♣ < ♦ < ♥ < ♠ < NoTrump
-        return GetColorOrder(Color).CompareTo(GetColorOrder(other.Color));
-    }
-
-    private static int GetColorOrder(BidColor color) {
-        return color switch {
-            BidColor.Clubs => 0,
-            BidColor.Diamonds => 1,
-            BidColor.Hearts => 2,
-            BidColor.Spades => 3,
-            _ => 4 // NoColor/NoTrump
-        };
+        return base.CompareTo(other);
     }
 }

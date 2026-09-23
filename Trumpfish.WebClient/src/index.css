@@ -93,14 +93,17 @@ input[type='number']::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type='checkbox'] {
+/*
+ * Kwadracik i kółko wyboru: jedna barwa akcentu dla obu. Kółko jej nie miało i wychodziło systemową, niebieską - w
+ * jednym panelu, tuż nad kwadracikiem w barwie aplikacji.
+ *
+ * Bez powiększania pod wskaźnikiem: kontrolka, która rośnie, kiedy się na nią patrzy, czyta się jako za duża, a wiersz
+ * pod nią drga. Podświetlenie całego wiersza robi `ui/panel.css` i to ono jest odpowiedzią na wskaźnik.
+ */
+input[type='checkbox'],
+input[type='radio'] {
   accent-color: var(--accent);
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-out);
-}
-
-input[type='checkbox']:hover:not(:disabled) {
-  transform: scale(1.1);
 }
 
 select {

@@ -12,6 +12,8 @@ interface DialogProps {
   /** Rząd komend na dole. Najwyżej jedna z nich jest akcentowana - okno liczy się jako osobny widok. */
   actions?: ReactNode;
   wide?: boolean;
+  /** Okno na całą szerokość okna przeglądarki - dla treści, która sama jest widokiem: drzewa odzywek do wyboru. */
+  full?: boolean;
   children: ReactNode;
 }
 
@@ -22,7 +24,7 @@ interface DialogProps {
  * Rysowane do `body`, a nie w miejscu wywołania: strona pod spodem bywa ramką z własnym przewijaniem i własnym
  * `backdrop-filter`, a okno zaczepione w takiej ramce jest oknem wysokości tej ramki.
  */
-export function Dialog({ title, onClose, actions, wide = false, children }: DialogProps) {
+export function Dialog({ title, onClose, actions, wide = false, full = false, children }: DialogProps) {
   const titleId = useId();
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export function Dialog({ title, onClose, actions, wide = false, children }: Dial
     <div className="ui-dialog-backdrop" role="presentation" onClick={onClose}>
       {/* Okno nie jest tłem: kliknięcie w środku jest wyborem, a nie rezygnacją. */}
       <div
-        className={wide ? 'ui-dialog wide' : 'ui-dialog'}
+        className={['ui-dialog', wide ? 'wide' : '', full ? 'full' : ''].filter((name) => name !== '').join(' ')}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

@@ -15,8 +15,8 @@ export const minimumSystemWidth = 760;
  * Adres jednego rozdania. Tryb analizy jest domyślny i nie dopisuje się do adresu; podział widoku dopisuje się zawsze,
  * bo ma przetrwać i wybór innego rozdania, i odświeżenie strony.
  */
-export function analyzerLink(dealId: string, mode: AnalyzerMode = 'analysis', split = false): string {
-  return `${analyzerRoute}/${dealId}${query(mode, split)}`;
+export function analyzerLink(dealId: string, mode: AnalyzerMode = 'analysis', split = false, systemId?: string): string {
+  return `${analyzerRoute}/${dealId}${query(mode, split, systemId)}`;
 }
 
 /** Adres samej listy rozdań - „wczytaj inne", które ma wrócić do tego samego układu. */
@@ -24,7 +24,7 @@ export function analyzerPickerLink(split = false): string {
   return `${analyzerRoute}${query('analysis', split)}`;
 }
 
-function query(mode: AnalyzerMode, split: boolean): string {
+function query(mode: AnalyzerMode, split: boolean, systemId?: string): string {
   const parameters = new URLSearchParams();
 
   if (mode !== 'analysis') {
@@ -33,6 +33,11 @@ function query(mode: AnalyzerMode, split: boolean): string {
 
   if (split) {
     parameters.set('split', '1');
+  }
+
+  // Z którym systemem otworzyć widok. Dopisywane tam, gdzie widok jest otwierany z innego, który system już zna.
+  if (systemId !== undefined && systemId !== '') {
+    parameters.set('system', systemId);
   }
 
   const written = parameters.toString();

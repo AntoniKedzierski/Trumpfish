@@ -2,10 +2,11 @@ using Model.Enums;
 using Model.Helpers;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Model.Bidding.Bids;
 
-public class Bid : IEquatable<Bid> {
+public class Bid : IEquatable<Bid>, IEqualityComparer<Bid>, IComparable<Bid> {
 
     public BidType Type { get; set; }
 
@@ -115,8 +116,53 @@ public class Bid : IEquatable<Bid> {
         return other.Color == Color && other.Type == Type && (other.Value?.Equals(Value) ?? true);
     }
 
+
+    public int GetBidCode() {
+        return (Value ?? 0) * 10000 + (int)Type * 1000 + (int)Color * 100;
+    }
+
+
     public static Bid Pass(string? explanation = null) {
         return new Bid { Type = BidType.Pass, Explanation = explanation };
+    }
+
+
+    public bool Equals(Bid? x, Bid? y) {
+        return x?.Equals(y) ?? true;
+    }
+
+
+    public int GetHashCode([DisallowNull] Bid obj) {
+        return obj.GetBidCode();
+    }
+
+
+
+    public int CompareTo(Bid? other) {
+        if (other == null) {
+            return 1;
+        }
+
+        // Najpierw porównujemy Value (poziom odzywki: 1-7)
+        int valueComparison = Nullable.Compare(Value, other.Value);
+        if (valueComparison != 0) {
+            return valueComparison;
+        }
+
+        // Jeśli Value są równe, porównujemy Color
+        // Porządek: ♣ < ♦ < ♥ < ♠ < NoTrump
+        return GetColorOrder(Color).CompareTo(GetColorOrder(other.Color));
+    }
+
+
+    private static int GetColorOrder(BidColor color) {
+        return color switch {
+            BidColor.Clubs => 0,
+            BidColor.Diamonds => 1,
+            BidColor.Hearts => 2,
+            BidColor.Spades => 3,
+            _ => 4 // NoColor/NoTrump
+        };
     }
 }
 
