@@ -21963,6 +21963,38 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
+                          "nodeId": "88c74fab-ec1e-4df5-933a-f560c49869ca",
+                          "condition": "18-21 PC, dok\u0142adnie 4 kiery, dok\u0142adnie 5 karo.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5,
+                            "upper": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "alert": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "tryPremiumContract": false,
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 2,
+                          "isFromSystem": false
+                        },
+                        {
                           "nodeId": "82d5392d-2ae0-4037-8c82-9202916cc6da",
                           "condition": "18-21 PC, 5\u002B kier\u00F3w.",
                           "pointsRange": {
@@ -22081,6 +22113,36 @@
                           "type": "Submit",
                           "color": "Spades",
                           "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "c25767fd-69da-4136-8751-84a90b7bcdea",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "alert": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "tryPremiumContract": false,
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -22230,6 +22292,36 @@
                           "type": "Submit",
                           "color": "Spades",
                           "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "0bc56fcd-b28d-4c61-b8b1-6086f427db0b",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 kiery.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "heartsCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "alert": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "tryPremiumContract": false,
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -23028,7 +23120,7 @@
                   "goToOpenings": false,
                   "isPreferred": true,
                   "alert": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "nextBids": [
                     {
                       "nodeId": "f6bb16ca-79ac-4198-bfe4-adad36204b74",
@@ -23614,7 +23706,7 @@
                   "goToOpenings": false,
                   "isPreferred": true,
                   "alert": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "nextBids": [
                     {
                       "nodeId": "7f454f71-c497-47fa-96b7-f056b33df9c5",
@@ -24190,6 +24282,38 @@
                       "isDisabled": false,
                       "nextBids": [
                         {
+                          "nodeId": "53ec7763-a524-4472-830a-465222bde6b4",
+                          "condition": "18-21 PC, dok\u0142adnie 4 piki, dok\u0142adnie 5 karo.",
+                          "pointsRange": {
+                            "lower": 18,
+                            "upper": 21
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "diamondsCardRange": {
+                            "lower": 5,
+                            "upper": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": true,
+                          "gameForcing": false,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "alert": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "tryPremiumContract": false,
+                          "type": "Submit",
+                          "color": "Diamonds",
+                          "value": 2,
+                          "isFromSystem": false
+                        },
+                        {
                           "nodeId": "f925d8e8-1e4e-4d39-ad7f-4e02ac525a0f",
                           "condition": "18-21 PC, dok\u0142adnie 5 pik\u00F3w, dok\u0142adnie 4 kiery.",
                           "pointsRange": {
@@ -24308,6 +24432,36 @@
                           "type": "Submit",
                           "color": "Hearts",
                           "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "13c28bb3-d796-4738-90af-e08dfd72b4ce",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "alert": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "tryPremiumContract": false,
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -24457,6 +24611,36 @@
                           "type": "Submit",
                           "color": "Hearts",
                           "value": 3,
+                          "isFromSystem": false
+                        },
+                        {
+                          "nodeId": "94b0c90c-b2ca-4c7a-9386-553c20c00eb0",
+                          "condition": "18\u002B PC, 5\u002B trefli, dok\u0142adnie 4 piki.",
+                          "pointsRange": {
+                            "lower": 18
+                          },
+                          "spadesCardRange": {
+                            "lower": 4,
+                            "upper": 4
+                          },
+                          "clubsCardRange": {
+                            "lower": 5
+                          },
+                          "openerBid": true,
+                          "signOff": false,
+                          "oneRoundForcing": false,
+                          "gameForcing": true,
+                          "automaticResponse": false,
+                          "goToOpenings": false,
+                          "isPreferred": false,
+                          "alert": false,
+                          "isDisabled": false,
+                          "nextBids": [],
+                          "realizedGoal": "None",
+                          "tryPremiumContract": false,
+                          "type": "Submit",
+                          "color": "Clubs",
+                          "value": 4,
                           "isFromSystem": false
                         }
                       ],
@@ -24847,13 +25031,14 @@
                     },
                     {
                       "nodeId": "d46efd65-09dd-4bb4-a01e-b9f5840a1582",
-                      "condition": "9-11 PC, 6\u002B trefli.",
+                      "description": "odej\u015Bcie od Jassem 2025",
+                      "condition": "9-11 PC, 5\u002B trefli.",
                       "pointsRange": {
                         "lower": 9,
                         "upper": 11
                       },
                       "clubsCardRange": {
-                        "lower": 6
+                        "lower": 5
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -24947,12 +25132,12 @@
                         },
                         {
                           "nodeId": "0e8abd4f-15d1-4ca0-add3-107ba7f8fc70",
-                          "condition": "18\u002B PC, 3\u002B karo.",
+                          "condition": "18\u002B PC, 5\u002B karo.",
                           "pointsRange": {
                             "lower": 18
                           },
                           "diamondsCardRange": {
-                            "lower": 3
+                            "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
@@ -25033,13 +25218,14 @@
                     },
                     {
                       "nodeId": "2398e9cf-8144-43cd-ac1d-f7c2e06209a2",
-                      "condition": "9-11 PC, 6\u002B karo.",
+                      "description": "odej\u015Bcie od Jassem 2025",
+                      "condition": "9-11 PC, 5\u002B karo.",
                       "pointsRange": {
                         "lower": 9,
                         "upper": 11
                       },
                       "diamondsCardRange": {
-                        "lower": 6
+                        "lower": 5
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -25107,12 +25293,12 @@
                         },
                         {
                           "nodeId": "faac6224-fb7c-4f0c-9d77-e5bab6e02ae2",
-                          "condition": "18\u002B PC, 3\u002B trefli.",
+                          "condition": "18\u002B PC, 5\u002B trefli.",
                           "pointsRange": {
                             "lower": 18
                           },
                           "clubsCardRange": {
-                            "lower": 3
+                            "lower": 5
                           },
                           "openerBid": true,
                           "signOff": false,
@@ -25247,7 +25433,7 @@
                   "goToOpenings": false,
                   "isPreferred": true,
                   "alert": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "nextBids": [
                     {
                       "nodeId": "99460e4c-17ed-4121-9755-42000a98d06f",
@@ -25585,13 +25771,14 @@
                     },
                     {
                       "nodeId": "ce183e66-61f8-4e86-9705-110ce5a58f6e",
-                      "condition": "9-11 PC, 6\u002B trefli.",
+                      "description": "odej\u015Bcie od Jassem 2025",
+                      "condition": "9-11 PC, 5\u002B trefli.",
                       "pointsRange": {
                         "lower": 9,
                         "upper": 11
                       },
                       "clubsCardRange": {
-                        "lower": 6
+                        "lower": 5
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -25691,13 +25878,14 @@
                     },
                     {
                       "nodeId": "3262a7a0-eb19-4262-a260-f40a465b5219",
-                      "condition": "9-11 PC, 6\u002B karo.",
+                      "description": "odej\u015Bcie od Jassem 2025",
+                      "condition": "9-11 PC, 5\u002B karo.",
                       "pointsRange": {
                         "lower": 9,
                         "upper": 11
                       },
                       "diamondsCardRange": {
-                        "lower": 6
+                        "lower": 5
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -25826,7 +26014,7 @@
                   "goToOpenings": false,
                   "isPreferred": true,
                   "alert": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "nextBids": [
                     {
                       "nodeId": "e5eab51a-fc71-4dff-bcfa-e15b9e67c6d2",
@@ -26135,13 +26323,14 @@
                     },
                     {
                       "nodeId": "ee686d3f-888b-43c1-9512-7330bd28f333",
-                      "condition": "9-11 PC, 6\u002B trefli.",
+                      "description": "odej\u015Bcie od Jassem 2025",
+                      "condition": "9-11 PC, 5\u002B trefli.",
                       "pointsRange": {
                         "lower": 9,
                         "upper": 11
                       },
                       "clubsCardRange": {
-                        "lower": 6
+                        "lower": 5
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -26241,13 +26430,14 @@
                     },
                     {
                       "nodeId": "276558fd-e944-48c4-89c2-0f528eb243d4",
-                      "condition": "9-11 PC, 6\u002B karo.",
+                      "description": "odej\u015Bcie od Jassem 2025",
+                      "condition": "9-11 PC, 5\u002B karo.",
                       "pointsRange": {
                         "lower": 9,
                         "upper": 11
                       },
                       "diamondsCardRange": {
-                        "lower": 6
+                        "lower": 5
                       },
                       "openerBid": false,
                       "signOff": false,
