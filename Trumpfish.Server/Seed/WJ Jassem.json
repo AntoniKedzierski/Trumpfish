@@ -64518,51 +64518,11 @@
           "isDisabled": false,
           "nextBids": [
             {
-              "nodeId": "be2fcea6-b72c-4749-bcf8-383b8d425bcb",
-              "description": "karta analogiczna jak na otwarcie 1 BA",
-              "condition": "15\u002B PC, brak starszej 5",
-              "pointsRange": {
-                "lower": 15
-              },
-              "spadesCardRange": {
-                "lower": 2,
-                "upper": 4
-              },
-              "heartsCardRange": {
-                "lower": 2,
-                "upper": 4
-              },
-              "diamondsCardRange": {
-                "lower": 2,
-                "upper": 5
-              },
-              "clubsCardRange": {
-                "lower": 2,
-                "upper": 5
-              },
-              "openerBid": false,
-              "signOff": true,
-              "oneRoundForcing": false,
-              "gameForcing": false,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "type": "Submit",
-              "color": "NoTrump",
-              "value": 3,
-              "isFromSystem": false
-            },
-            {
               "nodeId": "094160cc-5afa-4323-bcfe-e421ddcedf2c",
               "description": "wysprz\u0119gni\u0119cie na pewno??",
-              "condition": "18\u002B PC, 6\u002B kier\u00F3w z 2 figurami",
+              "condition": "16\u002B PC, 6\u002B kier\u00F3w z 2 figurami",
               "pointsRange": {
-                "lower": 18
+                "lower": 16
               },
               "heartsCardRange": {
                 "lower": 6
@@ -64587,18 +64547,24 @@
             },
             {
               "nodeId": "7b084d72-534e-4af0-937d-a37985e6a160",
-              "description": "wysprz\u0119gni\u0119cie na pewno??",
-              "condition": "18\u002B PC, 3\u002B pik\u00F3w z figur\u0105",
+              "description": "",
+              "condition": "18\u002B PC, 2\u002B piki, zatrzymanie w treflu (as)",
+              "convention": "cue bid",
               "pointsRange": {
                 "lower": 18
               },
               "spadesCardRange": {
-                "lower": 3
+                "lower": 2
               },
-              "spadesStops": 1.0,
+              "clubsCardRange": {
+                "lower": 1
+              },
+              "figures": {
+                "Ace.Clubs": true
+              },
               "openerBid": false,
-              "signOff": true,
-              "oneRoundForcing": false,
+              "signOff": false,
+              "oneRoundForcing": true,
               "gameForcing": false,
               "automaticResponse": false,
               "goToOpenings": false,
@@ -64609,7 +64575,109 @@
               "realizedGoal": "None",
               "tryPremiumContract": false,
               "type": "Submit",
-              "color": "Spades",
+              "color": "Clubs",
+              "value": 4,
+              "isFromSystem": false
+            },
+            {
+              "nodeId": "338a9fcd-3d7d-4bc1-a49f-e140413cfcc0",
+              "description": "wysprz\u0119gni\u0119cie na pewno??",
+              "condition": "18\u002B PC,  2\u002B piki, zatrzymanie w treflu (drugi kr\u00F3l)",
+              "convention": "cue bid",
+              "pointsRange": {
+                "lower": 18
+              },
+              "spadesCardRange": {
+                "lower": 2
+              },
+              "clubsCardRange": {
+                "lower": 2
+              },
+              "figures": {
+                "King.Clubs": true
+              },
+              "openerBid": false,
+              "signOff": false,
+              "oneRoundForcing": true,
+              "gameForcing": false,
+              "automaticResponse": false,
+              "goToOpenings": false,
+              "isPreferred": false,
+              "alert": false,
+              "isDisabled": false,
+              "nextBids": [],
+              "realizedGoal": "None",
+              "tryPremiumContract": false,
+              "type": "Submit",
+              "color": "Clubs",
+              "value": 4,
+              "isFromSystem": false
+            },
+            {
+              "nodeId": "b098c1f5-a4e5-4fc6-a6d9-2cfbb8d2fe5a",
+              "description": "",
+              "condition": "18\u002B PC, 2\u002B piki, zatrzymanie w karo(as)",
+              "convention": "cue bid",
+              "pointsRange": {
+                "lower": 18
+              },
+              "spadesCardRange": {
+                "lower": 2
+              },
+              "diamondsCardRange": {
+                "lower": 1
+              },
+              "figures": {
+                "Ace.Diamonds": true
+              },
+              "openerBid": false,
+              "signOff": false,
+              "oneRoundForcing": true,
+              "gameForcing": false,
+              "automaticResponse": false,
+              "goToOpenings": false,
+              "isPreferred": false,
+              "alert": false,
+              "isDisabled": false,
+              "nextBids": [],
+              "realizedGoal": "None",
+              "tryPremiumContract": false,
+              "type": "Submit",
+              "color": "Diamonds",
+              "value": 4,
+              "isFromSystem": false
+            },
+            {
+              "nodeId": "47cf3c8d-ac0e-4133-9a46-592c6565afe2",
+              "description": "",
+              "condition": "18\u002B PC,  2\u002B piki, zatrzymanie w karo (drugi kr\u00F3l)",
+              "convention": "cue bid",
+              "pointsRange": {
+                "lower": 18
+              },
+              "spadesCardRange": {
+                "lower": 2
+              },
+              "diamondsCardRange": {
+                "lower": 2
+              },
+              "figures": {
+                "King.Diamonds": true
+              },
+              "openerBid": false,
+              "signOff": false,
+              "oneRoundForcing": true,
+              "gameForcing": false,
+              "automaticResponse": false,
+              "goToOpenings": false,
+              "isPreferred": false,
+              "alert": false,
+              "isDisabled": false,
+              "nextBids": [],
+              "realizedGoal": "None",
+              "tryPremiumContract": false,
+              "type": "Submit",
+              "color": "Diamonds",
               "value": 4,
               "isFromSystem": false
             }
