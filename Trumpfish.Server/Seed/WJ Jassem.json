@@ -60979,16 +60979,18 @@
           "nextBids": [
             {
               "nodeId": "e2d66f7a-2bea-4430-ad89-6c8a55d2b40f",
-              "condition": "13\u002B PC, 5\u002B pik\u00F3w z figur\u0105 - to nie ma sensu! to samo co 3S!!!",
+              "condition": "7-12 PC, 5\u002B pik\u00F3w, 0-2 kier\u00F3w, ",
               "pointsRange": {
                 "lower": 13
               },
               "spadesCardRange": {
                 "lower": 5
               },
-              "spadesStops": 1.0,
+              "heartsCardRange": {
+                "upper": 2
+              },
               "openerBid": false,
-              "signOff": false,
+              "signOff": true,
               "oneRoundForcing": false,
               "gameForcing": false,
               "automaticResponse": false,
@@ -61414,13 +61416,13 @@
             },
             {
               "nodeId": "26c1be14-d19a-4ca2-9175-49bd24330d77",
-              "condition": "17-19 PC, 6\u002B pik\u00F3w",
+              "condition": "17-19 PC, 7\u002B pik\u00F3w",
               "pointsRange": {
                 "lower": 17,
                 "upper": 19
               },
               "spadesCardRange": {
-                "lower": 6
+                "lower": 7
               },
               "heartsStops": 1.0,
               "openerBid": false,
@@ -61472,17 +61474,19 @@
           "isDisabled": false,
           "nextBids": [
             {
-              "nodeId": "f95fbd66-47e2-4cb5-9d8e-7673fcb84ef3",
-              "condition": "13\u002B PC, 5\u002B pik\u00F3w z figur\u0105 - to nie ma sensu! to samo co 3S!!!",
+              "nodeId": "57c9a324-8117-4d52-8259-8f763c3ec6ec",
+              "condition": "7-12 PC, 5\u002B pik\u00F3w, 0-2 kier\u00F3w, ",
               "pointsRange": {
                 "lower": 13
               },
               "spadesCardRange": {
                 "lower": 5
               },
-              "spadesStops": 1.0,
+              "heartsCardRange": {
+                "upper": 2
+              },
               "openerBid": false,
-              "signOff": false,
+              "signOff": true,
               "oneRoundForcing": false,
               "gameForcing": false,
               "automaticResponse": false,
