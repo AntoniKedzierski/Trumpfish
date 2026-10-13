@@ -53634,13 +53634,14 @@
             {
               "nodeId": "ff9f6c04-db94-4061-9649-f8bf6848df23",
               "description": "",
-              "condition": "4\u002B kier\u00F3w, pytanie o starsze czw\u00F3rki",
+              "condition": "0\u002B PC, dok\u0142adnie 4 kiery,  mog\u0105 by\u0107 4 piki",
               "convention": "Stayman",
               "spadesCardRange": {
-                "upper": 5
+                "upper": 4
               },
               "heartsCardRange": {
-                "lower": 4
+                "lower": 4,
+                "upper": 4
               },
               "openerBid": false,
               "signOff": false,
@@ -53673,21 +53674,9 @@
                   "nextBids": [
                     {
                       "nodeId": "e020c2b2-7cd8-4314-a566-a9af5bfdf06f",
-                      "condition": "Zamkni\u0119cie licytacji, \u015Bmietnik nie do grania.",
+                      "condition": "0-7 PC, 4 kiery, nadal mog\u0105 by\u0107 piki",
                       "pointsRange": {
-                        "upper": 9
-                      },
-                      "spadesCardRange": {
-                        "upper": 4
-                      },
-                      "heartsCardRange": {
-                        "upper": 4
-                      },
-                      "diamondsCardRange": {
-                        "upper": 4
-                      },
-                      "clubsCardRange": {
-                        "upper": 4
+                        "upper": 7
                       },
                       "openerBid": false,
                       "signOff": true,
@@ -53708,10 +53697,10 @@
                     },
                     {
                       "nodeId": "f0e03a84-049b-480e-80e1-9142d17b07bb",
-                      "condition": "10-11 PC, zaproszenie do grania 3BA.",
+                      "condition": "8-9 PC, inwit do 3 BA",
                       "pointsRange": {
-                        "lower": 10,
-                        "upper": 11
+                        "lower": 8,
+                        "upper": 9
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -53732,9 +53721,9 @@
                     },
                     {
                       "nodeId": "6002d830-d17c-418f-8004-5862179b01c0",
-                      "condition": "12\u002B PC, 5\u002B trefli i 4\u002B kier\u00F3w.",
+                      "condition": "10\u002B PC, 5\u002B trefli",
                       "pointsRange": {
-                        "lower": 12
+                        "lower": 10
                       },
                       "heartsCardRange": {
                         "lower": 4
@@ -53745,7 +53734,7 @@
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
-                      "gameForcing": false,
+                      "gameForcing": true,
                       "automaticResponse": false,
                       "goToOpenings": false,
                       "isPreferred": false,
@@ -53761,9 +53750,9 @@
                     },
                     {
                       "nodeId": "e9c908a1-ea8f-4fa0-a893-98698ac9cda3",
-                      "condition": "12\u002B PC, 5\u002B karo i 4\u002B kier\u00F3w.",
+                      "condition": "10\u002B PC, 5\u002B karo",
                       "pointsRange": {
-                        "lower": 12
+                        "lower": 10
                       },
                       "heartsCardRange": {
                         "lower": 4
@@ -53774,7 +53763,7 @@
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
-                      "gameForcing": false,
+                      "gameForcing": true,
                       "automaticResponse": false,
                       "goToOpenings": false,
                       "isPreferred": false,
@@ -53811,7 +53800,7 @@
                       "goToOpenings": false,
                       "isPreferred": false,
                       "alert": false,
-                      "isDisabled": false,
+                      "isDisabled": true,
                       "nextBids": [
                         {
                           "nodeId": "590854fc-90a0-4593-a131-8bfa771716fd",
@@ -53920,7 +53909,7 @@
                       "goToOpenings": false,
                       "isPreferred": false,
                       "alert": false,
-                      "isDisabled": false,
+                      "isDisabled": true,
                       "nextBids": [
                         {
                           "nodeId": "f0ee1d20-7d15-454d-bcc6-0041bad8a740",
@@ -53975,6 +53964,35 @@
                       "color": "Spades",
                       "value": 3,
                       "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "872a50eb-6901-466c-853c-36c22bfef00b",
+                      "condition": "10\u002B PC, brak pi\u0105tek",
+                      "pointsRange": {
+                        "lower": 10
+                      },
+                      "diamondsCardRange": {
+                        "upper": 4
+                      },
+                      "clubsCardRange": {
+                        "upper": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": true,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "NoTrump",
+                      "value": 3,
+                      "isFromSystem": false
                     }
                   ],
                   "realizedGoal": "None",
@@ -54001,38 +54019,14 @@
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "2a3d94e5-df8a-4474-86a5-794e0597d7db",
-                      "condition": "10\u002B PC silny forsing do ko\u0144c\u00F3wki",
-                      "pointsRange": {
-                        "lower": 10
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": true,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "alert": false,
-                      "isDisabled": false,
-                      "nextBids": [],
-                      "realizedGoal": "None",
-                      "tryPremiumContract": false,
-                      "type": "Submit",
-                      "color": "Spades",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "0a89853f-8996-4ea9-ae93-3d8759292a8b",
-                      "condition": "7-9 PC, inwit 4 piki ",
+                      "nodeId": "ec9d2100-74b2-4296-8ad3-c676932bd548",
+                      "condition": "7-9 PC, 4 piki i 4 kiery",
                       "pointsRange": {
                         "lower": 7,
                         "upper": 9
                       },
                       "spadesCardRange": {
-                        "lower": 4,
-                        "upper": 4
+                        "lower": 4
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -54047,19 +54041,15 @@
                       "realizedGoal": "None",
                       "tryPremiumContract": false,
                       "type": "Submit",
-                      "color": "NoTrump",
+                      "color": "Spades",
                       "value": 2,
                       "isFromSystem": false
                     },
                     {
                       "nodeId": "e75bc1fa-0a73-418b-a232-f27fd0e220cf",
-                      "condition": "10\u002B PC, 5\u002B trefl\u00F3w i 4 pik\u00F3w",
+                      "condition": "10\u002B PC, 5\u002B trefl\u00F3w",
                       "pointsRange": {
                         "lower": 10
-                      },
-                      "spadesCardRange": {
-                        "lower": 4,
-                        "upper": 4
                       },
                       "clubsCardRange": {
                         "lower": 5
@@ -54083,13 +54073,9 @@
                     },
                     {
                       "nodeId": "3b30e0c3-3aad-43f5-b978-abe1e5f26641",
-                      "condition": "10\u002B PC, 5\u002B kar i 4 pik\u00F3w",
+                      "condition": "10\u002B PC, 5\u002B kar",
                       "pointsRange": {
                         "lower": 10
-                      },
-                      "spadesCardRange": {
-                        "lower": 4,
-                        "upper": 4
                       },
                       "diamondsCardRange": {
                         "lower": 5
@@ -54113,10 +54099,13 @@
                     },
                     {
                       "nodeId": "eb5a91f5-8df7-4446-855a-c45fb9482d38",
-                      "condition": "7-9 PC, inwit",
+                      "condition": "7-9 PC, 4 kiery, brak 4 pik\u00F3w",
                       "pointsRange": {
                         "lower": 7,
                         "upper": 9
+                      },
+                      "spadesCardRange": {
+                        "upper": 3
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -54132,6 +54121,35 @@
                       "tryPremiumContract": false,
                       "type": "Submit",
                       "color": "Hearts",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "2a3d94e5-df8a-4474-86a5-794e0597d7db",
+                      "condition": "10\u002B PC, uzgodnienie kier\u00F3w, brak pi\u0105tek",
+                      "pointsRange": {
+                        "lower": 10
+                      },
+                      "diamondsCardRange": {
+                        "upper": 5
+                      },
+                      "clubsCardRange": {
+                        "upper": 5
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": true,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "Spades",
                       "value": 3,
                       "isFromSystem": false
                     }
@@ -54165,13 +54183,13 @@
                   "nextBids": [
                     {
                       "nodeId": "ca7bf32c-3ec6-442d-bb17-347f7e2796e6",
-                      "condition": "7-9 PC,  inwit 4 kiery",
+                      "condition": "7-9 PC,  4 kiery, 0-3 pik\u00F3w",
                       "pointsRange": {
                         "lower": 7,
                         "upper": 9
                       },
-                      "heartsCardRange": {
-                        "upper": 4
+                      "spadesCardRange": {
+                        "upper": 3
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -54249,32 +54267,6 @@
                       "color": "Diamonds",
                       "value": 3,
                       "isFromSystem": false
-                    },
-                    {
-                      "nodeId": "5fb8dc5e-fe0c-470b-b676-a86de2739591",
-                      "condition": "10\u002B PC, 4\u002B piki, silny forsing do ko\u0144c\u00F3wki",
-                      "pointsRange": {
-                        "lower": 10
-                      },
-                      "spadesCardRange": {
-                        "lower": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": true,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "alert": false,
-                      "isDisabled": false,
-                      "nextBids": [],
-                      "realizedGoal": "None",
-                      "tryPremiumContract": false,
-                      "type": "Submit",
-                      "color": "Hearts",
-                      "value": 3,
-                      "isFromSystem": false
                     }
                   ],
                   "realizedGoal": "None",
@@ -54294,10 +54286,11 @@
             },
             {
               "nodeId": "b920b716-936e-4152-a348-61d8dd567cc1",
-              "condition": "4\u002B pik\u00F3w, brak 4 kier\u00F3w, pytanie o starsze czw\u00F3rki",
+              "condition": "0\u002B PC, dok\u0142adnie 4 piki, brak 4 kier\u00F3w",
               "convention": "Stayman",
               "spadesCardRange": {
-                "lower": 4
+                "lower": 4,
+                "upper": 4
               },
               "heartsCardRange": {
                 "upper": 3
@@ -54333,18 +54326,9 @@
                   "nextBids": [
                     {
                       "nodeId": "8a2b59fd-b08e-40eb-9cfb-11767017ffeb",
-                      "condition": "Zamkni\u0119cie licytacji, \u015Bmietnik nie do grania.",
+                      "condition": "0-8 PC, 4 piki",
                       "pointsRange": {
-                        "upper": 9
-                      },
-                      "spadesCardRange": {
-                        "upper": 4
-                      },
-                      "diamondsCardRange": {
-                        "upper": 4
-                      },
-                      "clubsCardRange": {
-                        "upper": 4
+                        "upper": 7
                       },
                       "openerBid": false,
                       "signOff": true,
@@ -54364,11 +54348,11 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "dfedfa45-9a32-49e6-93c7-06445b7edac9",
-                      "condition": "10-11 PC, zaproszenie do grania 3BA.",
+                      "nodeId": "8551b07b-60e2-468c-b209-cceee8463afb",
+                      "condition": "8-9 PC, inwit do 3 BA",
                       "pointsRange": {
-                        "lower": 10,
-                        "upper": 11
+                        "lower": 8,
+                        "upper": 9
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -54388,13 +54372,10 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "ddb48152-25a1-4400-8799-a1697af9127b",
-                      "condition": "12\u002B PC, 5\u002B trefli i 4\u002B pik\u00F3w.",
+                      "nodeId": "96925324-d3b7-4c09-b28b-8bf7afa1f585",
+                      "condition": "10\u002B PC, 5\u002B trefli",
                       "pointsRange": {
-                        "lower": 12
-                      },
-                      "spadesCardRange": {
-                        "lower": 4
+                        "lower": 10
                       },
                       "clubsCardRange": {
                         "lower": 5
@@ -54402,7 +54383,7 @@
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
-                      "gameForcing": false,
+                      "gameForcing": true,
                       "automaticResponse": false,
                       "goToOpenings": false,
                       "isPreferred": false,
@@ -54417,13 +54398,10 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "b432e622-dbeb-487f-87b3-b06acaebc9da",
-                      "condition": "12\u002B PC, 5\u002B karo i 4\u002B pik\u00F3w.",
+                      "nodeId": "7e437959-828f-4b75-86da-28a326cc7281",
+                      "condition": "10\u002B PC, 5\u002B karo",
                       "pointsRange": {
-                        "lower": 12
-                      },
-                      "spadesCardRange": {
-                        "lower": 4
+                        "lower": 10
                       },
                       "diamondsCardRange": {
                         "lower": 5
@@ -54431,7 +54409,7 @@
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
-                      "gameForcing": false,
+                      "gameForcing": true,
                       "automaticResponse": false,
                       "goToOpenings": false,
                       "isPreferred": false,
@@ -54442,6 +54420,35 @@
                       "tryPremiumContract": false,
                       "type": "Submit",
                       "color": "Diamonds",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "5d756363-717f-44bb-9d6d-0e5f243ee63b",
+                      "condition": "10\u002B PC, brak pi\u0105tek",
+                      "pointsRange": {
+                        "lower": 10
+                      },
+                      "diamondsCardRange": {
+                        "upper": 4
+                      },
+                      "clubsCardRange": {
+                        "upper": 4
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": true,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "NoTrump",
                       "value": 3,
                       "isFromSystem": false
                     }
@@ -54470,14 +54477,11 @@
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "591c7d5a-c3cc-494e-8d97-b2ad61303dff",
-                      "condition": "7-9 PC, inwit, max. 3 kiery",
+                      "nodeId": "661a2f12-b0ec-45d4-b746-49035fb32bb2",
+                      "condition": "7-9 PC, 4 piki, 0-3 kier\u00F3w",
                       "pointsRange": {
                         "lower": 7,
                         "upper": 9
-                      },
-                      "heartsCardRange": {
-                        "upper": 3
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -54577,34 +54581,6 @@
                   "isDisabled": false,
                   "nextBids": [
                     {
-                      "nodeId": "0998f14f-bc0e-4237-84e2-694581dbd083",
-                      "condition": "7-9 PC,  inwit 4 piki",
-                      "pointsRange": {
-                        "lower": 7,
-                        "upper": 9
-                      },
-                      "spadesCardRange": {
-                        "lower": 4,
-                        "upper": 4
-                      },
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "alert": false,
-                      "isDisabled": false,
-                      "nextBids": [],
-                      "realizedGoal": "None",
-                      "tryPremiumContract": false,
-                      "type": "Submit",
-                      "color": "NoTrump",
-                      "value": 2,
-                      "isFromSystem": false
-                    },
-                    {
                       "nodeId": "75fd7256-601f-48fc-be03-860e0f199c5f",
                       "condition": "10\u002B PC, 5\u002B trefl\u00F3w i 4 piki",
                       "pointsRange": {
@@ -54665,13 +54641,16 @@
                       "isFromSystem": false
                     },
                     {
-                      "nodeId": "29567f26-d4f8-4d44-a995-d830262e8f37",
-                      "condition": "10\u002B PC, 4\u002B piki, silny forsing do ko\u0144c\u00F3wki",
+                      "nodeId": "c3f6a0aa-bb7d-4f92-a862-3384cec9c221",
+                      "condition": "10\u002B PC, uzgodnienie pik\u00F3w, brak pi\u0105tek",
                       "pointsRange": {
                         "lower": 10
                       },
-                      "spadesCardRange": {
-                        "lower": 4
+                      "diamondsCardRange": {
+                        "upper": 5
+                      },
+                      "clubsCardRange": {
+                        "upper": 5
                       },
                       "openerBid": false,
                       "signOff": false,
@@ -54687,6 +54666,30 @@
                       "tryPremiumContract": false,
                       "type": "Submit",
                       "color": "Hearts",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "d47c0cf1-5f4b-45e1-9168-58a01a34093e",
+                      "condition": "7-9 PC, 4 piki, brak 4 kier\u00F3w",
+                      "pointsRange": {
+                        "lower": 7,
+                        "upper": 9
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "Spades",
                       "value": 3,
                       "isFromSystem": false
                     }
@@ -54708,11 +54711,8 @@
             },
             {
               "nodeId": "ce8549e8-7e26-406b-a5ec-1ba0a50c03de",
-              "condition": "0-11 PC, 5\u002B kier\u00F3w",
+              "condition": "0\u002B PC, 5\u002B kier\u00F3w",
               "convention": "Transfer Jacobiego",
-              "pointsRange": {
-                "upper": 11
-              },
               "heartsCardRange": {
                 "lower": 5
               },
@@ -54845,11 +54845,8 @@
             },
             {
               "nodeId": "c3db2d4f-7774-4f1f-9808-f48b02433abd",
-              "condition": "0-11 PC, 5\u002B pik\u00F3w",
+              "condition": "0\u002B PC, 5\u002B pik\u00F3w",
               "convention": "Transfer Jacobiego",
-              "pointsRange": {
-                "upper": 11
-              },
               "spadesCardRange": {
                 "lower": 5
               },
@@ -54982,11 +54979,8 @@
             },
             {
               "nodeId": "5570acf4-050c-4952-b114-92b26ad7df09",
-              "condition": "0-11 PC, 6\u002B trefli",
+              "condition": "0\u002B PC, 6\u002B trefli",
               "convention": "Transfer Jacobiego",
-              "pointsRange": {
-                "upper": 11
-              },
               "clubsCardRange": {
                 "lower": 6
               },
@@ -55105,7 +55099,7 @@
                   "nodeId": "7e138530-619f-479f-894c-cccd095c5164",
                   "condition": "Akceptacja transferu.",
                   "openerBid": true,
-                  "signOff": false,
+                  "signOff": true,
                   "oneRoundForcing": false,
                   "gameForcing": false,
                   "automaticResponse": true,
@@ -55113,26 +55107,7 @@
                   "isPreferred": false,
                   "alert": false,
                   "isDisabled": false,
-                  "nextBids": [
-                    {
-                      "nodeId": "b84284c7-1696-4fa8-9b5d-12b2d6d648f3",
-                      "openerBid": false,
-                      "signOff": false,
-                      "oneRoundForcing": false,
-                      "gameForcing": false,
-                      "automaticResponse": false,
-                      "goToOpenings": false,
-                      "isPreferred": false,
-                      "alert": false,
-                      "isDisabled": false,
-                      "nextBids": [],
-                      "realizedGoal": "None",
-                      "tryPremiumContract": false,
-                      "type": "Pass",
-                      "color": "NoColor",
-                      "isFromSystem": false
-                    }
-                  ],
+                  "nextBids": [],
                   "realizedGoal": "None",
                   "tryPremiumContract": false,
                   "type": "Submit",
@@ -55184,12 +55159,18 @@
                   "nextBids": [
                     {
                       "nodeId": "5f07d25a-f9c2-4ef6-b071-f86263c9a2dd",
-                      "condition": "Pokazanie pot\u0119gi.",
+                      "condition": "10-14 PC, 0-2 kier\u00F3w (kr\u00F3tko\u015B\u0107)",
+                      "pointsRange": {
+                        "upper": 14
+                      },
+                      "heartsCardRange": {
+                        "upper": 2
+                      },
                       "openerBid": false,
                       "signOff": false,
                       "oneRoundForcing": false,
                       "gameForcing": false,
-                      "automaticResponse": true,
+                      "automaticResponse": false,
                       "goToOpenings": false,
                       "isPreferred": false,
                       "alert": false,
@@ -55198,8 +55179,83 @@
                       "realizedGoal": "None",
                       "tryPremiumContract": false,
                       "type": "Submit",
-                      "color": "Diamonds",
-                      "value": 5,
+                      "color": "Hearts",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "471065d4-93dd-495d-a22c-4ca89bfacbec",
+                      "condition": "10-14 PC, 0-2 pik\u00F3w (kr\u00F3tko\u015B\u0107)",
+                      "pointsRange": {
+                        "upper": 14
+                      },
+                      "spadesCardRange": {
+                        "lower": 2
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "Spades",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "30eae28b-f90a-4d1e-b45d-1425c8e71743",
+                      "condition": "15\u002B PC, aspiracje szlemikowe",
+                      "pointsRange": {
+                        "lower": 15
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "NoTrump",
+                      "value": 3,
+                      "isFromSystem": false
+                    },
+                    {
+                      "nodeId": "cd312bcf-ab15-4bd1-bc6b-80033219a20e",
+                      "condition": "10-14 PC, 0-2 trefli (kr\u00F3tko\u015B\u0107)",
+                      "pointsRange": {
+                        "upper": 14
+                      },
+                      "clubsCardRange": {
+                        "upper": 2
+                      },
+                      "openerBid": false,
+                      "signOff": false,
+                      "oneRoundForcing": false,
+                      "gameForcing": false,
+                      "automaticResponse": false,
+                      "goToOpenings": false,
+                      "isPreferred": false,
+                      "alert": false,
+                      "isDisabled": false,
+                      "nextBids": [],
+                      "realizedGoal": "None",
+                      "tryPremiumContract": false,
+                      "type": "Submit",
+                      "color": "Clubs",
+                      "value": 4,
                       "isFromSystem": false
                     }
                   ],
