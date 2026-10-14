@@ -114,24 +114,20 @@ public class BiddingSystem {
 
         var matchingBids = bidCollection
             .Where(e => e.Equals(lookup))
-            .Where(e => !e.IsDisabled);
+            .Where(e => !e.IsDisabled)
+            .ToList();
 
-        // Wyjęcie pasujących odzywek względem wcięcia.
-        if (lookup.Interjection == null) {
-            matchingBids = matchingBids.Where(e => e.Interjection == null);
-        }
-        else {
-            var interjectedBids = matchingBids
-                .Where(e => e.Interjection?.Equals(lookup.Interjection) ?? false)
+        // Węzeł ze ścieżki zamiast odzywki z licytacji - nie niesie jednego wtrącenia, tylko listę. Pasują węzły, do których
+        // prowadzi którekolwiek z jego wtrąceń, czyli te, na które trafiłaby każda licytacja prowadząca do tego węzła.
+        if (lookup is BidNode node && node.HasInterjections) {
+            return node.Interjections
+                .SelectMany(interjection => BidNode.FilterByInterjection(matchingBids, interjection))
+                .Distinct()
                 .ToList();
-
-            matchingBids = interjectedBids.Count > 0
-                ? interjectedBids
-                : matchingBids.Where(e => e.Interjection == null);
         }
 
-        // Zmaterializowanie listy pasujących odzywek.
-        return matchingBids.ToList();
+        // Wyjęcie pasujących odzywek względem wtrącenia.
+        return BidNode.FilterByInterjection(matchingBids, lookup.Interjection);
     }
 
 

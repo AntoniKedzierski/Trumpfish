@@ -145,7 +145,7 @@ export function BidEditorPanel({ node, rootName, focusConditionKey, inherited, a
 
           <label className="field">
             <span>Wtrącenie</span>
-            <InterjectionPicker value={node.interjection} ancestors={ancestors} onChange={(interjection) => onChange({ interjection })} />
+            <InterjectionPicker value={node.interjections} ancestors={ancestors} call={node} onChange={(interjections) => onChange({ interjections })} />
           </label>
 
           <label className="field">

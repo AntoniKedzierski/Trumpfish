@@ -68,6 +68,13 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "8e02ef5c-6caf-46fd-afe3-8abfbed24abc",
@@ -95,11 +102,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Redouble",
               "color": "NoColor",
               "isFromSystem": false
@@ -123,14 +125,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -155,14 +159,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -187,14 +193,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -219,14 +227,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -251,14 +261,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -283,14 +295,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 3,
@@ -316,14 +330,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 3,
@@ -349,14 +365,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 3,
@@ -383,6 +401,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "3ff8d7e4-0e61-4be9-afcf-1216c9b1b873",
@@ -497,12 +523,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -525,15 +545,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 1,
@@ -561,15 +583,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 1,
@@ -597,15 +621,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -629,15 +655,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -661,15 +689,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -694,15 +724,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -727,15 +759,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -765,15 +799,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -798,15 +834,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -833,16 +871,18 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "continuationNodeId": "91b3af50-f86c-4bac-8ea4-9b573b2e3867",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -7010,6 +7050,13 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "be5d479c-62d5-4d89-9554-900b7c7241e3",
@@ -7034,11 +7081,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Redouble",
               "color": "NoColor",
               "isFromSystem": false
@@ -7062,14 +7104,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -7094,14 +7138,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -7126,14 +7172,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -7158,14 +7206,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -7190,14 +7240,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -7222,14 +7274,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 3,
@@ -7255,14 +7309,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 3,
@@ -7288,14 +7344,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 3,
@@ -7322,6 +7380,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "005fddee-ed51-4fb6-8afd-439f56b615fe",
@@ -7467,12 +7533,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -7495,15 +7555,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 1,
@@ -7531,15 +7593,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 1,
@@ -7567,15 +7631,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -7599,15 +7665,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -7631,15 +7699,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -7664,15 +7734,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -7697,15 +7769,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -7735,15 +7809,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -7768,15 +7844,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -7803,16 +7881,18 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "continuationNodeId": "bf4caf40-c255-4a6e-ae34-4275d8513872",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -17909,6 +17989,13 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "8de78bff-03a8-4797-b05f-0cded7ea2f0e",
@@ -18037,11 +18124,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Redouble",
               "color": "NoColor",
               "isFromSystem": false
@@ -18065,14 +18147,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -18097,14 +18181,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -18129,14 +18215,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -18161,14 +18249,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -18193,14 +18283,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -18225,14 +18317,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 3,
@@ -18258,14 +18352,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 3,
@@ -18291,14 +18387,16 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Double",
+                  "color": "NoColor",
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Double",
-                "color": "NoColor",
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 3,
@@ -18325,6 +18423,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "14a62ac8-fd2d-4907-a49e-8c696ffdc0ad",
@@ -18352,12 +18458,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -18380,15 +18480,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 1,
@@ -18416,15 +18518,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 1,
@@ -18452,15 +18556,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -18484,15 +18590,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -18516,15 +18624,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -18549,15 +18659,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -18582,15 +18694,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -18620,15 +18734,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -18653,15 +18769,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -18688,16 +18806,18 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "continuationNodeId": "cdff6a6c-b411-4215-a969-6208b627eeb1",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -33628,6 +33748,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "059f7a9c-dbd6-4730-b1e6-f687dff8da89",
@@ -33658,12 +33786,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -33687,15 +33809,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -33719,15 +33843,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -33751,6 +33877,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "98154290-7af7-4979-b81b-e0bdf2b77626",
@@ -33922,12 +34056,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 1,
@@ -33962,15 +34090,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -34005,15 +34135,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -34037,15 +34169,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -34069,15 +34203,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -34102,15 +34238,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -34135,15 +34273,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -34168,15 +34308,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -34200,6 +34342,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "446f0ba7-af6f-4d0e-89d6-6f2de242255d",
@@ -34397,12 +34547,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -34426,15 +34570,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -34459,15 +34605,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -34491,15 +34639,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -34521,15 +34671,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -34553,15 +34705,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -34585,15 +34739,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -34617,15 +34773,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -34650,15 +34808,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -34683,15 +34843,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -34716,15 +34878,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 3,
@@ -34749,15 +34913,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 3,
@@ -35808,6 +35974,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "db1511db-f7f9-4b46-8550-c41c6b41c70a",
@@ -36001,12 +36175,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -36030,15 +36198,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -36062,15 +36232,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -36094,6 +36266,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "2f54fe4e-d4c9-455c-9def-a2fff701593b",
@@ -36457,12 +36637,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 1,
@@ -36497,15 +36671,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -36540,15 +36716,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 1,
@@ -36572,15 +36750,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -36604,15 +36784,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -36637,15 +36819,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -36670,15 +36854,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -36703,15 +36889,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -36735,6 +36923,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "2fdfee69-01c6-4c18-b32c-45a6a29fd220",
@@ -37011,12 +37207,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -37040,15 +37230,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 2,
@@ -37073,15 +37265,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -37105,15 +37299,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -37135,15 +37331,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -37167,15 +37365,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -37199,15 +37399,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -37231,15 +37433,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
@@ -37264,15 +37468,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -37297,15 +37503,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
@@ -37330,15 +37538,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Hearts",
               "value": 3,
@@ -37363,15 +37573,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 3,
@@ -43968,6 +44180,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "3d87532e-b78b-442b-a963-d3e07cb755fb",
@@ -44059,12 +44279,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -44091,6 +44305,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "e87fec99-6f92-4fc7-a8b8-ea465818255c",
@@ -44182,12 +44404,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -44207,6 +44423,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "e5645c79-632e-48f1-8608-64ed5c004d1c",
@@ -44417,12 +44641,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -44442,6 +44660,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "74ce79ff-1f50-4e63-b32e-d21522292228",
@@ -44676,12 +44902,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -44704,6 +44924,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "fca78dcb-8650-4ca1-bca2-537bf77a0c69",
@@ -44778,12 +45006,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 2,
@@ -44807,6 +45029,20 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                },
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "44dce786-166f-4fc9-969b-a52474c8c35b",
@@ -44881,115 +45117,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
-              "type": "Submit",
-              "color": "Diamonds",
-              "value": 2,
-              "isFromSystem": false
-            },
-            {
-              "nodeId": "84747f12-03a1-4a13-b8b1-ae3c23d93db5",
-              "condition": "10\u002B PC, 5\u002B karo.",
-              "pointsRange": {
-                "lower": 10
-              },
-              "diamondsCardRange": {
-                "lower": 5
-              },
-              "openerBid": false,
-              "signOff": false,
-              "oneRoundForcing": false,
-              "gameForcing": false,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [
-                {
-                  "nodeId": "d456f124-a62d-4efe-a847-9fff853f9cac",
-                  "condition": "6\u002B kier\u00F3w.",
-                  "heartsCardRange": {
-                    "lower": 6
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "alert": false,
-                  "isDisabled": false,
-                  "nextBids": [],
-                  "realizedGoal": "None",
-                  "tryPremiumContract": false,
-                  "type": "Submit",
-                  "color": "Hearts",
-                  "value": 2,
-                  "isFromSystem": false
-                },
-                {
-                  "nodeId": "eabfc271-b95c-4063-a473-a4eaf45c4379",
-                  "condition": "4\u002B karo.",
-                  "diamondsCardRange": {
-                    "lower": 4
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "alert": false,
-                  "isDisabled": false,
-                  "nextBids": [],
-                  "realizedGoal": "None",
-                  "tryPremiumContract": false,
-                  "type": "Submit",
-                  "color": "Diamonds",
-                  "value": 3,
-                  "isFromSystem": false
-                },
-                {
-                  "nodeId": "d2183b99-6a2b-49c6-a3e5-b72053dfde61",
-                  "condition": "15-17 PC, 5\u002B kier\u00F3w.",
-                  "pointsRange": {
-                    "lower": 15,
-                    "upper": 17
-                  },
-                  "openerBid": true,
-                  "signOff": false,
-                  "oneRoundForcing": false,
-                  "gameForcing": false,
-                  "automaticResponse": false,
-                  "goToOpenings": false,
-                  "isPreferred": false,
-                  "alert": false,
-                  "isDisabled": false,
-                  "nextBids": [],
-                  "realizedGoal": "None",
-                  "tryPremiumContract": false,
-                  "type": "Submit",
-                  "color": "Hearts",
-                  "value": 3,
-                  "isFromSystem": false
-                }
-              ],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 2,
@@ -45014,15 +45141,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 2,
@@ -45046,179 +45175,44 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                },
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                },
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 2,
+                  "isFromSystem": false
+                },
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 2,
+                  "isFromSystem": false
+                },
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "NoTrump",
               "value": 2,
-              "isFromSystem": false
-            },
-            {
-              "nodeId": "82d96008-92b8-4c17-a93b-3a683f05fa0a",
-              "condition": "13\u002B PC, 3\u002B kiery.",
-              "pointsRange": {
-                "lower": 13
-              },
-              "heartsCardRange": {
-                "lower": 3
-              },
-              "openerBid": false,
-              "signOff": false,
-              "oneRoundForcing": false,
-              "gameForcing": true,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
-              "type": "Submit",
-              "color": "NoTrump",
-              "value": 2,
-              "isFromSystem": false
-            },
-            {
-              "nodeId": "81f64649-2591-41c6-8785-400d795c8e95",
-              "condition": "13\u002B PC, 3\u002B kiery.",
-              "pointsRange": {
-                "lower": 13
-              },
-              "heartsCardRange": {
-                "lower": 3
-              },
-              "openerBid": false,
-              "signOff": false,
-              "oneRoundForcing": false,
-              "gameForcing": true,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 2,
-                "isFromSystem": false
-              },
-              "type": "Submit",
-              "color": "NoTrump",
-              "value": 2,
-              "isFromSystem": false
-            },
-            {
-              "nodeId": "7ec670d5-4113-45c5-8ea9-f7ff649923b8",
-              "condition": "13\u002B PC, 3\u002B kiery.",
-              "pointsRange": {
-                "lower": 13
-              },
-              "heartsCardRange": {
-                "lower": 3
-              },
-              "openerBid": false,
-              "signOff": false,
-              "oneRoundForcing": false,
-              "gameForcing": true,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 2,
-                "isFromSystem": false
-              },
-              "type": "Submit",
-              "color": "NoTrump",
-              "value": 2,
-              "isFromSystem": false
-            },
-            {
-              "nodeId": "1e1fee38-3c8f-450f-9a0e-c7137b065338",
-              "condition": "13\u002B PC, 3\u002B kiery.",
-              "pointsRange": {
-                "lower": 13
-              },
-              "heartsCardRange": {
-                "lower": 3
-              },
-              "openerBid": false,
-              "signOff": false,
-              "oneRoundForcing": false,
-              "gameForcing": true,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 2,
-                "isFromSystem": false
-              },
-              "type": "Submit",
-              "color": "NoTrump",
-              "value": 2,
-              "isFromSystem": false
-            },
-            {
-              "nodeId": "88b95655-1bdd-494c-b291-446da38ac0b8",
-              "condition": "10-12 PC, 3\u002B kiery.",
-              "pointsRange": {
-                "lower": 10,
-                "upper": 12
-              },
-              "heartsCardRange": {
-                "lower": 3
-              },
-              "openerBid": false,
-              "signOff": false,
-              "oneRoundForcing": false,
-              "gameForcing": false,
-              "automaticResponse": false,
-              "goToOpenings": false,
-              "isPreferred": false,
-              "alert": false,
-              "isDisabled": false,
-              "nextBids": [],
-              "realizedGoal": "None",
-              "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Clubs",
-                "value": 2,
-                "isFromSystem": false
-              },
-              "type": "Submit",
-              "color": "Clubs",
-              "value": 3,
               "isFromSystem": false
             },
             {
@@ -45240,22 +45234,24 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 3,
               "isFromSystem": false
             },
             {
-              "nodeId": "14dba5c6-0e4f-4bb3-bf1d-146ec82a67d3",
+              "nodeId": "88b95655-1bdd-494c-b291-446da38ac0b8",
               "condition": "10-12 PC, 3\u002B kiery.",
               "pointsRange": {
                 "lower": 10,
@@ -45273,17 +45269,19 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Clubs",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
-              "color": "Diamonds",
+              "color": "Clubs",
               "value": 3,
               "isFromSystem": false
             },
@@ -45306,22 +45304,24 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 3,
               "isFromSystem": false
             },
             {
-              "nodeId": "ccdd2362-3ce6-4888-8bad-259bf1905308",
+              "nodeId": "14dba5c6-0e4f-4bb3-bf1d-146ec82a67d3",
               "condition": "10-12 PC, 3\u002B kiery.",
               "pointsRange": {
                 "lower": 10,
@@ -45339,17 +45339,19 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Hearts",
-                "value": 2,
-                "isFromSystem": false
-              },
               "type": "Submit",
-              "color": "Hearts",
+              "color": "Diamonds",
               "value": 3,
               "isFromSystem": false
             },
@@ -45372,15 +45374,52 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
+              "type": "Submit",
+              "color": "Hearts",
+              "value": 3,
+              "isFromSystem": false
+            },
+            {
+              "nodeId": "ccdd2362-3ce6-4888-8bad-259bf1905308",
+              "condition": "10-12 PC, 3\u002B kiery.",
+              "pointsRange": {
+                "lower": 10,
+                "upper": 12
               },
+              "heartsCardRange": {
+                "lower": 3
+              },
+              "openerBid": false,
+              "signOff": false,
+              "oneRoundForcing": false,
+              "gameForcing": false,
+              "automaticResponse": false,
+              "goToOpenings": false,
+              "isPreferred": false,
+              "alert": false,
+              "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Hearts",
+                  "value": 2,
+                  "isFromSystem": false
+                }
+              ],
+              "nextBids": [],
+              "realizedGoal": "None",
+              "tryPremiumContract": false,
               "type": "Submit",
               "color": "Hearts",
               "value": 3,
@@ -45409,15 +45448,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Spades",
               "value": 3,
@@ -45446,15 +45487,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Clubs",
               "value": 4,
@@ -45483,15 +45526,17 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Spades",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Spades",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Submit",
               "color": "Diamonds",
               "value": 4,
@@ -67023,6 +67068,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Clubs",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "67728fad-82a9-4dd7-a849-69e0e68d645b",
@@ -67041,6 +67094,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "47204066-f766-4134-80d3-58dc553fe0c3",
@@ -67176,12 +67237,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -67599,12 +67654,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Clubs",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -67625,6 +67674,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Clubs",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "9c9faf31-1bba-47c6-a8e1-ce7ab7faed17",
@@ -67643,6 +67700,14 @@
               "isPreferred": false,
               "alert": false,
               "isDisabled": false,
+              "interjections": [
+                {
+                  "type": "Submit",
+                  "color": "Diamonds",
+                  "value": 1,
+                  "isFromSystem": false
+                }
+              ],
               "nextBids": [
                 {
                   "nodeId": "34a5ddc0-8119-4661-8be3-6e29db7f61e4",
@@ -67778,12 +67843,6 @@
               ],
               "realizedGoal": "None",
               "tryPremiumContract": false,
-              "interjection": {
-                "type": "Submit",
-                "color": "Diamonds",
-                "value": 1,
-                "isFromSystem": false
-              },
               "type": "Double",
               "color": "NoColor",
               "isFromSystem": false
@@ -68271,12 +68330,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Clubs",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -68309,6 +68362,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Diamonds",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "313cf1dd-33d1-4204-8301-04bcf43668c9",
@@ -69010,12 +69071,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Diamonds",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -69036,6 +69091,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Diamonds",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "bdc197fe-200a-43ad-b877-4031920c6b53",
@@ -70009,12 +70072,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Diamonds",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -70046,6 +70103,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Hearts",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "b4f06d3d-aa18-4c97-a1a0-9640cc10777c",
@@ -70701,12 +70766,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Hearts",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -70727,6 +70786,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Hearts",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "c5e04bc6-6708-457a-97c5-e75c92e82d9e",
@@ -71677,12 +71744,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Hearts",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -71714,6 +71775,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Spades",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "09e8e049-c3f5-48ef-96a7-358313c07f08",
@@ -72314,12 +72383,6 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Spades",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
           "isFromSystem": false
@@ -72340,6 +72403,14 @@
           "isPreferred": false,
           "alert": false,
           "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Spades",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
           "nextBids": [
             {
               "nodeId": "42665138-fb8b-4332-8c0f-ae554ea19341",
@@ -73350,14 +73421,87 @@
           ],
           "realizedGoal": "None",
           "tryPremiumContract": false,
-          "interjection": {
-            "type": "Submit",
-            "color": "Spades",
-            "value": 1,
-            "isFromSystem": false
-          },
           "type": "Double",
           "color": "NoColor",
+          "isFromSystem": false
+        },
+        {
+          "nodeId": "6b5a2d0a-c8fd-4ad4-a5f8-480cefc6ddc3",
+          "condition": "18\u002B PC, dowolny uk\u0142ad",
+          "pointsRange": {
+            "lower": 18
+          },
+          "openerBid": true,
+          "signOff": false,
+          "oneRoundForcing": false,
+          "gameForcing": false,
+          "automaticResponse": false,
+          "goToOpenings": false,
+          "isPreferred": false,
+          "alert": false,
+          "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "Clubs",
+              "value": 2,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Diamonds",
+              "value": 2,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Hearts",
+              "value": 2,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Spades",
+              "value": 2,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "NoTrump",
+              "value": 2,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Clubs",
+              "value": 3,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Diamonds",
+              "value": 3,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Hearts",
+              "value": 3,
+              "isFromSystem": false
+            },
+            {
+              "type": "Submit",
+              "color": "Spades",
+              "value": 3,
+              "isFromSystem": false
+            }
+          ],
+          "nextBids": [],
+          "realizedGoal": "None",
+          "tryPremiumContract": false,
+          "type": "Submit",
+          "color": "NoTrump",
+          "value": 3,
           "isFromSystem": false
         },
         {

@@ -131,7 +131,14 @@ public class BidNodeRecord {
 
     public string? AiSource { get; set; }
 
-    // --- Interjection: the opponent bid squeezed in before this one, flattened because only a handful of its fields carry meaning. ---
+    /// <summary>
+    /// Serialized <c>BidNode.Interjections</c>: the opponent bids this one applies after. Null when the list is empty, which
+    /// is also what every row written before the list existed holds - those still carry their single interjection below.
+    /// </summary>
+    public string? InterjectionsJson { get; set; }
+
+    // --- Legacy single interjection, superseded by InterjectionsJson. Only read, as a fallback for rows written before the list
+    // existed; new saves leave it empty. To be dropped once no such rows remain. ---
 
     /// <summary>Null when there is no interjection; a value here is what marks the embedded bid as present.</summary>
     public BidType? InterjectionType { get; set; }

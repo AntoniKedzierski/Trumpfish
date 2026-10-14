@@ -2185,15 +2185,11 @@
           "isDisabled": {
             "type": "boolean"
           },
-          "interjection": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/Bid"
-              }
-            ]
+          "interjections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Bid"
+            }
           },
           "nextBids": {
             "type": "array",
@@ -2248,6 +2244,16 @@
               "string"
             ],
             "format": "int32"
+          },
+          "interjection": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Bid"
+              }
+            ]
           },
           "type": {
             "$ref": "#/components/schemas/BidType"

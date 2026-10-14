@@ -840,6 +840,29 @@
   cursor: default;
 }
 
+/* A call in the list: every cell toggles, so the chosen ones have to be told apart at a glance. */
+.interjection-cell.chosen {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* Chosen, but no longer legal for the bid: kept visible in red until it is clicked away, never dropped silently. */
+.interjection-cell.chosen.unavailable {
+  opacity: 1;
+  border-color: var(--hearts);
+  cursor: pointer;
+}
+
+/* Same warning as a conflicting input in the editor: one of the chosen calls is no longer legal here. */
+.interjection-picker .ui-combo-field.conflict {
+  border-color: var(--hearts);
+  box-shadow: 0 0 0 1px var(--hearts);
+}
+
+.interjection-more {
+  color: var(--text-muted);
+}
+
 .validation {
   max-height: 280px;
   overflow: auto;

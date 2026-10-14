@@ -141,8 +141,8 @@ function addSibling(state: BrowserState): BrowserState {
   const { color, value } = bidAfter(selected);
   const sibling = createBidNode(color, value, selected.openerBid ?? false);
 
-  // Staying beside a bid means staying on the same side of the folder boundary, so the interjection comes along.
-  return insertAfter(state, state.selection, selected.interjection ? { ...sibling, interjection: selected.interjection } : sibling);
+  // Staying beside a bid means staying on the same side of the folder boundary, so the interjections come along.
+  return insertAfter(state, state.selection, { ...sibling, interjections: selected.interjections });
 }
 
 
@@ -156,19 +156,18 @@ function addInterjected(state: BrowserState, container: NodePath): BrowserState 
   const count = interjectedCount(children);
 
   const { color, value } = bidAfter(children[count - 1] ?? parent ?? undefined);
-  const node: EditableBidNode = {
-    ...createBidNode(color, value, parent === null ? true : !parent.openerBid),
-    interjection: firstLegalInterjection(chainTo(state.system, container)),
-  };
+  const created = createBidNode(color, value, parent === null ? true : !parent.openerBid);
+  const interjection = firstLegalInterjection(chainTo(state.system, container), created);
+  const node: EditableBidNode = { ...created, interjections: interjection === null ? [] : [interjection] };
 
   const system = updateChildrenAt(state.system, container, (current) => place(current, node));
   return { ...state, system, selection: childPath(container, count), dirty: true };
 }
 
 
-/** The lowest interjection bridge still permits at this point, taken in the order the picker offers them. */
-function firstLegalInterjection(ancestors: readonly EditableBidNode[]): InterjectionBid | null {
-  return interjectionOptions(ancestors).find((option) => option.available && option.bid !== null)?.bid ?? null;
+/** The lowest interjection bridge still permits at this point for `node`, taken in the order the picker offers them. */
+function firstLegalInterjection(ancestors: readonly EditableBidNode[], node: EditableBidNode): InterjectionBid | null {
+  return interjectionOptions(ancestors, node).find((option) => option.available && option.bid !== null)?.bid ?? null;
 }
 
 
@@ -276,7 +275,7 @@ function updateSelected(state: BrowserState, patch: Partial<EditableBidNode>): B
 
   const before = getNode(state.system, state.selection);
   const system = updateNodeAt(state.system, state.selection, (node) => ({ ...node, ...patch }));
-  if (before === null || !('interjection' in patch) || hasInterjection(before) === hasInterjection({ ...before, ...patch })) {
+  if (before === null || !('interjections' in patch) || hasInterjection(before) === hasInterjection({ ...before, ...patch })) {
     return { ...state, system, dirty: true };
   }
 
