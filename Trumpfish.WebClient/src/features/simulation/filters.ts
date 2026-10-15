@@ -1,5 +1,6 @@
 import { playerPositions, toNumber } from '@/api/models';
 import type { BidColor, BidType, PlayerPosition, SimulationContract, SimulationDealResult } from '@/api/models';
+import { conventionKey } from '@/features/practice/conventions';
 import { makesGame } from './sorting';
 
 /** Whether one or both pairs actually entered the auction. */
@@ -33,13 +34,26 @@ export interface DealFilters {
   bid: string;
   side: SideFilterKey;
   games: GameFilterKey[];
+  /** Node id of the opening the auction has to start with, empty for any. */
+  opening: string;
+  /** Matching key of a convention somebody has to bid - see {@link conventionKey} - empty for any. */
+  convention: string;
+  /** Node id of a defence somebody has to make, empty for any. */
+  defence: string;
 }
 
-export const emptyFilters: DealFilters = { bid: '', side: 'any', games: [] };
+export const emptyFilters: DealFilters = { bid: '', side: 'any', games: [], opening: '', convention: '', defence: '' };
 
 /** How many constraints are actually in force - for the badge on a trigger that has folded them out of sight. */
 export function activeFilterCount(filters: DealFilters): number {
-  return (filters.bid.trim() === '' ? 0 : 1) + (filters.side === 'any' ? 0 : 1) + filters.games.length;
+  return (
+    (filters.bid.trim() === '' ? 0 : 1) +
+    (filters.side === 'any' ? 0 : 1) +
+    filters.games.length +
+    (filters.opening === '' ? 0 : 1) +
+    (filters.convention === '' ? 0 : 1) +
+    (filters.defence === '' ? 0 : 1)
+  );
 }
 
 /** Minimum combined strength (and trump fit for suits) that makes a game contract sound. */
@@ -51,17 +65,41 @@ const gameRequirements: Record<string, { points: number; trumps?: number }> = {
   Clubs: { points: 27, trumps: 9 },
 };
 
-/** Every contract filter has to hold, not just one of them: the selection is a conjunction. An empty one constrains nothing. */
-export function filterDeals(
-  deals: readonly SimulationDealResult[],
-  side: SideFilterKey,
-  games: readonly GameFilterKey[],
-  bidSearch: string,
-): SimulationDealResult[] {
-  const wanted = parseBid(bidSearch);
+/** Every filter has to hold, not just one of them: the selection is a conjunction. An empty one constrains nothing. */
+export function filterDeals(deals: readonly SimulationDealResult[], filters: DealFilters): SimulationDealResult[] {
+  const wanted = parseBid(filters.bid);
   return deals.filter(
-    (deal) => matchesSide(deal, side) && games.every((game) => matchesGame(deal, game)) && matchesBid(deal, wanted),
+    (deal) =>
+      matchesSide(deal, filters.side) &&
+      filters.games.every((game) => matchesGame(deal, game)) &&
+      matchesBid(deal, wanted) &&
+      matchesOpening(deal, filters.opening) &&
+      matchesConvention(deal, filters.convention) &&
+      matchesDefence(deal, filters.defence),
   );
+}
+
+/**
+ * The opening is the first bid that is not a pass, whoever made it - the same bid the practice table deals for. Several openings
+ * can share a bid, so it is matched by the system's node rather than by what is written on the card.
+ */
+function matchesOpening(deal: SimulationDealResult, nodeId: string): boolean {
+  if (nodeId === '') {
+    return true;
+  }
+
+  const opening = deal.bidding.find((bid) => bid.type !== 'Pass');
+  return opening?.nodeId === nodeId;
+}
+
+/** Somebody at the table, on either side, answered the opening with this very defence of the system. */
+function matchesDefence(deal: SimulationDealResult, nodeId: string): boolean {
+  return nodeId === '' || deal.bidding.some((bid) => bid.nodeId === nodeId);
+}
+
+/** Somebody at the table, on either side, made a bid of the system carrying the convention. */
+function matchesConvention(deal: SimulationDealResult, key: string): boolean {
+  return key === '' || deal.bidding.some((bid) => conventionKey(bid.convention) === key);
 }
 
 function matchesSide(deal: SimulationDealResult, filter: SideFilterKey): boolean {

@@ -1,8 +1,22 @@
 import { useState } from 'react';
 import { CheckIcon, CloseIcon, FilterIcon } from '@/components/icons';
-import { Popup } from '@/ui';
+import { Field, Popup } from '@/ui';
+import { ConventionPicker } from '@/features/practice/components/ConventionPicker';
+import { DefencePicker } from '@/features/practice/components/DefencePicker';
+import { OpeningPicker } from '@/features/practice/components/OpeningPicker';
+import type { ConventionChoice } from '@/features/practice/conventions';
+import type { DefenceChoice, OpeningChoice } from '@/features/practice/openings';
 import type { DealFilters, GameFilterKey, SideFilterKey } from '../filters';
 import { activeFilterCount, emptyFilters, gameFilterLabels, sideFilterLabels } from '../filters';
+
+interface FilterMenuProps {
+  value: DealFilters;
+  onChange: (next: DealFilters) => void;
+  /** Openings of the system the results were bid with - the lists are the very ones the practice table offers. */
+  openings: readonly OpeningChoice[];
+  defences: readonly DefenceChoice[];
+  conventions: readonly ConventionChoice[];
+}
 
 /**
  * Every way of narrowing the result set, in one sheet.
@@ -14,7 +28,7 @@ import { activeFilterCount, emptyFilters, gameFilterLabels, sideFilterLabels } f
  * Dismissing the sheet commits, which is the behaviour of a form that has no cancel. `Zastosuj` commits without
  * dismissing, for when the user wants to see the effect and keep adjusting.
  */
-export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: (next: DealFilters) => void }) {
+export function FilterMenu({ value, onChange, openings, defences, conventions }: FilterMenuProps) {
   const [draft, setDraft] = useState<DealFilters>(value);
 
   /*
@@ -74,6 +88,35 @@ export function FilterMenu({ value, onChange }: { value: DealFilters; onChange: 
             </button>
           )}
         </div>
+      </div>
+
+      <div className="ui-panel-section">
+        <Field label="Otwarcie" hint="Licytacja zaczyna się od tego otwarcia, niezależnie od tego, która para otwiera.">
+          <OpeningPicker
+            value={draft.opening}
+            openings={openings}
+            noneLabel="Dowolne otwarcie"
+            onChange={(opening) => setDraft((current) => ({ ...current, opening }))}
+          />
+        </Field>
+
+        <Field label="Obrona" hint="Ktoś przy stole, z dowolnej pary, broni się tą odzywką po otwarciu przeciwników.">
+          <DefencePicker
+            value={draft.defence}
+            defences={defences}
+            noneLabel="Dowolna obrona"
+            onChange={(defence) => setDraft((current) => ({ ...current, defence }))}
+          />
+        </Field>
+
+        <Field label="Konwencja" hint="Ktoś przy stole, z dowolnej pary, licytuje tę konwencję.">
+          <ConventionPicker
+            value={draft.convention}
+            conventions={conventions}
+            noneLabel="Dowolna konwencja"
+            onChange={(convention) => setDraft((current) => ({ ...current, convention }))}
+          />
+        </Field>
       </div>
 
       <div className="ui-panel-section">

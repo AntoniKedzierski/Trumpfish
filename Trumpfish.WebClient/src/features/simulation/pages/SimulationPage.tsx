@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { listBiddingSystems } from '@/api/biddingSystems';
+import { getBiddingSystem, listBiddingSystems } from '@/api/biddingSystems';
 import { simulateBidding } from '@/api/simulation';
-import type { BiddingSystemSummary, SimulationResponse } from '@/api/models';
+import type { BiddingSystem, BiddingSystemSummary, SimulationResponse } from '@/api/models';
 import { CardsIcon } from '@/components/icons';
 import { ToolBar, toolbarKeepLonger } from '@/components/ToolBar';
+import { conventionChoices } from '@/features/practice/conventions';
+import { defenceChoices, openingChoices } from '@/features/practice/openings';
 import { ConfigMenu } from '../components/ConfigMenu';
 import { DealResultCard } from '../components/DealResultCard';
 import { FilterMenu } from '../components/FilterMenu';
@@ -21,6 +23,12 @@ export function SimulationPage() {
   const [dealCount, setDealCount] = useState(500);
   const [seed, setSeed] = useState('');
   const [result, setResult] = useState<SimulationResponse | null>(null);
+  /**
+   * The system the result was bid with, which is not necessarily the one chosen now - the configuration can change after a run.
+   * The opening and convention filters are built out of its tree, since those are the bids the result is made of.
+   */
+  const [resultSystemId, setResultSystemId] = useState('');
+  const [resultTree, setResultTree] = useState<BiddingSystem | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>('index');
@@ -29,7 +37,7 @@ export function SimulationPage() {
   const [filters, setFilters] = useState<DealFilters>(emptyFilters);
 
   const sortedDeals = useMemo(
-    () => (result === null ? [] : sortDeals(filterDeals(result.deals, filters.side, filters.games, filters.bid), sortKey, sortDirection)),
+    () => (result === null ? [] : sortDeals(filterDeals(result.deals, filters), sortKey, sortDirection)),
     [filters, result, sortDirection, sortKey],
   );
 
@@ -46,6 +54,10 @@ export function SimulationPage() {
     [sortedDeals, systemId],
   );
 
+  const openings = useMemo(() => openingChoices(resultTree), [resultTree]);
+  const defences = useMemo(() => defenceChoices(resultTree), [resultTree]);
+  const conventions = useMemo(() => conventionChoices(resultTree), [resultTree]);
+
   useEffect(() => {
     let cancelled = false;
     listBiddingSystems().then(
@@ -60,6 +72,21 @@ export function SimulationPage() {
     return () => { cancelled = true; };
   }, []);
 
+  // Fetched whole only once a run has been made with it: until then there are no results to filter.
+  useEffect(() => {
+    if (resultSystemId === '') {
+      return;
+    }
+
+    let cancelled = false;
+    getBiddingSystem(resultSystemId).then(
+      (loaded) => { if (!cancelled) { setResultTree(loaded); } },
+      (reason) => { if (!cancelled) { setError(describe(reason)); setResultTree(null); } },
+    );
+
+    return () => { cancelled = true; };
+  }, [resultSystemId]);
+
   const run = useCallback(async () => {
     if (systemId === '') {
       setError('Wybierz system licytacyjny.');
@@ -72,12 +99,19 @@ export function SimulationPage() {
       // Deals are generated here and shipped to the API, so the server only runs the engine. The seed (when given) makes the batch reproducible.
       const trimmedSeed = seed.trim();
       setResult(await simulateBidding({ systemId, deals: generateDeals(dealCount, trimmedSeed), seed: trimmedSeed === '' ? null : trimmedSeed }));
+
+      // Another system means other bids, so an opening, a defence or a convention picked from the previous one no longer names anything.
+      if (systemId !== resultSystemId) {
+        setResultSystemId(systemId);
+        setResultTree(null);
+        setFilters((current) => ({ ...current, opening: '', defence: '', convention: '' }));
+      }
     } catch (reason) {
       setError(describe(reason));
     } finally {
       setBusy(false);
     }
-  }, [dealCount, seed, systemId]);
+  }, [dealCount, resultSystemId, seed, systemId]);
 
   return (
     <div className="simulation">
@@ -112,7 +146,8 @@ export function SimulationPage() {
         {result === null ? null : (
           <>
             {/* Everything that narrows or reorders the results lives behind these two, so the bar stays one row of controls. */}
-            <FilterMenu value={filters} onChange={setFilters} />
+            {/* Keyed by the system, so the sheet's draft starts over from the filters the switch above just cleared. */}
+            <FilterMenu key={resultSystemId} value={filters} onChange={setFilters} openings={openings} defences={defences} conventions={conventions} />
 
             <SortMenu sortKey={sortKey} direction={sortDirection} onSortKey={setSortKey} onDirection={setSortDirection} />
           </>

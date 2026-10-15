@@ -69,7 +69,8 @@ public class DuoSessionService : IDuoSessionService {
             _invitations.TryRemove(stale.Invitation.Id, out _);
         }
 
-        var invitation = new DuoInvitation(Guid.NewGuid(), fromId, fromName, toId, toName, systemName, openingLabel, settings);
+        var defenceLabel = DuoSession.DescribeDefence(TableEngine.FindDefence(system, settings.DefenceNodeId));
+        var invitation = new DuoInvitation(Guid.NewGuid(), fromId, fromName, toId, toName, systemName, openingLabel, settings, defenceLabel);
         _invitations[invitation.Id] = new DuoOffer(invitation, system);
 
         return invitation;

@@ -81,7 +81,10 @@ export function AppLayout() {
             <strong>{invitation.fromName}</strong> zaprasza cię do wspólnego ćwiczenia licytacji.
             <small>
               {invitation.systemName}
-              {invitation.openingLabel === null || invitation.openingLabel === undefined ? ' · wszystkie otwarcia' : ` · ${invitation.openingLabel}`}
+              {/* A defence is practised against the opponents' opening, so "every opening" would misread it. */}
+              {invitation.defenceLabel
+                ? ` · obrona: ${invitation.defenceLabel}`
+                : invitation.openingLabel === null || invitation.openingLabel === undefined ? ' · wszystkie otwarcia' : ` · ${invitation.openingLabel}`}
               {invitation.settings.convention ? ` · konwencja: ${invitation.settings.convention}` : null}
             </small>
           </div>

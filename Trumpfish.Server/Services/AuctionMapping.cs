@@ -41,7 +41,15 @@ internal static class AuctionMapping {
 
         for (var i = 0; i < auction.AuctionHistory.Count; i++) {
             var bid = auction.AuctionHistory[i];
-            bids.Add(new SimulationBid(i, auction.GetBidder(i), bid.Type, bid.Color, bid.Value, bid.IsFromSystem, Describe(bid), bid.Explanation));
+
+            // The engine hands back the system's own node for a system bid. A natural bid is a node made up on the spot, with an
+            // identity of its own and no convention, so it is given neither - nothing in the system could be matched against it.
+            var node = bid is BidNode { IsFromSystem: true } systemNode ? systemNode : null;
+
+            // A name left blank in the editor is no convention at all.
+            var convention = string.IsNullOrWhiteSpace(node?.Convention) ? null : node.Convention;
+
+            bids.Add(new SimulationBid(i, auction.GetBidder(i), bid.Type, bid.Color, bid.Value, bid.IsFromSystem, Describe(bid), bid.Explanation, node?.NodeId, convention));
         }
 
         return bids;

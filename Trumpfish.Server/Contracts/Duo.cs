@@ -10,12 +10,13 @@ namespace Trumpfish.Server.Contracts;
 /// <remarks>
 /// There is deliberately no choice of who opens. The two players are partners, and the seat that is dealt the practised opening
 /// is drawn afresh every deal, so both of them get to be the opener and the responder over a session. A practised
-/// <c>Convention</c> works the same way: every deal is one on which one of the pair bids it, and which of the two is drawn.
+/// <c>Convention</c> works the same way: every deal is one on which one of the pair bids it, and which of the two is drawn. So does
+/// a practised <c>DefenceNodeId</c>: the opponents open, and one of the pair, drawn, makes that defence.
 /// </remarks>
-public record DuoSettings(Guid SystemId, Guid? OpeningNodeId, string? Seed, bool AllowHints, bool ImmediateMeanings, bool CheckBids, string? Convention = null);
+public record DuoSettings(Guid SystemId, Guid? OpeningNodeId, string? Seed, bool AllowHints, bool ImmediateMeanings, bool CheckBids, string? Convention = null, Guid? DefenceNodeId = null);
 
 /// <summary>An outstanding invitation to a table. Lives in memory only: an invitation nobody answered is not worth keeping.</summary>
-public record DuoInvitation(Guid Id, Guid FromUserId, string FromName, Guid ToUserId, string ToName, string SystemName, string? OpeningLabel, DuoSettings Settings);
+public record DuoInvitation(Guid Id, Guid FromUserId, string FromName, Guid ToUserId, string ToName, string SystemName, string? OpeningLabel, DuoSettings Settings, string? DefenceLabel = null);
 
 /// <summary>One of the two people at the table, as the other one sees them.</summary>
 public record DuoSeat(Guid UserId, string Name, PlayerPosition Position, bool Connected, bool IsHost);
@@ -41,7 +42,8 @@ public record DuoTableState(
     DuoSeat You,
     DuoSeat Partner,
     string SystemName,
-    string? OpeningLabel);
+    string? OpeningLabel,
+    string? DefenceLabel = null);
 
 /// <summary>Why a session stopped, which is what the other player is shown when it was not his doing.</summary>
 [JsonConverter(typeof(JsonStringEnumConverter<DuoEndReason>))]

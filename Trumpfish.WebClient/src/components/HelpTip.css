@@ -34,13 +34,15 @@
 
 /*
  * Hidden by visibility rather than by `display`, so the text stays in the accessibility tree for `aria-describedby` to
- * point at whether or not the bubble is showing.
+ * point at whether or not the bubble is showing - and so it can be measured before it is shown.
+ *
+ * Rysowany do `body` i stawiany `fixed` przez HelpTip.tsx, nad listami i oknami (200), bo bywa otwierany w jednym i drugim.
  */
 .help-tip-bubble {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  z-index: 60;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 210;
   width: max-content;
   max-width: min(260px, 72vw);
   padding: var(--space-2) var(--space-3);
@@ -54,7 +56,6 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
-  transform: translateX(-50%);
   opacity: 0;
   visibility: hidden;
   transition:
@@ -62,9 +63,13 @@
     visibility var(--duration-fast) var(--ease-out);
 }
 
-.help-tip:hover .help-tip-bubble,
-.help-tip-trigger:focus-visible + .help-tip-bubble,
-.help-tip-bubble.pinned {
+/* Najechany, przypięty kliknięciem albo wybrany klawiaturą - o tym, który z tych stanów zachodzi, decyduje HelpTip.tsx. */
+.help-tip-bubble.shown {
   opacity: 1;
   visibility: visible;
+}
+
+/* W popupie jest jedna czcionka (DESIGN.md, rozdz. 5); dymek wyszedł z drzewa panelu, więc reguła jedzie z nim jako klasa. */
+.help-tip-bubble.small {
+  font-size: var(--text-xs);
 }
