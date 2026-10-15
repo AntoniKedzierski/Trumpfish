@@ -36,19 +36,45 @@ public class PracticeService : IPracticeService {
             return new PracticeResult(null, "Nie znaleziono ćwiczonego otwarcia w tym systemie.");
         }
 
-        // Practising as the responder means the partner is the one who has to be able to open, so the hand goes to him instead.
-        var targetSeat = request.Role == PracticeRole.Responder ? PlayerPosition.North : HumanSeat;
-        var hands = PracticeDealer.Deal(TableEngine.RandomFor(request.Seed, request.DealIndex), opening, targetSeat);
+        var random = TableEngine.RandomFor(request.Seed, request.DealIndex);
+        Dictionary<PlayerPosition, Hand> hands;
 
-        if (hands == null) {
-            return new PracticeResult(null, "Nie da się rozdać ręki spełniającej warunki tego otwarcia - sprawdź zakresy punktów i kart.");
+        // Every deal is started by the next player round the table, so the human bids from a different position each time.
+        var dealer = (PlayerPosition)(((request.DealIndex % 4) + 4) % 4);
+
+        if (!string.IsNullOrWhiteSpace(request.Convention)) {
+            var conventionNodes = ConventionDealer.NodesOf(system, ConventionDealer.Key(request.Convention));
+            if (conventionNodes.Count == 0) {
+                return new PracticeResult(null, "Nie znaleziono ćwiczonej konwencji w tym systemie.");
+            }
+
+            // A convention is found by bidding whole deals out, and the one found decides who deals - so the rotation above gives way.
+            var found = ConventionDealer.Find(system, conventionNodes, opening, request.Role, random);
+            if (found == null) {
+                return new PracticeResult(null, opening == null
+                    ? "Nie udało się znaleźć rozdania, w którym boty używają tej konwencji. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną."
+                    : "Nie udało się znaleźć rozdania, w którym po tym otwarciu boty używają tej konwencji. Spróbuj ponownie albo zmień otwarcie.");
+            }
+
+            hands = found.Hands;
+            dealer = found.Dealer;
+        }
+        else {
+            // Practising as the responder means the partner is the one who has to be able to open, so the hand goes to him instead.
+            var targetSeat = request.Role == PracticeRole.Responder ? PlayerPosition.North : HumanSeat;
+            var dealt = PracticeDealer.Deal(random, opening, targetSeat);
+
+            if (dealt == null) {
+                return new PracticeResult(null, "Nie da się rozdać ręki spełniającej warunki tego otwarcia - sprawdź zakresy punktów i kart.");
+            }
+
+            hands = dealt;
         }
 
         var data = new PracticeStateData(
             request.SystemId,
             request.DealIndex,
-            // Every deal is started by the next player round the table, so the human bids from a different position each time.
-            (PlayerPosition)(((request.DealIndex % 4) + 4) % 4),
+            dealer,
             HumanSeat,
             request.OpeningNodeId,
             request.CheckBids,

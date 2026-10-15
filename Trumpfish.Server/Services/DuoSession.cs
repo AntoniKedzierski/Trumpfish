@@ -27,7 +27,10 @@ public enum DuoResult {
     NotAllowed,
 
     /// <summary>No hand satisfying the practised opening could be dealt.</summary>
-    CannotDeal
+    CannotDeal,
+
+    /// <summary>No deal on which the pair gets to bid the practised convention turned up within the search limits.</summary>
+    ConventionNotFound
 }
 
 /// <summary>One deal of a session: the four hands, and the human bids made against them so far.</summary>
@@ -37,7 +40,10 @@ internal sealed class DuoDeal {
 
     public required PlayerPosition Dealer { get; init; }
 
-    /// <summary>The seat that was dealt the practised opening. Drawn afresh every deal, which is what rotates the roles.</summary>
+    /// <summary>
+    /// The seat that was dealt the practised opening - or, when a convention is practised, the one who gets to bid it. Drawn
+    /// afresh every deal, which is what rotates the roles.
+    /// </summary>
     public required PlayerPosition Opener { get; init; }
 
     public required Dictionary<PlayerPosition, Hand> Hands { get; init; }
@@ -208,7 +214,7 @@ public sealed class DuoSession {
 
             var next = Deal(_system, Settings, _deal.Index + 1);
             if (next == null) {
-                return DuoResult.CannotDeal;
+                return string.IsNullOrWhiteSpace(Settings.Convention) ? DuoResult.CannotDeal : DuoResult.ConventionNotFound;
             }
 
             _deal = next;
@@ -275,6 +281,16 @@ public sealed class DuoSession {
         var opening = TableEngine.FindOpening(system, settings.OpeningNodeId);
         var random = TableEngine.RandomFor(settings.Seed, index);
         var opener = Seats[random.Next(Seats.Length)];
+
+        // A convention is found by bidding whole deals out, the way the solo table does it. The drawn seat is the one who bids it,
+        // and the deal found decides who deals.
+        if (!string.IsNullOrWhiteSpace(settings.Convention)) {
+            var conventionNodes = ConventionDealer.NodesOf(system, ConventionDealer.Key(settings.Convention));
+            var found = conventionNodes.Count == 0 ? null : ConventionDealer.Find(system, conventionNodes, opening, PracticeRole.Opener, random, opener);
+
+            return found == null ? null : new DuoDeal { Index = index, Dealer = found.Dealer, Opener = opener, Hands = found.Hands };
+        }
+
         var hands = PracticeDealer.Deal(random, opening, opener);
 
         if (hands == null) {

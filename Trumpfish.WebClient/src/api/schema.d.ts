@@ -2171,6 +2171,7 @@ export interface components {
             allowHints: boolean;
             immediateMeanings: boolean;
             checkBids: boolean;
+            convention?: null | string;
         };
         DuoTableState: {
             /** Format: uuid */
@@ -2269,6 +2270,7 @@ export interface components {
             openingNodeId: null | string;
             role: components["schemas"]["PracticeRole"];
             checkBids: boolean;
+            convention?: null | string;
         };
         PracticeState: {
             state: string;

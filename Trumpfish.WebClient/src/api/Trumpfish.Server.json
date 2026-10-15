@@ -2947,6 +2947,12 @@
           },
           "checkBids": {
             "type": "boolean"
+          },
+          "convention": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -3360,6 +3366,12 @@
           },
           "checkBids": {
             "type": "boolean"
+          },
+          "convention": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

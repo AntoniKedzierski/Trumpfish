@@ -10,6 +10,8 @@ import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { BiddingBox, type BoxBid } from '../components/BiddingBox';
 import { BidWarning } from '../components/BidWarning';
 import { openingChoices } from '../openings';
+import { conventionChoices } from '../conventions';
+import { ConventionPicker } from '../components/ConventionPicker';
 import { CardsIcon, CloseIcon, PlayIcon, SettingsIcon } from '@/components/icons';
 import { HelpTip } from '@/components/HelpTip';
 import '@/components/SetupCard.css';
@@ -34,6 +36,12 @@ const roleLabels: Record<PracticeRole, string> = {
   Responder: 'Odpowiadający',
 };
 
+/** With a convention chosen the seat is about the convention, not the opening: who bids it, and who has to answer it. */
+const conventionRoleLabels: Record<PracticeRole, string> = {
+  Opener: 'Zgłaszasz konwencję',
+  Responder: 'Odpowiadasz na konwencję',
+};
+
 export function PracticePage() {
   const navigate = useNavigate();
   const [systems, setSystems] = useState<BiddingSystemSummary[]>([]);
@@ -41,6 +49,8 @@ export function PracticePage() {
   const [tree, setTree] = useState<BiddingSystem | null>(null);
   const [seed, setSeed] = useState('');
   const [openingNodeId, setOpeningNodeId] = useState('');
+  /** Matching key of the convention practised, empty for none. */
+  const [convention, setConvention] = useState('');
   const [role, setRole] = useState<PracticeRole>('Opener');
   const [meanings, setMeanings] = useState<MeaningMode>('summary');
   const [checkBids, setCheckBids] = useState(false);
@@ -51,9 +61,15 @@ export function PracticePage() {
   const [hint, setHint] = useState<PracticeHint | null>(null);
 
   const [busy, setBusy] = useState(false);
+  /** A convention deal is searched for rather than dealt, which takes noticeably longer - the status says so. */
+  const [searching, setSearching] = useState(false);
+  /** Convention the deal on the table was found for. Kept apart from the setting, which may change before the next deal. */
+  const [practised, setPractised] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const openings = useMemo(() => openingChoices(tree), [tree]);
+  const conventions = useMemo(() => conventionChoices(tree), [tree]);
+  const conventionLabel = conventions.find((choice) => choice.key === convention)?.label ?? null;
 
   useEffect(() => {
     let cancelled = false;
@@ -94,12 +110,14 @@ export function PracticePage() {
       setError(describe(reason));
     } finally {
       setBusy(false);
+      setSearching(false);
     }
   }, []);
 
   /** Deals number `index` of the session, which is also what decides who deals: N, E, S and W in turn. */
   const deal = (index: number) => run(async () => {
     setHint(null);
+    setSearching(conventionLabel !== null);
     setTable(await startPracticeDeal({
       systemId,
       dealIndex: index,
@@ -107,7 +125,9 @@ export function PracticePage() {
       openingNodeId: openingNodeId === '' ? null : openingNodeId,
       role,
       checkBids,
+      convention: conventionLabel,
     }));
+    setPractised(conventionLabel);
     setDealNumber(index + 1);
   });
 
@@ -150,7 +170,7 @@ export function PracticePage() {
       <ToolBar
         status={
           <>
-            {busy ? <span className="status">Licytują boty…</span> : null}
+            {busy ? <span className="status">{searching ? 'Szukam rozdania z konwencją…' : 'Licytują boty…'}</span> : null}
             {error === null ? null : <span className="status error">{error}</span>}
           </>
         }
@@ -184,8 +204,8 @@ export function PracticePage() {
               <ComboBox
                 value={systemId}
                 options={systems.map((system) => ({ value: system.id, label: system.name }))}
-                /* Another system means another tree, so the opening being practised cannot survive the switch. */
-                onChange={(id) => { setSystemId(id); setOpeningNodeId(''); }}
+                /* Another system means another tree, so neither the opening nor the convention being practised survives the switch. */
+                onChange={(id) => { setSystemId(id); setOpeningNodeId(''); setConvention(''); }}
                 placeholder="Brak zapisanych systemów"
                 disabled={systems.length === 0}
               />
@@ -219,14 +239,32 @@ export function PracticePage() {
 
             <label>
               <span className="field-name">
+                Ćwiczona konwencja
+                <HelpTip>
+                  Boty licytują całe rozdania, aż któryś użyje tej konwencji - to rozdanie dostajesz. Z wybranym otwarciem konwencja
+                  musi paść po nim. Rzadkie konwencje szuka się dłużej.
+                </HelpTip>
+              </span>
+              <ConventionPicker value={convention} conventions={conventions} onChange={setConvention} />
+            </label>
+
+            <label>
+              <span className="field-name">
                 Siadasz jako
-                <HelpTip>Przy odpowiadaniu warunki dostaje partner, a ty dowolne karty.</HelpTip>
+                <HelpTip>
+                  {conventionLabel === null
+                    ? 'Przy odpowiadaniu warunki dostaje partner, a ty dowolne karty.'
+                    : 'Zgłaszasz konwencję albo odpowiadasz partnerowi, który jej użyje.'}
+                </HelpTip>
               </span>
               <ComboBox
                 value={role}
-                options={(Object.keys(roleLabels) as PracticeRole[]).map((key) => ({ value: key, label: roleLabels[key] }))}
+                options={(Object.keys(roleLabels) as PracticeRole[]).map((key) => ({
+                  value: key,
+                  label: conventionLabel === null ? roleLabels[key] : conventionRoleLabels[key],
+                }))}
                 onChange={setRole}
-                disabled={openingNodeId === ''}
+                disabled={openingNodeId === '' && conventionLabel === null}
               />
             </label>
 
@@ -266,7 +304,20 @@ export function PracticePage() {
           </section>
         ) : null}
 
-        {phase === 'playing' && table === null ? <p className="dealing">Rozdaję…</p> : null}
+        {/* Only the first deal of a session can fail with nothing on the table - and then there is no bar to leave by either. */}
+        {phase === 'playing' && table === null ? (
+          busy ? (
+            <p className="dealing">{searching ? 'Szukam rozdania, w którym boty użyją tej konwencji…' : 'Rozdaję…'}</p>
+          ) : (
+            <div className="dealing">
+              <p>{error ?? 'Nie udało się rozdać.'}</p>
+              <button type="button" onClick={() => setPhase('setup')}>
+                <SettingsIcon />
+                <span>Ustawienia</span>
+              </button>
+            </div>
+          )
+        ) : null}
 
         {phase === 'playing' && table !== null ? (
           <div className="stack">
@@ -281,7 +332,7 @@ export function PracticePage() {
                   <div className="panel-head">
                     {/* Named the way the simulator names a deal, down to the wording: it is the same deal, seen earlier. */}
                     <h2 className="deal-title">Rozdanie {dealNumber}</h2>
-                    <span className="deal-meta">Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}</span>
+                    <span className="deal-meta">Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}{practised === null ? null : ` · konwencja: ${practised}`}</span>
                     <button
                       type="button"
                       className="hint-button"

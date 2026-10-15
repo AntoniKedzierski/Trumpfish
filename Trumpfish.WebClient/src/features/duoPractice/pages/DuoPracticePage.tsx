@@ -7,6 +7,8 @@ import { Auction, BidCard, ComboBox, ConfirmDialog, Hand } from '@/ui';
 import { BidWarning } from '@/features/practice/components/BidWarning';
 import { BiddingBox, type BoxBid } from '@/features/practice/components/BiddingBox';
 import { openingChoices } from '@/features/practice/openings';
+import { conventionChoices } from '@/features/practice/conventions';
+import { ConventionPicker } from '@/features/practice/components/ConventionPicker';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { useRealtime } from '@/realtime/useRealtime';
@@ -35,6 +37,8 @@ export function DuoPracticePage() {
   const [systemId, setSystemId] = useState('');
   const [tree, setTree] = useState<BiddingSystem | null>(null);
   const [openingNodeId, setOpeningNodeId] = useState('');
+  /** Matching key of the convention practised, empty for none. */
+  const [convention, setConvention] = useState('');
   const [seed, setSeed] = useState('');
   const [meanings, setMeanings] = useState<MeaningMode>('summary');
   const [allowHints, setAllowHints] = useState(true);
@@ -51,6 +55,8 @@ export function DuoPracticePage() {
   const [awaiting, setAwaiting] = useState<string | null>(null);
 
   const openings = useMemo(() => openingChoices(tree), [tree]);
+  const conventions = useMemo(() => conventionChoices(tree), [tree]);
+  const conventionLabel = conventions.find((choice) => choice.key === convention)?.label ?? null;
   const available = (friends?.friends ?? []).filter((friend) => friend.presence === 'Online');
 
   // Leaving ends the session for both of them, so both ways out have to be held up: the router for a navigation inside the
@@ -129,6 +135,7 @@ export function DuoPracticePage() {
       allowHints,
       immediateMeanings: meanings === 'immediate',
       checkBids,
+      convention: conventionLabel,
     };
 
     const partner = available.find((friend) => friend.userId === partnerId);
@@ -180,6 +187,8 @@ export function DuoPracticePage() {
                 {table.partner.connected ? null : <span className="duo-dropped"> (rozłączony)</span>}
               </span>
               {table.you.isHost || !table.finished ? null : <Waiting>Czekam, aż partner rozda następne rozdanie</Waiting>}
+              {/* A convention deal is searched for rather than dealt, which takes noticeably longer. */}
+              {busy && table.you.isHost && table.finished && table.settings.convention ? <Waiting>Szukam rozdania z konwencją</Waiting> : null}
             </>
           )
         }
@@ -218,8 +227,8 @@ export function DuoPracticePage() {
               <ComboBox
                 value={systemId}
                 options={systems.map((system) => ({ value: system.id, label: system.name }))}
-                /* Another system means another tree, so the opening being practised cannot survive the switch. */
-                onChange={(id) => { setSystemId(id); setOpeningNodeId(''); }}
+                /* Another system means another tree, so neither the opening nor the convention being practised survives the switch. */
+                onChange={(id) => { setSystemId(id); setOpeningNodeId(''); setConvention(''); }}
                 placeholder="Brak zapisanych systemów"
                 disabled={systems.length === 0}
               />
@@ -249,6 +258,17 @@ export function DuoPracticePage() {
                 onChange={setOpeningNodeId}
                 disabled={openings.length === 0}
               />
+            </label>
+
+            <label>
+              <span className="field-name">
+                Ćwiczona konwencja
+                <HelpTip>
+                  Każde rozdanie jest takie, w którym konwencji używa jedno z was — za każdym rozdaniem losowo. Z wybranym otwarciem
+                  konwencja musi paść po nim. Rzadkie konwencje szuka się dłużej.
+                </HelpTip>
+              </span>
+              <ConventionPicker value={convention} conventions={conventions} onChange={setConvention} />
             </label>
 
             <label>
@@ -321,7 +341,10 @@ export function DuoPracticePage() {
                   <div className="panel-head">
                     {/* Named the way the simulator names a deal, down to the wording: it is the same deal, seen earlier. */}
                     <h2 className="deal-title">Rozdanie {table.dealNumber}</h2>
-                    <span className="deal-meta">Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}</span>
+                    <span className="deal-meta">
+                      Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}
+                      {table.settings.convention ? ` · konwencja: ${table.settings.convention}` : null}
+                    </span>
                     {!table.settings.allowHints ? null : (
                       <button
                         type="button"

@@ -1,6 +1,6 @@
 import { toNumber, type BidColor, type ValidationIssue } from '@/api/models';
 import { interjectionOptions } from './interjection';
-import { cloneNode, compareBids, compareWithInterjection, createBidNode, createEmptySystem, hasInterjection, type EditableBidNode, type EditableSystem, type InterjectionBid, type NodePath } from './model';
+import { cloneNode, compareBids, compareByInterjection, compareWithInterjection, createBidNode, createEmptySystem, hasInterjection, type EditableBidNode, type EditableSystem, type InterjectionBid, type NodePath } from './model';
 import { childPath, childrenAt, getNode, interjectedCount, isFolderPath, parentPath, samePath, updateChildrenAt, updateNodeAt } from './tree';
 
 const suitLadder: readonly BidColor[] = ['Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
@@ -31,7 +31,7 @@ export type BrowserAction =
   | { kind: 'copyChildren' }
   | { kind: 'cutChildren' }
   | { kind: 'paste' }
-  | { kind: 'sort' }
+  | { kind: 'sort'; byInterjection?: boolean }
   | { kind: 'replaceSystem'; system: EditableSystem }
   | { kind: 'setIssues'; issues: ValidationIssue[] | null }
   | { kind: 'markSaved'; systemId: string };
@@ -89,7 +89,7 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
       return paste(state);
 
     case 'sort':
-      return sort(state);
+      return sort(state, action.byInterjection ?? false);
 
     // A tree rewritten wholesale outside the reducer. The selection survives because every such rewrite only ever removes
     // things below what is selected, never the selected bid itself.
@@ -329,16 +329,18 @@ function paste(state: BrowserState): BrowserState {
   return { ...state, system, dirty: true };
 }
 
-function sort(state: BrowserState): BrowserState {
+/** `byInterjection` only changes the folder: by the call the bids answer first, instead of by the bids themselves. */
+function sort(state: BrowserState, byInterjection: boolean): BrowserState {
   const target = state.selection ?? { rootIndex: 0, path: [] };
 
   // Sorting the folder means sorting what it holds, and that lives in the list belonging to the container beneath it.
   const container = isFolderPath(target) ? parentPath(target) : target;
+  const folderOrder = byInterjection ? compareByInterjection : compareWithInterjection;
 
   const system = updateChildrenAt(state.system, container, (children) => {
     // The folder stays on top, so the two groups are sorted apart: the interjected ones also by the call they answer.
     const count = interjectedCount(children);
-    return [...[...children.slice(0, count)].sort(compareWithInterjection), ...[...children.slice(count)].sort(compareBids)];
+    return [...[...children.slice(0, count)].sort(folderOrder), ...[...children.slice(count)].sort(compareBids)];
   });
 
   // Indices shift while sorting, so keep the container selected instead of pointing at a stale child.

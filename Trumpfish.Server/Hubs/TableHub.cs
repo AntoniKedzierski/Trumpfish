@@ -113,6 +113,10 @@ public class TableHub : Hub {
             throw new HubException("Nie znaleziono ćwiczonego otwarcia w tym systemie.");
         }
 
+        if (!string.IsNullOrWhiteSpace(settings.Convention) && ConventionDealer.NodesOf(system, ConventionDealer.Key(settings.Convention)).Count == 0) {
+            throw new HubException("Nie znaleziono ćwiczonej konwencji w tym systemie.");
+        }
+
         var invitation = _sessions.Invite(userId, await NameOf(userId), friendUserId, await NameOf(friendUserId), system, system.SystemName, DuoSession.DescribeOpening(opening), settings);
         await _notifier.InvitationAsync(invitation);
     }
@@ -153,7 +157,7 @@ public class TableHub : Hub {
 
         var session = _sessions.Start(offer);
         if (session == null) {
-            throw new HubException("Nie da się rozdać ręki spełniającej warunki tego otwarcia - sprawdź zakresy punktów i kart.");
+            throw new HubException(Explain(string.IsNullOrWhiteSpace(invitation.Settings.Convention) ? DuoResult.CannotDeal : DuoResult.ConventionNotFound));
         }
 
         // Neither of them is invitable any more, so every other invitation either of them had goes away with the same message.
@@ -235,6 +239,7 @@ public class TableHub : Hub {
             DuoResult.HostOnly => "Następne rozdanie rozdaje osoba, która założyła sesję.",
             DuoResult.NotAllowed => "Podpowiedzi silnika są w tej sesji wyłączone.",
             DuoResult.CannotDeal => "Nie da się rozdać ręki spełniającej warunki tego otwarcia - sprawdź zakresy punktów i kart.",
+            DuoResult.ConventionNotFound => "Nie udało się znaleźć rozdania, w którym któreś z was licytuje tę konwencję. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną.",
             _ => "Nie siedzisz przy żadnym stole."
         };
     }

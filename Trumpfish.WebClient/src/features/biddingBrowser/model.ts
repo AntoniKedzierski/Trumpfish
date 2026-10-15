@@ -167,6 +167,12 @@ export function compareWithInterjection(left: EditableBidNode, right: EditableBi
   return byBid !== 0 ? byBid : compareInterjections(left.interjections[0] ?? {}, right.interjections[0] ?? {});
 }
 
+/** The other order for the folder: by the lowest opponent call first, so everything said after the same call stands together. */
+export function compareByInterjection(left: EditableBidNode, right: EditableBidNode): number {
+  const byInterjection = compareInterjections(left.interjections[0] ?? {}, right.interjections[0] ?? {});
+  return byInterjection !== 0 ? byInterjection : compareByRank(left, right);
+}
+
 function compareByRank(left: { color?: BidColor; value?: number | string | null }, right: { color?: BidColor; value?: number | string | null }): number {
   const leftValue = Number(left.value ?? 0);
   const rightValue = Number(right.value ?? 0);
