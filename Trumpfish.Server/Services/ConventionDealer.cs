@@ -12,15 +12,15 @@ namespace Trumpfish.Server.Services;
 internal sealed record ConventionDeal(Dictionary<PlayerPosition, Hand> Hands, PlayerPosition Dealer);
 
 /// <summary>
-/// Finds a deal on which the bots use a given convention. Unlike an opening, a convention can turn up anywhere in an auction and
-/// depends on all four hands, so no single hand can be built to fit it: whole deals are bid out by the bots until one of them
-/// makes a bid carrying that convention.
+/// Finds a deal on which the bots use a given convention, or make a given defence. Unlike an opening, either can only come up
+/// once somebody else has bid and so depends on more than one hand, so no single hand can be built to fit it: whole deals are bid
+/// out by the bots until one of them makes the bid looked for.
 /// </summary>
 /// <remarks>
 /// A deal is bid out in a fraction of a millisecond, so thousands of tries fit in a request. Most of them are aimed: when the
-/// convention lives under openings of the system, the dealer is given a hand for one of those openings, which is what makes the
-/// rarer conventions findable at all. The rest of the tries are plain random deals, so conventions reached some other way - from
-/// the defences, or through a continuation - still turn up.
+/// convention lives under openings of the system, the dealer is given a hand for one of those openings, and when it lives under a
+/// defence, the player after him is given a hand for that defence - which is what makes the rarer ones findable at all. The rest
+/// of the tries are plain random deals, so conventions reached some other way - through a continuation - still turn up.
 /// </remarks>
 internal static class ConventionDealer {
 
@@ -52,31 +52,33 @@ internal static class ConventionDealer {
 
 
     /// <summary>
-    /// Searches for a deal on which the convention is bid, and turns it so that <paramref name="seat"/> is the one who bids it
-    /// (<see cref="PracticeRole.Opener"/>) or the partner who has to answer it (<see cref="PracticeRole.Responder"/>). With
-    /// <paramref name="opening"/> given, the auction also has to start with that very opening. Null when nothing was found
-    /// within the limits.
+    /// Searches for a deal on which one of <paramref name="targets"/> is bid, and turns it so that <paramref name="seat"/> is the one
+    /// who bids it (<see cref="PracticeRole.Opener"/>) or the partner who has to answer it (<see cref="PracticeRole.Responder"/>).
+    /// With <paramref name="opening"/> given, the auction also has to start with that very opening; with <paramref name="defence"/>
+    /// given, it has to contain that defence and the target has to come from it on - which makes a defence its own target when it
+    /// is practised alone. Null when nothing was found within the limits.
     /// </summary>
-    public static ConventionDeal? Find(BiddingSystem system, HashSet<BidNode> conventionNodes, BidNode? opening, PracticeRole role, Random random, PlayerPosition seat = PlayerPosition.South) {
-        List<BidNode> aims = opening != null ? [opening] : OpeningsAbove(system, conventionNodes);
+    public static ConventionDeal? Find(BiddingSystem system, HashSet<BidNode> targets, BidNode? opening, BidNode? defence, PracticeRole role, Random random, PlayerPosition seat = PlayerPosition.South) {
+        // A chosen opening or defence is dealt for on every try: the search is pointless on a deal that cannot contain it.
+        var forced = opening != null || defence != null;
+        List<Aim> aims = opening != null ? [new Aim(opening, 0)] : defence != null ? [new Aim(defence, 1)] : AimsFor(system, targets);
         var clock = Stopwatch.StartNew();
 
         for (var attempt = 0; attempt < MaxAttempts && clock.Elapsed < TimeLimit; attempt++) {
             var dealer = (PlayerPosition)random.Next(4);
-            var aim = aims.Count > 0 && (opening != null || random.NextDouble() < AimedShare) ? aims[random.Next(aims.Count)] : null;
+            Aim? aim = aims.Count > 0 && (forced || random.NextDouble() < AimedShare) ? aims[random.Next(aims.Count)] : null;
 
-            // The opening hand goes to the dealer, who speaks first and so actually gets to open with it.
-            var hands = PracticeDealer.Deal(random, aim, dealer);
+            var hands = PracticeDealer.Deal(random, aim?.Node, Rotate(dealer, aim?.SeatsAfterDealer ?? 0));
             if (hands == null) {
-                // Only an opening whose ranges contradict each other gets here; when the player chose it, no try can do better.
-                if (opening != null) {
+                // Only a bid whose ranges contradict each other gets here; when the player chose it, no try can do better.
+                if (forced) {
                     return null;
                 }
 
                 continue;
             }
 
-            var bidder = ConventionBidder(system, hands, dealer, conventionNodes, opening);
+            var bidder = TargetBidder(system, hands, dealer, targets, opening, defence);
             if (bidder == null) {
                 continue;
             }
@@ -88,7 +90,7 @@ internal static class ConventionDealer {
 
             // The engine plays every seat alike, so the turned deal bids out the same - checked anyway, since a deal that does not
             // reproduce would hand the player an exercise that never comes.
-            if (ConventionBidder(system, turned.Hands, turned.Dealer, conventionNodes, opening) == Rotate(bidder.Value, turn)) {
+            if (TargetBidder(system, turned.Hands, turned.Dealer, targets, opening, defence) == Rotate(bidder.Value, turn)) {
                 return turned;
             }
         }
@@ -97,11 +99,15 @@ internal static class ConventionDealer {
     }
 
 
+    /// <summary>A hand to deal for, and which seat gets it, counted from the dealer round the table.</summary>
+    private readonly record struct Aim(BidNode Node, int SeatsAfterDealer);
+
+
     /// <summary>
-    /// Bids the deal out with four bots and returns the seat that made the first bid carrying the convention, or null when nobody
-    /// did - or when an opening was asked for and the auction did not start with it.
+    /// Bids the deal out with four bots and returns the seat that made the first bid out of <paramref name="targets"/>, or null when
+    /// nobody did - or when the auction did not start with <paramref name="opening"/>, or never had <paramref name="defence"/> in it.
     /// </summary>
-    private static PlayerPosition? ConventionBidder(BiddingSystem system, IReadOnlyDictionary<PlayerPosition, Hand> hands, PlayerPosition dealer, HashSet<BidNode> conventionNodes, BidNode? opening) {
+    private static PlayerPosition? TargetBidder(BiddingSystem system, IReadOnlyDictionary<PlayerPosition, Hand> hands, PlayerPosition dealer, HashSet<BidNode> targets, BidNode? opening, BidNode? defence) {
         var replay = TableEngine.Replay(system, hands, dealer, [], [], false, 0);
         if (replay.Error != null) {
             return null;
@@ -116,10 +122,16 @@ internal static class ConventionDealer {
             }
         }
 
-        // The engine hands back the system's own node for a system bid, so being one of the convention's nodes is the test.
-        // A natural bid is a node made up on the spot and never matches, whatever its wording.
-        for (var i = 0; i < history.Count; i++) {
-            if (history[i] is BidNode node && conventionNodes.Contains(node)) {
+        // From the defence on, the defence itself included: practised alone, it is the very bid looked for.
+        var from = defence == null ? 0 : history.FindIndex(bid => ReferenceEquals(bid, defence));
+        if (from < 0) {
+            return null;
+        }
+
+        // The engine hands back the system's own node for a system bid, so being one of the targets is the test. A natural bid is
+        // a node made up on the spot and never matches, whatever its wording.
+        for (var i = from; i < history.Count; i++) {
+            if (history[i] is BidNode node && targets.Contains(node)) {
                 return replay.Auction.GetBidder(i);
             }
         }
@@ -128,15 +140,19 @@ internal static class ConventionDealer {
     }
 
 
-    /// <summary>The openings the convention's bids hang under. Bids in other roots are reached some other way and add nothing here.</summary>
-    private static List<BidNode> OpeningsAbove(BiddingSystem system, IEnumerable<BidNode> conventionNodes) {
+    /// <summary>
+    /// What to deal for when only the targets are known: the openings they hang under go to the dealer, and the defences they hang
+    /// under to the player after him, who is the one to answer the opening. Bids in other roots are reached some other way and add
+    /// nothing here.
+    /// </summary>
+    private static List<Aim> AimsFor(BiddingSystem system, IEnumerable<BidNode> targets) {
         var openings = TableEngine.OpeningsRoot(system)?.Bids ?? [];
+        var tops = targets.Select(node => node.GetPath()[0]).Distinct().ToList();
 
-        return conventionNodes
-            .Select(node => node.GetPath()[0])
-            .Where(top => openings.Any(opening => ReferenceEquals(opening, top)))
-            .Distinct()
-            .ToList();
+        return [
+            .. tops.Where(top => openings.Any(opening => ReferenceEquals(opening, top))).Select(top => new Aim(top, 0)),
+            .. tops.Where(top => ReferenceEquals(TableEngine.FindDefence(system, top.NodeId), top)).Select(top => new Aim(top, 1)),
+        ];
     }
 
 

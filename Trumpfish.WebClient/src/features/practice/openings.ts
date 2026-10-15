@@ -45,3 +45,45 @@ function meaning(node: BidNode): string {
   const first = parts.find((part) => typeof part === 'string' && part.trim() !== '');
   return typeof first === 'string' ? first.trim() : 'bez opisu';
 }
+
+/** Name of the root holding the defences - bids made after an opponent opened. */
+const defencesRootName = 'Obrona';
+
+/** One of the opponents' bids a defence answers, taken apart the same way as the defence itself. */
+export interface DefenceAfter {
+  label: string;
+  type: BidType;
+  color: BidColor;
+  level: number | null;
+}
+
+/** A defence: an opening-like choice, plus the opponents' bids it is made after - which is what tells two kinds of double apart. */
+export interface DefenceChoice extends OpeningChoice {
+  after: DefenceAfter[];
+}
+
+/**
+ * Every defence the engine can make, in tree order: a switched-on bid of the defences root that names the opponents' bids it
+ * answers. A bid there without them is never picked - the engine chooses a defence by the bid that was just made - and one that
+ * sends the player to the openings is an opening, not a defence. The server's `TableEngine.FindDefence` applies the same rule.
+ */
+export function defenceChoices(system: BiddingSystem | null): DefenceChoice[] {
+  const root = (system?.roots ?? []).find((candidate) => (candidate.name ?? '').trim() === defencesRootName);
+
+  return (root?.bids ?? [])
+    .filter((node) => !node.isDisabled && !node.goToOpenings && node.nodeId && (node.interjections ?? []).length > 0)
+    .map((node) => ({
+      nodeId: node.nodeId as string,
+      label: label(node),
+      type: node.type ?? 'Submit',
+      color: node.color ?? 'NoColor',
+      level: toNumber(node.value),
+      meaning: meaning(node),
+      after: (node.interjections ?? []).map((bid) => ({
+        label: `${bid.value ?? ''}${bidCode(bid)}`.trim(),
+        type: bid.type ?? 'Submit',
+        color: bid.color ?? 'NoColor',
+        level: toNumber(bid.value),
+      })),
+    }));
+}

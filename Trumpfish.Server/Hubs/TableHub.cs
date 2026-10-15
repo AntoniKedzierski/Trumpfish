@@ -117,6 +117,16 @@ public class TableHub : Hub {
             throw new HubException("Nie znaleziono ćwiczonej konwencji w tym systemie.");
         }
 
+        var defence = TableEngine.FindDefence(system, settings.DefenceNodeId);
+        if (settings.DefenceNodeId != null && defence == null) {
+            throw new HubException("Nie znaleziono ćwiczonej obrony w tym systemie.");
+        }
+
+        // A defence is made after the opponents opened, an opening by the practising pair: no auction has both.
+        if (opening != null && defence != null) {
+            throw new HubException("Otwarcia i obrony nie da się ćwiczyć w jednym rozdaniu - wybierz jedno z nich.");
+        }
+
         var invitation = _sessions.Invite(userId, await NameOf(userId), friendUserId, await NameOf(friendUserId), system, system.SystemName, DuoSession.DescribeOpening(opening), settings);
         await _notifier.InvitationAsync(invitation);
     }
@@ -157,7 +167,7 @@ public class TableHub : Hub {
 
         var session = _sessions.Start(offer);
         if (session == null) {
-            throw new HubException(Explain(string.IsNullOrWhiteSpace(invitation.Settings.Convention) ? DuoResult.CannotDeal : DuoResult.ConventionNotFound));
+            throw new HubException(Explain(DuoSession.FailureOf(invitation.Settings)));
         }
 
         // Neither of them is invitable any more, so every other invitation either of them had goes away with the same message.
@@ -240,6 +250,7 @@ public class TableHub : Hub {
             DuoResult.NotAllowed => "Podpowiedzi silnika są w tej sesji wyłączone.",
             DuoResult.CannotDeal => "Nie da się rozdać ręki spełniającej warunki tego otwarcia - sprawdź zakresy punktów i kart.",
             DuoResult.ConventionNotFound => "Nie udało się znaleźć rozdania, w którym któreś z was licytuje tę konwencję. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną.",
+            DuoResult.DefenceNotFound => "Nie udało się znaleźć rozdania, w którym któreś z was broni się w ten sposób. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną obronę.",
             _ => "Nie siedzisz przy żadnym stole."
         };
     }

@@ -2880,6 +2880,12 @@
           },
           "settings": {
             "$ref": "#/components/schemas/DuoSettings"
+          },
+          "defenceLabel": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2953,6 +2959,13 @@
               "null",
               "string"
             ]
+          },
+          "defenceNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -3049,6 +3062,12 @@
             "type": "string"
           },
           "openingLabel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "defenceLabel": {
             "type": [
               "null",
               "string"
@@ -3372,6 +3391,13 @@
               "null",
               "string"
             ]
+          },
+          "defenceNodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -4066,6 +4092,19 @@
             "type": "string"
           },
           "explanation": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "nodeId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "convention": {
             "type": [
               "null",
               "string"

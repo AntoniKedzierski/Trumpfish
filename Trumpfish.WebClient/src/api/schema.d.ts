@@ -2153,6 +2153,7 @@ export interface components {
             systemName: string;
             openingLabel: null | string;
             settings: components["schemas"]["DuoSettings"];
+            defenceLabel?: null | string;
         };
         DuoSeat: {
             /** Format: uuid */
@@ -2172,6 +2173,8 @@ export interface components {
             immediateMeanings: boolean;
             checkBids: boolean;
             convention?: null | string;
+            /** Format: uuid */
+            defenceNodeId?: null | string;
         };
         DuoTableState: {
             /** Format: uuid */
@@ -2193,6 +2196,7 @@ export interface components {
             partner: components["schemas"]["DuoSeat"];
             systemName: string;
             openingLabel: null | string;
+            defenceLabel?: null | string;
         };
         /** @enum {unknown} */
         FriendPresence: "Offline" | "Online" | "Busy";
@@ -2271,6 +2275,8 @@ export interface components {
             role: components["schemas"]["PracticeRole"];
             checkBids: boolean;
             convention?: null | string;
+            /** Format: uuid */
+            defenceNodeId?: null | string;
         };
         PracticeState: {
             state: string;
@@ -2426,6 +2432,9 @@ export interface components {
             isFromSystem: boolean;
             label: string;
             explanation: null | string;
+            /** Format: uuid */
+            nodeId?: null | string;
+            convention?: null | string;
         };
         SimulationCard: {
             value: components["schemas"]["CardValue"];

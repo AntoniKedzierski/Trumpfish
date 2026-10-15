@@ -30,7 +30,10 @@ public enum DuoResult {
     CannotDeal,
 
     /// <summary>No deal on which the pair gets to bid the practised convention turned up within the search limits.</summary>
-    ConventionNotFound
+    ConventionNotFound,
+
+    /// <summary>No deal on which one of the pair gets to make the practised defence turned up within the search limits.</summary>
+    DefenceNotFound
 }
 
 /// <summary>One deal of a session: the four hands, and the human bids made against them so far.</summary>
@@ -81,6 +84,7 @@ public sealed class DuoSession {
         _system = system;
         SystemName = systemName;
         OpeningLabel = openingLabel;
+        DefenceLabel = DescribeDefence(TableEngine.FindDefence(system, settings.DefenceNodeId));
         Settings = settings;
         HostId = hostId;
         GuestId = guestId;
@@ -111,6 +115,8 @@ public sealed class DuoSession {
     public string SystemName { get; }
 
     public string? OpeningLabel { get; }
+
+    public string? DefenceLabel { get; }
 
     /// <summary>Both people at the table, which is who every change of it has to be sent to.</summary>
     public IReadOnlyList<Guid> Members => [HostId, GuestId];
@@ -214,7 +220,7 @@ public sealed class DuoSession {
 
             var next = Deal(_system, Settings, _deal.Index + 1);
             if (next == null) {
-                return string.IsNullOrWhiteSpace(Settings.Convention) ? DuoResult.CannotDeal : DuoResult.ConventionNotFound;
+                return FailureOf(Settings);
             }
 
             _deal = next;
@@ -255,7 +261,8 @@ public sealed class DuoSession {
                 Describe(position),
                 Describe(partner),
                 SystemName,
-                OpeningLabel);
+                OpeningLabel,
+                DefenceLabel);
         }
     }
 
@@ -279,14 +286,18 @@ public sealed class DuoSession {
     /// </remarks>
     internal static DuoDeal? Deal(BiddingSystem system, DuoSettings settings, int index) {
         var opening = TableEngine.FindOpening(system, settings.OpeningNodeId);
+        var defence = TableEngine.FindDefence(system, settings.DefenceNodeId);
         var random = TableEngine.RandomFor(settings.Seed, index);
         var opener = Seats[random.Next(Seats.Length)];
 
-        // A convention is found by bidding whole deals out, the way the solo table does it. The drawn seat is the one who bids it,
-        // and the deal found decides who deals.
-        if (!string.IsNullOrWhiteSpace(settings.Convention)) {
-            var conventionNodes = ConventionDealer.NodesOf(system, ConventionDealer.Key(settings.Convention));
-            var found = conventionNodes.Count == 0 ? null : ConventionDealer.Find(system, conventionNodes, opening, PracticeRole.Opener, random, opener);
+        // A convention or a defence is found by bidding whole deals out, the way the solo table does it. The drawn seat is the one
+        // who bids it, and the deal found decides who deals. Practised alone, the defence is the very bid looked for; with a
+        // convention, the convention is, and it has to follow the defence.
+        if (!string.IsNullOrWhiteSpace(settings.Convention) || defence != null) {
+            var targets = string.IsNullOrWhiteSpace(settings.Convention)
+                ? new HashSet<BidNode>(ReferenceEqualityComparer.Instance) { defence! }
+                : ConventionDealer.NodesOf(system, ConventionDealer.Key(settings.Convention));
+            var found = targets.Count == 0 ? null : ConventionDealer.Find(system, targets, opening, defence, PracticeRole.Opener, random, opener);
 
             return found == null ? null : new DuoDeal { Index = index, Dealer = found.Dealer, Opener = opener, Hands = found.Hands };
         }
@@ -302,15 +313,41 @@ public sealed class DuoSession {
     }
 
 
+    /// <summary>What to tell the pair when no deal could be found for <paramref name="settings"/>.</summary>
+    internal static DuoResult FailureOf(DuoSettings settings) {
+        if (!string.IsNullOrWhiteSpace(settings.Convention)) {
+            return DuoResult.ConventionNotFound;
+        }
+
+        return settings.DefenceNodeId != null ? DuoResult.DefenceNotFound : DuoResult.CannotDeal;
+    }
+
+
+    /// <summary>How a defence reads in the invitation and on the table: the bid, the opponents' bids it answers, and its meaning.</summary>
+    internal static string? DescribeDefence(BidNode? node) {
+        if (node == null) {
+            return null;
+        }
+
+        var after = string.Join(", ", node.Interjections.Select(AuctionMapping.Describe));
+        return $"{AuctionMapping.Describe(node)} po {after} · {MeaningOf(node)}";
+    }
+
+
     /// <summary>How an opening reads in the invitation and on the table, so the guest sees what he agreed to practise.</summary>
     internal static string? DescribeOpening(BidNode? node) {
         if (node == null) {
             return null;
         }
 
+        return $"{AuctionMapping.Describe(node)} · {MeaningOf(node)}";
+    }
+
+
+    private static string MeaningOf(BidNode node) {
         var meaning = new[] { node.Condition, node.Convention == null ? null : $"⟨{node.Convention}⟩", node.Description }
             .FirstOrDefault(part => !string.IsNullOrWhiteSpace(part));
 
-        return $"{AuctionMapping.Describe(node)} · {meaning?.Trim() ?? "bez opisu"}";
+        return meaning?.Trim() ?? "bez opisu";
     }
 }

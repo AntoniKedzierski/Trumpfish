@@ -10,6 +10,8 @@ interface ConventionPickerProps {
   value: string;
   conventions: readonly ConventionChoice[];
   onChange: (key: string) => void;
+  /** What the empty choice is called - a setup screen practises no convention, a filter keeps every deal. */
+  noneLabel?: string;
 }
 
 /**
@@ -19,13 +21,13 @@ interface ConventionPickerProps {
  * is how it is reached on a phone. A convention no branch leads to is shown in red and cannot be chosen.
  */
 /*
- * Shared by the solo and the duo table, so the one list reads - and behaves - the same at both.
+ * Shared by the solo and the duo table and by the simulation filters, so the one list reads - and behaves - the same everywhere.
  */
-export function ConventionPicker({ value, conventions, onChange }: ConventionPickerProps) {
+export function ConventionPicker({ value, conventions, onChange, noneLabel = 'Bez konwencji' }: ConventionPickerProps) {
   const [details, setDetails] = useState<ConventionChoice | null>(null);
 
   const options: ComboBoxOption<string>[] = [
-    { value: '', label: 'Bez konwencji' },
+    { value: '', label: noneLabel },
     ...conventions.map((choice) => {
       const place = placeOf(choice);
       return {

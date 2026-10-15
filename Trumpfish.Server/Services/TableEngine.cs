@@ -251,6 +251,18 @@ internal static class TableEngine {
     }
 
 
+    /// <summary>
+    /// A defence that can be practised: a bid of the defences root the engine actually makes, i.e. a switched-on one that names
+    /// the opponents' bids it answers. A bid there without them is never picked - the engine chooses a defence by the bid that was
+    /// just made - and one sending the player to the openings is an opening, not a defence. The client lists by the same rule.
+    /// </summary>
+    public static BidNode? FindDefence(BiddingSystem system, Guid? nodeId) {
+        return nodeId == null
+            ? null
+            : system.Defences()?.Bids.FirstOrDefault(node => node.NodeId == nodeId.Value && !node.IsDisabled && !node.GoToOpenings && node.HasInterjections);
+    }
+
+
     /// <summary>A named seed makes a whole session reproducible, deal by deal. Without one every deal is genuinely random.</summary>
     public static Random RandomFor(string? seed, int dealIndex) {
         return string.IsNullOrWhiteSpace(seed) ? new Random() : new Random(StableHash(seed.Trim()) ^ dealIndex);

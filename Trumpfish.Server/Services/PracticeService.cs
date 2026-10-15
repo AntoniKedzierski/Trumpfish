@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Model;
 using Model.Bidding.AI;
+using Model.Bidding.Bids;
 using Model.Enums;
 using Model.Helpers;
 using System.Text.Json;
@@ -36,24 +37,37 @@ public class PracticeService : IPracticeService {
             return new PracticeResult(null, "Nie znaleziono ćwiczonego otwarcia w tym systemie.");
         }
 
+        var defence = TableEngine.FindDefence(system, request.DefenceNodeId);
+        if (request.DefenceNodeId != null && defence == null) {
+            return new PracticeResult(null, "Nie znaleziono ćwiczonej obrony w tym systemie.");
+        }
+
+        // A defence is made after the opponents opened, an opening by the practising side: no auction has both.
+        if (opening != null && defence != null) {
+            return new PracticeResult(null, "Otwarcia i obrony nie da się ćwiczyć w jednym rozdaniu - wybierz jedno z nich.");
+        }
+
         var random = TableEngine.RandomFor(request.Seed, request.DealIndex);
         Dictionary<PlayerPosition, Hand> hands;
 
         // Every deal is started by the next player round the table, so the human bids from a different position each time.
         var dealer = (PlayerPosition)(((request.DealIndex % 4) + 4) % 4);
 
-        if (!string.IsNullOrWhiteSpace(request.Convention)) {
-            var conventionNodes = ConventionDealer.NodesOf(system, ConventionDealer.Key(request.Convention));
-            if (conventionNodes.Count == 0) {
-                return new PracticeResult(null, "Nie znaleziono ćwiczonej konwencji w tym systemie.");
+        if (!string.IsNullOrWhiteSpace(request.Convention) || defence != null) {
+            // Practised alone, the defence is the very bid looked for; with a convention, the convention is, and it has to follow it.
+            HashSet<BidNode> targets = defence == null ? [] : new HashSet<BidNode>(ReferenceEqualityComparer.Instance) { defence };
+
+            if (!string.IsNullOrWhiteSpace(request.Convention)) {
+                targets = ConventionDealer.NodesOf(system, ConventionDealer.Key(request.Convention));
+                if (targets.Count == 0) {
+                    return new PracticeResult(null, "Nie znaleziono ćwiczonej konwencji w tym systemie.");
+                }
             }
 
-            // A convention is found by bidding whole deals out, and the one found decides who deals - so the rotation above gives way.
-            var found = ConventionDealer.Find(system, conventionNodes, opening, request.Role, random);
+            // Found by bidding whole deals out, and the one found decides who deals - so the rotation above gives way.
+            var found = ConventionDealer.Find(system, targets, opening, defence, request.Role, random);
             if (found == null) {
-                return new PracticeResult(null, opening == null
-                    ? "Nie udało się znaleźć rozdania, w którym boty używają tej konwencji. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną."
-                    : "Nie udało się znaleźć rozdania, w którym po tym otwarciu boty używają tej konwencji. Spróbuj ponownie albo zmień otwarcie.");
+                return new PracticeResult(null, NotFound(request.Convention, opening, defence));
             }
 
             hands = found.Hands;
@@ -82,6 +96,24 @@ public class PracticeService : IPracticeService {
             []);
 
         return new PracticeResult(Describe(system, data), null);
+    }
+
+
+    /// <summary>Why no deal came out of the search, in the terms of what the player asked to practise.</summary>
+    private static string NotFound(string? convention, BidNode? opening, BidNode? defence) {
+        if (string.IsNullOrWhiteSpace(convention)) {
+            return "Nie udało się znaleźć rozdania, w którym boty bronią się w ten sposób. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną obronę.";
+        }
+
+        if (opening != null) {
+            return "Nie udało się znaleźć rozdania, w którym po tym otwarciu boty używają tej konwencji. Spróbuj ponownie albo zmień otwarcie.";
+        }
+
+        if (defence != null) {
+            return "Nie udało się znaleźć rozdania, w którym po tej obronie boty używają tej konwencji. Spróbuj ponownie albo zmień obronę.";
+        }
+
+        return "Nie udało się znaleźć rozdania, w którym boty używają tej konwencji. Najwyraźniej trafia się bardzo rzadko - spróbuj ponownie albo wybierz inną.";
     }
 
 

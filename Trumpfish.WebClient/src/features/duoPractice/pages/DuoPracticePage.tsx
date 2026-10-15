@@ -6,9 +6,11 @@ import { ToolBar } from '@/components/ToolBar';
 import { Auction, BidCard, ComboBox, ConfirmDialog, Hand } from '@/ui';
 import { BidWarning } from '@/features/practice/components/BidWarning';
 import { BiddingBox, type BoxBid } from '@/features/practice/components/BiddingBox';
-import { openingChoices } from '@/features/practice/openings';
+import { defenceChoices, openingChoices } from '@/features/practice/openings';
 import { conventionChoices } from '@/features/practice/conventions';
 import { ConventionPicker } from '@/features/practice/components/ConventionPicker';
+import { OpeningPicker } from '@/features/practice/components/OpeningPicker';
+import { DefencePicker } from '@/features/practice/components/DefencePicker';
 import { DealResultCard } from '@/features/simulation/components/DealResultCard';
 import { vulnerabilityLabels } from '@/features/simulation/vulnerability';
 import { useRealtime } from '@/realtime/useRealtime';
@@ -37,6 +39,8 @@ export function DuoPracticePage() {
   const [systemId, setSystemId] = useState('');
   const [tree, setTree] = useState<BiddingSystem | null>(null);
   const [openingNodeId, setOpeningNodeId] = useState('');
+  /** Node id of the defence practised, empty for none. An auction has an opening of ours or a defence, never both. */
+  const [defenceNodeId, setDefenceNodeId] = useState('');
   /** Matching key of the convention practised, empty for none. */
   const [convention, setConvention] = useState('');
   const [seed, setSeed] = useState('');
@@ -55,6 +59,7 @@ export function DuoPracticePage() {
   const [awaiting, setAwaiting] = useState<string | null>(null);
 
   const openings = useMemo(() => openingChoices(tree), [tree]);
+  const defences = useMemo(() => defenceChoices(tree), [tree]);
   const conventions = useMemo(() => conventionChoices(tree), [tree]);
   const conventionLabel = conventions.find((choice) => choice.key === convention)?.label ?? null;
   const available = (friends?.friends ?? []).filter((friend) => friend.presence === 'Online');
@@ -136,6 +141,7 @@ export function DuoPracticePage() {
       immediateMeanings: meanings === 'immediate',
       checkBids,
       convention: conventionLabel,
+      defenceNodeId: defenceNodeId === '' ? null : defenceNodeId,
     };
 
     const partner = available.find((friend) => friend.userId === partnerId);
@@ -187,8 +193,8 @@ export function DuoPracticePage() {
                 {table.partner.connected ? null : <span className="duo-dropped"> (rozłączony)</span>}
               </span>
               {table.you.isHost || !table.finished ? null : <Waiting>Czekam, aż partner rozda następne rozdanie</Waiting>}
-              {/* A convention deal is searched for rather than dealt, which takes noticeably longer. */}
-              {busy && table.you.isHost && table.finished && table.settings.convention ? <Waiting>Szukam rozdania z konwencją</Waiting> : null}
+              {/* A convention or a defence deal is searched for rather than dealt, which takes noticeably longer. */}
+              {busy && table.you.isHost && table.finished && (table.settings.convention || table.settings.defenceNodeId) ? <Waiting>Szukam rozdania</Waiting> : null}
             </>
           )
         }
@@ -227,8 +233,8 @@ export function DuoPracticePage() {
               <ComboBox
                 value={systemId}
                 options={systems.map((system) => ({ value: system.id, label: system.name }))}
-                /* Another system means another tree, so neither the opening nor the convention being practised survives the switch. */
-                onChange={(id) => { setSystemId(id); setOpeningNodeId(''); setConvention(''); }}
+                /* Another system means another tree, so nothing being practised survives the switch. */
+                onChange={(id) => { setSystemId(id); setOpeningNodeId(''); setDefenceNodeId(''); setConvention(''); }}
                 placeholder="Brak zapisanych systemów"
                 disabled={systems.length === 0}
               />
@@ -239,25 +245,19 @@ export function DuoPracticePage() {
                 Ćwiczone otwarcie
                 <HelpTip>Karty pod to otwarcie dostaje jedno z was — za każdym rozdaniem losowo.</HelpTip>
               </span>
-              <ComboBox
-                value={openingNodeId}
-                options={[
-                  { value: '', label: 'Wszystkie - karty bez warunków' },
-                  ...openings.map((choice) => ({
-                    value: choice.nodeId,
-                    label: `${choice.label} · ${choice.meaning}`,
-                    // The string is what the option is announced and titled by; this is what it looks like.
-                    labelNode: (
-                      <>
-                        <BidCard bid={{ type: choice.type, color: choice.color, value: choice.level }} />
-                        {` · ${choice.meaning}`}
-                      </>
-                    ),
-                  })),
-                ]}
-                onChange={setOpeningNodeId}
-                disabled={openings.length === 0}
-              />
+              {/* An auction has an opening of ours or a defence against theirs, never both - choosing one lets the other go. */}
+              <OpeningPicker value={openingNodeId} openings={openings} onChange={(id) => { setOpeningNodeId(id); if (id !== '') { setDefenceNodeId(''); } }} />
+            </label>
+
+            <label>
+              <span className="field-name">
+                Ćwiczona obrona
+                <HelpTip>
+                  Przeciwnicy otwierają, a tą odzywką broni się jedno z was — za każdym rozdaniem losowo. Wybranie obrony zdejmuje
+                  ćwiczone otwarcie.
+                </HelpTip>
+              </span>
+              <DefencePicker value={defenceNodeId} defences={defences} onChange={(id) => { setDefenceNodeId(id); if (id !== '') { setOpeningNodeId(''); } }} />
             </label>
 
             <label>
@@ -265,7 +265,7 @@ export function DuoPracticePage() {
                 Ćwiczona konwencja
                 <HelpTip>
                   Każde rozdanie jest takie, w którym konwencji używa jedno z was — za każdym rozdaniem losowo. Z wybranym otwarciem
-                  konwencja musi paść po nim. Rzadkie konwencje szuka się dłużej.
+                  albo obroną konwencja musi paść po nich. Rzadkie konwencje szuka się dłużej.
                 </HelpTip>
               </span>
               <ConventionPicker value={convention} conventions={conventions} onChange={setConvention} />
@@ -343,6 +343,7 @@ export function DuoPracticePage() {
                     <h2 className="deal-title">Rozdanie {table.dealNumber}</h2>
                     <span className="deal-meta">
                       Rozdaje {table.dealer} · po partii {vulnerabilityLabels[table.vulnerability]}
+                      {table.defenceLabel ? ` · obrona: ${table.defenceLabel}` : null}
                       {table.settings.convention ? ` · konwencja: ${table.settings.convention}` : null}
                     </span>
                     {!table.settings.allowHints ? null : (
