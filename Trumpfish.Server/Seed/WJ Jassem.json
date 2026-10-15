@@ -73248,6 +73248,36 @@
           "isFromSystem": false
         },
         {
+          "nodeId": "28b44bb1-9b53-440e-a381-d76689b3a12a",
+          "condition": "7-11 PC,  4-5 kier\u00F3w, 4-5 pik\u00F3w",
+          "convention": "Precision",
+          "openerBid": true,
+          "signOff": false,
+          "oneRoundForcing": false,
+          "gameForcing": false,
+          "automaticResponse": false,
+          "goToOpenings": false,
+          "isPreferred": false,
+          "alert": false,
+          "isDisabled": false,
+          "interjections": [
+            {
+              "type": "Submit",
+              "color": "NoTrump",
+              "value": 1,
+              "isFromSystem": false
+            }
+          ],
+          "nextBids": [],
+          "realizedGoal": "None",
+          "continuationNodeId": "1b66ba90-a548-4609-82d6-5cf30b7b9815",
+          "tryPremiumContract": false,
+          "type": "Submit",
+          "color": "Clubs",
+          "value": 2,
+          "isFromSystem": false
+        },
+        {
           "nodeId": "8003ed9e-b6b0-40e6-9f93-d3f2861d8d6d",
           "description": "W systemie: 1BA, 2 karo, 2 kier, 2 pik, bloki.",
           "condition": "Odzywka przeciwnik\u00F3w.",
