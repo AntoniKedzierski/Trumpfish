@@ -58975,7 +58975,7 @@
                     {
                       "nodeId": "aa7ed2e0-071b-47e0-a4d3-9eef6d8b5680",
                       "condition": "brak pi\u0105tki, odpowiedzi na odwr\u00F3t",
-                      "convention": "Pytanie o kolor",
+                      "convention": "Pytanie o sk\u0142ad cd. - Multi",
                       "spadesCardRange": {
                         "upper": 4
                       },
@@ -59686,7 +59686,7 @@
             {
               "nodeId": "59859e5f-e9d1-44dd-be6b-6e8a23fbd142",
               "condition": "12-16 PC, 2\u002B kier\u00F3w, 0-1 pik\u00F3w",
-              "convention": "Wezwanie do transferu",
+              "convention": "Wezwanie do transferu - Multi",
               "pointsRange": {
                 "lower": 12,
                 "upper": 16
@@ -59749,7 +59749,7 @@
             {
               "nodeId": "658b4eab-3a4e-438a-b48b-bf1cd576735e",
               "condition": "12-16 PC, 2\u002B pik\u00F3w, 0-1 kier\u00F3w",
-              "convention": "Wezwanie do transferu",
+              "convention": "Wezwanie do transferu - Multi",
               "pointsRange": {
                 "lower": 12,
                 "upper": 16
@@ -63615,7 +63615,7 @@
               "nodeId": "7c5bae56-0d48-44b8-9725-67e844c1a5d4",
               "description": "powinno by\u0107 17\u002B PC, ale to gra uk\u0142adowa!",
               "condition": "14\u002B PC, 5\u002B kier\u00F3w",
-              "convention": "pytanie o kr\u00F3tko\u015B\u0107",
+              "convention": "pytanie o kr\u00F3tko\u015B\u0107 - 2 BA",
               "pointsRange": {
                 "lower": 14
               },
@@ -63995,7 +63995,7 @@
               "nodeId": "7dfb07ab-4858-46e8-bbeb-7fffc221bf6a",
               "description": "powinno by\u0107 17\u002B PC, ale to gra uk\u0142adowa!",
               "condition": "14\u002B PC, 5\u002B pik\u00F3w",
-              "convention": "pytanie o kr\u00F3tko\u015B\u0107",
+              "convention": "pytanie o kr\u00F3tko\u015B\u0107 - 2 BA",
               "pointsRange": {
                 "lower": 14
               },
@@ -64377,7 +64377,7 @@
             {
               "nodeId": "9b95fc4a-8c17-49cd-8176-1d092c862359",
               "condition": "16\u002B PC, brak starszej 5",
-              "convention": "sztuczny inwit",
+              "convention": "sztuczny inwit - 2 BA",
               "pointsRange": {
                 "lower": 16
               },
@@ -65342,7 +65342,7 @@
         {
           "nodeId": "fabb0182-db52-4d0e-9dee-e1e8efbaaab6",
           "condition": "9-14 PC, 7\u002B trefli (z asem, kr\u00F3lem i dam\u0105) oraz zatrzymaniem w kolorze bocznym",
-          "convention": "Gambling",
+          "convention": "Gambling - 3 BA",
           "pointsRange": {
             "lower": 9,
             "upper": 14
@@ -66039,7 +66039,7 @@
         {
           "nodeId": "3e01cb4f-62f0-4b9e-a402-cebbcd8d92c5",
           "condition": "9-14 PC, 7\u002B karo (z asem, kr\u00F3lem i dam\u0105) oraz zatrzymaniem w kolorze bocznym",
-          "convention": "Gambling",
+          "convention": "Gambling - 3 BA",
           "pointsRange": {
             "lower": 9,
             "upper": 14
