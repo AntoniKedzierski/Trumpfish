@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { overlayMark } from './overlay';
+import { isInsideOverlay, overlayMark } from './overlay';
 import './comboBox.css';
 
 export interface ComboBoxOption<TValue extends string> {
@@ -13,6 +13,13 @@ export interface ComboBoxOption<TValue extends string> {
    * is still required and still what the option is announced and titled by.
    */
   labelNode?: React.ReactNode;
+  /**
+   * What the closed field shows once the option is chosen, when that has to differ from `labelNode` - which may hold
+   * something interactive, and the field is itself a button. Falls back to `labelNode`, then to `label`.
+   */
+  valueNode?: React.ReactNode;
+  /** Shown, but cannot be chosen - for an option whose reason for being unavailable is worth reading. */
+  disabled?: boolean;
 }
 
 interface ComboBoxProps<TValue extends string> {
@@ -97,6 +104,12 @@ export function ComboBox<TValue extends string>({ value, options, onChange, plac
 
   const commit = (index: number) => {
     const option = options[index];
+
+    // An unavailable option stays on screen to be read; picking it does nothing, and the list stays open.
+    if (option?.disabled) {
+      return;
+    }
+
     if (option !== undefined) {
       onChange(option.value);
     }
@@ -111,7 +124,8 @@ export function ComboBox<TValue extends string>({ value, options, onChange, plac
 
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-      const inside = rootRef.current?.contains(target) === true || listRef.current?.contains(target) === true;
+      // An overlay opened from the list - the window with a convention's openings - belongs to it: closing that is its own business.
+      const inside = rootRef.current?.contains(target) === true || listRef.current?.contains(target) === true || isInsideOverlay(target);
 
       if (!inside) {
         setOpen(false);
@@ -193,7 +207,7 @@ export function ComboBox<TValue extends string>({ value, options, onChange, plac
         onClick={() => (open ? close() : openList())}
       >
         <span className={`ui-combo-value${selected === null ? ' placeholder' : ''} ${selected?.labelClassName ?? ''}`.trimEnd()}>
-          {selected?.labelNode ?? selected?.label ?? placeholder ?? ''}
+          {selected?.valueNode ?? selected?.labelNode ?? selected?.label ?? placeholder ?? ''}
         </span>
         <Chevron className="ui-combo-chevron" />
       </button>
@@ -213,7 +227,8 @@ export function ComboBox<TValue extends string>({ value, options, onChange, plac
               key={option.value}
               role="option"
               aria-selected={option.value === value}
-              className={`ui-combo-option${index === activeIndex ? ' active' : ''}${option.value === value ? ' selected' : ''}`}
+              aria-disabled={option.disabled === true ? true : undefined}
+              className={`ui-combo-option${index === activeIndex ? ' active' : ''}${option.value === value ? ' selected' : ''}${option.disabled ? ' disabled' : ''}`}
               title={option.label}
               onPointerEnter={() => setActiveIndex(index)}
               onClick={() => commit(index)}

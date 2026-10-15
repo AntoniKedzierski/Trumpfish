@@ -1,6 +1,8 @@
 using Model.Bidding.AI;
+using Model.Bidding.Bids;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Trumpfish.Server.Services;
 
@@ -50,6 +52,24 @@ public static class BiddingSystemJson {
         }
 
         options.Converters.Add(new JsonStringEnumConverter());
+        options.TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+            Modifiers = { SkipEmptyInterjections }
+        };
         return options;
+    }
+
+
+    /// <summary>
+    /// An empty interjection list is left out: only a handful of bids have interjections, so in every other one it would be noise.
+    /// Reading a node without the field keeps the empty list from the <see cref="BidNode.Interjections"/> initializer.
+    /// </summary>
+    private static void SkipEmptyInterjections(JsonTypeInfo typeInfo) {
+        if (typeInfo.Type != typeof(BidNode)) {
+            return;
+        }
+
+        var name = JsonNamingPolicy.CamelCase.ConvertName(nameof(BidNode.Interjections));
+        var property = typeInfo.Properties.Single(property => property.Name == name);
+        property.ShouldSerialize = (_, value) => value is List<Bid> { Count: > 0 };
     }
 }

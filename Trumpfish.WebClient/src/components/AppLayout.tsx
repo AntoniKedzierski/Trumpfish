@@ -82,6 +82,7 @@ export function AppLayout() {
             <small>
               {invitation.systemName}
               {invitation.openingLabel === null || invitation.openingLabel === undefined ? ' · wszystkie otwarcia' : ` · ${invitation.openingLabel}`}
+              {invitation.settings.convention ? ` · konwencja: ${invitation.settings.convention}` : null}
             </small>
           </div>
           <div className="app-invitation-actions">

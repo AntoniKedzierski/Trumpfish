@@ -546,6 +546,7 @@ export function SystemWorkspace({ systemId: imposedId, withinPath, onDirtyChange
         onMoveUp={() => dispatch({ kind: 'moveUp' })}
         onMoveDown={() => dispatch({ kind: 'moveDown' })}
         onSort={() => dispatch({ kind: 'sort' })}
+        onSortByInterjection={() => dispatch({ kind: 'sort', byInterjection: true })}
         onRemoveUnreachable={handleRemoveUnreachable}
         onValidate={handleValidate}
         onSave={handleSave}

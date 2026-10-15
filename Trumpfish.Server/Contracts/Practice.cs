@@ -3,7 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace Trumpfish.Server.Contracts;
 
-/// <summary>Which side of the practised sequence the human sits on. The other side of it is played by the partner bot.</summary>
+/// <summary>
+/// Which side of the practised sequence the human sits on. The other side of it is played by the partner bot. When a convention
+/// is practised, <see cref="Opener"/> is the one who bids it and <see cref="Responder"/> the partner who has to answer it.
+/// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<PracticeRole>))]
 public enum PracticeRole {
     Opener,
@@ -15,8 +18,10 @@ public enum PracticeRole {
 /// and, together with <paramref name="Seed"/>, makes the whole session reproducible. <paramref name="OpeningNodeId"/> names the
 /// opening being practised - the hand of whoever is meant to open it is dealt to fit it. Null practises everything.
 /// <paramref name="CheckBids"/> turns on the running check of the player's own bids against the hand he is holding.
+/// <paramref name="Convention"/> names a convention to practise, as written on the bids of the system; the deal is then one on
+/// which the bots get to use it, with the human in the seat <paramref name="Role"/> asks for. Null practises no convention.
 /// </summary>
-public record PracticeStartRequest(Guid SystemId, int DealIndex, string? Seed, Guid? OpeningNodeId, PracticeRole Role, bool CheckBids);
+public record PracticeStartRequest(Guid SystemId, int DealIndex, string? Seed, Guid? OpeningNodeId, PracticeRole Role, bool CheckBids, string? Convention = null);
 
 /// <summary>A bid reduced to what it takes to draw it: the denomination is needed to tint the suit glyph.</summary>
 public record PracticeBidLabel(BidType Type, BidColor Color, int? Value, string Label);

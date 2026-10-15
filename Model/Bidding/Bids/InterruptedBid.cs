@@ -9,6 +9,7 @@ namespace Model.Bidding.Bids;
 public class InterruptedBid : Bid {
 
     /// <summary>Bid made by the preceding opponent, so sequences with interjections can be described. Only <see cref="BidType.Submit"/> or <see cref="BidType.Double"/> make sense here.</summary>
+    /// <remarks>Describes the auction as it actually went. Always empty on a <see cref="BidNode"/>, which lists the interjections it applies after in <see cref="BidNode.Interjections"/>.</remarks>
     public Bid? Interjection { get; set; }
 
     public InterruptedBid() : base() { }

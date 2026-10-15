@@ -2007,7 +2007,7 @@ export interface components {
             isPreferred?: boolean;
             alert?: boolean;
             isDisabled?: boolean;
-            interjection?: null | components["schemas"]["Bid"];
+            interjections?: components["schemas"]["Bid"][];
             nextBids?: components["schemas"]["BidNode"][];
             realizedGoal?: components["schemas"]["BiddingGoal"];
             aiSource?: null | string;
@@ -2018,6 +2018,7 @@ export interface components {
             tryPremiumContract?: boolean;
             /** Format: int32 */
             slamConventionIndex?: null | number | string;
+            interjection?: null | components["schemas"]["Bid"];
             type?: components["schemas"]["BidType"];
             color?: components["schemas"]["BidColor"];
             /** Format: int32 */
@@ -2170,6 +2171,7 @@ export interface components {
             allowHints: boolean;
             immediateMeanings: boolean;
             checkBids: boolean;
+            convention?: null | string;
         };
         DuoTableState: {
             /** Format: uuid */
@@ -2268,6 +2270,7 @@ export interface components {
             openingNodeId: null | string;
             role: components["schemas"]["PracticeRole"];
             checkBids: boolean;
+            convention?: null | string;
         };
         PracticeState: {
             state: string;

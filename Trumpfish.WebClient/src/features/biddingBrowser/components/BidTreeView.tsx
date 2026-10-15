@@ -3,6 +3,7 @@ import { BidCard, Chevron } from '@/ui';
 import { longPressDelay, useLongPress } from '@/components/useLongPress';
 import type { EditableBidNode, EditableSystem, NodePath } from '../model';
 import { childPath, containsPath, folderPathUnder, holdsInterjected, interjectedCount, samePath } from '../tree';
+import { InterjectionList } from './InterjectionList';
 
 interface BidTreeViewProps {
   system: EditableSystem;
@@ -256,9 +257,9 @@ function TreeBidLabel({ node }: { node: EditableBidNode }) {
         {/* Part of the call rather than of the sentence after it: it travels with the bid instead of standing in a column of its own. */}
         <span className="bid-separator">:</span>
       </span>
-      {node.interjection && (
+      {node.interjections.length > 0 && (
         <span className="bid-interjection">
-          (po. <BidCard bid={node.interjection} />)
+          (po. <InterjectionList interjections={node.interjections} />)
         </span>
       )}
       <span className="bid-condition">{node.condition}</span>

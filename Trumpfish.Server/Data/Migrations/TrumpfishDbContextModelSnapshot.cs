@@ -122,6 +122,9 @@ namespace Trumpfish.Server.Data.Migrations
                     b.Property<int?>("InterjectionValue")
                         .HasColumnType("integer");
 
+                    b.Property<string>("InterjectionsJson")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 

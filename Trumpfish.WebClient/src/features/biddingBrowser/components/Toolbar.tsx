@@ -1,5 +1,5 @@
 import type { BiddingSystemSummary } from '@/api/models';
-import { ArrowDownIcon, ArrowUpIcon, BranchIcon, BroomIcon, PlusIcon, SaveIcon, SortIcon, TrashIcon } from '@/components/icons';
+import { ArrowDownIcon, ArrowUpIcon, BranchIcon, BroomIcon, LayersIcon, PlusIcon, SaveIcon, SortIcon, TrashIcon } from '@/components/icons';
 import { MenuPopup } from '@/ui';
 import { ToolBar, toolbarKeepLonger } from '@/components/ToolBar';
 import { ShortcutsHelp } from './ShortcutsHelp';
@@ -19,6 +19,8 @@ interface ToolbarProps {
   onMoveUp: () => void;
   onMoveDown: () => void;
   onSort: () => void;
+  /** Same as `onSort`, except the interjection folder is ordered by the opponent call first. */
+  onSortByInterjection: () => void;
   onRemoveUnreachable: () => void;
   onValidate: () => void;
   onSave: () => void;
@@ -76,6 +78,12 @@ export function Toolbar(props: ToolbarProps) {
           { label: 'Przenieś w górę', icon: ArrowUpIcon, onClick: props.onMoveUp, disabled: !canEditNode },
           { label: 'Przenieś w dół', icon: ArrowDownIcon, onClick: props.onMoveDown, disabled: !canEditNode },
           { label: 'Sortuj', icon: SortIcon, onClick: props.onSort },
+          {
+            label: 'Sortuj wg wtrąceń',
+            icon: LayersIcon,
+            onClick: props.onSortByInterjection,
+            title: 'Jak Sortuj, tylko w folderze Wtrącenia najpierw według wtrącenia (najniższego z listy), a dopiero potem według odzywki - wszystko po tym samym wtrąceniu stoi razem.',
+          },
           {
             label: 'Wyczyść nieosiągalne',
             icon: BroomIcon,

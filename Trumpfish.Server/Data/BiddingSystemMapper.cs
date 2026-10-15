@@ -16,6 +16,11 @@ public static class BiddingSystemMapper {
         Converters = { new FigureRequirementsJsonConverter() }
     };
 
+    private static readonly JsonSerializerOptions InterjectionsJsonOptions = new() {
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+    };
+
     /// <summary>
     /// Rebuilds the domain tree from a record whose <see cref="BiddingSystemRecord.Roots"/> and their bids are already loaded.
     /// Every node of a root carries that root's id, so the loaded collections are flat and the nesting is restored from <see cref="BidNodeRecord.ParentId"/>.
@@ -107,7 +112,7 @@ public static class BiddingSystemMapper {
                 SlamConventionIndex = record.SlamConventionIndex,
                 RealizedGoal = record.RealizedGoal,
                 AiSource = record.AiSource,
-                Interjection = ToInterjection(record)
+                Interjections = DeserializeInterjections(record.InterjectionsJson) ?? ToLegacyInterjections(record)
             };
 
             if (childrenByParent.TryGetValue(record.Id, out var children)) {
@@ -175,11 +180,7 @@ public static class BiddingSystemMapper {
                 SlamConventionIndex = node.SlamConventionIndex,
                 RealizedGoal = node.RealizedGoal,
                 AiSource = node.AiSource,
-                InterjectionType = node.Interjection?.Type,
-                InterjectionColor = node.Interjection?.Color,
-                InterjectionValue = node.Interjection?.Value,
-                InterjectionIsFromSystem = node.Interjection?.IsFromSystem,
-                InterjectionExplanation = node.Interjection?.Explanation
+                InterjectionsJson = SerializeInterjections(node.Interjections)
             });
 
             // Children hang off the row identity, which is what the parent foreign key actually references.
@@ -212,17 +213,29 @@ public static class BiddingSystemMapper {
     private static NumberRange? ToRange(int? lower, int? upper) => lower == null && upper == null ? null : new NumberRange(lower, upper);
 
 
-    private static Bid? ToInterjection(BidNodeRecord record) {
+    /// <summary>An empty list is stored as no list at all, the same way <see cref="SerializeFigures"/> treats missing requirements.</summary>
+    private static string? SerializeInterjections(List<Bid> interjections) {
+        return interjections.Count == 0 ? null : JsonSerializer.Serialize(interjections, InterjectionsJsonOptions);
+    }
+
+
+    private static List<Bid>? DeserializeInterjections(string? json) {
+        return json == null ? null : JsonSerializer.Deserialize<List<Bid>>(json, InterjectionsJsonOptions);
+    }
+
+
+    /// <summary>Reads the single interjection a row written before the list existed carries, so such rows keep their meaning without a data migration.</summary>
+    private static List<Bid> ToLegacyInterjections(BidNodeRecord record) {
         if (record.InterjectionType == null) {
-            return null;
+            return [];
         }
 
-        return new Bid {
+        return [new Bid {
             Type = record.InterjectionType.Value,
             Color = record.InterjectionColor ?? Model.Enums.BidColor.NoColor,
             Value = record.InterjectionValue,
             IsFromSystem = record.InterjectionIsFromSystem ?? false,
             Explanation = record.InterjectionExplanation
-        };
+        }];
     }
 }

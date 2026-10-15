@@ -74,6 +74,15 @@ public class BidNode : InterruptedBid, IEquatable<BidNode>, IEqualityComparer<Bi
     /// </summary>
     public bool IsDisabled { get; set; }
 
+    /// <summary>
+    /// Wtrącenia przeciwnika, po których ta odzywka obowiązuje. Pusta lista - odzywka bez wtrącenia.
+    /// </summary>
+    /// <remarks>
+    /// Odziedziczone <see cref="InterruptedBid.Interjection"/> opisuje jedno wtrącenie, które faktycznie padło w licytacji,
+    /// więc na węźle systemu pozostaje puste - węzeł opisuje wzorzec, a nie konkretną licytację.
+    /// </remarks>
+    public List<Bid> Interjections { get; set; } = [];
+
     public List<BidNode> NextBids { get; set; } = [];
 
     /// <summary>Back-reference assigned after deserialization. Never serialized, otherwise the tree becomes cyclic.</summary>
@@ -418,6 +427,37 @@ public class BidNode : InterruptedBid, IEquatable<BidNode>, IEqualityComparer<Bi
 
         return false;
     }
+
+
+    /// <summary>Wyliczana z <see cref="Interjections"/>, więc nie jest serializowana.</summary>
+    [JsonIgnore, TextJsonIgnore]
+    public bool HasInterjections => Interjections.Count > 0;
+
+
+    /// <summary>
+    /// Czy odzywka obowiązuje po wtrąceniu, które faktycznie padło. Brak wtrącenia (<see langword="null"/>) nie pasuje
+    /// do niczego - odzywki bez wtrąceń rozpoznaje się po <see cref="HasInterjections"/>.
+    /// </summary>
+    public bool AcceptsInterjection(Bid? actual) =>
+        actual != null && Interjections.Any(e => e.Equals(actual));
+
+
+    /// <summary>
+    /// Zostawia tylko te warianty odzywek, które obowiązują po wtrąceniu <paramref name="actual"/>. Rozstrzyga osobno dla
+    /// każdej odzywki: gdy któryś jej wariant przewiduje to wtrącenie, zostają tylko takie warianty, w przeciwnym razie
+    /// zostają warianty bez wtrąceń.
+    /// </summary>
+    /// <remarks>
+    /// Z tej samej reguły korzysta wybór własnej odzywki i odczytanie odzywki partnera, więc obaj partnerzy przypisują
+    /// odzywce to samo znaczenie. 
+    /// </remarks>
+    public static List<BidNode> FilterByInterjection(IEnumerable<BidNode> nodes, Bid? actual) => nodes
+        .GroupBy(e => e.GetBidCode())
+        .SelectMany(group => {
+            var interjected = group.Where(e => e.AcceptsInterjection(actual)).ToList();
+            return interjected.Count > 0 ? interjected : group.Where(e => !e.HasInterjections);
+        })
+        .ToList();
 
 
     public bool Equals(BidNode? x, BidNode? y) {

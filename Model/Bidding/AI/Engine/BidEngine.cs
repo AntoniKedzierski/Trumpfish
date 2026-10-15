@@ -124,7 +124,7 @@ public partial class BidEngine {
             if (OwnBidsHistory.Count == 0) {
                 // Mimo wszystko preferowane jest otwarcie z systemu.
                 // Gdy dostajemy null, to próbujemy odzywek obronnych.
-                return TrySystemOpening(Hand) ?? TrySystemDefence(Hand, (rightOpponentBid ?? leftOpponentBid)!);
+                return TrySystemOpening(Hand) ?? TrySystemDefence(Hand, Auction.GetInterjection());
 
                 // Tutaj dopisać wcinanie się na wyższym poziomie, pod minimalizację straty.
             }
@@ -162,15 +162,15 @@ public partial class BidEngine {
     /// <summary>
     /// Wejście w obrony jako pierwszy z pary
     /// </summary>
-    public BidNode? TrySystemDefence(Hand hand, Bid lastOpponentsBid) {
+    public BidNode? TrySystemDefence(Hand hand, Bid? interjection) {
         var defences = BiddingSystem.Defences();
         if (defences == null) {
             return null;
         }
 
         var result = defences.Bids
-            .Where(e => !e.IsDisabled && e.Interjection != null)
-            .Where(e => e.Interjection!.Equals(lastOpponentsBid))
+            .Where(e => !e.IsDisabled)
+            .Where(e => e.AcceptsInterjection(interjection))
             .Where(e => e.IsBidLegal(Auction))
             .Where(e => e.Matches(hand))
             .OrderByDescending(e => e.IsPreferred ? 1 : 0)

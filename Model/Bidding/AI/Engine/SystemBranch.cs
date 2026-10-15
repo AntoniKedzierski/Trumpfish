@@ -79,10 +79,13 @@ public class SystemBranch {
             return [new ExtendedSystemBranch(lastPartnerBid, this)];
         }
 
+        // Dalsze odzywki razem z tymi z kontynuacji - partner wybierał spośród nich, więc tu też muszą być widoczne.
+        var nextBids = Head.GetNextBids();
+
         var newBranches = new List<SystemBranch>();
         foreach (var newHead in newHeads) {
-            // Przodek odzywki partnera musi być identyczny, jak bieżący head (żeby pasowało do naszej ścieżki).
-            if (newHead.Parent == null || !newHead.Parent.Equals(Head)) {
+            // Odzywka partnera musi być jedną z dalszych odzywek bieżącego heada (żeby pasowało do naszej ścieżki).
+            if (!nextBids.Contains(newHead)) {
                 continue;
             }
 
@@ -99,33 +102,18 @@ public class SystemBranch {
 
 
     private List<BidNode> GetMatchingBids() {
-        var leftOpponentsBid = Auction.GetLastPlayerBid(Position.GetLeftOpponent(), passAsNull: true);
-        var rightOpponentsBid = Auction.GetLastPlayerBid(Position.GetRightOpponent(), passAsNull: true);
-        var lastOpponentsBid = rightOpponentsBid ?? leftOpponentsBid;
-
-        var matchingBids = Head.GetNextBids()
+        // Najpierw wtrącenie, potem ręka - wtrącenie decyduje, który wariant odzywki w ogóle obowiązuje.
+        return BidNode.FilterByInterjection(Head.GetNextBids(), Auction.GetInterjection())
             .Where(e => e.Matches(Hand))
-            .Where(e => e.MatchesEntirePath(Hand));
-
-        matchingBids = lastOpponentsBid != null
-            ? matchingBids.Where(e => e.Interjection == null || e.Interjection.Equals(lastOpponentsBid))
-            : matchingBids.Where(e => e.Interjection == null);
-
-        return matchingBids.ToList();
+            .Where(e => e.MatchesEntirePath(Hand))
+            .ToList();
     }
 
 
     public List<BidNode> GetNextLegalBids() {
-        var leftOpponentsBid = Auction.GetLastPlayerBid(Position.GetLeftOpponent(), passAsNull: true);
-        var rightOpponentsBid = Auction.GetLastPlayerBid(Position.GetRightOpponent(), passAsNull: true);
-        var lastOpponentsBid = rightOpponentsBid ?? leftOpponentsBid;
-
-        var matchingBids = Head.GetNextBids().Where(e => e.IsBidLegal(Auction));
-        matchingBids = lastOpponentsBid != null
-            ? matchingBids.Where(e => e.Interjection == null || e.Interjection.Equals(lastOpponentsBid))
-            : matchingBids.Where(e => e.Interjection == null);
-
-        return matchingBids.ToList();
+        return BidNode.FilterByInterjection(Head.GetNextBids(), Auction.GetInterjection())
+            .Where(e => e.IsBidLegal(Auction))
+            .ToList();
     }
 
 

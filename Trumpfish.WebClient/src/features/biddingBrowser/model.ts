@@ -7,11 +7,14 @@ export interface InterjectionBid {
   value?: number | string | null;
 }
 
-/** Editing copy of `BidNode` where the children collection is always materialised, which keeps the tree code free of `?? []` noise. */
-export interface EditableBidNode extends Omit<BidNode, 'nextBids' | 'interjection'> {
+/**
+ * Editing copy of `BidNode` where the collections are always materialised, which keeps the tree code free of `?? []` noise.
+ * The inherited single `interjection` is left out: on a node of the system it is always empty, the list is what counts.
+ */
+export interface EditableBidNode extends Omit<BidNode, 'nextBids' | 'interjections' | 'interjection'> {
   nextBids: EditableBidNode[];
-  /** Narrows the generated `Bid` down to the handful of fields an interjection actually uses. */
-  interjection?: InterjectionBid | null;
+  /** Opponent calls this bid applies after, kept in auction order. Narrows the generated `Bid` down to the fields that matter. */
+  interjections: InterjectionBid[];
 }
 
 export interface EditableRoot extends Omit<Root, 'bids'> {
@@ -36,7 +39,7 @@ export function createEmptySystem(systemName = 'NewSystem'): EditableSystem {
 }
 
 export function createBidNode(color: BidColor | undefined, value: number | string | undefined, openerBid: boolean): EditableBidNode {
-  return { nodeId: newNodeId(), type: 'Submit', color: color ?? 'NoColor', value: value ?? null, openerBid, nextBids: [] };
+  return { nodeId: newNodeId(), type: 'Submit', color: color ?? 'NoColor', value: value ?? null, openerBid, interjections: [], nextBids: [] };
 }
 
 /** Identity used to address a single bid; `crypto.randomUUID` is unavailable over plain HTTP, hence the fallback. */
@@ -49,11 +52,42 @@ export function normalizeSystem(system: BiddingSystem): EditableSystem {
 }
 
 function normalizeNode(node: BidNode): EditableBidNode {
-  return { ...node, nodeId: node.nodeId ?? newNodeId(), nextBids: groupInterjected((node.nextBids ?? []).map(normalizeNode)) };
+  // The single inherited field never carries anything on a node, so it is dropped rather than sent back on save.
+  const copy = { ...node };
+  delete copy.interjection;
+
+  return {
+    ...copy,
+    nodeId: node.nodeId ?? newNodeId(),
+    interjections: sortInterjections(node.interjections ?? []),
+    nextBids: groupInterjected((node.nextBids ?? []).map(normalizeNode)),
+  };
 }
 
 export function hasInterjection(node: EditableBidNode): boolean {
-  return node.interjection !== null && node.interjection !== undefined;
+  return node.interjections.length > 0;
+}
+
+/** Auction order: by level, then ♣ < ♦ < ♥ < ♠ < NT, with the double after every bid. */
+export function compareInterjections(left: InterjectionBid, right: InterjectionBid): number {
+  return interjectionRank(left) - interjectionRank(right);
+}
+
+function interjectionRank(bid: InterjectionBid): number {
+  return bid.type === 'Double' ? Number.MAX_SAFE_INTEGER : Number(bid.value ?? 0) * 10 + colorOrder(bid.color);
+}
+
+export function sortInterjections(interjections: readonly InterjectionBid[]): InterjectionBid[] {
+  return [...interjections].sort(compareInterjections);
+}
+
+export function sameInterjection(left: InterjectionBid, right: InterjectionBid): boolean {
+  return left.type === right.type && (left.color ?? 'NoColor') === (right.color ?? 'NoColor') && Number(left.value ?? 0) === Number(right.value ?? 0);
+}
+
+/** Plain text of an interjection, for tooltips; the drawn version is `BidCard`. */
+export function formatInterjection(bid: InterjectionBid): string {
+  return bid.type === 'Double' ? 'X' : `${bid.value ?? ''}${colorMark(bid.color)}`;
 }
 
 /**
@@ -127,10 +161,16 @@ export function compareBids(left: EditableBidNode, right: EditableBidNode): numb
   return compareByRank(left, right);
 }
 
-/** Orders the bids inside the interjection folder: by the bid itself first, then by the opponent call that precedes it. */
+/** Orders the bids inside the interjection folder: by the bid itself first, then by the lowest opponent call that precedes it. */
 export function compareWithInterjection(left: EditableBidNode, right: EditableBidNode): number {
   const byBid = compareByRank(left, right);
-  return byBid !== 0 ? byBid : compareByRank(left.interjection ?? {}, right.interjection ?? {});
+  return byBid !== 0 ? byBid : compareInterjections(left.interjections[0] ?? {}, right.interjections[0] ?? {});
+}
+
+/** The other order for the folder: by the lowest opponent call first, so everything said after the same call stands together. */
+export function compareByInterjection(left: EditableBidNode, right: EditableBidNode): number {
+  const byInterjection = compareInterjections(left.interjections[0] ?? {}, right.interjections[0] ?? {});
+  return byInterjection !== 0 ? byInterjection : compareByRank(left, right);
 }
 
 function compareByRank(left: { color?: BidColor; value?: number | string | null }, right: { color?: BidColor; value?: number | string | null }): number {

@@ -62,7 +62,8 @@
  * Rysowana do `body` i pozycjonowana `fixed`, więc nie obcina jej żaden kontener z własnym przewijaniem ani wysokością.
  * Położenie i szerokość (dokładnie szerokość pola) wchodzą stylem z komponentu, bo tylko on zna prostokąt pola.
  *
- * Warstwa ponad wszystkim: lista wartości otwiera się także w popupie (40), w szufladzie (80) i w oknie modalnym (100).
+ * Warstwa ponad wszystkim: lista wartości otwiera się także w popupie (40) i w szufladzie (80). Okno modalne stoi na tej
+ * samej warstwie (200), więc z nim rozstrzyga kolejność otwarcia - patrz `dialog.css`.
  */
 .ui-combo-list {
   position: fixed;
@@ -123,6 +124,16 @@
 
 .ui-combo-option.selected {
   color: var(--accent);
+}
+
+/* Readable but out of reach: the reason it cannot be chosen is part of what the option says. */
+.ui-combo-option.disabled {
+  cursor: not-allowed;
+}
+
+.ui-combo-option.disabled.active {
+  background: transparent;
+  color: inherit;
 }
 
 /* Checkmark for the committed value, drawn in CSS so options stay a single element. */

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from './Button';
 import { CheckIcon, CloseIcon } from '@/components/icons';
+import { overlayMark } from './overlay';
 import './dialog.css';
 
 interface DialogProps {
@@ -14,6 +15,11 @@ interface DialogProps {
   wide?: boolean;
   /** Okno na całą szerokość okna przeglądarki - dla treści, która sama jest widokiem: drzewa odzywek do wyboru. */
   full?: boolean;
+  /**
+   * Okno otwarte z wnętrza innej warstwy - z pozycji listy wartości. Kliknięcie w nie, także w tło, nie liczy się wtedy jako
+   * kliknięcie obok tamtej warstwy: zamyka się samo okno, a lista pod nim zostaje.
+   */
+  overlay?: boolean;
   children: ReactNode;
 }
 
@@ -24,7 +30,7 @@ interface DialogProps {
  * Rysowane do `body`, a nie w miejscu wywołania: strona pod spodem bywa ramką z własnym przewijaniem i własnym
  * `backdrop-filter`, a okno zaczepione w takiej ramce jest oknem wysokości tej ramki.
  */
-export function Dialog({ title, onClose, actions, wide = false, full = false, children }: DialogProps) {
+export function Dialog({ title, onClose, actions, wide = false, full = false, overlay = false, children }: DialogProps) {
   const titleId = useId();
 
   useEffect(() => {
@@ -45,7 +51,7 @@ export function Dialog({ title, onClose, actions, wide = false, full = false, ch
   }, [onClose]);
 
   return createPortal(
-    <div className="ui-dialog-backdrop" role="presentation" onClick={onClose}>
+    <div className="ui-dialog-backdrop" role="presentation" onClick={onClose} {...(overlay ? { [overlayMark]: '' } : {})}>
       {/* Okno nie jest tłem: kliknięcie w środku jest wyborem, a nie rezygnacją. */}
       <div
         className={['ui-dialog', wide ? 'wide' : '', full ? 'full' : ''].filter((name) => name !== '').join(' ')}

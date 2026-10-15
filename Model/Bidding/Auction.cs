@@ -130,14 +130,38 @@ public class Auction {
                 return null;
             }
             else {
-                if (i >= 1 && AuctionHistory[i - 1].Type == BidType.Submit) {
-                    return new InterruptedBid(AuctionHistory[i]) {
-                        Interjection = AuctionHistory[i - 1]
-                    };
-                }
-
-                return new InterruptedBid(bid);
+                return new InterruptedBid(bid) {
+                    Interjection = GetInterjection(i)
+                };
             }
+        }
+
+        return null;
+    }
+
+
+    /// <summary>
+    /// Wtrącenie przed odzywką, którą teraz powie gracz na ruchu - jego odzywki nie ma jeszcze w historii, więc szukamy od jej końca.
+    /// </summary>
+    public Bid? GetInterjection() => GetInterjection(AuctionHistory.Count);
+
+
+    /// <summary>
+    /// Wtrącenie przed odzywką już zapisaną w historii pod indeksem <paramref name="index"/>. Wtrąceniem jest ostatnia
+    /// odzywka inna niż pas (także kontra i rekontra), o ile powiedział ją przeciwnik. Gdy powiedział ją ktoś z pary,
+    /// wtrącenia nie ma.
+    /// </summary>
+    /// <remarks>
+    /// Przykład: prawy 1H - pas - lewy pas - partner. Przed partnerem są dwa pasy, ale wtrąceniem dla niego jest 1H.
+    /// </remarks>
+    private Bid? GetInterjection(int index) {
+        for (int i = index - 1; i >= 0; i--) {
+            if (AuctionHistory[i].Type == BidType.Pass) {
+                continue;
+            }
+
+            // Gracze mówią po kolei: nieparzysta odległość - przeciwnik, parzysta - ktoś z pary.
+            return (index - i) % 2 == 1 ? AuctionHistory[i] : null;
         }
 
         return null;
@@ -336,13 +360,9 @@ public class Auction {
                 openingPlayer = bidPlayer;
             }
 
-            var bid = new InterruptedBid(AuctionHistory[i]);
-            var interruption = i >= 1 ? AuctionHistory[i - 1] : null;
-            if (interruption != null && interruption.Type != BidType.Pass) {
-                bid.Interjection = interruption;
-            }
-
-            playerBids.Add(bid);
+            playerBids.Add(new InterruptedBid(AuctionHistory[i]) {
+                Interjection = GetInterjection(i)
+            });
         }
 
         return playerBids;

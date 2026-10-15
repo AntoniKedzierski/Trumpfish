@@ -1,6 +1,6 @@
 import { toNumber, type BidColor, type ValidationIssue } from '@/api/models';
 import { interjectionOptions } from './interjection';
-import { cloneNode, compareBids, compareWithInterjection, createBidNode, createEmptySystem, hasInterjection, type EditableBidNode, type EditableSystem, type InterjectionBid, type NodePath } from './model';
+import { cloneNode, compareBids, compareByInterjection, compareWithInterjection, createBidNode, createEmptySystem, hasInterjection, type EditableBidNode, type EditableSystem, type InterjectionBid, type NodePath } from './model';
 import { childPath, childrenAt, getNode, interjectedCount, isFolderPath, parentPath, samePath, updateChildrenAt, updateNodeAt } from './tree';
 
 const suitLadder: readonly BidColor[] = ['Clubs', 'Diamonds', 'Hearts', 'Spades', 'NoTrump'];
@@ -31,7 +31,7 @@ export type BrowserAction =
   | { kind: 'copyChildren' }
   | { kind: 'cutChildren' }
   | { kind: 'paste' }
-  | { kind: 'sort' }
+  | { kind: 'sort'; byInterjection?: boolean }
   | { kind: 'replaceSystem'; system: EditableSystem }
   | { kind: 'setIssues'; issues: ValidationIssue[] | null }
   | { kind: 'markSaved'; systemId: string };
@@ -89,7 +89,7 @@ export function browserReducer(state: BrowserState, action: BrowserAction): Brow
       return paste(state);
 
     case 'sort':
-      return sort(state);
+      return sort(state, action.byInterjection ?? false);
 
     // A tree rewritten wholesale outside the reducer. The selection survives because every such rewrite only ever removes
     // things below what is selected, never the selected bid itself.
@@ -141,8 +141,8 @@ function addSibling(state: BrowserState): BrowserState {
   const { color, value } = bidAfter(selected);
   const sibling = createBidNode(color, value, selected.openerBid ?? false);
 
-  // Staying beside a bid means staying on the same side of the folder boundary, so the interjection comes along.
-  return insertAfter(state, state.selection, selected.interjection ? { ...sibling, interjection: selected.interjection } : sibling);
+  // Staying beside a bid means staying on the same side of the folder boundary, so the interjections come along.
+  return insertAfter(state, state.selection, { ...sibling, interjections: selected.interjections });
 }
 
 
@@ -156,19 +156,18 @@ function addInterjected(state: BrowserState, container: NodePath): BrowserState 
   const count = interjectedCount(children);
 
   const { color, value } = bidAfter(children[count - 1] ?? parent ?? undefined);
-  const node: EditableBidNode = {
-    ...createBidNode(color, value, parent === null ? true : !parent.openerBid),
-    interjection: firstLegalInterjection(chainTo(state.system, container)),
-  };
+  const created = createBidNode(color, value, parent === null ? true : !parent.openerBid);
+  const interjection = firstLegalInterjection(chainTo(state.system, container), created);
+  const node: EditableBidNode = { ...created, interjections: interjection === null ? [] : [interjection] };
 
   const system = updateChildrenAt(state.system, container, (current) => place(current, node));
   return { ...state, system, selection: childPath(container, count), dirty: true };
 }
 
 
-/** The lowest interjection bridge still permits at this point, taken in the order the picker offers them. */
-function firstLegalInterjection(ancestors: readonly EditableBidNode[]): InterjectionBid | null {
-  return interjectionOptions(ancestors).find((option) => option.available && option.bid !== null)?.bid ?? null;
+/** The lowest interjection bridge still permits at this point for `node`, taken in the order the picker offers them. */
+function firstLegalInterjection(ancestors: readonly EditableBidNode[], node: EditableBidNode): InterjectionBid | null {
+  return interjectionOptions(ancestors, node).find((option) => option.available && option.bid !== null)?.bid ?? null;
 }
 
 
@@ -276,7 +275,7 @@ function updateSelected(state: BrowserState, patch: Partial<EditableBidNode>): B
 
   const before = getNode(state.system, state.selection);
   const system = updateNodeAt(state.system, state.selection, (node) => ({ ...node, ...patch }));
-  if (before === null || !('interjection' in patch) || hasInterjection(before) === hasInterjection({ ...before, ...patch })) {
+  if (before === null || !('interjections' in patch) || hasInterjection(before) === hasInterjection({ ...before, ...patch })) {
     return { ...state, system, dirty: true };
   }
 
@@ -330,16 +329,18 @@ function paste(state: BrowserState): BrowserState {
   return { ...state, system, dirty: true };
 }
 
-function sort(state: BrowserState): BrowserState {
+/** `byInterjection` only changes the folder: by the call the bids answer first, instead of by the bids themselves. */
+function sort(state: BrowserState, byInterjection: boolean): BrowserState {
   const target = state.selection ?? { rootIndex: 0, path: [] };
 
   // Sorting the folder means sorting what it holds, and that lives in the list belonging to the container beneath it.
   const container = isFolderPath(target) ? parentPath(target) : target;
+  const folderOrder = byInterjection ? compareByInterjection : compareWithInterjection;
 
   const system = updateChildrenAt(state.system, container, (children) => {
     // The folder stays on top, so the two groups are sorted apart: the interjected ones also by the call they answer.
     const count = interjectedCount(children);
-    return [...[...children.slice(0, count)].sort(compareWithInterjection), ...[...children.slice(count)].sort(compareBids)];
+    return [...[...children.slice(0, count)].sort(folderOrder), ...[...children.slice(count)].sort(compareBids)];
   });
 
   // Indices shift while sorting, so keep the container selected instead of pointing at a stale child.

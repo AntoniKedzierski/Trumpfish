@@ -1,5 +1,6 @@
 import type { EditableBidNode } from '../model';
 import { BidCard } from '@/ui';
+import { InterjectionList } from './InterjectionList';
 
 interface BidPathProps {
   /** Name of the root the edited bid lives under, shown as the outermost level. */
@@ -37,9 +38,9 @@ export function BidPath({ rootName, ancestors }: BidPathProps) {
             <BidCard bid={node} />
           </span>
           {/* Kept in the same place as in the tree: an interjection changes what the bid under it means, so the path has to show it. */}
-          {node.interjection && (
+          {node.interjections.length > 0 && (
             <span className="bid-interjection">
-              (po. <BidCard bid={node.interjection} />)
+              (po. <InterjectionList interjections={node.interjections} />)
             </span>
           )}
           {node.condition && <span className="bid-condition">{node.condition}</span>}

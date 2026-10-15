@@ -9,9 +9,10 @@ namespace Trumpfish.Server.Contracts;
 /// </summary>
 /// <remarks>
 /// There is deliberately no choice of who opens. The two players are partners, and the seat that is dealt the practised opening
-/// is drawn afresh every deal, so both of them get to be the opener and the responder over a session.
+/// is drawn afresh every deal, so both of them get to be the opener and the responder over a session. A practised
+/// <c>Convention</c> works the same way: every deal is one on which one of the pair bids it, and which of the two is drawn.
 /// </remarks>
-public record DuoSettings(Guid SystemId, Guid? OpeningNodeId, string? Seed, bool AllowHints, bool ImmediateMeanings, bool CheckBids);
+public record DuoSettings(Guid SystemId, Guid? OpeningNodeId, string? Seed, bool AllowHints, bool ImmediateMeanings, bool CheckBids, string? Convention = null);
 
 /// <summary>An outstanding invitation to a table. Lives in memory only: an invitation nobody answered is not worth keeping.</summary>
 public record DuoInvitation(Guid Id, Guid FromUserId, string FromName, Guid ToUserId, string ToName, string SystemName, string? OpeningLabel, DuoSettings Settings);

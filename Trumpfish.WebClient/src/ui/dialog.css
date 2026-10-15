@@ -4,10 +4,14 @@
  * przycisków. Rozmiary kontrolek w środku pochodzą z `controls.css` jak wszędzie.
  */
 
+/*
+ * Ta sama warstwa co lista ComboBoxa (200), więc o kolejności decyduje to, co otwarto później - obie są rysowane do `body`.
+ * Lista otwarta w oknie leży nad oknem, a okno otwarte z listy (szczegóły konwencji) leży nad listą.
+ */
 .ui-dialog-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
